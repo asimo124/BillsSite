@@ -4,6 +4,7 @@ function preformat2($str) {
 	echo "<pre>" . print_r($str, true) . "\n</pre>";
 }
 
+include "config.php";
 
 try {
 	$db_conn = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.MYSQL_DATABASE, MYSQL_USERNAME, MYSQL_PASSWORD);
