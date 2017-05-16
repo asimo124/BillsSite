@@ -4,7 +4,12 @@ function preformat2($str) {
 	echo "<pre>" . print_r($str, true) . "\n</pre>";
 }
 
+function preformat($str) {
+	preformat2($str);
+}
+
 include "config.php";
+include "UploadValidator.php";
 
 try {
 	$db_conn = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.MYSQL_DATABASE, MYSQL_USERNAME, MYSQL_PASSWORD);
