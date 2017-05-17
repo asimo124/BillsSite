@@ -1,6 +1,4 @@
-<?php
-include "../inc/includes.php";
-?>
+<?php include "../inc/includes.php"; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,22 +8,24 @@ include "../inc/includes.php";
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
     <style type="text/css">
-
         textarea {
             width: 100%;
             height: 375px;
         }
-
     </style>
 </head>
 <body>
 <div class="container">
+    <div style="clear: both; height: 20px;" ></div>
+    <?php if (isset($_REQUEST['Message'])) { ?>
+    <div class="alert alert-success" role="alert">
+        <?php echo $_REQUEST['Message']; ?>
+    </div>
+    <?php } ?>
     <form class="form-horizontal" id="frmUpload" action="proc_upload.php" method="post" enctype="multipart/form-data">
         <fieldset>
-
             <!-- Form Name -->
             <legend>Form Name</legend>
-
             <!-- Text input-->
             <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Upload Charge File</label>
@@ -39,7 +39,6 @@ include "../inc/includes.php";
                     <textarea id="code" name="code" class="form-control input-md"></textarea
                 </div>
             </div>
-
         </fieldset>
         <a href="javascript:void(0);" onclick="$('#frmUpload').submit();" class="btn btn-primary">Upload</a>
     </form>

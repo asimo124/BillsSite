@@ -3,13 +3,13 @@
 function preformat2($str) {
 	echo "<pre>" . print_r($str, true) . "\n</pre>";
 }
-
 function preformat($str) {
 	preformat2($str);
 }
 
 include "config.php";
 include "UploadValidator.php";
+include "QueryUtils.php";
 
 try {
 	$db_conn = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.MYSQL_DATABASE, MYSQL_USERNAME, MYSQL_PASSWORD);
@@ -30,4 +30,18 @@ function cleanRS($rs) {
 	return $rs;
 }
 
+function execQuery($sql, $data=array()) {
+	global $db_conn;
+
+	$stmt = $db_conn->prepare($sql);
+	$stmt->execute($data);
+}
+
+function getQuery($sql, $data=array()) {
+	global $db_conn;
+
+	$stmt = $db_conn->prepare($sql);
+	$stmt->execute($data);
+	return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>
