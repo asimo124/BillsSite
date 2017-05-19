@@ -1,6 +1,8 @@
 <?php
-include "../inc/includes.php";
 ini_set("display_errors", 1);
+include "../inc/includes.php";
+
+$days_range = 2;
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
@@ -40,10 +42,23 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $content = isset($_REQUEST['code']) ? $_REQUEST['code'] : "";
     }
     $doc = new DOMDocument();
-    $doc->loadHTML($content);
+
+    /*/
+    $config = array(
+        'clean' => 'yes',
+        'output-html' => 'yes',
+    );
+    $tidy = tidy_parse_string($content, $config, 'utf8');
+    $tidy->cleanRepair();
+    //*/
+    $tidy = $content;
+
+    $doc->loadHTML($tidy);
     $doc->preserveWhiteSpace = false;
     $accountDiv = $doc->getElementById('accountTransactions');
     $children = $accountDiv->childNodes;
+
+
     foreach ($children as $child) {
         $children2 = $child->childNodes;
         foreach ($children2 as $i => $child2) {
@@ -79,42 +94,45 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                 $credit = str_replace(",", "", $credit);
                         }
                     }
-                    if ($charge != "") {
-                        $sql = "SELECT id from vnd_bills_charges
-                                    WHERE date between DATE(DATE_ADD(:date, INTERVAL -1 DAY))
-                                    AND DATE(DATE_ADD(:date, INTERVAL 1 DAY))
+                    if ($desc != "") {
+                        if ($charge != "") {
+                            $sql = "SELECT id from vnd_bills_charges
+                                    WHERE date between DATE(DATE_ADD(:date, INTERVAL -$days_range DAY))
+                                    AND DATE(DATE_ADD(:date, INTERVAL $days_range DAY))
                                     AND description = :desc and CAST(charge AS DECIMAL(4,2)) = CAST(:charge AS DECIMAL(4,2)) ";
-                        $data = [
-                            "date" => date("Y-m-d", strtotime($date)),
-                            "desc" => preg_replace("/[0-9]{2}\/[0-9]{2}/", "", $desc),
-                            "charge" => $charge
-                        ];
-                        $ins_data = $data;
-                        $ins_data['credit'] = "";
-                    } else if ($credit != "") {
-                        $sql = "SELECT id from vnd_bills_charges
-                                    WHERE date between DATE(DATE_ADD(:date, INTERVAL -1 DAY))
-                                    AND DATE(DATE_ADD(:date, INTERVAL 1 DAY))
+                            $data = [
+                                "date" => date("Y-m-d", strtotime($date)),
+                                "desc" => preg_replace("/[0-9]{2}\/[0-9]{2}/", "", $desc),
+                                "charge" => $charge
+                            ];
+                            $ins_data = $data;
+                            $ins_data['credit'] = "";
+                        } else if ($credit != "") {
+                            $sql = "SELECT id from vnd_bills_charges
+                                    WHERE date between DATE(DATE_ADD(:date, INTERVAL -$days_range DAY))
+                                    AND DATE(DATE_ADD(:date, INTERVAL $days_range DAY))
                                     AND description = :desc and CAST(credit AS DECIMAL(4,2)) = CAST(:credit AS DECIMAL(4,2)) ";
-                        $data = [
-                            "date" => date("Y-m-d", strtotime($date)),
-                            "desc" => preg_replace("/[0-9]{2}\/[0-9]{2}/", "", $desc),
-                            "credit" => $credit
-                        ];
-                        $ins_data = $data;
-                        $ins_data['charge'] = "";
-                    }
-                    $results = getQuery($sql, $data);
-                    if (count($results) == 0) {
-                        $sql = "INSERT INTO vnd_bills_charges
+                            $data = [
+                                "date" => date("Y-m-d", strtotime($date)),
+                                "desc" => preg_replace("/[0-9]{2}\/[0-9]{2}/", "", $desc),
+                                "credit" => $credit
+                            ];
+                            $ins_data = $data;
+                            $ins_data['charge'] = "";
+                        }
+                        $results = getQuery($sql, $data);
+                        if (count($results) == 0) {
+                            $sql = "INSERT INTO vnd_bills_charges
                                     ( date,  description, charge,  credit, entrydate) VALUES
                                     (:date, :desc,       :charge, :credit, now()) ";
-                        execQuery($sql, $ins_data);
+                            execQuery($sql, $ins_data);
+                        }
                     }
                 }
             }
         }
     }
+
     header("Location: upload.php?Message=" . urlencode("Charge uploaded."));
 } else {
     die("You do not have access to this page.");

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bootstrap 101 Template</title>
+    <title>Upload Charges</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
@@ -25,7 +25,11 @@
     <form class="form-horizontal" id="frmUpload" action="proc_upload.php" method="post" enctype="multipart/form-data">
         <fieldset>
             <!-- Form Name -->
-            <legend>Form Name</legend>
+            <legend>Upload Charges</legend>
+
+            <a href="/bills" >Bills</a> | <a href="cats/index.php" >Charge Categories</a> | <a href="/charges" >Chart</a>
+            <div style="clear: both; height: 7px"></div>
+
             <!-- Text input-->
             <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Upload Charge File</label>

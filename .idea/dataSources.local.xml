@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="MySQL - asimo124_bills@vdb2a.pair.com" uuid="2134804b-1700-4145-a114-63e2fc8883c2">
+      <secret-storage>master_key</secret-storage>
+      <user-name>asimo124</user-name>
+      <schema-pattern>asimo124_bills.*</schema-pattern>
+      <default-schemas>asimo124_bills.*</default-schemas>
+      <ssh-properties>
+        <enabled>true</enabled>
+        <proxy-host>asimo124.pairserver.com</proxy-host>
+        <proxy-port>22</proxy-port>
+        <secret-storage>master_key</secret-storage>
+        <user>asimo124</user>
+        <use-password>true</use-password>
+      </ssh-properties>
+    </data-source>
+  </component>
+</project>
