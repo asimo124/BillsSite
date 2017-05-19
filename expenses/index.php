@@ -78,6 +78,10 @@ a.btn {
 			<div class="message" ><?php echo $_REQUEST['Message']; ?></div>
 			<div class="clear" style="height: 12px;"></div>
 		<?php endif; ?>
+		<div style="clear: both; height: 12px"></div>
+
+		<a href="/charges" class="nav_links" >Chart</a> | <a href="/bills" class="nav_links" >Bills</a> | <a href="/charges/upload.php" class="nav_links" >Upload</a> | <a href="/charges/cats" class="nav_links" >Categories</a>
+		<div style="clear: both; height: 12px"></div>
 
 		Desc:<br>
 		<input type="text" name="vnd_bill" id="vnd_bill" value="" class="expense_field" />

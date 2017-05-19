@@ -27,7 +27,7 @@ $resultset = getQuery($sql);
 
     <div style="clear: both; height: 12px"></div>
 
-    <a href="../upload.php" >Upload Charges</a> | <a href="/bills" >Bills</a> | <a href="/charges" >Chart</a>
+    <a href="../upload.php" >Upload Charges</a> | <a href="/bills" >Bills</a> | <a href="/bills/admin" >Bills Admin</a> | <a href="/charges" >Chart</a>
     <div style="clear: both; height: 12px"></div>
 
     <div class="row">

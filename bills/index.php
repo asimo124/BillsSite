@@ -230,7 +230,7 @@ a.nav_links:hover {
 	<div style="clear: both; height: 0px;" ></div>
 
 	<div class="nav">
-		<a href="/charges" class="nav_links" >Chart</a> | <a href="/charges/upload.php" class="nav_links" >Upload</a> | <a href="/charges/cats" class="nav_links" >Categories</a>
+		<a href="/charges" class="nav_links" >Chart</a> | <a href="/expenses" class="nav_links" >Add Expense</a> | <a href="/crons/loadDates.php" class="nav_links" >Dates CRON</a> | <a href="/charges/upload.php" class="nav_links" >Upload</a> | <a href="/charges/cats" class="nav_links" >Categories</a>
 	</div>
 	<div style="clear: both; height: 7px"></div>
 

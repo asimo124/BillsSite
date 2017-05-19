@@ -144,7 +144,7 @@ $data = [
         </div>
     <?php } ?>
 
-    <a href="/bills" >Bills</a> | <a href="upload.php" >Upload Charges</a> | <a href="/charges/cats" >Charge Categories</a>
+    <a href="/bills" >Bills</a> | <a href="/bills/admin" >Bills Admin</a> | <a href="upload.php" >Upload Charges</a> | <a href="/charges/cats" >Charge Categories</a>
     <div style="clear: both; height: 12px"></div>
 
     <?php if (!isset($_SESSION['User'])) { ?>

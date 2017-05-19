@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a2afb100-9492-4794-888f-87188d2c08b9" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bills/admin/add.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bills/admin/delete.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bills/admin/edit.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bills/admin/index.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bills/admin/proc_add.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bills/admin/proc_edit.php" />
+    <list default="true" id="a2afb100-9492-4794-888f-87188d2c08b9" name="Default" comment="small changes">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/crons/loadDates.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/inc/includes.php" afterPath="$PROJECT_DIR$/inc/includes.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bills/index.php" afterPath="$PROJECT_DIR$/bills/index.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/charges/cats/index.php" afterPath="$PROJECT_DIR$/charges/cats/index.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/charges/index.php" afterPath="$PROJECT_DIR$/charges/index.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/charges/upload.php" afterPath="$PROJECT_DIR$/charges/upload.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/expenses/index.php" afterPath="$PROJECT_DIR$/expenses/index.php" />
     </list>
     <ignored path="Bills.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -49,14 +48,67 @@
   <component name="FileEditorManager">
     <leaf>
       <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bills/index.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-10.769231">
+              <caret line="227" column="0" selection-start-line="227" selection-start-column="0" selection-end-line="227" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/expenses/index.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-20.754717">
+              <caret line="82" column="73" selection-start-line="82" selection-start-column="73" selection-end-line="82" selection-end-column="73" />
+              <folding>
+                <element signature="n#style#0;n#div#3;n#div#0;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#4;n#div#0;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="loadBillDates.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/api/loadBillDates.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="loadDates.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/crons/loadDates.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.32220945">
+              <caret line="14" column="98" selection-start-line="14" selection-start-column="98" selection-end-line="14" selection-end-column="98" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/charges/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-31.923077">
-              <caret line="84" column="13" selection-start-line="84" selection-start-column="13" selection-end-line="84" selection-end-column="13" />
+            <state vertical-scroll-proportion="-19.615385">
+              <caret line="146" column="74" selection-start-line="146" selection-start-column="74" selection-end-line="146" selection-end-column="74" />
               <folding>
-                <marker date="1495227658889" expanded="true" signature="327:653" placeholder="SELECT SUM(c... vnd_bills_charges" />
-                <marker date="1495227658889" expanded="true" signature="867:1287" placeholder="SELECT id, d... vnd_bills_charges" />
+                <marker date="1495231260176" expanded="true" signature="327:653" placeholder="SELECT SUM(c... vnd_bills_charges" />
+                <marker date="1495231260176" expanded="true" signature="867:1287" placeholder="SELECT id, d... vnd_bills_charges" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="upload.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/charges/upload.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-12.884615">
+              <caret line="29" column="82" selection-start-line="29" selection-start-column="40" selection-end-line="29" selection-end-column="82" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -64,34 +116,10 @@
       <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/charges/cats/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.923077">
-              <caret line="37" column="49" selection-start-line="37" selection-start-column="49" selection-end-line="37" selection-end-column="49" />
+            <state vertical-scroll-proportion="-5.3846154">
+              <caret line="29" column="120" selection-start-line="29" selection-start-column="120" selection-end-line="29" selection-end-column="120" />
               <folding>
-                <marker date="1495224538203" expanded="true" signature="81:122" placeholder="SELECT * FRO... vnd_bills_charge_categories" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="edit.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bills/admin/edit.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.313253">
-              <caret line="80" column="22" selection-start-line="80" selection-start-column="22" selection-end-line="80" selection-end-column="22" />
-              <folding>
-                <marker date="1495230509306" expanded="true" signature="114:285" placeholder="SELECT vnd_b... vnd_bills" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="delete.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/charges/cats/delete.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.230769">
-              <caret line="12" column="5" selection-start-line="0" selection-start-column="0" selection-end-line="12" selection-end-column="5" />
-              <folding>
-                <marker date="1495033514675" expanded="true" signature="110:164" placeholder="DELETE FROM " />
+                <marker date="1495231178685" expanded="true" signature="81:122" placeholder="SELECT * FRO... vnd_bills_charge_categories" />
               </folding>
             </state>
           </provider>
@@ -122,34 +150,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="proc_edit.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bills/admin/proc_edit.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="0" column="5" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
-              <folding>
-                <marker date="1495230628200" expanded="true" signature="943:1275" placeholder="UPDATE vnd_b... " />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="add.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bills/admin/add.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.730769">
-              <caret line="22" column="66" selection-start-line="22" selection-start-column="66" selection-end-line="22" selection-end-column="66" />
-              <folding>
-                <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="proc_add.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="proc_add.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bills/admin/proc_add.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.41426927">
+            <state vertical-scroll-proportion="-13.846154">
               <caret line="18" column="10" selection-start-line="18" selection-start-column="10" selection-end-line="18" selection-end-column="10" />
               <folding>
                 <marker date="1495231084655" expanded="true" signature="896:1040" placeholder="INSERT INTO vnd_bills... " />
@@ -180,10 +184,6 @@
         <option value="$PROJECT_DIR$/api/get_charges.php" />
         <option value="$PROJECT_DIR$/charges/proc_upload.php" />
         <option value="$PROJECT_DIR$/api/get_final_charges.php" />
-        <option value="$PROJECT_DIR$/charges/upload.php" />
-        <option value="$PROJECT_DIR$/bills/index.php" />
-        <option value="$PROJECT_DIR$/charges/cats/index.php" />
-        <option value="$PROJECT_DIR$/charges/index.php" />
         <option value="$PROJECT_DIR$/inc/includes.php" />
         <option value="$PROJECT_DIR$/bills/admin/edit.php" />
         <option value="$PROJECT_DIR$/bills/admin/add.php" />
@@ -191,6 +191,12 @@
         <option value="$PROJECT_DIR$/bills/admin/delete.php" />
         <option value="$PROJECT_DIR$/bills/admin/index.php" />
         <option value="$PROJECT_DIR$/bills/admin/proc_add.php" />
+        <option value="$PROJECT_DIR$/charges/upload.php" />
+        <option value="$PROJECT_DIR$/charges/cats/index.php" />
+        <option value="$PROJECT_DIR$/charges/index.php" />
+        <option value="$PROJECT_DIR$/expenses/index.php" />
+        <option value="$PROJECT_DIR$/bills/index.php" />
+        <option value="$PROJECT_DIR$/crons/loadDates.php" />
       </list>
     </option>
   </component>
@@ -262,39 +268,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="inc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Bills" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Bills" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="charges" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Bills" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Bills" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="charges" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cats" />
+              <option name="myItemId" value="crons" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -322,11 +296,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="bills" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
+              <option name="myItemId" value="api" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -412,7 +382,13 @@
       <option name="project" value="LOCAL" />
       <updated>1495227677869</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="added ability to edit bills">
+      <created>1495231117494</created>
+      <option name="number" value="00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1495231117494</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -454,7 +430,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fixed color issue" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed color issue" />
+    <MESSAGE value="added ability to edit bills" />
+    <option name="LAST_COMMIT_MESSAGE" value="added ability to edit bills" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -482,7 +459,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="29" column="109" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="109" />
           <folding>
-            <marker date="1495224538203" expanded="true" signature="81:122" placeholder="SELECT * FRO... vnd_bills_charge_categories" />
+            <marker date="1495231178685" expanded="true" signature="81:122" placeholder="SELECT * FRO... vnd_bills_charge_categories" />
           </folding>
         </state>
       </provider>
@@ -492,8 +469,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1495227658889" expanded="true" signature="327:653" placeholder="SELECT SUM(c... vnd_bills_charges" />
-            <marker date="1495227658889" expanded="true" signature="867:1287" placeholder="SELECT id, d... vnd_bills_charges" />
+            <marker date="1495231260176" expanded="true" signature="327:653" placeholder="SELECT SUM(c... vnd_bills_charges" />
+            <marker date="1495231260176" expanded="true" signature="867:1287" placeholder="SELECT id, d... vnd_bills_charges" />
           </folding>
         </state>
       </provider>
@@ -770,33 +747,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/charges/upload.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.35632184">
-          <caret line="29" column="121" selection-start-line="29" selection-start-column="12" selection-end-line="29" selection-end-column="121" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bills/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="4.0574713">
-          <caret line="232" column="51" selection-start-line="232" selection-start-column="51" selection-end-line="232" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/charges/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-31.923077">
-          <caret line="84" column="13" selection-start-line="84" selection-start-column="13" selection-end-line="84" selection-end-column="13" />
-          <folding>
-            <marker date="1495227658889" expanded="true" signature="327:653" placeholder="SELECT SUM(c... vnd_bills_charges" />
-            <marker date="1495227658889" expanded="true" signature="867:1287" placeholder="SELECT id, d... vnd_bills_charges" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/inc/includes.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.7149644">
@@ -826,16 +776,6 @@
         <state vertical-scroll-proportion="0.29919448">
           <caret line="13" column="3" selection-start-line="0" selection-start-column="0" selection-end-line="31" selection-end-column="5" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/charges/cats/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.923077">
-          <caret line="37" column="49" selection-start-line="37" selection-start-column="49" selection-end-line="37" selection-end-column="49" />
-          <folding>
-            <marker date="1495224538203" expanded="true" signature="81:122" placeholder="SELECT * FRO... vnd_bills_charge_categories" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -889,6 +829,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bills/admin/proc_add.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.846154">
+          <caret line="18" column="10" selection-start-line="18" selection-start-column="10" selection-end-line="18" selection-end-column="10" />
+          <folding>
+            <marker date="1495231084655" expanded="true" signature="896:1040" placeholder="INSERT INTO vnd_bills... " />
+            <marker date="1495231084655" expanded="true" signature="896:1172" placeholder="INSERT INTO vnd_bills... " />
+            <marker date="1495231084655" expanded="true" signature="896:1194" placeholder="INSERT INTO vnd_bills... " />
+            <marker date="1495231084655" expanded="true" signature="917:1040" placeholder="UPDATE vnd_b... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/charges/cats/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.3846154">
+          <caret line="29" column="120" selection-start-line="29" selection-start-column="120" selection-end-line="29" selection-end-column="120" />
+          <folding>
+            <marker date="1495231178685" expanded="true" signature="81:122" placeholder="SELECT * FRO... vnd_bills_charge_categories" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/bills/admin/index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="7.3461537">
@@ -900,16 +863,57 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bills/admin/proc_add.php">
+    <entry file="file://$PROJECT_DIR$/charges/upload.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.41426927">
-          <caret line="18" column="10" selection-start-line="18" selection-start-column="10" selection-end-line="18" selection-end-column="10" />
+        <state vertical-scroll-proportion="-12.884615">
+          <caret line="29" column="82" selection-start-line="29" selection-start-column="40" selection-end-line="29" selection-end-column="82" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/charges/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-19.615385">
+          <caret line="146" column="74" selection-start-line="146" selection-start-column="74" selection-end-line="146" selection-end-column="74" />
           <folding>
-            <marker date="1495231084655" expanded="true" signature="896:1040" placeholder="INSERT INTO vnd_bills... " />
-            <marker date="1495231084655" expanded="true" signature="896:1172" placeholder="INSERT INTO vnd_bills... " />
-            <marker date="1495231084655" expanded="true" signature="896:1194" placeholder="INSERT INTO vnd_bills... " />
-            <marker date="1495231084655" expanded="true" signature="917:1040" placeholder="UPDATE vnd_b... " />
+            <marker date="1495231260176" expanded="true" signature="327:653" placeholder="SELECT SUM(c... vnd_bills_charges" />
+            <marker date="1495231260176" expanded="true" signature="867:1287" placeholder="SELECT id, d... vnd_bills_charges" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/expenses/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-20.754717">
+          <caret line="82" column="73" selection-start-line="82" selection-start-column="73" selection-end-line="82" selection-end-column="73" />
+          <folding>
+            <element signature="n#style#0;n#div#3;n#div#0;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#4;n#div#0;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/loadBillDates.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bills/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.769231">
+          <caret line="227" column="0" selection-start-line="227" selection-start-column="0" selection-end-line="227" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crons/loadDates.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.32220945">
+          <caret line="14" column="98" selection-start-line="14" selection-start-column="98" selection-end-line="14" selection-end-column="98" />
+          <folding />
         </state>
       </provider>
     </entry>

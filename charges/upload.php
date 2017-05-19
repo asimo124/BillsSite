@@ -27,7 +27,7 @@
             <!-- Form Name -->
             <legend>Upload Charges</legend>
 
-            <a href="/bills" >Bills</a> | <a href="cats/index.php" >Charge Categories</a> | <a href="/charges" >Chart</a>
+            <a href="/bills" >Bills</a> | <a href="/bills/admin" >Bills Admin</a> | <a href="cats/index.php" >Charge Categories</a> | <a href="/charges" >Chart</a>
             <div style="clear: both; height: 7px"></div>
 
             <!-- Text input-->
