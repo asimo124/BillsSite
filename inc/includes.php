@@ -44,4 +44,10 @@ function getQuery($sql, $data=array()) {
 	$stmt->execute($data);
 	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function formatCurrency($amount) {
+
+	$formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
+	return $formatter->formatCurrency($amount, 'USD');
+}
 ?>
