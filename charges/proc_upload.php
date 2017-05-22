@@ -1,4 +1,5 @@
 <?php
+define(CURRENT_PATH, dirname(__FILE__));
 ini_set("display_errors", 1);
 include "../inc/includes.php";
 
@@ -41,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     } else {
         $content = isset($_REQUEST['code']) ? $_REQUEST['code'] : "";
     }
+
     $doc = new DOMDocument();
 
     /*/
@@ -134,6 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 
     header("Location: upload.php?Message=" . urlencode("Charge uploaded."));
+    exit;
 } else {
     die("You do not have access to this page.");
 }

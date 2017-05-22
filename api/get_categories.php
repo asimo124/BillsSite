@@ -2,7 +2,7 @@
     include "../inc/includes.php";
 
 $sql = "SELECT id, cat_name
-        FROM vnd_bills_charge_categories ";
+        FROM vnd_bills_charge_categories ORDER BY cat_name ";
 
 $resultset = getQuery($sql);
 

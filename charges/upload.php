@@ -1,4 +1,7 @@
-<?php include "../inc/includes.php"; ?>
+<?php
+define(CURRENT_PATH, dirname(__FILE__));
+include "../inc/includes.php";
+?>
 <!DOCTYPE html>
 <html>
 <head>
