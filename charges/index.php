@@ -147,13 +147,13 @@ $data = [
     <a href="/bills" >Bills</a> | <a href="/bills/admin" >Bills Admin</a> | <a href="upload.php" >Upload Charges</a> | <a href="/charges/cats" >Charge Categories</a>
     <div style="clear: both; height: 12px"></div>
 
-    <?php if (!isset($_SESSION['User'])) { ?>
+    <?php /*if (!isset($_SESSION['User'])) { ?>
     <form class="form-horizontal" id="frmLogin" action="index.php" method="post" >
         <fieldset>
             <!-- Form Name -->
             <legend>Login</legend>
 
-            <a href="cats/index.php" >Charge Categories</a>
+            <a href="workouts/index.php" >Charge Categories</a>
             <div style="clear: both; height: 7px"></div>
 
             <div class="form-group">
@@ -166,11 +166,11 @@ $data = [
         <a href="javascript:void(0);" onclick="$('#frmLogin').submit();" class="btn btn-primary">Login</a>
         <input type="hidden" name="doSubmit" id="doSubmit" value="1" />
     </form>
-    <?php } else { ?>
+    <?php //} else {*/ ?>
     <div class="span3">
         <canvas id="myChart" width="100%"></canvas>
     </div>
-    <?php } ?>
+    <?php //} ?>
 </div>
 </body>
 <script src="https://code.jquery.com/jquery.js"></script>
