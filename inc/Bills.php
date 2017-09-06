@@ -89,8 +89,8 @@ class Bills {
 		$this->user_id = $user_id;
 		
 		$queryInsertDate = "INSERT INTO vnd_bill_dates 
-		(vnd_bill_desc, vnd_user_id, vnd_amount, vnd_date) VALUES 
-		(:vnd_bill_desc, :vnd_user_id, :vnd_amount, :vnd_date) ";
+		(vnd_bill_desc, vnd_user_id, vnd_amount, vnd_date, vnd_is_future) VALUES
+		(:vnd_bill_desc, :vnd_user_id, :vnd_amount, :vnd_date, :vnd_is_future) ";
 		$this->sthInsertDate = $db_conn->prepare($queryInsertDate);
 		
 		$queryCheckDate = "
@@ -101,27 +101,27 @@ class Bills {
 		
 		$resultset = $this->loadBillsByUserID($user_id);
 		foreach ($resultset as $getItem) {
-			
+
 			switch ($getItem['vnd_frequency']) {
 				case "Once":
-					$this->loadOnce($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type']);
+					$this->loadOnce($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future']);
 					break;
 				case "Once Per Month":
-					$this->loadOncePerMonth($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type']);
+					$this->loadOncePerMonth($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future']);
 					break;
 				case "Once Per Week":
-					$this->loadOncePerWeek($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type']);
+					$this->loadOncePerWeek($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future']);
 					break;
 				case "Every 2 Weeks":
-					$this->loadEveryXWeeks($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], 2);
+					$this->loadEveryXWeeks($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], 2, $getItem['is_future']);
 					break;
 				case "Every 4 Weeks":
-					$this->loadEveryXWeeks($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], 4);
+					$this->loadEveryXWeeks($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], 4, $getItem['is_future']);
 					break;
 			}
 		}
 	}
-	public function loadOncePerMonth($freq_value, $bill_desc, $amount, $freq_type="Day of Month") {
+	public function loadOncePerMonth($freq_value, $bill_desc, $amount, $freq_type="Day of Month", $is_future=0) {
 		
 		global $db_conn;
 		
@@ -149,6 +149,7 @@ class Bills {
 					$data['vnd_user_id'] = $this->user_id;
 					$data['vnd_amount'] = $amount;
 					$data['vnd_date'] = $year . "-" . $month . "-" . $freq_value;
+					$data['vnd_is_future'] = $is_future;
 					$this->sthInsertDate->execute($data);
 				}
 				$month = intval($month);
@@ -163,7 +164,7 @@ class Bills {
 		}
 	}
 
-	public function loadOnce($freq_value, $bill_desc, $amount, $freq_type) {
+	public function loadOnce($freq_value, $bill_desc, $amount, $freq_type, $is_future=0) {
 		global $db_conn;
 		
 		$data = array();
@@ -171,10 +172,11 @@ class Bills {
 		$data['vnd_user_id'] = $this->user_id;
 		$data['vnd_amount'] = $amount;
 		$data['vnd_date'] = $freq_value;
+		$data['vnd_is_future'] = $is_future;
 		$this->sthInsertDate->execute($data);
 	}
 
-	public function loadOncePerWeek($freq_value, $bill_desc, $amount, $freq_type="Day of Week") {
+	public function loadOncePerWeek($freq_value, $bill_desc, $amount, $freq_type="Day of Week", $is_future=0) {
 		global $db_conn;
 		if ($freq_type == "Day of Week") {
 			$date2 = strtotime($this->today);
@@ -205,13 +207,14 @@ class Bills {
 					$data['vnd_user_id'] = $this->user_id;
 					$data['vnd_amount'] = $amount;
 					$data['vnd_date'] = $use_date;
+					$data['vnd_is_future'] = $is_future;
 					$this->sthInsertDate->execute($data);
 				}
 				$each_date = $use_date;
 			}
 		}
 	}
-	public function loadEveryXWeeks($freq_value, $bill_desc, $amount, $freq_type="Starting From", $numWeeks=2) {
+	public function loadEveryXWeeks($freq_value, $bill_desc, $amount, $freq_type="Starting From", $numWeeks=2, $is_future=0) {
 	
 		global $db_conn;
 		
@@ -234,11 +237,52 @@ class Bills {
 					$data['vnd_user_id'] = $this->user_id;
 					$data['vnd_amount'] = $amount;
 					$data['vnd_date'] = $use_date;
+					$data['vnd_is_future'] = $is_future;
 					$this->sthInsertDate->execute($data);
 				}
 				$each_date = $use_date;
 			}
 		}
 	}
+
+	public function sendFutureCharges()
+	{
+		global $db_conn;
+
+		$date_from = date("Y-m-d");
+		$cur_day = intval(date("m"));
+		if ($cur_day < 15) {
+			$date_to = date("Y-m-t");
+		} else {
+			$date_to = date('Y-m-15 23:59:59', strtotime('next month'));
+		}
+
+		$email_content = "Hello, you have the following Appointments coming up in this paycheck, or the following: <br><br>";
+
+		$sql = "SELECT bd.vnd_bill_desc, bd.vnd_date, bd.vnd_amount
+				FROM vnd_bill_dates bd
+				WHERE vnd_is_future = 1
+				and vnd_date BETWEEN :date_from and :date_to ";
+
+		$stmt = $db_conn->prepare($sql);
+
+		$data = array(
+			"date_from" => $date_from,
+			"date_to" =>  $date_to
+		);
+		$stmt->execute($data);
+		$resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		foreach ($resultset as $getItem) {
+
+			$email_content .= "- " . $getItem['vnd_bill_desc'] . ", on " . date("m/d/Y", strtotime($getItem['vnd_date'])) . ", for the amount: $" . round($getItem['vnd_amount'], 2) . "<br>";
+		}
+
+		$headers = 'From: asimo124@yahoo.com' . "\r\n" .
+			'X-Mailer: PHP/' . phpversion();
+		$headers .= 'MIME-Version: 1.0' . "\r\n";
+		$headers .= 'Content-type: text/html; charset=iso-8859-1';
+		mail("ahawley@claimatic.com", "Appointments this Week" , $email_content, $headers);
+	}
+
 }
 ?>

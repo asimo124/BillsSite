@@ -31,6 +31,7 @@ foreach ($billDates as $getDate) {
 	$newDate = array();
 	$newDate['desc'] = $getDate['vnd_bill_desc'];
 	$newDate['amount'] = $getDate['vnd_amount'];
+	$newDate['is_future'] = $getDate['vnd_is_future'];
 	$key = strtotime(date("Y-m-d 00:00:00", strtotime($getDate['vnd_date'])));
 	$MyBills[$key][] = $newDate;
 }
@@ -84,6 +85,9 @@ while ($timestamp <= strtotime($end_date)) {
 			$bills_desc .= "<br>" . $getBill['desc'] . " - " . '<span class="use_money" >' . $getBill["amount"] . '</span>';
 		}
 		$full_cur_amount -= $getBill["amount"];
+	}
+	if ($getBill['is_future']) {
+		$get_day['is_future'] = "color: #0000FF; font-size: 14px; font-weight: bold;";
 	}
 	$get_day['desc'] = $bills_desc;
 	//if ($hasBills == true) {

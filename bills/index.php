@@ -156,7 +156,7 @@ function numberWithCommas (x) {
 			<div class="day_col col-md-2 col-sm-2 col-xs-4"  >
 				<span ><strong>{{Day}}</strong></span>
 				<div style="clear: both; height: 15px;" ></div>
-				{{{desc}}}
+				<span style="{{is_future}}" >{{{desc}}}</span>
 				<div style="clear: both; height: 7px;" ></div>
 				<strong style="color: #FF0000;">Balance:</strong> <span class="use_money" style="font-weight: bold;" >{{Balance}}</span>
 			</div>
