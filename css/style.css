@@ -1,0 +1,43 @@
+
+body, table, tr, th, td {
+
+    font-family: Verdana;
+    font-size: 13px;
+}
+
+.wrapper {
+    width: 1152px;
+    margin: 0 auto;
+}
+
+.login_container {
+    width: 600px;
+    margin: 50px auto 0;
+}
+
+.button {
+    background-color: #0077FF;
+    color: #FFF;
+    border-radius: 7px;
+    font-weight: bold;
+    padding: 7px 11px;
+}
+
+a.button:active {
+    text-decoration: none;
+}
+a.button:visited {
+    text-decoration: none;
+}
+a.button:link {
+    text-decoration: none;
+}
+a.button:hover {
+    text-decoration: none;
+}
+
+.message {
+    color: #FF0000;
+    font-weight: bold;
+}
+

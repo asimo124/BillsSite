@@ -2,6 +2,13 @@
 	include "../inc/includes.php";
 	include "../inc/Bills.php";
 
+$ip = $_SERVER['REMOTE_ADDR'];
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
+$ipArr = explode(".", $ip);
+$userAgentArr = explode(" ", $user_agent);
+$string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
+$hash_key = md5($string_to_hash);
+
 $query = "SELECT * FROM vnd_bills WHERE is_future = 1 ORDER BY vnd_frequency_value ";
 $sth = $db_conn->prepare($query);
 
@@ -98,11 +105,12 @@ a.btn {
 					<input type="text" name="amount[<?php echo $get_expense['vnd_id']; ?>]" id="amount<?php echo $get_expense['vnd_id']; ?>" value="<?php echo $get_expense['amount']; ?>" class="expenses_text" />
 				</td>
 				<td width="12%">
-					<a href="delete.php?vnd_id=<?php echo $get_expense['vnd_id']; ?>" class="delete btn" >Delete</a>
+					<a href="delete.php?vnd_id=<?php echo $get_expense['vnd_id']; ?>&hash_key_token_cs=<?php echo urlencode($hash_key); ?>" class="delete btn" >Delete</a>
 				</td>
 			</tr>
 		<?php endforeach; ?>
 		</table>
+		<input type="hidden" name="hash_key_token_cs" id="hash_key_token_cs" value="<?php echo $hash_key; ?>" />
 	</form>
 </div>
 

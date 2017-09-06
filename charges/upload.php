@@ -1,6 +1,13 @@
 <?php
 define(CURRENT_PATH, dirname(__FILE__));
 include "../inc/includes.php";
+
+$ip = $_SERVER['REMOTE_ADDR'];
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
+$ipArr = explode(".", $ip);
+$userAgentArr = explode(" ", $user_agent);
+$string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
+$hash_key = md5($string_to_hash);
 ?>
 <!DOCTYPE html>
 <html>
@@ -33,20 +40,14 @@ include "../inc/includes.php";
             <a href="/bills" >Bills</a> | <a href="/bills/admin" >Bills Admin</a> | <a href="cats/index.php" >Charge Categories</a> | <a href="/charges" >Chart</a>
             <div style="clear: both; height: 7px"></div>
 
-            <!-- Text input-->
             <div class="form-group">
-                <label class="col-md-4 control-label" for="textinput">Upload Charge File</label>
-                <div class="col-md-4">
-                    <input type="file" name="FName" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="textinput">OR Paste Code</label>
+                <label class="col-md-4 control-label" for="textinput">Paste Code</label>
                 <div class="col-md-4">
                     <textarea id="code" name="code" class="form-control input-md"></textarea
                 </div>
             </div>
         </fieldset>
+        <input type="hidden" name="hash_key_token_cs" id="hash_key_token_cs" value="<?php echo $hash_key; ?>" />
         <a href="javascript:void(0);" onclick="$('#frmUpload').submit();" class="btn btn-primary">Upload</a>
     </form>
 </div>

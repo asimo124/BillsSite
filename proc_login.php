@@ -1,5 +1,8 @@
 <?php
-include "../../inc/includes.php";
+include("inc/includes.php");
+
+$username           = isset($_REQUEST['username']) ? trim($_REQUEST['username']) : "";
+$password           = isset($_REQUEST['password']) ? ($_REQUEST['password']) : "";
 
 $hash_key_token_cs  = isset($_REQUEST['hash_key_token_cs']) ? ($_REQUEST['hash_key_token_cs']) : "";
 
@@ -15,13 +18,12 @@ if ($hash_key_token_cs != $hash_key) {
     die;
 }
 
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
-
-$sql = "DELETE FROM vnd_bills_charge_categories WHERE id = :id ";
-
-execQuery($sql, [
-    "id" =>  $id
-]);
-
-header("Location: index.php?Message=" . urlencode("You have deleted a category"));
-exit;
+if ($username == "alex" && $password == "clownfrog38") {
+    $_SESSION['user']['user_id'] = 1;
+    header("Location: /bills");
+    exit;
+} else {
+    header("Location: /login.php?Message=" . urlencode("You did not enter the correct username/password combination"));
+    exit;
+}
+?>

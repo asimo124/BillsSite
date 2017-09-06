@@ -2,6 +2,12 @@
 	include "../inc/includes.php";
 	include "../inc/Bills.php";
 
+$ip = $_SERVER['REMOTE_ADDR'];
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
+$ipArr = explode(".", $ip);
+$userAgentArr = explode(" ", $user_agent);
+$string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
+$hash_key = md5($string_to_hash);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -98,6 +104,7 @@ a.btn {
 		<a href="javascript:void(0);" onclick="$('#frmAdd').submit();" class="btn">Add</a>
 		<div class="clear" style="height: 12px;"></div>
 
+		<input type="hidden" name="hash_key_token_cs" id="hash_key_token_cs" value="<?php echo $hash_key; ?>" />
 		<a href="show_expenses.php">All Future Expenses</a>
 	</div>
 </form>

@@ -1,11 +1,38 @@
 <?php
+	ini_set("display_errors", 1);
 	include "../inc/includes.php";
 	include "../inc/Bills.php";
-	include "../inc/QueryUtils.php";
+
+$hash_key_token_cs  = isset($_REQUEST['hash_key_token_cs']) ? ($_REQUEST['hash_key_token_cs']) : "";
+
+$ip = $_SERVER['REMOTE_ADDR'];
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
+$ipArr = explode(".", $ip);
+$userAgentArr = explode(" ", $user_agent);
+$string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
+$hash_key = md5($string_to_hash);
+
+if ($hash_key_token_cs != $hash_key) {
+	echo "You do not have access to this page. Please contact Site Admin.";
+	die;
+}
+
 
 $vnd_bill 				= isset($_REQUEST['vnd_bill']) ? trim($_REQUEST['vnd_bill']) : "";
 $vnd_frequency_value 	= isset($_REQUEST['vnd_frequency_value']) ? ($_REQUEST['vnd_frequency_value']) : "";
 $amount 				= isset($_REQUEST['amount']) ? floatval($_REQUEST['amount']) : 0;
+
+$vnd_bill = isset($_REQUEST['vnd_bill']) ? trim($_REQUEST['vnd_bill']) : "";
+if (!validateTags($vnd_bill)) {
+	die("You have entered invalid content. Please re-enter");
+}
+$vnd_bill = strip_tags($vnd_bill);
+
+$vnd_frequency_value = isset($_REQUEST['vnd_frequency_value']) ? trim($_REQUEST['vnd_frequency_value']) : "";
+if (!validateTags($vnd_frequency_value)) {
+	die("You have entered invalid content. Please re-enter");
+}
+$vnd_frequency_value = strip_tags($vnd_frequency_value);
 
 $query = "INSERT INTO vnd_bills 
 ( vnd_user_id,  vnd_bill,  vnd_frequency_value,  amount,  vnd_is_auto,  vnd_frequency,  vnd_frequency_type,  vnd_entrydate,  multiplier,  is_future) VALUES 

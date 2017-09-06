@@ -1,6 +1,11 @@
 <?php
     include "../../inc/includes.php";
 
+if (!isset($_SESSION['user'])) {
+    header("Location: /login.php");
+    exit;
+}
+
 $curPage = isset($_REQUEST['curPage']) ? intval($_REQUEST['curPage']) : 0;
 $numPerPage = 10;
 if ($curPage < 1)

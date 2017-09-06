@@ -31,10 +31,10 @@ $resultset = getQuery($sql, [
 $totalCharges = 0;
 if (count($resultset) > 0) {
     $getResult = $resultset[0];
-    $totalCharges = $getResult['totalCharges'];
+    $totalCharges = floatval($getResult['totalCharges']);
 }
 
-$sql = "SELECT cc.cat_name, ROUND((SUM(c.charge) / " . $totalCharges . ") * 100) as percent
+$sql = "SELECT cc.cat_name, ROUND((SUM(ifnull(c.charge, 0)) / " . $totalCharges . ") * 100) as percent
         FROM vnd_bills_charges c
         INNER JOIN vnd_bills_charge_categories cc
           ON c.category_id = cc.id

@@ -2,6 +2,11 @@
     //ini_set("display_errors", 1);
     include "../../inc/includes.php";
 
+if (!isset($_SESSION['user'])) {
+    header("Location: /login.php");
+    exit;
+}
+
 $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value
         FROM vnd_bills ORDER BY amount DESC";
 $resultset = getQuery($sql);

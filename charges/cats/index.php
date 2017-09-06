@@ -4,6 +4,13 @@ include "../../inc/includes.php";
 
 $sql = "SELECT * FROM vnd_bills_charge_categories";
 $resultset = getQuery($sql);
+
+$ip = $_SERVER['REMOTE_ADDR'];
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
+$ipArr = explode(".", $ip);
+$userAgentArr = explode(" ", $user_agent);
+$string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
+$hash_key = md5($string_to_hash);
 ?>
 <!DOCTYPE html>
 <html>
@@ -81,6 +88,7 @@ $resultset = getQuery($sql);
                         <p>Are you sure you wish to delete this Category?</p>
                     </div>
                     <div class="modal-footer">
+                        <input type="hidden" name="hash_key_token_cs" id="hash_key_token_cs" value="<?php echo $hash_key; ?>" />
                         <button type="submit" class="btn btn-primary" id="save_del_btn" data-id="">Delete</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <input type="hidden" name="id" id="del_id" value="" />

@@ -2,6 +2,11 @@
 ini_set("display_errors", 1);
 include "../../inc/includes.php";
 
+if (!isset($_SESSION['user'])) {
+    header("Location: /login.php");
+    exit;
+}
+
 $vnd_bill = isset($_REQUEST['vnd_bill']) ? trim($_REQUEST['vnd_bill']) : "";
 $amount = isset($_REQUEST['amount']) ? floatval($_REQUEST['amount']) : 0;
 $vnd_is_auto = isset($_REQUEST['vnd_is_auto']) ? intval($_REQUEST['vnd_is_auto']) : 0;

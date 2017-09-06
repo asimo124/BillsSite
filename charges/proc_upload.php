@@ -5,9 +5,26 @@ include "../inc/includes.php";
 
 $days_range = 2;
 
+$hash_key_token_cs  = isset($_REQUEST['hash_key_token_cs']) ? ($_REQUEST['hash_key_token_cs']) : "";
+
+$ip = $_SERVER['REMOTE_ADDR'];
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
+$ipArr = explode(".", $ip);
+$userAgentArr = explode(" ", $user_agent);
+$string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
+$hash_key = md5($string_to_hash);
+
+if ($hash_key_token_cs != $hash_key) {
+    echo "You do not have access to this page. Please contact Site Admin.";
+    die;
+}
+
+
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     if (empty($_REQUEST['code'])) {
+        die("You did not paste any code");
+        /*/
         $file = array();
         foreach ($_FILES as $getFile) {
             $file = $getFile;
@@ -39,8 +56,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $file_path = $newPath;
             $content = file_get_contents($file_path);
         }
+        //*/
     } else {
         $content = isset($_REQUEST['code']) ? $_REQUEST['code'] : "";
+
+        if (!validateTags($content)) {
+            die("You have entered invalid content. Please re-enter");
+        }
+        $content = strip_tags($content);
     }
 
     $doc = new DOMDocument();

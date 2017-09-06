@@ -64,4 +64,15 @@ function formatCurrency($amount) {
 	$formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
 	return $formatter->formatCurrency($amount, 'USD');
 }
+
+function validateTags($str) {
+
+	if (strpos($str, "<") !== false || strpos($str, ">") !== false
+		|| strpos($str, "&gt;") !== false || strpos($str, "&lt;") !== false
+		|| strpos($str, "script") !== false)
+	{
+		return false;
+	}
+	return true;
+}
 ?>

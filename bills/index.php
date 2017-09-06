@@ -3,6 +3,14 @@
 	include "../inc/Bills.php";
 
 $user_id = 1;
+
+$ip = $_SERVER['REMOTE_ADDR'];
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
+$ipArr = explode(".", $ip);
+$userAgentArr = explode(" ", $user_agent);
+$string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
+$hash_key = md5($string_to_hash);
+
 ?>
 <!DOCTYPE html>
 <head>
@@ -49,7 +57,7 @@ $(document).ready(function() {
 
 	$('.send_form').click(function() {
 		$.ajax({
-			url: '/api/saveCurBalance.php?user_id=<?php echo $user_id; ?>&current_balance=' + $('#current_balance').val(),
+			url: '/api/saveCurBalance.php?user_id=<?php echo $user_id; ?>&current_balance=' + $('#current_balance').val() + '&hash_key_token_cs=<?php echo urlencode($hash_key); ?>',
 			type: "GET",
 			dataType: "json",
 			success: function (data) {
@@ -230,7 +238,7 @@ a.nav_links:hover {
 	<div style="clear: both; height: 0px;" ></div>
 
 	<div class="nav">
-		<a href="/charges" class="nav_links" >Chart</a> | <a href="/expenses" class="nav_links" >Add Expense</a> | <a href="/crons/loadDates.php" class="nav_links" >Dates CRON</a> | <a href="/charges/upload.php" class="nav_links" >Upload</a> | <a href="/charges/cats" class="nav_links" >Categories</a>
+		<a href="/charges" class="nav_links" >Chart</a> | <a href="/expenses" class="nav_links" >Add Expense</a> | <a href="/crons/loadDates.php" class="nav_links" >Dates CRON</a> | <a href="/charges/upload.php" class="nav_links" >Upload</a> | <a href="/charges/cats" class="nav_links" >Categories</a> | <a href="/logout.php" class="nav_links" >Logout</a>
 	</div>
 	<div style="clear: both; height: 7px"></div>
 

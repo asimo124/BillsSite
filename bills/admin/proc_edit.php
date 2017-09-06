@@ -1,6 +1,11 @@
 <?php
 include "../../inc/includes.php";
 
+if (!isset($_SESSION['user'])) {
+    header("Location: /login.php");
+    exit;
+}
+
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 $vnd_bill = isset($_REQUEST['vnd_bill']) ? trim($_REQUEST['vnd_bill']) : "";

@@ -1,6 +1,11 @@
 <?php
 include "../../inc/includes.php";
 
+if (!isset($_SESSION['user'])) {
+    header("Location: /login.php");
+    exit;
+}
+
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 $cat_name = isset($_REQUEST['cat_name']) ? trim($_REQUEST['cat_name']) : "";
 
