@@ -1,6 +1,11 @@
 <?php
 include "../../inc/includes.php";
 
+if (!isset($_SESSION['user'])) {
+    header("Location: /login.php");
+    exit;
+}
+
 $hash_key_token_cs  = isset($_REQUEST['hash_key_token_cs']) ? ($_REQUEST['hash_key_token_cs']) : "";
 
 $ip = $_SERVER['REMOTE_ADDR'];

@@ -2,6 +2,11 @@
 //ini_set("display_errors", 1);
 include "../../inc/includes.php";
 
+if (!isset($_SESSION['user'])) {
+    header("Location: /login.php");
+    exit;
+}
+
 $sql = "SELECT * FROM vnd_bills_charge_categories";
 $resultset = getQuery($sql);
 

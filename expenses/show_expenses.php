@@ -2,6 +2,11 @@
 	include "../inc/includes.php";
 	include "../inc/Bills.php";
 
+if (!isset($_SESSION['user'])) {
+	header("Location: /login.php");
+	exit;
+}
+
 $ip = $_SERVER['REMOTE_ADDR'];
 $user_agent = $_SERVER['HTTP_USER_AGENT'];
 $ipArr = explode(".", $ip);
