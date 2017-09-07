@@ -10,8 +10,12 @@ $ip = $_SERVER['REMOTE_ADDR'];
 $user_agent = $_SERVER['HTTP_USER_AGENT'];
 $ipArr = explode(".", $ip);
 $userAgentArr = explode(" ", $user_agent);
-$string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
+$string_to_hash = SALT2 . $userAgentArr[2] . SALT1 . $userAgentArr[0];
 $hash_key = md5($string_to_hash);
+
+echo "<pre>";
+echo "hash_key_token_cs: " . $hash_key_token_cs . "\n";
+echo "hash_key: " . $hash_key . "\n";
 
 if ($hash_key_token_cs != $hash_key) {
     echo "You do not have access to this page. Please contact Site Admin.";
