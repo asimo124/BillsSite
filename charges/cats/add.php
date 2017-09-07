@@ -10,7 +10,7 @@ $ip = $_SERVER['REMOTE_ADDR'];
 $user_agent = $_SERVER['HTTP_USER_AGENT'];
 $ipArr = explode(".", $ip);
 $userAgentArr = explode(" ", $user_agent);
-$string_to_hash = SALT2 . $userAgentArr[2] . SALT1 . $userAgentArr[0];
+$string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
 $hash_key = md5($string_to_hash);
 ?>
 <!DOCTYPE html>
