@@ -13,20 +13,12 @@ $userAgentArr = explode(" ", $user_agent);
 $string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
 $hash_key = md5($string_to_hash);
 
-echo "<pre>";
-echo "user_agent: " . $user_agent . "\n";
-echo "ip: " . $ip . "\n";
-
-echo "<pre>";
-echo "hash_key_token_cs: " . $hash_key_token_cs . "\n";
-echo "hash_key: " . $hash_key . "\n";
-
 if ($hash_key_token_cs != $hash_key) {
     echo "You do not have access to this page. Please contact Site Admin.";
     die;
 }
 
-if ($username == "alex" && $password == "clownfrog38") {
+if (($username == "alex" || $username == "Alex") && $password == "clownfrog38") {
     $_SESSION['user']['user_id'] = 1;
     header("Location: /bills");
     exit;

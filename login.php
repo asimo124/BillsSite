@@ -7,12 +7,6 @@ $ipArr = explode(".", $ip);
 $userAgentArr = explode(" ", $user_agent);
 $string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
 
-echo "<pre>";
-echo "user_agent: " . $user_agent . "\n";
-echo "ip: " . $ip . "\n\n";
-echo "string_to_hash: " . $string_to_hash . "\n";
-
-
 $hash_key = md5($string_to_hash);
 ?>
 <!DOCTYPE html>
@@ -23,6 +17,7 @@ $hash_key = md5($string_to_hash);
     <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 <div class="container">
@@ -32,6 +27,9 @@ $hash_key = md5($string_to_hash);
         <fieldset>
             <!-- Form Name -->
             <legend>Login</legend>
+            <?php if (isset($_REQUEST['Message'])) : ?>
+                <div class="alert alert-danger" ><?php echo $_REQUEST['Message']; ?></div>
+            <?php endif; ?>
 
             <!-- Text input-->
             <div class="row">
