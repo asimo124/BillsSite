@@ -166,14 +166,22 @@ class Bills {
 
 	public function loadOnce($freq_value, $bill_desc, $amount, $freq_type, $is_future=0) {
 		global $db_conn;
-		
+
 		$data = array();
 		$data['vnd_bill_desc'] = $bill_desc;
-		$data['vnd_user_id'] = $this->user_id;
-		$data['vnd_amount'] = $amount;
+		$data['user_id'] = $this->user_id;
 		$data['vnd_date'] = $freq_value;
-		$data['vnd_is_future'] = $is_future;
-		$this->sthInsertDate->execute($data);
+		$this->sthCheckDate->execute($data);
+		$HasDates = $this->sthCheckDate->fetchAll();
+		if (count($HasDates) == 0) {
+			$data = array();
+			$data['vnd_bill_desc'] = $bill_desc;
+			$data['vnd_user_id'] = $this->user_id;
+			$data['vnd_amount'] = $amount;
+			$data['vnd_date'] = $freq_value;
+			$data['vnd_is_future'] = $is_future;
+			$this->sthInsertDate->execute($data);
+		}
 	}
 
 	public function loadOncePerWeek($freq_value, $bill_desc, $amount, $freq_type="Day of Week", $is_future=0) {

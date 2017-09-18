@@ -1,0 +1,2 @@
+#Action application/x-pair-sphp /cgi-bin/php56.cgi
+#AddType application/x-pair-sphp .php

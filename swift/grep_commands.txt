@@ -1,0 +1,5 @@
+579  grep --color=always '\.truncate' login_models_new.txt | sed 's/[[:space:]]//g' | sed 's/\.truncate\(\)//g'
+581  grep --color=always '\.truncate' login_models_old.txt | sed 's/[[:space:]]//g' | sed 's/\.truncate\(\)//g' 
+
+586  grep -A 2 'DBUtils.isNewDB' login_models_old.txt | grep Data | sed 's/[[:space:]]//g' 
+587  grep -A 2 'DBUtils.isNewDB' login_models_new.txt | grep Data | sed 's/[[:space:]]//g' 

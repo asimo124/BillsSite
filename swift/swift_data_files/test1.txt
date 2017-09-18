@@ -1,0 +1,7 @@
+ $new_modeldata = json_decode(file_get_contents("http://alexhaw1.wwwss22.a2hosted.com/swift/swift_data_files/new_modeldata_fields.json"));
+ $new_models = json_decode(file_get_contents("http://alexhaw1.wwwss22.a2hosted.com/swift/swift_data_files/new_model_fields.json"));
+ $new_tables = json_decode(file_get_contents("http://alexhaw1.wwwss22.a2hosted.com/swift/swift_data_files/new_table_fields.json"));
+ 
+ $old_modeldata = json_decode(file_get_contents("http://alexhaw1.wwwss22.a2hosted.com/swift/swift_data_files/old_modeldata_fields.json"));
+ $old_models = json_decode(file_get_contents("http://alexhaw1.wwwss22.a2hosted.com/swift/swift_data_files/old_model_fields.json"));
+ $old_tables = json_decode(file_get_contents("http://alexhaw1.wwwss22.a2hosted.com/swift/swift_data_files/old_table_fields.json"));

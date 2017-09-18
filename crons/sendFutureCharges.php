@@ -10,5 +10,5 @@ $user_id = 1;
 $Bill = new Bills($numReps);
 $Bill->sendFutureCharges();
 
-echo "script completed. <a href='javascript:void(0);' onclick='window.history.back();' >Back</a>\n";
+echo "script completed. <a href='javascript:void(0);' onclick='window.history.back();' >Back</a>\n";	
 ?>

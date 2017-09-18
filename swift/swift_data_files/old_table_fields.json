@@ -1,0 +1,3422 @@
+{
+    "tbl_animal": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "animal_id": {
+            "method": "getAnimalId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "breeder_id": {
+            "method": "getBreederId()",
+            "type": "Int"
+        },
+        "animal_record_status": {
+            "method": "getAnimalRecordStatus()",
+            "type": "String"
+        },
+        "animal_name": {
+            "method": "getAnimalName()",
+            "type": "String"
+        },
+        "animal_sex": {
+            "method": "getAnimalSex()",
+            "type": "String"
+        },
+        "animal_sire": {
+            "method": "getAnimalSire()",
+            "type": "String"
+        },
+        "animal_dam": {
+            "method": "getAnimalDam()",
+            "type": "String"
+        },
+        "animal_hold_brand": {
+            "method": "getAnimalHoldBrand()",
+            "type": "String"
+        },
+        "animal_hold_brand_location": {
+            "method": "getAnimalHoldBrandLocation()",
+            "type": "String"
+        },
+        "animal_private_herd_id": {
+            "method": "getAnimalPrivateHerdId()",
+            "type": "String"
+        },
+        "animal_private_herd_id_location": {
+            "method": "getAnimalPrivateHerdIdLocation()",
+            "type": "String"
+        },
+        "animal_color_score": {
+            "method": "getAnimalColorScore()",
+            "type": "Int"
+        },
+        "animal_scurs_code": {
+            "method": "getAnimalScursCode()",
+            "type": "String"
+        },
+        "breed_code_1": {
+            "method": "getBreedCode1()",
+            "type": "String"
+        },
+        "breed_percentage_1": {
+            "method": "getBreedPercentage1()",
+            "type": "Double"
+        },
+        "breed_code_2": {
+            "method": "getBreedCode2()",
+            "type": "String"
+        },
+        "breed_percentage_2": {
+            "method": "getBreedPercentage2()",
+            "type": "Double"
+        },
+        "breed_code_3": {
+            "method": "getBreedCode3()",
+            "type": "String"
+        },
+        "breed_percentage_3": {
+            "method": "getBreedPercentage3()",
+            "type": "Double"
+        },
+        "breed_code_4": {
+            "method": "getBreedCode4()",
+            "type": "String"
+        },
+        "breed_percentage_4": {
+            "method": "getBreedPercentage4()",
+            "type": "Double"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "status_code": {
+            "method": "getStatusCode()",
+            "type": "Date"
+        },
+        "generation": {
+            "method": "getGENERATION()",
+            "type": "Date"
+        },
+        "certificate_filename": {
+            "method": "getCertificateFilename()",
+            "type": "String"
+        },
+        "work_order": {
+            "method": "getWorkOrder()",
+            "type": "String"
+        },
+        "foreign_association_registration": {
+            "method": "getForeignAssociationRegistration()",
+            "type": "String"
+        },
+        "foreign_registration_association": {
+            "method": "getForeignRegistrationAssociation()",
+            "type": "String"
+        },
+        "status_code_date": {
+            "method": "getStatusCodeDate()",
+            "type": "Date"
+        },
+        "international_id": {
+            "method": "getInternationalId()",
+            "type": "String"
+        },
+        "eid": {
+            "method": "getEID()",
+            "type": "String"
+        },
+        "metal_ear_tag": {
+            "method": "getMetalEarTag()",
+            "type": "String"
+        },
+        "other_id": {
+            "method": "getOtherId()",
+            "type": "String"
+        },
+        "is_registered": {
+            "method": "getIsRegistered()",
+            "type": "Int"
+        }
+    },
+    "tbl_animal_assessment": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "animal_assessment_id": {
+            "method": "getAnimalAssessmentId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "owner_id": {
+            "method": "getOwnerId()",
+            "type": "Int"
+        },
+        "assessment_year": {
+            "method": "getAssessmentYear()",
+            "type": "Int"
+        },
+        "assessment_season": {
+            "method": "getAssessmentSeason()",
+            "type": "String"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "calf_registration": {
+            "method": "getCalfRegistration()",
+            "type": "Date"
+        },
+        "calf_registration_date": {
+            "method": "getCalfRegistrationDate()",
+            "type": "Date"
+        },
+        "calf_transfer_date": {
+            "method": "getCalfTransferDate()",
+            "type": "Date"
+        },
+        "invoice_id": {
+            "method": "getInvoiceId()",
+            "type": "Int"
+        },
+        "work_order": {
+            "method": "getWorkOrder()",
+            "type": "Int"
+        },
+        "validation_date": {
+            "method": "getValidationDate()",
+            "type": "Date"
+        },
+        "animal_sex": {
+            "method": "getAnimalSex()",
+            "type": "String"
+        },
+        "confirmed_by": {
+            "method": "getConfirmedBy()",
+            "type": "String"
+        },
+        "confirmed_on": {
+            "method": "getConfirmedOn()",
+            "type": "Date"
+        },
+        "non_calving_status_code": {
+            "method": "getNonCalvingStatusCode()",
+            "type": "Int"
+        },
+        "assessment_invoiced_to": {
+            "method": "getAssessmentInvoicedTo()",
+            "type": "Int"
+        },
+        "calf_wean_date": {
+            "method": "getCalfWeanDate()",
+            "type": "Date"
+        },
+        "calf_prewean_disposal_code": {
+            "method": "getCalfPreweanDisposalCode()",
+            "type": "Int"
+        }
+    },
+    "tbl_animal_data_birth": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "contemporary_group": {
+            "method": "getContemporaryGroup()",
+            "type": "String"
+        },
+        "management_group": {
+            "method": "getManagementGroup()",
+            "type": "String"
+        },
+        "animal_service_type": {
+            "method": "getAnimalServiceType()",
+            "type": "String"
+        },
+        "birth_date": {
+            "method": "getBirthDate()",
+            "type": "Date"
+        },
+        "birth_weight": {
+            "method": "getBirthWeight()",
+            "type": "Double"
+        },
+        "animal_sex": {
+            "method": "getAnimalSex()",
+            "type": "String"
+        },
+        "twin_code": {
+            "method": "getTwinCode()",
+            "type": "String"
+        },
+        "calving_ease": {
+            "method": "getCalvingEase()",
+            "type": "String"
+        },
+        "udder_score_suspension": {
+            "method": "getUdderScoreSuspension()",
+            "type": "String"
+        },
+        "udder_score_teat_size": {
+            "method": "getUdderScoreTeatSize()",
+            "type": "String"
+        },
+        "natural_breeding_agreement": {
+            "method": "getNaturalBreedingAgreement()",
+            "type": "Int"
+        },
+        "breeding_agreement_location": {
+            "method": "getBreedingAgreementLocation()",
+            "type": "String"
+        },
+        "et_flush_date": {
+            "method": "getEtFlushDate()",
+            "type": "Date"
+        },
+        "et_transfer_date": {
+            "method": "getEtTransferDate()",
+            "type": "Date"
+        },
+        "recipient_dam_registration": {
+            "method": "getRecipientDamRegistration()",
+            "type": "String"
+        },
+        "recipient_dam_animal_tattoo": {
+            "method": "getRecipientDamAnimalTattoo()",
+            "type": "String"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "version": {
+            "method": "getVERSION()",
+            "type": "Int"
+        },
+        "birth_weight_adj": {
+            "method": "getBirthWeightAdj()",
+            "type": "Double"
+        },
+        "sub_contemporary_group": {
+            "method": "getSubContemporaryGroup()",
+            "type": "Int"
+        },
+        "herd_id": {
+            "method": "getHerdId()",
+            "type": "String"
+        },
+        "inspector_name": {
+            "method": "getInspectorName()",
+            "type": "String"
+        },
+        "inspector_id": {
+            "method": "getInspectorId()",
+            "type": "Int"
+        },
+        "bw_ratio": {
+            "method": "getBwRatio()",
+            "type": "Int"
+        },
+        "premise_id": {
+            "method": "getPremiseId()",
+            "type": "String"
+        },
+        "pasture_id": {
+            "method": "getPastureId()",
+            "type": "String"
+        },
+        "work_order": {
+            "method": "getWorkOrder()",
+            "type": "String"
+        },
+        "pre_contemporary_group": {
+            "method": "getPreContemporaryGroup()",
+            "type": "Int"
+        },
+        "calving_season": {
+            "method": "getCalvingSeason()",
+            "type": "Int"
+        },
+        "commit_lock_id": {
+            "method": "getCommitLockId()",
+            "type": "Int"
+        },
+        "age_of_dam": {
+            "method": "getAgeOfDam()",
+            "type": "Int"
+        },
+        "inventory_season": {
+            "method": "getInventorySeason()",
+            "type": "String"
+        },
+        "eid": {
+            "method": "getEID()",
+            "type": "String"
+        }
+    },
+    "tbl_animal_data_carcass": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "carcass_id": {
+            "method": "getCarcassId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "carcass_tag": {
+            "method": "getCarcassTag()",
+            "type": "String"
+        },
+        "animal_sire": {
+            "method": "getAnimalSire()",
+            "type": "String"
+        },
+        "birth_date": {
+            "method": "getBirthDate()",
+            "type": "Date"
+        },
+        "kill_date": {
+            "method": "getKillDate()",
+            "type": "Date"
+        },
+        "contemporary_group": {
+            "method": "getContemporaryGroup()",
+            "type": "String"
+        },
+        "animal_sex": {
+            "method": "getAnimalSex()",
+            "type": "String"
+        },
+        "cohort_group": {
+            "method": "getCohortGroup()",
+            "type": "String"
+        },
+        "hot_carcass_weight": {
+            "method": "getHotCarcassWeight()",
+            "type": "Int"
+        },
+        "marbling_score": {
+            "method": "getMarblingScore()",
+            "type": "String"
+        },
+        "quality_grade": {
+            "method": "getQualityGrade()",
+            "type": "String"
+        },
+        "pyg": {
+            "method": "getPYG()",
+            "type": "Double"
+        },
+        "fat_thickness": {
+            "method": "getFatThickness()",
+            "type": "Double"
+        },
+        "ribeye_area": {
+            "method": "getRibeyeArea()",
+            "type": "Double"
+        },
+        "kph": {
+            "method": "getKPH()",
+            "type": "Int"
+        },
+        "internal_fat": {
+            "method": "getInternalFat()",
+            "type": "Double"
+        },
+        "yield_grade": {
+            "method": "getYieldGrade()",
+            "type": "Double"
+        },
+        "days_on_feed": {
+            "method": "getDaysOnFeed()",
+            "type": "Int"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_date": {
+            "method": "getCreateDate()",
+            "type": "Date"
+        }
+    },
+    "tbl_animal_data_mature": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "measurement_date": {
+            "method": "getMeasurementDate()",
+            "type": "Date"
+        },
+        "weight": {
+            "method": "getWEIGHT()",
+            "type": "Int"
+        },
+        "height": {
+            "method": "getHEIGHT()",
+            "type": "Double"
+        },
+        "body_condition_score": {
+            "method": "getBodyConditionScore()",
+            "type": "Int"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_date": {
+            "method": "getUpdateDate()",
+            "type": "Date"
+        },
+        "work_order": {
+            "method": "getWorkOrder()",
+            "type": "String"
+        },
+        "commit_lock_id": {
+            "method": "getCommitLockId()",
+            "type": "Int"
+        },
+        "contemporary_group": {
+            "method": "getContemporaryGroup()",
+            "type": "Int"
+        },
+        "sub_contemporary_group": {
+            "method": "getSubContemporaryGroup()",
+            "type": "Int"
+        },
+        "premise_id": {
+            "method": "getPremiseId()",
+            "type": "String"
+        },
+        "pasture_id": {
+            "method": "getPastureId()",
+            "type": "String"
+        },
+        "management_group": {
+            "method": "getManagementGroup()",
+            "type": "Int"
+        },
+        "feed_code": {
+            "method": "getFeedCode()",
+            "type": "Int"
+        }
+    },
+    "tbl_animal_data_misc": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "weight": {
+            "method": "getWEIGHT()",
+            "type": "Int"
+        },
+        "measurement_date": {
+            "method": "getMeasurementDate()",
+            "type": "Date"
+        },
+        "rump_fat": {
+            "method": "getRumpFat()",
+            "type": "Double"
+        },
+        "body_condition_score": {
+            "method": "getBodyConditionScore()",
+            "type": "Int"
+        },
+        "measurement_type": {
+            "method": "getMeasurementType()",
+            "type": "String"
+        },
+        "measurement_diameter": {
+            "method": "getMeasurementDiameter()",
+            "type": "Double"
+        },
+        "days_bred": {
+            "method": "getDaysBred()",
+            "type": "String"
+        }
+    },
+    "tbl_animal_data_other_weight": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "measurement_date": {
+            "method": "getMeasurementDate()",
+            "type": "Date"
+        },
+        "weight": {
+            "method": "getWEIGHT()",
+            "type": "Int"
+        },
+        "height": {
+            "method": "getHEIGHT()",
+            "type": "Int"
+        },
+        "body_condition_score": {
+            "method": "getBodyConditionScore()",
+            "type": "Int"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_date": {
+            "method": "getUpdateDate()",
+            "type": "Date"
+        },
+        "work_order": {
+            "method": "getWorkOrder()",
+            "type": "String"
+        },
+        "commit_lock_id": {
+            "method": "getCommitLockId()",
+            "type": "String"
+        },
+        "contemporary_group": {
+            "method": "getContemporaryGroup()",
+            "type": "Int"
+        },
+        "sub_contemporary_group": {
+            "method": "getSubContemporaryGroup()",
+            "type": "Int"
+        },
+        "premise_id": {
+            "method": "getPremiseId()",
+            "type": "String"
+        },
+        "pasture_id": {
+            "method": "getPastureId()",
+            "type": "String"
+        },
+        "management_group": {
+            "method": "getManagementGroup()",
+            "type": "Int"
+        },
+        "feed_code": {
+            "method": "getFeedCode()",
+            "type": "Int"
+        },
+        "phn": {
+            "method": "getPHN()",
+            "type": "String"
+        },
+        "frame_score": {
+            "method": "getFrameScore()",
+            "type": "Double"
+        }
+    },
+    "tbl_animal_data_ultrasound": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "ribeye_area": {
+            "method": "getRibeyeArea()",
+            "type": "Double"
+        },
+        "backfat_thickness": {
+            "method": "getBackfatThickness()",
+            "type": "Double"
+        },
+        "intramuscular_fat": {
+            "method": "getIntramuscularFat()",
+            "type": "Double"
+        },
+        "rump_fat": {
+            "method": "getRumpFat()",
+            "type": "Double"
+        },
+        "management_group": {
+            "method": "getManagementGroup()",
+            "type": "String"
+        },
+        "technician": {
+            "method": "getTECHNICIAN()",
+            "type": "String"
+        },
+        "hardware": {
+            "method": "getHARDWARE()",
+            "type": "String"
+        },
+        "software": {
+            "method": "getSOFTWARE()",
+            "type": "String"
+        },
+        "measurement_date": {
+            "method": "getMeasurementDate()",
+            "type": "Date"
+        },
+        "ultrasound_weight": {
+            "method": "getUltrasoundWeight()",
+            "type": "Double"
+        },
+        "contemporary_group": {
+            "method": "getContemporaryGroup()",
+            "type": "Int"
+        },
+        "ribeye_area_adj": {
+            "method": "getRibeyeAreaAdj()",
+            "type": "Double"
+        },
+        "backfat_thickness_adj": {
+            "method": "getBackfatThicknessAdj()",
+            "type": "Double"
+        },
+        "intramuscular_fat_adj": {
+            "method": "getIntramuscularFatAdj()",
+            "type": "Double"
+        },
+        "animal_sex": {
+            "method": "getAnimalSex()",
+            "type": "String"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "sub_contemporary_group": {
+            "method": "getSubContemporaryGroup()",
+            "type": "Int"
+        },
+        "herd_id": {
+            "method": "getHerdId()",
+            "type": "Int"
+        },
+        "premise_id": {
+            "method": "getPremiseId()",
+            "type": "String"
+        },
+        "pasture_id": {
+            "method": "getPastureId()",
+            "type": "String"
+        },
+        "work_order": {
+            "method": "getWorkOrder()",
+            "type": "String"
+        },
+        "scrotal_circumference": {
+            "method": "getScrotalCircumference()",
+            "type": "Double"
+        },
+        "scrotal_circumference_adj": {
+            "method": "getScrotalCircumferenceAdj()",
+            "type": "Double"
+        },
+        "pre_contemporary_group": {
+            "method": "getPreContemporaryGroup()",
+            "type": "Int"
+        },
+        "commit_lock_id": {
+            "method": "getCommitLockId()",
+            "type": "Int"
+        },
+        "season": {
+            "method": "getSEASON()",
+            "type": "Int"
+        },
+        "rea_ratio": {
+            "method": "getReaRatio()",
+            "type": "Int"
+        },
+        "imf_ratio": {
+            "method": "getImfRatio()",
+            "type": "Int"
+        },
+        "fat_ratio": {
+            "method": "getFatRatio()",
+            "type": "Int"
+        },
+        "hip_height": {
+            "method": "getHipHeight()",
+            "type": "Int"
+        },
+        "frame_score": {
+            "method": "getFrameScore()",
+            "type": "Double"
+        }
+    },
+    "tbl_animal_data_wean": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "wean_date": {
+            "method": "getWeanDate()",
+            "type": "Date"
+        },
+        "wean_weight": {
+            "method": "getWeanWeight()",
+            "type": "Double"
+        },
+        "contemporary_group": {
+            "method": "getContemporaryGroup()",
+            "type": "Int"
+        },
+        "management_group": {
+            "method": "getManagementGroup()",
+            "type": "Int"
+        },
+        "feed_code": {
+            "method": "getFeedCode()",
+            "type": "Int"
+        },
+        "animal_sex": {
+            "method": "getAnimalSex()",
+            "type": "String"
+        },
+        "hip_height_old": {
+            "method": "getHipHeightOld()",
+            "type": "Double"
+        },
+        "conformation_score": {
+            "method": "getConformationScore()",
+            "type": "Int"
+        },
+        "sheath_score": {
+            "method": "getSheathScore()",
+            "type": "Int"
+        },
+        "navel_score": {
+            "method": "getNavelScore()",
+            "type": "Int"
+        },
+        "wean_weight_adj": {
+            "method": "getWeanWeightAdj()",
+            "type": "Double"
+        },
+        "herd_id": {
+            "method": "getHerdId()",
+            "type": "String"
+        },
+        "sub_contemporary_group": {
+            "method": "getSubContemporaryGroup()",
+            "type": "Int"
+        },
+        "ww_ratio": {
+            "method": "getWwRatio()",
+            "type": "Double"
+        },
+        "premise_id": {
+            "method": "getPremiseId()",
+            "type": "String"
+        },
+        "pasture_id": {
+            "method": "getPastureId()",
+            "type": "String"
+        },
+        "temper_score": {
+            "method": "getTemperScore()",
+            "type": "Int"
+        },
+        "scrotal_circumference": {
+            "method": "getScrotalCircumference()",
+            "type": "Double"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "frame_score": {
+            "method": "getFrameScore()",
+            "type": "Double"
+        },
+        "work_order": {
+            "method": "getWorkOrder()",
+            "type": "String"
+        },
+        "scrotal_circumference_adj": {
+            "method": "getScrotalCircumferenceAdj()",
+            "type": "Double"
+        },
+        "pre_contemporary_group": {
+            "method": "getPreContemporaryGroup()",
+            "type": "Int"
+        },
+        "hip_height": {
+            "method": "getHipHeight()",
+            "type": "Double"
+        },
+        "commit_lock_id": {
+            "method": "getCommitLockId()",
+            "type": "Int"
+        },
+        "season": {
+            "method": "getSEASON()",
+            "type": "Int"
+        }
+    },
+    "tbl_animal_data_year": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "year_date": {
+            "method": "getYearDate()",
+            "type": "Date"
+        },
+        "year_weight": {
+            "method": "getYearWeight()",
+            "type": "Double"
+        },
+        "contemporary_group": {
+            "method": "getContemporaryGroup()",
+            "type": "Int"
+        },
+        "management_group": {
+            "method": "getManagementGroup()",
+            "type": "Int"
+        },
+        "feed_code": {
+            "method": "getFeedCode()",
+            "type": "Int"
+        },
+        "animal_sex": {
+            "method": "getAnimalSex()",
+            "type": "String"
+        },
+        "year_weight_adj": {
+            "method": "getYearWeightAdj()",
+            "type": "Double"
+        },
+        "herd_id": {
+            "method": "getHerdId()",
+            "type": "String"
+        },
+        "sub_contemporary_group": {
+            "method": "getSubContemporaryGroup()",
+            "type": "Int"
+        },
+        "stage_code": {
+            "method": "getStageCode()",
+            "type": "String"
+        },
+        "hip_height_old": {
+            "method": "getHipHeightOld()",
+            "type": "Double"
+        },
+        "conformation_score": {
+            "method": "getConformationScore()",
+            "type": "Int"
+        },
+        "sheath_score": {
+            "method": "getSheathScore()",
+            "type": "Int"
+        },
+        "navel_score": {
+            "method": "getNavelScore()",
+            "type": "Int"
+        },
+        "yw_ratio": {
+            "method": "getYwRatio()",
+            "type": "Double"
+        },
+        "premise_id": {
+            "method": "getPremiseId()",
+            "type": "String"
+        },
+        "pasture_id": {
+            "method": "getPastureId()",
+            "type": "String"
+        },
+        "yearling_age_range": {
+            "method": "getYearlingAgeRange()",
+            "type": "String"
+        },
+        "scrotal_circumference": {
+            "method": "getScrotalCircumference()",
+            "type": "Double"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "temper_score": {
+            "method": "getTemperScore()",
+            "type": "Int"
+        },
+        "avg_daily_gain": {
+            "method": "getAvgDailyGain()",
+            "type": "Double"
+        },
+        "frame_score": {
+            "method": "getFrameScore()",
+            "type": "Double"
+        },
+        "work_order": {
+            "method": "getWorkOrder()",
+            "type": "String"
+        },
+        "scrotal_circumference_adj": {
+            "method": "getScrotalCircumferenceAdj()",
+            "type": "Double"
+        },
+        "pre_contemporary_group": {
+            "method": "getPreContemporaryGroup()",
+            "type": "Int"
+        },
+        "hip_height": {
+            "method": "getHipHeight()",
+            "type": "Double"
+        },
+        "commit_lock_id": {
+            "method": "getCommitLockId()",
+            "type": "Int"
+        },
+        "season": {
+            "method": "getSEASON()",
+            "type": "Int"
+        },
+        "post_weaning_gain": {
+            "method": "getPostWeaningGain()",
+            "type": "Double"
+        }
+    },
+    "tbl_animal_health": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "animal_health_id": {
+            "method": "getAnimalHealthId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "date_administered": {
+            "method": "getDateAdministered()",
+            "type": "Date"
+        },
+        "product_name": {
+            "method": "getProductName()",
+            "type": "String"
+        },
+        "serial_number": {
+            "method": "getSerialNumber()",
+            "type": "String"
+        },
+        "dosage": {
+            "method": "getDOSAGE()",
+            "type": "String"
+        },
+        "application_location": {
+            "method": "getApplicationLocation()",
+            "type": "String"
+        },
+        "withdrawal_period": {
+            "method": "getWithdrawalPeriod()",
+            "type": "String"
+        },
+        "administered_by": {
+            "method": "getAdministeredBy()",
+            "type": "String"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "lot_number": {
+            "method": "getLotNumber()",
+            "type": "String"
+        },
+        "application_method": {
+            "method": "getApplicationMethod()",
+            "type": "String"
+        },
+        "expiration_date": {
+            "method": "getExpirationDate()",
+            "type": "String"
+        }
+    },
+    "tbl_animal_heat": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "pk_id": {
+            "method": "getPkId()",
+            "type": "Int"
+        },
+        "owner_id": {
+            "method": "getOwnerId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "animal_phn": {
+            "method": "getAnimalPhn()",
+            "type": "String"
+        },
+        "heat_date": {
+            "method": "getHeatDate()",
+            "type": "Date"
+        },
+        "am_pm": {
+            "method": "getAmPm()",
+            "type": "String"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        }
+    },
+    "tbl_animal_notes": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "comment_id": {
+            "method": "getCommentId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "comment": {
+            "method": "getCOMMENT()",
+            "type": "String"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "deleted_flag": {
+            "method": "getDeletedFlag()",
+            "type": "Int"
+        },
+        "flag_notification": {
+            "method": "getFlagNotification()",
+            "type": "Int"
+        },
+        "flag_culled": {
+            "method": "getFlagCulled()",
+            "type": "Int"
+        }
+    },
+    "tbl_animal_location": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "animal_location_id": {
+            "method": "getAnimalLocationId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "pasture_id": {
+            "method": "getPastureId()",
+            "type": "String"
+        },
+        "move_in_date": {
+            "method": "getMoveInDate()",
+            "type": "Date"
+        },
+        "move_out_date": {
+            "method": "getMoveOutDate()",
+            "type": "Date"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "can_breed": {
+            "method": "getCanBreed()",
+            "type": "Int"
+        }
+    },
+    "tbl_animal_pen_location": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "pk_id": {
+            "method": "getPkId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "member_id": {
+            "method": "getMemberId()",
+            "type": "String"
+        },
+        "pen_id": {
+            "method": "getPenId()",
+            "type": "Int"
+        },
+        "move_in_date": {
+            "method": "getMoveInDate()",
+            "type": "Date"
+        },
+        "move_out_date": {
+            "method": "getMoveOutDate()",
+            "type": "Date"
+        },
+        "expired": {
+            "method": "getEXPIRED()",
+            "type": "Int"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        }
+    },
+    "tbl_animal_photo": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "pk_id": {
+            "method": "getPkId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "photo": {
+            "method": "getPHOTO()",
+            "type": "String"
+        },
+        "is_primary": {
+            "method": "getIsPrimary()",
+            "type": "Int"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "hide_from_rotation": {
+            "method": "getHideFromRotation()",
+            "type": "Int"
+        },
+        "comment": {
+            "method": "getCOMMENT()",
+            "type": "String"
+        }
+    },
+    "tbl_animal_sync": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "pk_id": {
+            "method": "getPkId()",
+            "type": "Int"
+        },
+        "owner_id": {
+            "method": "getOwnerId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "animal_phn": {
+            "method": "getAnimalPhn()",
+            "type": "String"
+        },
+        "sync_date": {
+            "method": "getSyncDate()",
+            "type": "Date"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "comment": {
+            "method": "getCOMMENT()",
+            "type": "String"
+        }
+    },
+    "codes_body_condition": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "body_condition_score": {
+            "method": "getBodyConditionScore()",
+            "type": "Int"
+        },
+        "body_condition_text": {
+            "method": "getBodyConditionText()",
+            "type": "String"
+        }
+    },
+    "codes_breed": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "breed_id": {
+            "method": "getBreedId()",
+            "type": "String"
+        },
+        "breed_name": {
+            "method": "getBreedName()",
+            "type": "String"
+        },
+        "breed": {
+            "method": "getBREED()",
+            "type": "String"
+        }
+    },
+    "codes_calving_ease": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "calving_ease_id": {
+            "method": "getCalvingEaseId()",
+            "type": "String"
+        },
+        "calving_ease_text": {
+            "method": "getCalvingEaseText()",
+            "type": "String"
+        }
+    },
+    "codes_color_score": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "color_score_id": {
+            "method": "getColorScoreId()",
+            "type": "Int"
+        },
+        "color_score_text": {
+            "method": "getColorScoreText()",
+            "type": "String"
+        }
+    },
+    "codes_disposal": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "disposal": {
+            "method": "getDISPOSAL()",
+            "type": "Int"
+        },
+        "disposal_stat": {
+            "method": "getDisposalStat()",
+            "type": "String"
+        },
+        "disposal_text": {
+            "method": "getDisposalText()",
+            "type": "String"
+        }
+    },
+    "codes_management": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "management": {
+            "method": "getMANAGEMENT()",
+            "type": "Int"
+        },
+        "management_text": {
+            "method": "getManagementText()",
+            "type": "String"
+        }
+    },
+    "codes_navel_score": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "navel_score_id": {
+            "method": "getNavelScoreId()",
+            "type": "String"
+        },
+        "navel_score_text": {
+            "method": "getNavelScoreText()",
+            "type": "String"
+        }
+    },
+    "codes_scur_score": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "scur_score": {
+            "method": "getScurScore()",
+            "type": "String"
+        },
+        "scur_score_text": {
+            "method": "getScurScoreText()",
+            "type": "String"
+        },
+        "scur": {
+            "method": "getSCUR()",
+            "type": "String"
+        }
+    },
+    "codes_sheath_score": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "sheath_score_id": {
+            "method": "getSheathScoreId()",
+            "type": "String"
+        },
+        "sheath_score_text": {
+            "method": "getSheathScoreText()",
+            "type": "String"
+        }
+    },
+    "codes_temper_score": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "temper_score_id": {
+            "method": "getTemperScoreId()",
+            "type": "String"
+        },
+        "temper_score_text": {
+            "method": "getTemperScoreText()",
+            "type": "String"
+        }
+    },
+    "codes_twin_code": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "twin_code_id": {
+            "method": "getTwinCodeId()",
+            "type": "Int"
+        },
+        "twin_code_text": {
+            "method": "getTwinCodeText()",
+            "type": "String"
+        }
+    },
+    "codes_udder_score_suspension": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "suspension_id": {
+            "method": "getSuspensionId()",
+            "type": "String"
+        },
+        "suspension_text": {
+            "method": "getSuspensionText()",
+            "type": "String"
+        }
+    },
+    "codes_udder_score_teat_size": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "teat_size_id": {
+            "method": "getTeatSizeId()",
+            "type": "String"
+        },
+        "teat_size_text": {
+            "method": "getTeatSizeText()",
+            "type": "String"
+        }
+    },
+    "tbl_breeding_ai": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "breeding_ai_id": {
+            "method": "getBreedingAiId()",
+            "type": "Int"
+        },
+        "cow_owner_id": {
+            "method": "getCowOwnerId()",
+            "type": "Int"
+        },
+        "old_owner_id": {
+            "method": "getOldOwnerId()",
+            "type": "Int"
+        },
+        "bull_registration": {
+            "method": "getBullRegistration()",
+            "type": "String"
+        },
+        "ai_date": {
+            "method": "getAiDate()",
+            "type": "Date"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "cow_registration": {
+            "method": "getCowRegistration()",
+            "type": "String"
+        },
+        "work_order": {
+            "method": "getWorkOrder()",
+            "type": "String"
+        },
+        "calf": {
+            "method": "getCALF()",
+            "type": "String"
+        },
+        "non_calving_reason": {
+            "method": "getNonCalvingReason()",
+            "type": "String"
+        },
+        "palpation_result": {
+            "method": "getPalpationResult()",
+            "type": "String"
+        },
+        "palpation_date": {
+            "method": "getPalpationDate()",
+            "type": "Date"
+        }
+    },
+    "tbl_breeding_et": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "breeding_et_id": {
+            "method": "getBreedingEtId()",
+            "type": "Int"
+        },
+        "cow_owner_id": {
+            "method": "getCowOwnerId()",
+            "type": "Int"
+        },
+        "old_owner_id": {
+            "method": "getOldOwnerId()",
+            "type": "Int"
+        },
+        "bull_registration": {
+            "method": "getBullRegistration()",
+            "type": "String"
+        },
+        "transfer_date": {
+            "method": "getTransferDate()",
+            "type": "Date"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "cow_registration": {
+            "method": "getCowRegistration()",
+            "type": "String"
+        },
+        "recip_registration": {
+            "method": "getRecipRegistration()",
+            "type": "String"
+        },
+        "work_order": {
+            "method": "getWorkOrder()",
+            "type": "String"
+        },
+        "calf": {
+            "method": "getCALF()",
+            "type": "String"
+        },
+        "non_calving_reason": {
+            "method": "getNonCalvingReason()",
+            "type": "String"
+        },
+        "flush_date": {
+            "method": "getFlushDate()",
+            "type": "Date"
+        },
+        "palpation_result": {
+            "method": "getPalpationResult()",
+            "type": "String"
+        },
+        "palpation_date": {
+            "method": "getPalpationDate()",
+            "type": "Date"
+        }
+    },
+    "tbl_breeding_agreement": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "breeding_agreement_id": {
+            "method": "getBreedingAgreementId()",
+            "type": "Int"
+        },
+        "cow_owner_id": {
+            "method": "getCowOwnerId()",
+            "type": "Int"
+        },
+        "bull_owner_id": {
+            "method": "getBullOwnerId()",
+            "type": "Int"
+        },
+        "bull_registration": {
+            "method": "getBullRegistration()",
+            "type": "String"
+        },
+        "begin_date": {
+            "method": "getBeginDate()",
+            "type": "Date"
+        },
+        "end_date": {
+            "method": "getEndDate()",
+            "type": "Date"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "cow_registration": {
+            "method": "getCowRegistration()",
+            "type": "String"
+        },
+        "work_order": {
+            "method": "getWorkOrder()",
+            "type": "String"
+        },
+        "calf": {
+            "method": "getCALF()",
+            "type": "String"
+        },
+        "non_calving_reason": {
+            "method": "getNonCalvingReason()",
+            "type": "String"
+        },
+        "palpation_result": {
+            "method": "getPalpationResult()",
+            "type": "String"
+        },
+        "palpation_date": {
+            "method": "getPalpationDate()",
+            "type": "Date"
+        },
+        "pasture_id": {
+            "method": "getPastureId()",
+            "type": "Int"
+        }
+    },
+    "tbl_embryo_inventory": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "pk_id": {
+            "method": "getPkId()",
+            "type": "Int"
+        },
+        "member_id": {
+            "method": "getMemberId()",
+            "type": "Int"
+        },
+        "dam_registration": {
+            "method": "getDamRegistration()",
+            "type": "String"
+        },
+        "sire_registration": {
+            "method": "getSireRegistration()",
+            "type": "String"
+        },
+        "tank_id": {
+            "method": "getTankId()",
+            "type": "String"
+        },
+        "canister_id": {
+            "method": "getCanisterId()",
+            "type": "String"
+        },
+        "cane_code": {
+            "method": "getCaneCode()",
+            "type": "String"
+        },
+        "exportable": {
+            "method": "getEXPORTABLE()",
+            "type": "Int"
+        },
+        "quantity": {
+            "method": "getQUANTITY()",
+            "type": "Int"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "flush_date": {
+            "method": "getFlushDate()",
+            "type": "Date"
+        },
+        "for_sale_private_treaty": {
+            "method": "getForSalePrivateTreaty()",
+            "type": "Int"
+        },
+        "private_treaty_date": {
+            "method": "getPrivateTreatyDate()",
+            "type": "Date"
+        },
+        "seller_comments": {
+            "method": "getSellerComments()",
+            "type": "String"
+        },
+        "sale_price": {
+            "method": "getSalePrice()",
+            "type": "Int"
+        },
+        "breeder_id": {
+            "method": "getBreederId()",
+            "type": "Int"
+        }
+    },
+    "tbl_semen_inventory": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "pk_id": {
+            "method": "getPkId()",
+            "type": "Int"
+        },
+        "member_id": {
+            "method": "getMemberId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "tank_id": {
+            "method": "getTankId()",
+            "type": "String"
+        },
+        "canister_id": {
+            "method": "getCanisterId()",
+            "type": "String"
+        },
+        "cane_code": {
+            "method": "getCaneCode()",
+            "type": "String"
+        },
+        "css_certified": {
+            "method": "getCssCertified()",
+            "type": "Int"
+        },
+        "straws": {
+            "method": "getSTRAWS()",
+            "type": "Int"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "for_sale_private_treaty": {
+            "method": "getForSalePrivateTreaty()",
+            "type": "Int"
+        },
+        "private_treaty_date": {
+            "method": "getPrivateTreatyDate()",
+            "type": "Date"
+        },
+        "seller_comments": {
+            "method": "getSellerComments()",
+            "type": "String"
+        },
+        "sale_price": {
+            "method": "getSalePrice()",
+            "type": "Int"
+        }
+    },
+    "tbl_tablet_logs": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "log_id": {
+            "method": "getLogId()",
+            "type": "Int"
+        },
+        "profile_id": {
+            "method": "getProfileId()",
+            "type": "String"
+        },
+        "flag_new_calf": {
+            "method": "getFlagNewCalf()",
+            "type": "String"
+        },
+        "flag_new_wean": {
+            "method": "getFlagNewWean()",
+            "type": "String"
+        },
+        "flag_new_year": {
+            "method": "getFlagNewYear()",
+            "type": "String"
+        },
+        "flag_new_eid": {
+            "method": "getFlagNewEid()",
+            "type": "String"
+        },
+        "flag_new_vacc": {
+            "method": "getFlagNewVacc()",
+            "type": "String"
+        },
+        "flag_new_bang": {
+            "method": "getFlagNewBang()",
+            "type": "String"
+        },
+        "flag_new_brand": {
+            "method": "getFlagNewBrand()",
+            "type": "String"
+        },
+        "flag_new_weight": {
+            "method": "getFlagNewWeight()",
+            "type": "String"
+        },
+        "flag_new_pasture": {
+            "method": "getFlagNewPasture()",
+            "type": "String"
+        },
+        "flag_new_escaped": {
+            "method": "getFlagNewEscaped()",
+            "type": "String"
+        },
+        "flag_new_pregnancy": {
+            "method": "getFlagNewPregnancy()",
+            "type": "String"
+        },
+        "flag_new_breed_ai": {
+            "method": "getFlagNewBreedAi()",
+            "type": "String"
+        },
+        "flag_new_comment": {
+            "method": "getFlagNewComment()",
+            "type": "String"
+        },
+        "flag_new_animal": {
+            "method": "getFlagNewAnimal()",
+            "type": "String"
+        },
+        "flag_new_sync": {
+            "method": "getFlagNewSync()",
+            "type": "String"
+        },
+        "flag_new_breed_et": {
+            "method": "getFlagNewBreedEt()",
+            "type": "String"
+        },
+        "comment": {
+            "method": "getCOMMENT()",
+            "type": "String"
+        },
+        "phn": {
+            "method": "getPHN()",
+            "type": "String"
+        },
+        "reg_no": {
+            "method": "getRegNo()",
+            "type": "String"
+        },
+        "eid": {
+            "method": "getEID()",
+            "type": "String"
+        },
+        "pasture_id": {
+            "method": "getPastureId()",
+            "type": "String"
+        },
+        "weight": {
+            "method": "getWEIGHT()",
+            "type": "String"
+        },
+        "sex": {
+            "method": "getSEX()",
+            "type": "String"
+        },
+        "dob": {
+            "method": "getDOB()",
+            "type": "String"
+        },
+        "dam": {
+            "method": "getDAM()",
+            "type": "String"
+        },
+        "sire": {
+            "method": "getSIRE()",
+            "type": "String"
+        },
+        "date_worked": {
+            "method": "getDateWorked()",
+            "type": "String"
+        },
+        "bangs_id": {
+            "method": "getBangsId()",
+            "type": "String"
+        },
+        "brand": {
+            "method": "getBRAND()",
+            "type": "String"
+        },
+        "brand_location": {
+            "method": "getBrandLocation()",
+            "type": "String"
+        },
+        "prev_pasture_id": {
+            "method": "getPrevPastureId()",
+            "type": "String"
+        },
+        "breed_type": {
+            "method": "getBreedType()",
+            "type": "String"
+        },
+        "palpation_result": {
+            "method": "getPalpationResult()",
+            "type": "String"
+        },
+        "estimated_birthing": {
+            "method": "getEstimatedBirthing()",
+            "type": "String"
+        },
+        "working_pasture_id": {
+            "method": "getWorkingPastureId()",
+            "type": "String"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        }
+    },
+    "tbl_member_reports_android": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "pk_id": {
+            "method": "getPkId()",
+            "type": "Int"
+        },
+        "member_id": {
+            "method": "getMemberId()",
+            "type": "Int"
+        },
+        "report_type": {
+            "method": "getReportType()",
+            "type": "String"
+        },
+        "report_file_name": {
+            "method": "getReportFileName()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "report_format": {
+            "method": "getReportFormat()",
+            "type": "String"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        }
+    },
+    "tbl_member_transfers": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "pk_id": {
+            "method": "getPkId()",
+            "type": "Int"
+        },
+        "member_id": {
+            "method": "getMemberId()",
+            "type": "String"
+        },
+        "work_order": {
+            "method": "getWorkOrder()",
+            "type": "String"
+        },
+        "customer_id": {
+            "method": "getCustomerId()",
+            "type": "String"
+        },
+        "transfer_date": {
+            "method": "getTransferDate()",
+            "type": "Date"
+        },
+        "transfer_value": {
+            "method": "getTransferValue()",
+            "type": "Double"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        }
+    },
+    "tbl_ownership": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "ownership_id": {
+            "method": "getOwnershipId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "owner_id": {
+            "method": "getOwnerId()",
+            "type": "Int"
+        },
+        "ownership_amount": {
+            "method": "getOwnershipAmount()",
+            "type": "Double"
+        },
+        "ownership_date": {
+            "method": "getOwnershipDate()",
+            "type": "Date"
+        },
+        "is_primary": {
+            "method": "getIsPrimary()",
+            "type": "Int"
+        },
+        "superceded_flag": {
+            "method": "getSupercededFlag()",
+            "type": "Int"
+        },
+        "superceded_date": {
+            "method": "getSupercededDate()",
+            "type": "Date"
+        },
+        "old_owner_id": {
+            "method": "getOldOwnerId()",
+            "type": "Int"
+        },
+        "is_transfer": {
+            "method": "getIsTransfer()",
+            "type": "Int"
+        },
+        "is_calf_at_side": {
+            "method": "getIsCalfAtSide()",
+            "type": "Int"
+        },
+        "for_sale_private_treaty": {
+            "method": "getForSalePrivateTreaty()",
+            "type": "Int"
+        },
+        "seller_comments": {
+            "method": "getSellerComments()",
+            "type": "String"
+        },
+        "sale_price": {
+            "method": "getSalePrice()",
+            "type": "Int"
+        },
+        "private_treaty_date": {
+            "method": "getPrivateTreatyDate()",
+            "type": "Date"
+        },
+        "work_order": {
+            "method": "getWorkOrder()",
+            "type": "String"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        }
+    },
+    "tbl_pastures": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "pk_id": {
+            "method": "getPkId()",
+            "type": "Int"
+        },
+        "member_id": {
+            "method": "getMemberId()",
+            "type": "Int"
+        },
+        "premise_id": {
+            "method": "getPremiseId()",
+            "type": "String"
+        },
+        "pasture_id": {
+            "method": "getPastureId()",
+            "type": "String"
+        },
+        "pasture_description": {
+            "method": "getPastureDescription()",
+            "type": "String"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        }
+    },
+    "tbl_pens": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "pen_id": {
+            "method": "getPenId()",
+            "type": "Int"
+        },
+        "member_id": {
+            "method": "getMemberId()",
+            "type": "String"
+        },
+        "pen_name": {
+            "method": "getPenName()",
+            "type": "String"
+        },
+        "pen_description": {
+            "method": "getPenDescription()",
+            "type": "String"
+        },
+        "premise_id": {
+            "method": "getPremiseId()",
+            "type": "String"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        }
+    },
+    "reports": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "report_title": {
+            "method": "getReportTitle()",
+            "type": "String"
+        },
+        "report_file_name": {
+            "method": "getReportFileName()",
+            "type": "String"
+        },
+        "report_date": {
+            "method": "getReportDate()",
+            "type": "Date"
+        },
+        "report_format": {
+            "method": "getReportFormat()",
+            "type": "String"
+        }
+    },
+    "tbl_todo": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "todo_id": {
+            "method": "getTodoId()",
+            "type": "Int"
+        },
+        "member_id": {
+            "method": "getMemberId()",
+            "type": "String"
+        },
+        "header": {
+            "method": "getHEADER()",
+            "type": "String"
+        },
+        "details": {
+            "method": "getDETAILS()",
+            "type": "String"
+        },
+        "date_due": {
+            "method": "getDateDue()",
+            "type": "Date"
+        },
+        "date_completed": {
+            "method": "getDateCompleted()",
+            "type": "Date"
+        },
+        "flag_completed": {
+            "method": "getFlagCompleted()",
+            "type": "Int"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "flag_deleted": {
+            "method": "getFlagDeleted()",
+            "type": "Int"
+        }
+    },
+    "tbl_vaccinations": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "pk_id": {
+            "method": "getPkId()",
+            "type": "Int"
+        },
+        "member_id": {
+            "method": "getMemberId()",
+            "type": "Int"
+        },
+        "withdrawal_period": {
+            "method": "getWithdrawalPeriod()",
+            "type": "String"
+        },
+        "date": {
+            "method": "getDATE()",
+            "type": "Date"
+        },
+        "product_name": {
+            "method": "getProductName()",
+            "type": "String"
+        },
+        "lot_number": {
+            "method": "getLotNumber()",
+            "type": "String"
+        },
+        "serial_number": {
+            "method": "getSerialNumber()",
+            "type": "String"
+        },
+        "expiration_date": {
+            "method": "getExpirationDate()",
+            "type": "Date"
+        },
+        "dosage": {
+            "method": "getDOSAGE()",
+            "type": "String"
+        },
+        "method": {
+            "method": "getMETHOD()",
+            "type": "String"
+        },
+        "location": {
+            "method": "getLOCATION()",
+            "type": "String"
+        },
+        "administered_by": {
+            "method": "getAdministeredBy()",
+            "type": "String"
+        },
+        "less_ten_month": {
+            "method": "getLessTenMonth()",
+            "type": "Int"
+        },
+        "greater_ten_month": {
+            "method": "getGreaterTenMonth()",
+            "type": "Int"
+        },
+        "female_only": {
+            "method": "getFemaleOnly()",
+            "type": "Int"
+        },
+        "male_only": {
+            "method": "getMaleOnly()",
+            "type": "Int"
+        },
+        "less_twelve_month": {
+            "method": "getLessTwelveMonth()",
+            "type": "Int"
+        },
+        "bangs_vaccs": {
+            "method": "getBangsVaccs()",
+            "type": "Int"
+        },
+        "no_requirements": {
+            "method": "getNoRequirements()",
+            "type": "Int"
+        },
+        "active_flag": {
+            "method": "getActiveFlag()",
+            "type": "Int"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "String"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        }
+    },
+    "tbl_work_recieved": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "work_received_id": {
+            "method": "getWorkReceivedId()",
+            "type": "Int"
+        },
+        "member_id": {
+            "method": "getMemberId()",
+            "type": "Int"
+        },
+        "date_received": {
+            "method": "getDateReceived()",
+            "type": "Date"
+        },
+        "received_by": {
+            "method": "getReceivedBy()",
+            "type": "String"
+        },
+        "work_description": {
+            "method": "getWorkDescription()",
+            "type": "String"
+        },
+        "date_worked": {
+            "method": "getDateWorked()",
+            "type": "Date"
+        },
+        "worked_by": {
+            "method": "getWorkedBy()",
+            "type": "String"
+        },
+        "date_printed": {
+            "method": "getDatePrinted()",
+            "type": "Date"
+        },
+        "printed_by": {
+            "method": "getPrintedBy()",
+            "type": "String"
+        },
+        "date_mailed": {
+            "method": "getDateMailed()",
+            "type": "Date"
+        },
+        "mailed_by": {
+            "method": "getMailedBy()",
+            "type": "String"
+        },
+        "started_by": {
+            "method": "getStartedBy()",
+            "type": "String"
+        },
+        "start_date": {
+            "method": "getStartDate()",
+            "type": "Date"
+        },
+        "time_stamp": {
+            "method": "getTimeStamp()",
+            "type": "Date"
+        },
+        "close_flag": {
+            "method": "getCloseFlag()",
+            "type": "Int"
+        },
+        "closed_by": {
+            "method": "getClosedBy()",
+            "type": "String"
+        },
+        "paypal_id": {
+            "method": "getPaypalId()",
+            "type": "String"
+        }
+    },
+    "tbl_invoice_items": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "invoice_item_id": {
+            "method": "getInvoiceItemId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getAnimalRegistration()",
+            "type": "String"
+        },
+        "member_id": {
+            "method": "getMemberId()",
+            "type": "Int"
+        },
+        "description": {
+            "method": "getDESCRIPTION()",
+            "type": "String"
+        },
+        "fee": {
+            "method": "getFEE()",
+            "type": "Double"
+        },
+        "entered_by": {
+            "method": "getEnteredBy()",
+            "type": "String"
+        },
+        "entered_on": {
+            "method": "getEnteredOn()",
+            "type": "Date"
+        },
+        "fee_type": {
+            "method": "getFeeType()",
+            "type": "String"
+        },
+        "invoice_id": {
+            "method": "getInvoiceId()",
+            "type": "String"
+        },
+        "date_received": {
+            "method": "getDateReceived()",
+            "type": "Date"
+        },
+        "check_number": {
+            "method": "getCheckNumber()",
+            "type": "String"
+        },
+        "check_date": {
+            "method": "getCheckDate()",
+            "type": "Date"
+        },
+        "check_amount": {
+            "method": "getCheckAmount()",
+            "type": "Double"
+        },
+        "private_herd_id": {
+            "method": "getPrivateHerdId()",
+            "type": "String"
+        },
+        "invoice_date": {
+            "method": "getInvoiceDate()",
+            "type": "Date"
+        },
+        "send_to_id": {
+            "method": "getSendToId()",
+            "type": "Int"
+        },
+        "lock_invoice_item": {
+            "method": "getLockInvoiceItem()",
+            "type": "String"
+        },
+        "work_order": {
+            "method": "getWorkOrder()",
+            "type": "String"
+        },
+        "updated_by": {
+            "method": "getUpdatedBy()",
+            "type": "String"
+        },
+        "updated_on": {
+            "method": "getUpdatedOn()",
+            "type": "Date"
+        },
+        "temp_id": {
+            "method": "getTempId()",
+            "type": "Int"
+        },
+        "mas90_id": {
+            "method": "getMas90Id()",
+            "type": "String"
+        },
+        "supplement_number": {
+            "method": "getSupplementNumber()",
+            "type": "Int"
+        },
+        "mail_certificate_to": {
+            "method": "getMailCertificateTo()",
+            "type": "String"
+        },
+        "supplement_sequence": {
+            "method": "getSupplementSequence()",
+            "type": "String"
+        }
+    },
+    "vw_member_customers": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "customer_id": {
+            "method": "getCustomerId()",
+            "type": "Int"
+        },
+        "address_id": {
+            "method": "getAddressId()",
+            "type": "Int"
+        },
+        "customer_name": {
+            "method": "getCustomerName()",
+            "type": "String"
+        },
+        "address_line1": {
+            "method": "getAddressLine1()",
+            "type": "String"
+        },
+        "address_line2": {
+            "method": "getAddressLine2()",
+            "type": "String"
+        },
+        "address_city": {
+            "method": "getAddressCity()",
+            "type": "String"
+        },
+        "address_state": {
+            "method": "getAddressState()",
+            "type": "String"
+        },
+        "address_postal_code": {
+            "method": "getAddressPostalCode()",
+            "type": "String"
+        },
+        "address_country": {
+            "method": "getAddressCountry()",
+            "type": "String"
+        },
+        "address_email": {
+            "method": "getAddressEmail()",
+            "type": "String"
+        },
+        "num_purch": {
+            "method": "getNumPurch()",
+            "type": "Int"
+        },
+        "date_purch": {
+            "method": "getDatePurch()",
+            "type": "Date"
+        },
+        "longitude": {
+            "method": "getLONGITUDE()",
+            "type": "String"
+        },
+        "latitude": {
+            "method": "getLATITUDE()",
+            "type": "String"
+        },
+        "phone1": {
+            "method": "getPHONE1()",
+            "type": "String"
+        },
+        "phone2": {
+            "method": "getPHONE2()",
+            "type": "String"
+        },
+        "phone3": {
+            "method": "getPHONE3()",
+            "type": "String"
+        },
+        "member_dba": {
+            "method": "getMemberDba()",
+            "type": "String"
+        },
+        "herd_code": {
+            "method": "getHerdCode()",
+            "type": "String"
+        },
+        "hold_brand_location": {
+            "method": "getHoldBrandLocation()",
+            "type": "String"
+        },
+        "tattoo_location": {
+            "method": "getTattooLocation()",
+            "type": "String"
+        }
+    },
+    "vw_animal_epd": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "animal_id": {
+            "method": "getAnimalId()",
+            "type": "Int"
+        },
+        "animal_registration": {
+            "method": "getRegNo()",
+            "type": "String"
+        },
+        "animal_private_herd_id": {
+            "method": "getAnimalPrivateHerdId()",
+            "type": "String"
+        },
+        "record_type": {
+            "method": "getRecordType()",
+            "type": "String"
+        },
+        "active": {
+            "method": "getActive()",
+            "type": "String"
+        },
+        "progeny_count": {
+            "method": "getProgenyCount()",
+            "type": "String"
+        },
+        "animal_sex": {
+            "method": "getAnimalSex()",
+            "type": "String"
+        },
+        "animal_name": {
+            "method": "getAnimalName()",
+            "type": "String"
+        },
+        "birth_date": {
+            "method": "getBirthDate()",
+            "type": "String"
+        },
+        "animal_sire": {
+            "method": "getAnimalSire()",
+            "type": "String"
+        },
+        "animal_dam": {
+            "method": "getAnimalDam()",
+            "type": "String"
+        },
+        "bw": {
+            "method": "getBw()",
+            "type": "Double"
+        },
+        "bw_accuracy": {
+            "method": "getBwAccuracy()",
+            "type": "Double"
+        },
+        "bw_progeny_count": {
+            "method": "getBwProgenyCount()",
+            "type": "Double"
+        },
+        "bw_progeny_herd_count": {
+            "method": "getBwProgenyHerdCount()",
+            "type": "Double"
+        },
+        "bw_progeny_cg_count": {
+            "method": "getBwProgenyCgCount()",
+            "type": "Double"
+        },
+        "tm": {
+            "method": "getTm()",
+            "type": "Double"
+        },
+        "tm_percent": {
+            "method": "getTmPercent()",
+            "type": "Double"
+        },
+        "ww": {
+            "method": "getWw()",
+            "type": "Double"
+        },
+        "ww_accuracy": {
+            "method": "getWwAccuracy()",
+            "type": "Double"
+        },
+        "ww_progeny_count": {
+            "method": "getWwProgenyCount()",
+            "type": "Double"
+        },
+        "ww_progeny_herd_count": {
+            "method": "getWwProgenyHerdCount()",
+            "type": "Double"
+        },
+        "ww_progeny_cg_count": {
+            "method": "getWwProgenyCgCount()",
+            "type": "Double"
+        },
+        "ww_maternal": {
+            "method": "getWwMaternal()",
+            "type": "Double"
+        },
+        "ww_maternal_accuracy": {
+            "method": "getWwMaternalAccuracy()",
+            "type": "Double"
+        },
+        "ww_progeny_daughter_count": {
+            "method": "getWwProgenyDaughterCount()",
+            "type": "Double"
+        },
+        "ww_progeny_daughter_herd_count": {
+            "method": "getWwProgenyDaughterHerdCount()",
+            "type": "Double"
+        },
+        "ww_progeny_daughter_cg_count": {
+            "method": "getWwProgenyDaughterCgCount()",
+            "type": "Double"
+        },
+        "weaning_milk_growth": {
+            "method": "getWeaningMilkGrowth()",
+            "type": "Double"
+        },
+        "weaning_milk_growth_accuracy": {
+            "method": "getWeaningMilkGrowthAccuracy()",
+            "type": "Double"
+        },
+        "weaning_milk_growth_percent": {
+            "method": "getWeaningMilkGrowthPercent()",
+            "type": "Double"
+        },
+        "weaning_permanent_environment": {
+            "method": "getWeaningPermanentEnvironment()",
+            "type": "Double"
+        },
+        "yw": {
+            "method": "getYw()",
+            "type": "Double"
+        },
+        "yw_accuracy": {
+            "method": "getYwAccuracy()",
+            "type": "Double"
+        },
+        "yw_percent": {
+            "method": "getYwPercent()",
+            "type": "Double"
+        },
+        "yw_progeny_count": {
+            "method": "getYwProgenyCount()",
+            "type": "Double"
+        },
+        "yw_progeny_herd_count": {
+            "method": "getYwProgenyHerdCount()",
+            "type": "Double"
+        },
+        "yw_progeny_cg_count": {
+            "method": "getYwProgenyCgCount()",
+            "type": "Double"
+        },
+        "sc": {
+            "method": "getSc()",
+            "type": "Double"
+        },
+        "sc_accuracy": {
+            "method": "getScAccuracy()",
+            "type": "Double"
+        },
+        "sc_percent": {
+            "method": "getScPercent()",
+            "type": "Double"
+        },
+        "sc_progeny_count": {
+            "method": "",
+            "type": "Double"
+        },
+        "sc_progeny_herd_count": {
+            "method": "getScProgenyHerdCount()",
+            "type": "Double"
+        },
+        "sc_progeny_cg_count": {
+            "method": "getScProgenyCgCount()",
+            "type": "Double"
+        },
+        "us_rea": {
+            "method": "getUsRea()",
+            "type": "Double"
+        },
+        "us_rea_accuracy": {
+            "method": "getUsReaAccuracy()",
+            "type": "Double"
+        },
+        "us_rea_percent": {
+            "method": "getUsReaPercent()",
+            "type": "Double"
+        },
+        "us_rea_progeny_count": {
+            "method": "getUsReaProgenyCount()",
+            "type": "Double"
+        },
+        "us_rea_progeny_herd_count": {
+            "method": "getUsReaProgenyHerdCount()",
+            "type": "Double"
+        },
+        "us_rea_progeny_cg_count": {
+            "method": "getUsReaProgenyCgCount()",
+            "type": "Double"
+        },
+        "us_imf": {
+            "method": "getUsImf()",
+            "type": "Double"
+        },
+        "us_imf_accuracy": {
+            "method": "getUsImfAccuracy()",
+            "type": "Double"
+        },
+        "us_imf_percent": {
+            "method": "getUsImfPercent()",
+            "type": "Double"
+        },
+        "us_imf_progeny_count": {
+            "method": "getUsImfProgenyCount()",
+            "type": "Double"
+        },
+        "us_imf_progeny_herd_count": {
+            "method": "getUsImfProgenyHerdCount()",
+            "type": "Double"
+        },
+        "us_imf_progeny_cg_count": {
+            "method": "getUsImfProgenyCgCount()",
+            "type": "Double"
+        },
+        "us_fat": {
+            "method": "getUsFat()",
+            "type": "Double"
+        },
+        "us_fat_accuracy": {
+            "method": "getUsFatAccuracy()",
+            "type": "Double"
+        },
+        "us_fat_percent": {
+            "method": "getUsFatPercent()",
+            "type": "Double"
+        },
+        "us_fat_progeny_count": {
+            "method": "getUsFatProgenyCount()",
+            "type": "Double"
+        },
+        "us_fat_progeny_herd_count": {
+            "method": "getUsFatProgenyHerdCount()",
+            "type": "Double"
+        },
+        "us_fat_progeny_cg_count": {
+            "method": "getUsFatProgenyCgCount()",
+            "type": "Double"
+        },
+        "source": {
+            "method": "getSource()",
+            "type": "Double"
+        },
+        "ced": {
+            "method": "getCed()",
+            "type": "Double"
+        },
+        "ced_accuracy": {
+            "method": "getCedAccuracy()",
+            "type": "Double"
+        },
+        "ced_percent": {
+            "method": "getCedPercent()",
+            "type": "Double"
+        },
+        "cem": {
+            "method": "getCem()",
+            "type": "Double"
+        },
+        "cem_accuracy": {
+            "method": "getCemAccuracy()",
+            "type": "Double"
+        },
+        "cem_percent": {
+            "method": "getCemPercent()",
+            "type": "Double"
+        },
+        "carc_wt": {
+            "method": "getCarcWt()",
+            "type": "Double"
+        },
+        "carc_wt_accuracy": {
+            "method": "getCarcWtAccuracy()",
+            "type": "Double"
+        },
+        "carc_rea": {
+            "method": "getCarcRea()",
+            "type": "Double"
+        },
+        "carc_rea_accuracy": {
+            "method": "getCarcReaAccuracy()",
+            "type": "Double"
+        },
+        "carc_fat": {
+            "method": "getCarcFat()",
+            "type": "Double"
+        },
+        "carc_fat_accuracy": {
+            "method": "getCarcFatAccuracy()",
+            "type": "Double"
+        },
+        "carc_marb": {
+            "method": "getCarcMarb()",
+            "type": "Double"
+        },
+        "carc_marb_accuracy": {
+            "method": "getCarcMarbAccuracy()",
+            "type": "Double"
+        }
+    },
+    "tbl_member": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "member_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "member_name": {
+            "method": "getMemberName()",
+            "type": "String"
+        },
+        "member_dba": {
+            "method": "getMemberDba()",
+            "type": "String"        
+        },
+        "member_type": {
+            "method": "getMemberType()",
+            "type": "String"
+        },
+        "create_user": {
+            "method": "getCreateUser()",
+            "type": "String"
+        },
+        "create_stamp": {
+            "method": "getCreateStamp()",
+            "type": "Date"
+        },
+        "update_user": {
+            "method": "getUpdateUser()",
+            "type": "Date"
+        },
+        "update_stamp": {
+            "method": "getUpdateStamp()",
+            "type": "Date"
+        },
+        "active_flag": {
+            "method": "getActiveFlag()",
+            "type": "Int"
+        },
+        "website": {
+            "method": "getWEBSITE()",
+            "type": "String"
+        },
+        "membership_begin_date": {
+            "method": "getMembershipBeginDate()",
+            "type": "Date"
+        },
+        "membership_end_date": {
+            "method": "getMembershipEndDate()",
+            "type": "Date"
+        },
+        "pub_subscription_start_date": {
+            "method": "getPubSubscriptionStartDate()",
+            "type": "Date"
+        },
+        "pub_subscription_end_date": {
+            "method": "getPubSubscriptionEndDate()",
+            "type": "Date"
+        },
+        "parent_member_id": {
+            "method": "getParentMemberId()",
+            "type": "Int"
+        },
+        "newspaper_name": {
+            "method": "getNewspaperName()",
+            "type": "String"
+        },
+        "newspaper_email": {
+            "method": "getNewspaperEmail()",
+            "type": "String"
+        },
+        "newspaper_phone": {
+            "method": "getNewspaperPhone()",
+            "type": "String"
+        },
+        "account_locked": {
+            "method": "getAccountLocked()",
+            "type": "Int"
+        },
+        "locking_user": {
+            "method": "getLockingUser()",
+            "type": "String"
+        },
+        "legacy_association": {
+            "method": "getLegacyAssociation()",
+            "type": "String"
+        },
+        "legacy_association_id": {
+            "method": "getLegacyAssociationId()",
+            "type": "Int"
+        },
+        "general_correspondance_address": {
+            "method": "getGeneralCorrespondanceAddress()",
+            "type": "Int"
+        },
+        "registry_correspondance_address": {
+            "method": "getRegistryCorrespondanceAddress()",
+            "type": "Int"
+        },
+        "accounting_correspondance_address": {
+            "method": "getAccountingCorrespondanceAddress()",
+            "type": "Int"
+        },
+        "hold_brand": {
+            "method": "getHoldBrand()",
+            "type": "String"
+        },
+        "hold_brand_location": {
+            "method": "getHoldBrandLocation()",
+            "type": "String"
+        },
+        "phn_location": {
+            "method": "getPhnLocation()",
+            "type": "String"
+        },
+        "date_last_activity": {
+            "method": "getDateLastActivity()",
+            "type": "Date"
+        },
+        "date_last_change": {
+            "method": "getDateLastChange()",
+            "type": "Date"
+        },
+        "date_last_registration": {
+            "method": "getDateLastRegistration()",
+            "type": "Date"
+        },
+        "date_last_transfer": {
+            "method": "getDateLastTransfer()",
+            "type": "Date"
+        },
+        "date_last_purchase": {
+            "method": "getDateLastPurchase()",
+            "type": "Date"
+        },
+        "date_last_performance": {
+            "method": "getDateLastPerformance()",
+            "type": "Date"
+        },
+        "mas90_customer_no": {
+            "method": "getMas90CustomerNo()",
+            "type": "String"
+        },
+        "m_opt_out": {
+            "method": "getmOptOut()",
+            "type": "Int"
+        },
+        "m_opt_out_date": {
+            "method": "getmOptOutDate()",
+            "type": "Date"
+        },
+        "m_opted_out_by": {
+            "method": "geteOptedOutBy()",
+            "type": "String"
+        },
+        "c_opt_in": {
+            "method": "getcOptIn()",
+            "type": "Int"
+        },
+        "c_opt_in_date": {
+            "method": "getcOptInDate()",
+            "type": "Date"
+        },
+        "c_opted_in_by": {
+            "method": "getcOptedInBy()",
+            "type": "String"
+        },
+        "e_opt_out": {
+            "method": "geteOptOut()",
+            "type": "Int"
+        },
+        "e_opt_out_date": {
+            "method": "geteOptOutDate()",
+            "type": "Date"
+        },
+        "e_opted_out_by": {
+            "method": "geteOptedOutBy()",
+            "type": "String"
+        },
+        "cash_only": {
+            "method": "getCashOnly()",
+            "type": "Int"
+        },
+        "junior_birthdate": {
+            "method": "getJuniorBirthdate()",
+            "type": "Date"
+        },
+        "herd_code": {
+            "method": "getHerdCode()",
+            "type": "String"
+        },
+        "herd_code_location": {
+            "method": "getHerdCodeLocation()",
+            "type": "String"
+        },
+        "verification_code": {
+            "method": "getVerificationCode()",
+            "type": "String"
+        },
+        "premise_id": {
+            "method": "getPremiseId()",
+            "type": "String"
+        }
+    },
+    "eid_sequences": {
+        "_id": {
+            "method": "getId()",
+            "type": "Int"
+        },
+        "member_id": {
+            "method": "getMemberId()",
+            "type": "String"
+        },
+        "eid": {
+            "method": "getEid()",
+            "type": "String"
+        }
+    }
+}
