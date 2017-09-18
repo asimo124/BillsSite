@@ -1,5 +1,7 @@
 <?php
 session_start();
+date_default_timezone_set("America/Chicago");
+
 function preformat2($str) {
 	echo "<pre>" . print_r($str, true) . "\n</pre>";
 }
