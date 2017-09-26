@@ -27,6 +27,7 @@ $expenses = $sth->fetchAll();
 	<meta charset="UTF-8">
 	<title>Document</title>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="/css/nav.css" />
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
@@ -96,6 +97,9 @@ a.btn {
 	
 	<a href="javascript:void(0);" onclick="$('#frmUpdate').submit();" class="btn">Update All</a>
 
+	<?php include "../templates/nav.php"; ?>
+	<div style="clear: both; height: 7px"></div>
+
 	<form action="update.php" method="post" name="frmUpdate" id="frmUpdate" >
 		<table width="100%" align="left" >
 		<?php foreach ($expenses as $get_expense) : ?>
@@ -119,6 +123,6 @@ a.btn {
 	</form>
 </div>
 
-
+<script src="/js/nav.js" ></script>
 </body>
 </html>

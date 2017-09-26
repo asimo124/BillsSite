@@ -25,6 +25,7 @@ $hash_key = md5($string_to_hash);
     <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/nav.css" />
 </head>
 <body>
 <div class="container">
@@ -39,8 +40,8 @@ $hash_key = md5($string_to_hash);
 
     <div style="clear: both; height: 12px"></div>
 
-    <a href="../upload.php" >Upload Charges</a> | <a href="/bills" >Bills</a> | <a href="/bills/admin" >Bills Admin</a> | <a href="/charges" >Chart</a>
-    <div style="clear: both; height: 12px"></div>
+    <?php include "../../templates/nav.php"; ?>
+    <div style="clear: both; height: 7px"></div>
 
     <div class="row">
         <div class="col-md-12">
@@ -107,6 +108,7 @@ $hash_key = md5($string_to_hash);
 </body>
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="/js/nav.js" ></script>
 <script>
 
     $(document).ready(function() {

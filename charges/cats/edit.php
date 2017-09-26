@@ -33,6 +33,7 @@ if (count($Cats) > 0) {
     <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/nav.css" />
 </head>
 <body>
 <div class="container">
@@ -48,7 +49,7 @@ if (count($Cats) > 0) {
             <!-- Form Name -->
             <legend>Edit Charge Category</legend>
 
-            <a href="index.php" >Charge Categories</a>
+            <?php include "../../templates/nav.php"; ?>
             <div style="clear: both; height: 7px"></div>
 
             <!-- Text input-->
@@ -68,3 +69,4 @@ if (count($Cats) > 0) {
 </body>
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="/js/nav.js" ></script>

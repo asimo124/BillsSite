@@ -21,6 +21,7 @@ $hash_key = md5($string_to_hash);
 	<meta charset="UTF-8">
 	<title>Document</title>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="/css/nav.css" />
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
@@ -91,8 +92,8 @@ a.btn {
 		<?php endif; ?>
 		<div style="clear: both; height: 12px"></div>
 
-		<a href="/charges" class="nav_links" >Chart</a> | <a href="/bills" class="nav_links" >Bills</a> | <a href="/charges/upload.php" class="nav_links" >Upload</a> | <a href="/charges/cats" class="nav_links" >Categories</a>
-		<div style="clear: both; height: 12px"></div>
+		<?php include "../templates/nav.php"; ?>
+		<div style="clear: both; height: 7px"></div>
 
 		Desc:<br>
 		<input type="text" name="vnd_bill" id="vnd_bill" value="" class="expense_field" />
@@ -114,5 +115,6 @@ a.btn {
 	</div>
 </form>
 
+<script src="/js/nav.js" ></script>
 </body>
 </html>

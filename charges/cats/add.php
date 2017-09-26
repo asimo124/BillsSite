@@ -21,6 +21,7 @@ $hash_key = md5($string_to_hash);
     <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/nav.css" />
 </head>
 <body>
 <div class="container">
@@ -36,7 +37,7 @@ $hash_key = md5($string_to_hash);
             <!-- Form Name -->
             <legend>Add Charge Category</legend>
 
-            <a href="index.php" >Charge Categories</a>
+            <?php include "../../templates/nav.php"; ?>
             <div style="clear: both; height: 7px"></div>
 
             <!-- Text input-->
@@ -55,3 +56,4 @@ $hash_key = md5($string_to_hash);
 </body>
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="/js/nav.js" ></script>

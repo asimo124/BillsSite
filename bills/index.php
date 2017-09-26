@@ -22,6 +22,7 @@ $hash_key = md5($string_to_hash);
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/css/nav.css" />
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script>
@@ -237,9 +238,7 @@ a.nav_links:hover {
 	<h1>Pay Period</h1>
 	<div style="clear: both; height: 0px;" ></div>
 
-	<div class="nav">
-		<a href="/charges" class="nav_links" >Chart</a> | <a href="/expenses" class="nav_links" >Add Expense</a> | <a href="/crons/loadDates.php" class="nav_links" >Dates CRON</a> | <a href="/charges/upload.php" class="nav_links" >Upload</a> | <a href="/charges/cats" class="nav_links" >Categories</a> | <a href="/logout.php" class="nav_links" >Logout</a>
-	</div>
+	<?php include "../templates/nav.php"; ?>
 	<div style="clear: both; height: 7px"></div>
 
 	<input type="text" class="txt" name="current_balance" id="current_balance" placeholder="Current Bank Balance" value="<?php echo $current_balance; ?>" />
@@ -255,6 +254,6 @@ a.nav_links:hover {
 
 
 
-
+<script src="/js/nav.js" ></script>
 </body>
 </html>

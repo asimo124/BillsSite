@@ -19,6 +19,7 @@ $resultset = getQuery($sql);
     <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/nav.css" />
 </head>
 <body>
 <div class="container">
@@ -33,8 +34,8 @@ $resultset = getQuery($sql);
 
     <div style="clear: both; height: 12px"></div>
 
-    <a href="../../charges/upload.php" >Upload Charges</a> | <a href="/charges/cats" >Charge Categories</a> | <a href="/bills" >Bills</a> | <a href="/charges" >Chart</a>
-    <div style="clear: both; height: 12px"></div>
+    <?php include "../../templates/nav.php"; ?>
+    <div style="clear: both; height: 7px"></div>
 
     <div class="row">
         <div class="col-md-12">
@@ -106,6 +107,7 @@ $resultset = getQuery($sql);
 </body>
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="/js/nav.js" ></script>
 <script>
 
     $(document).ready(function() {

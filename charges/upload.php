@@ -17,6 +17,7 @@ $hash_key = md5($string_to_hash);
     <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/nav.css" />
     <style type="text/css">
         textarea {
             width: 100%;
@@ -37,7 +38,7 @@ $hash_key = md5($string_to_hash);
             <!-- Form Name -->
             <legend>Upload Charges</legend>
 
-            <a href="/bills" >Bills</a> | <a href="/bills/admin" >Bills Admin</a> | <a href="cats/index.php" >Charge Categories</a> | <a href="/charges" >Chart</a>
+            <?php include "../templates/nav.php"; ?>
             <div style="clear: both; height: 7px"></div>
 
             <div class="form-group">
@@ -54,3 +55,4 @@ $hash_key = md5($string_to_hash);
 </body>
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="/js/nav.js" ></script>
