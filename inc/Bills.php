@@ -280,16 +280,18 @@ class Bills {
 		);
 		$stmt->execute($data);
 		$resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		foreach ($resultset as $getItem) {
+		if (count($resultset) > 0) {
+			foreach ($resultset as $getItem) {
 
-			$email_content .= "- " . $getItem['vnd_bill_desc'] . ", on " . date("m/d/Y", strtotime($getItem['vnd_date'])) . ", for the amount: $" . round($getItem['vnd_amount'], 2) . "<br>";
+				$email_content .= "- " . $getItem['vnd_bill_desc'] . ", on " . date("m/d/Y", strtotime($getItem['vnd_date'])) . ", for the amount: $" . round($getItem['vnd_amount'], 2) . "<br>";
+			}
+
+			$headers = 'From: asimo124@yahoo.com' . "\r\n" .
+				'X-Mailer: PHP/' . phpversion();
+			$headers .= 'MIME-Version: 1.0' . "\r\n";
+			$headers .= 'Content-type: text/html; charset=iso-8859-1';
+			mail("ahawley@claimatic.com", "Appointments this Week", $email_content, $headers);
 		}
-
-		$headers = 'From: asimo124@yahoo.com' . "\r\n" .
-			'X-Mailer: PHP/' . phpversion();
-		$headers .= 'MIME-Version: 1.0' . "\r\n";
-		$headers .= 'Content-type: text/html; charset=iso-8859-1';
-		mail("ahawley@claimatic.com", "Appointments this Week" , $email_content, $headers);
 	}
 
 }
