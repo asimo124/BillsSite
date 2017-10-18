@@ -42,6 +42,9 @@ $hash_key = md5($string_to_hash);
 
     <div style="clear: both; height: 7px"></div>
 
+    <a href="chart.php" class="btn btn-primary" >Chart</a>
+    <div style="clear: both; height: 7px"></div>
+
     <div class="row">
         <div class="col-md-12">
             <a href="add.php" class="btn btn-primary">Add Log</a>

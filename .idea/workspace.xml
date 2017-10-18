@@ -2,20 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a2afb100-9492-4794-888f-87188d2c08b9" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/bootstrap-datepicker.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/bootstrap-timepicker.min.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sol/glucose/add.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sol/glucose/delete.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sol/glucose/edit.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sol/glucose/index.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sol/glucose/proc_add.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sol/glucose/proc_edit.php" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/mdb.min.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sol/glucose/chart.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sol/glucose/index.php" afterPath="$PROJECT_DIR$/sol/glucose/index.php" />
     </list>
     <ignored path="Bills.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -56,7 +46,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
@@ -70,11 +60,39 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="chart.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/sol/glucose/chart.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="340">
+              <caret line="56" column="48" lean-forward="true" selection-start-line="56" selection-start-column="48" selection-end-line="56" selection-end-column="48" />
+              <folding>
+                <marker date="1508292375847" expanded="true" signature="456:502" ph="SELECT * FRO... glu_glucose_log" />
+                <marker date="1508292375847" expanded="true" signature="456:505" ph="SELECT * FRO... glu_glucose_log" />
+                <marker date="1508292375847" expanded="true" signature="456:506" ph="SELECT * FRO... glu_glucose_log" />
+                <marker date="1508292375847" expanded="true" signature="456:541" ph="SELECT * FRO... glu_glucose_log" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mdb.min.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/css/mdb.min.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1032">
+              <caret line="25" column="163012" lean-forward="false" selection-start-line="25" selection-start-column="163012" selection-end-line="25" selection-end-column="163012" />
+              <folding>
+                <element signature="e#122793#123036#2" expanded="true" />
+                <element signature="e#124453#124702#2" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="add.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bills/admin/add.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="549">
-              <caret line="47" column="6" lean-forward="true" selection-start-line="47" selection-start-column="6" selection-end-line="47" selection-end-column="6" />
+              <caret line="39" column="22" lean-forward="true" selection-start-line="39" selection-start-column="22" selection-end-line="39" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -83,12 +101,12 @@
       <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sol/glucose/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
-              <caret line="98" column="124" lean-forward="false" selection-start-line="98" selection-start-column="124" selection-end-line="98" selection-end-column="124" />
+            <state relative-caret-position="340">
+              <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
               <folding>
-                <marker date="1508290175896" expanded="true" signature="180:187" ph="SELECT vnd_i... vnd_bills" />
-                <marker date="1508290175896" expanded="true" signature="180:194" ph="SELECT * FRO... glu_" />
-                <marker date="1508290175896" expanded="true" signature="180:243" ph="SELECT * FRO... glu_glucose_log" />
+                <marker date="1508292375763" expanded="true" signature="180:187" ph="SELECT vnd_i... vnd_bills" />
+                <marker date="1508292375763" expanded="true" signature="180:194" ph="SELECT * FRO... glu_" />
+                <marker date="1508292375763" expanded="true" signature="180:243" ph="SELECT * FRO... glu_glucose_log" />
               </folding>
             </state>
           </provider>
@@ -97,11 +115,9 @@
       <file leaf-file-name="add.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sol/glucose/add.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="141">
-              <caret line="45" column="52" lean-forward="false" selection-start-line="45" selection-start-column="52" selection-end-line="45" selection-end-column="52" />
-              <folding>
-                <element signature="n#style#0;n#div#1;n#fieldset#0;n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
+            <state relative-caret-position="68">
+              <caret line="45" column="58" lean-forward="false" selection-start-line="44" selection-start-column="12" selection-end-line="45" selection-end-column="58" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -123,8 +139,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/health/pills/delete.php" />
-        <option value="$PROJECT_DIR$/health/pills/edit.php" />
         <option value="$PROJECT_DIR$/health/pills/index.php" />
         <option value="$PROJECT_DIR$/health/pills/proc_add.php" />
         <option value="$PROJECT_DIR$/health/pills/proc_edit.php" />
@@ -171,9 +185,11 @@
         <option value="$PROJECT_DIR$/css/bootstrap-datepicker.css" />
         <option value="$PROJECT_DIR$/sol/glucose/proc_add.php" />
         <option value="$PROJECT_DIR$/sol/glucose/delete.php" />
-        <option value="$PROJECT_DIR$/sol/glucose/index.php" />
         <option value="$PROJECT_DIR$/sol/glucose/add.php" />
         <option value="$PROJECT_DIR$/index.php" />
+        <option value="$PROJECT_DIR$/css/mdb.min.css" />
+        <option value="$PROJECT_DIR$/sol/glucose/index.php" />
+        <option value="$PROJECT_DIR$/sol/glucose/chart.php" />
       </list>
     </option>
   </component>
@@ -208,8 +224,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -248,6 +262,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -356,7 +372,8 @@
       <option name="presentableId" value="Default" />
       <updated>1495027478426</updated>
       <workItem from="1508285663583" duration="801000" />
-      <workItem from="1508286531503" duration="4056000" />
+      <workItem from="1508286531503" duration="4129000" />
+      <workItem from="1508290770821" duration="1742000" />
     </task>
     <task id="LOCAL-00001" summary="fixed color issue">
       <created>1495227677869</created>
@@ -449,11 +466,18 @@
       <option name="project" value="LOCAL" />
       <updated>1506439665148</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="added Glucose Log Module for Sol">
+      <created>1508290637202</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1508290637203</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4857000" />
+    <option name="totallyTimeSpent" value="6672000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -511,34 +535,14 @@
     <MESSAGE value="changed back" />
     <MESSAGE value="made login use bootstrap" />
     <MESSAGE value="added responsive dropdown" />
-    <option name="LAST_COMMIT_MESSAGE" value="added responsive dropdown" />
+    <MESSAGE value="added Glucose Log Module for Sol" />
+    <option name="LAST_COMMIT_MESSAGE" value="added Glucose Log Module for Sol" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/health/workouts/delete.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="6" column="1" lean-forward="false" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/health/workouts/edit.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="6" column="1" lean-forward="false" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/health/workouts/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="6" column="1" lean-forward="false" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/health/workouts/proc_add.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -797,9 +801,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="36" column="22" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="117" selection-end-column="9" />
-          <folding>
-            <marker date="1508285515204" expanded="true" signature="171:302" ph="SELECT vnd_i... vnd_bills" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -807,7 +808,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="549">
           <caret line="511" column="1" lean-forward="false" selection-start-line="511" selection-start-column="1" selection-end-line="511" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -815,15 +815,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="226">
           <caret line="69" column="82" lean-forward="false" selection-start-line="69" selection-start-column="71" selection-end-line="69" selection-end-column="82" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bills/admin/add.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="549">
-          <caret line="47" column="6" lean-forward="true" selection-start-line="47" selection-start-column="6" selection-end-line="47" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -831,9 +822,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="549">
           <caret line="39" column="5" lean-forward="true" selection-start-line="39" selection-start-column="5" selection-end-line="39" selection-end-column="5" />
-          <folding>
-            <marker date="1508285515220" expanded="true" signature="978:1254" ph="INSERT INTO vnd_bills... " />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -876,25 +864,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sol/glucose/index.php">
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/phpstorm.jar!/resources/html5-schema/html5/web-forms2.rnc">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="98" column="124" lean-forward="false" selection-start-line="98" selection-start-column="124" selection-end-line="98" selection-end-column="124" />
+        <state relative-caret-position="17">
+          <caret line="364" column="22" lean-forward="true" selection-start-line="364" selection-start-column="22" selection-end-line="364" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/mdb.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1032">
+          <caret line="25" column="163012" lean-forward="false" selection-start-line="25" selection-start-column="163012" selection-end-line="25" selection-end-column="163012" />
           <folding>
-            <marker date="1508290175896" expanded="true" signature="180:187" ph="SELECT vnd_i... vnd_bills" />
-            <marker date="1508290175896" expanded="true" signature="180:194" ph="SELECT * FRO... glu_" />
-            <marker date="1508290175896" expanded="true" signature="180:243" ph="SELECT * FRO... glu_glucose_log" />
+            <element signature="e#122793#123036#2" expanded="true" />
+            <element signature="e#124453#124702#2" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bills/admin/add.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="549">
+          <caret line="39" column="22" lean-forward="true" selection-start-line="39" selection-start-column="22" selection-end-line="39" selection-end-column="22" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sol/glucose/add.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="45" column="52" lean-forward="false" selection-start-line="45" selection-start-column="52" selection-end-line="45" selection-end-column="52" />
-          <folding>
-            <element signature="n#style#0;n#div#1;n#fieldset#0;n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+        <state relative-caret-position="68">
+          <caret line="45" column="58" lean-forward="false" selection-start-line="44" selection-start-column="12" selection-end-line="45" selection-end-column="58" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -906,6 +907,31 @@
             <marker date="1508290501328" expanded="false" signature="568:594" ph="..." />
             <marker date="1508290501328" expanded="false" signature="829:854" ph="..." />
             <marker date="1508290501328" expanded="false" signature="1027:1052" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sol/glucose/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+          <folding>
+            <marker date="1508292375763" expanded="true" signature="180:187" ph="SELECT vnd_i... vnd_bills" />
+            <marker date="1508292375763" expanded="true" signature="180:194" ph="SELECT * FRO... glu_" />
+            <marker date="1508292375763" expanded="true" signature="180:243" ph="SELECT * FRO... glu_glucose_log" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sol/glucose/chart.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="56" column="48" lean-forward="true" selection-start-line="56" selection-start-column="48" selection-end-line="56" selection-end-column="48" />
+          <folding>
+            <marker date="1508292375847" expanded="true" signature="456:502" ph="SELECT * FRO... glu_glucose_log" />
+            <marker date="1508292375847" expanded="true" signature="456:505" ph="SELECT * FRO... glu_glucose_log" />
+            <marker date="1508292375847" expanded="true" signature="456:506" ph="SELECT * FRO... glu_glucose_log" />
+            <marker date="1508292375847" expanded="true" signature="456:541" ph="SELECT * FRO... glu_glucose_log" />
           </folding>
         </state>
       </provider>
