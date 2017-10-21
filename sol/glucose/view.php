@@ -1,18 +1,23 @@
 <?php
 include "../../inc/includes.php";
 
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+
+$sql = "SELECT * FROM glu_glucose_log WHERE id = :id ";
+$Logs = getQuery($sql, [
+    "id" => $id
+]);
+$getLog = array();
+if (count($Logs) > 0) {
+    $getLog = $Logs[0];
+}
+
 /*/
 if (!isset($_SESSION['user'])) {
     header("Location: /login.php");
     exit;
 }
 //*/
-$ip = $_SERVER['REMOTE_ADDR'];
-$user_agent = $_SERVER['HTTP_USER_AGENT'];
-$ipArr = explode(".", $ip);
-$userAgentArr = explode(" ", $user_agent);
-$string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
-$hash_key = md5($string_to_hash);
 ?>
 <!DOCTYPE html>
 <html>
@@ -38,7 +43,7 @@ $hash_key = md5($string_to_hash);
     <form class="form-horizontal" id="frmAddBill" action="proc_add.php" method="post" >
         <fieldset>
             <!-- Form Name -->
-            <legend>Add Log</legend>
+            <legend>View Log</legend>
 
             <div style="clear: both; height: 7px"></div>
 
@@ -47,32 +52,26 @@ $hash_key = md5($string_to_hash);
 
             <!-- Text input-->
             <div class="form-group">
-                <label class="col-md-4 control-label" for="textinput">Date Recorded</label>
+                <label class="col-md-4 control-label" for="textinput">DateTime Recorded</label>
                 <div class="col-md-4">
-                    <input id="date_taken" name="date_taken" type="text" placeholder="Date Taken" class="form-control input-md" value="<?php echo date("m/d/Y"); ?>" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="textinput">Time Recorded</label>
-                <div class="col-md-4">
-                    <input id="time_taken" name="time_taken" type="text" placeholder="Time Taken" class="form-control input-small" value="" />
+                    <div style="clear: both; height: 7px;" ></div>
+                    <?php echo date("m/d/Y @ g:i A", strtotime($getLog['date_taken'])); ?>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Level</label>
                 <div class="col-md-4">
-                    <input id="level" name="level" type="text" placeholder="Glucose Level (Numbers Only)" class="form-control input-md" value="" />
+                    <div style="clear: both; height: 7px;" ></div>
+                    <?php echo $getLog['level']; ?>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Notes (Optional)</label>
                 <div class="col-md-4">
-                    <textarea name="notes" id="notes" class="form-control" rows="5" id="comment"></textarea>
+                    <textarea name="notes" id="notes" class="form-control" rows="5" id="comment" readonly><?php echo $getLog['notes']; ?></textarea>
                 </div>
             </div>
         </fieldset>
-        <a href="javascript:void(0);" onclick="$('#frmAddBill').submit();" class="btn btn-primary">Create Log</a>
-        <input type="hidden" name="hash_key_token_cs" id="hash_key_token_cs" value="<?php echo $hash_key; ?>" />
     </form>
 
 </div>

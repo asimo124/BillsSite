@@ -23,10 +23,32 @@ $lastMonthDate = date($lastYear . "-" . $lastMonth . "-1");
 
 $firstToday = date("Y-m-1");
 
-$sql = "SELECT * FROM glu_glucose_log WHERE date_taken >= :firstToday ORDER BY date_taken ASC ";
+$sql = "SELECT *,  
+        CASE WHEN DATE_FORMAT(date_taken, '%k') <= 11 THEN
+          'Morning' 
+        ELSE 
+          'Evening'
+        END as time_of_day
+        FROM glu_glucose_log 
+        WHERE date_taken >= :firstToday  
+        ORDER BY date_taken ASC ";
 $resultset = getQuery($sql, [
     "firstToday" => $firstToday
 ]);
+
+$allResults = array();
+$morningResults = array();
+$eveningResults = array();
+foreach ($resultset as $getItem) {
+
+    if ($getItem['time_of_day'] == "Morning") {
+        $allResults[date("Y-m-d", strtotime($getItem['date_taken']))]['morning'] = $getItem;
+    } else {
+        $allResults[date("Y-m-d", strtotime($getItem['date_taken']))]['evening'] = $getItem;
+    }
+}
+
+
 
 $lastMonthName = date("M", strtotime($lastMonthDate));
 $curMonthName = date("M");
@@ -78,13 +100,13 @@ $curMonthName = date("M");
             type: 'line',
             data: {
                 labels: [
-                    <?php foreach ($resultset as $getItem) : ?>
-                        "<?php echo date("D, jS", strtotime($getItem['date_taken'])); ?>",
+                    <?php foreach ($allResults as $date => $getItem) : ?>
+                        "<?php echo date("D, jS", strtotime($date)); ?>",
                     <?php endforeach; ?>
                 ],
                 datasets: [
                     {
-                        label: "Glucose Levels for Month of <?php echo $curMonthName; ?>",
+                        label: "<?php echo $curMonthName; ?> Levels in Morning",
                         fillColor: "rgba(151,187,205,0.2)",
                         strokeColor: "rgba(151,187,205,1)",
                         pointColor: "rgba(151,187,205,1)",
@@ -92,8 +114,30 @@ $curMonthName = date("M");
                         pointHighlightFill: "#fff",
                         pointHighlightStroke: "rgba(151,187,205,1)",
                         data: [
-                            <?php foreach ($resultset as $getItem) : ?>
-                                <?php echo $getItem['level']; ?>,
+                            <?php foreach ($allResults as $date => $getItem) : ?>
+                                <?php if (isset($getItem['morning'])) : ?>
+                                    <?php echo $getItem['morning']['level']; ?>,
+                                <?php /*elseif (isset($getItem['evening'])) : ?>
+                                    <?php echo $getItem['evening']['level'];*/ ?>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        ]
+                    },
+                    {
+                        label: "<?php echo $curMonthName; ?> Levels in Evening",
+                        fillColor: "rgba(100,100,100,0.2)",
+                        strokeColor: "rgba(105,105,105,1)",
+                        pointColor: "rgba(110,110,110,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(100,100,100,1)",
+                        data: [
+                            <?php foreach ($allResults as $date => $getItem) : ?>
+                                <?php if (isset($getItem['evening'])) : ?>
+                                    <?php echo $getItem['evening']['level']; ?>,
+                                <?php /*elseif (isset($getItem['morning'])) : ?>
+                                    <?php echo $getItem['morning']['level'];*/ ?>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         ]
                     }

@@ -18,6 +18,15 @@ $ipArr = explode(".", $ip);
 $userAgentArr = explode(" ", $user_agent);
 $string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
 $hash_key = md5($string_to_hash);
+
+function isMorning($date2) {
+    $date3 = intval(date("H", strtotime($date2)));
+    if ($date3 <= 11) {
+        return true;
+    } else {
+        return false;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,6 +37,12 @@ $hash_key = md5($string_to_hash);
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/nav.css" />
+    <style type="text/css">
+
+        .table-striped>tbody>tr:nth-child(odd)>td, .table-striped>tbody>tr:nth-child(odd)>th {
+            background-color: inherit;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -57,7 +72,7 @@ $hash_key = md5($string_to_hash);
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
-                    <th>Date/Time</th>
+                    <th>Date</th>
                     <th>Level</th>
                     <th colspan="1">Actions</th>
                 </tr>
@@ -65,11 +80,11 @@ $hash_key = md5($string_to_hash);
                 <tbody>
                 <?php if (count($resultset) > 0) { ?>
                     <?php foreach ($resultset as $getLog) { ?>
-                        <tr>
+                        <tr style="background-color: <?php echo isMorning($getLog['date_taken']) ? "#fcc480" : "#72dbff"; ?>">
                             <td><?php echo date("m/d/Y @ g:i A", strtotime($getLog['date_taken'])); ?></td>
                             <td><?php echo $getLog['level']; ?></td>
                             <?php /*<td><a href="edit.php?id=<?php echo $getLog['vnd_id']; ?>" class="btn btn-primary">Edit</a></td>*/ ?>
-                            <td><a class="btn btn-primary del_btn" data-id="<?php echo $getLog['id']; ?>" data-toggle="modal" data-target="#delBill">Delete</a></td>
+                            <td><a class="btn btn-primary edit_btn" href="view.php?id=<?php echo $getLog['id']; ?>" >View</a>&nbsp; <a class="btn btn-default del_btn" data-id="<?php echo $getLog['id']; ?>" data-toggle="modal" data-target="#delBill">Delete</a></td>
                         </tr>
                     <?php } ?>
                 <?php } else { ?>
