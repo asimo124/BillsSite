@@ -64,6 +64,7 @@ $curMonthName = date("M");
     <link rel="stylesheet" href="/css/nav.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/mdb.min.css" />
+    <link rel="stylesheet" href="/css/style_mdb.css" />
 </head>
 <body>
 <div class="container">
@@ -81,7 +82,7 @@ $curMonthName = date("M");
     <div style="clear: both; height: 7px;" ></div>
 
 
-    <canvas id="lineChart"></canvas>
+    <canvas id="lineChart" colours="colours"></canvas>
 </div>
 
 </div>
@@ -107,12 +108,12 @@ $curMonthName = date("M");
                 datasets: [
                     {
                         label: "<?php echo $curMonthName; ?> Levels in Morning",
-                        fillColor: "rgba(151,187,205,0.2)",
-                        strokeColor: "rgba(151,187,205,1)",
-                        pointColor: "rgba(151,187,205,1)",
-                        pointStrokeColor: "#fff",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke: "rgba(151,187,205,1)",
+                        fillColor: "rgba(252,196,128,0.2)",
+                        strokeColor: "rgba(237,139,16,1)",
+                        pointColor: "rgba(242,110,110,1)",
+                        pointStrokeColor: "#ed8b10",
+                        pointHighlightFill: "#ed8b10",
+                        pointHighlightStroke: "rgba(237,139,16,1)",
                         data: [
                             <?php foreach ($allResults as $date => $getItem) : ?>
                                 <?php if (isset($getItem['morning'])) : ?>
@@ -125,12 +126,12 @@ $curMonthName = date("M");
                     },
                     {
                         label: "<?php echo $curMonthName; ?> Levels in Evening",
-                        fillColor: "rgba(100,100,100,0.2)",
-                        strokeColor: "rgba(105,105,105,1)",
-                        pointColor: "rgba(110,110,110,1)",
-                        pointStrokeColor: "#fff",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke: "rgba(100,100,100,1)",
+                        fillColor: "rgba(252,196,128,0.2)",
+                        strokeColor: "rgba(237,139,16,1)",
+                        pointColor: "rgba(242,110,110,1)",
+                        pointStrokeColor: "#ed8b10",
+                        pointHighlightFill: "#ed8b10",
+                        pointHighlightStroke: "rgba(237,139,16,1)",
                         data: [
                             <?php foreach ($allResults as $date => $getItem) : ?>
                                 <?php if (isset($getItem['evening'])) : ?>
