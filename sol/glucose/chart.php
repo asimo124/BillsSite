@@ -80,7 +80,6 @@ $curMonthName = date("F");
     <div style="clear: both; height: 7px;" ></div>
 
     <canvas id="myChart" style="height: 370px; width: 100%;"></canvas>
-    <?php /*<div id="chartContainer" style="height: 370px; width: 100%;"></div>*/ ?>
 </div>
 </body>
 <script src="https://code.jquery.com/jquery.js"></script>
@@ -89,92 +88,6 @@ $curMonthName = date("F");
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js" ></script>
 <script src="/js/nav.js" ></script>
 <script>
-    <?php/*
-    window.onload = function () {
-
-//Better to construct options first and then pass it as a parameter
-        var options = {
-            responsive: true,
-            exportEnabled: true,
-            animationEnabled: true,
-            title: {
-                text: "<?php echo $curMonthName; ?> Glucose Levels"
-            },
-            data: [
-                {
-                    color: "orange",
-                    legendText: "Morning",
-                    showInLegend: true,
-                    type: "splineArea", //change it to line, area, bar, pie, etc
-                    dataPoints: [
-                        <?php foreach ($allResults as $date => $getItem) : ?>
-                            <?php if (isset($getItem['morning'])) { ?>
-                                { y: <?php echo $getItem['morning']['level']; ?>, label: "<?php echo date("jS", strtotime($getItem['morning']['date_taken'])); ?>"},
-                            <?php } else if (isset($getItem['evening'])) { ?>
-                                { y: null, label: "<?php echo date("jS", strtotime($getItem['evening']['date_taken'])); ?>"},
-                            <?php } ?>
-                        <?php endforeach; ?>
-                    ]
-                },
-                {
-                    color: "blue",
-                    legendText: "Evening",
-                    showInLegend: true,
-                    type: "splineArea", //change it to line, area, bar, pie, etc
-                    dataPoints: [
-                        <?php foreach ($allResults as $date => $getItem) : ?>
-                            <?php if (isset($getItem['evening'])) { ?>
-                                { y: <?php echo $getItem['evening']['level']; ?>, label: "<?php echo date("jS", strtotime($getItem['evening']['date_taken'])); ?>"},
-                            <?php } else if (isset($getItem['morning'])) { ?>
-                                { y: null, label: "<?php echo date("jS", strtotime($getItem['morning']['date_taken'])); ?>"},
-                            <?php } ?>
-                        <?php endforeach; ?>
-                    ]
-                }
-            ]
-        };
-        $("#chartContainer").CanvasJSChart(options);
-
-    }*/ ?>
-
-    /*
-    var ctx = document.getElementById("myChart").getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            }
-        }
-    });*/
 
     var ctx = document.getElementById('myChart').getContext('2d');
     var myChart = new Chart(ctx, {
