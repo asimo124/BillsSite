@@ -40,7 +40,7 @@ if (!isset($_SESSION['user'])) {
         </div>
     <?php } ?>
 
-    <form class="form-horizontal" id="frmAddBill" action="proc_add.php" method="post" >
+    <form class="form-horizontal" id="frmEditBill" action="proc_edit.php" method="post" >
         <fieldset>
             <!-- Form Name -->
             <legend>View Log</legend>
@@ -68,10 +68,12 @@ if (!isset($_SESSION['user'])) {
             <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Notes (Optional)</label>
                 <div class="col-md-4">
-                    <textarea name="notes" id="notes" class="form-control" rows="5" id="comment" readonly><?php echo $getLog['notes']; ?></textarea>
+                    <textarea name="notes" id="notes" class="form-control" rows="5" id="comment"><?php echo $getLog['notes']; ?></textarea>
                 </div>
             </div>
         </fieldset>
+        <input type="hidden" name="id" id="id" value="<?php echo $id; ?>" />
+        <a href="javascript:void(0);" onclick="$('#frmEditBill').submit();" class="btn btn-primary">Update</a>
     </form>
 
 </div>
