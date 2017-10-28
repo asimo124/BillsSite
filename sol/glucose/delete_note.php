@@ -23,18 +23,13 @@ if ($hash_key_token_cs != $hash_key) {
 }
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$log_id = isset($_REQUEST['log_id']) ? intval($_REQUEST['log_id']) : 0;
 
-$sql = "DELETE FROM glu_glucose_log WHERE id = :id ";
-
-execQuery($sql, [
-    "id" =>  $id
-]);
-
-$sql = "DELETE FROM glu_log_notes WHERE log_id = :id ";
+$sql = "DELETE FROM glu_log_notes WHERE id = :id ";
 
 execQuery($sql, [
     "id" =>  $id
 ]);
 
-header("Location: index.php?Message=" . urlencode("You have deleted a log."));
+header("Location: view.php?id=" . $log_id . "&Message=" . urlencode("You have deleted a note."));
 exit;

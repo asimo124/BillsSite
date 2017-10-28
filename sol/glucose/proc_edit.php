@@ -1,6 +1,8 @@
 <?php
 include "../../inc/includes.php";
 
+exit;
+
 /*/
 if (!isset($_SESSION['user'])) {
     header("Location: /login.php");

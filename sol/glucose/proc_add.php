@@ -42,16 +42,28 @@ if ($level <= 0) {
 }
 
 $sql = "INSERT INTO glu_glucose_log
-        ( date_taken,  level,  notes) VALUES
-        (:date_taken, :level, :notes) ";
+        ( date_taken,  level) VALUES
+        (:date_taken, :level) ";
 
 execQuery($sql, [
     "date_taken" => $date_taken2,
-    "level" => $level,
-    "notes" => $notes,
+    "level" => $level
 ]);
 
 $lastId = $db_conn->lastInsertId();
+
+if ($notes != "") {
+
+    $sql = "INSERT INTO glu_log_notes 
+           ( log_id,  date_entered,  note) VALUES  
+           (:log_id, :date_entered, :note) ";
+
+    execQuery($sql, [
+        "log_id" => $lastId,
+        "date_entered" => date("Y-m-d H:i:s"),
+        "note" => $notes
+    ]);
+}
 
 header("Location: index.php?Message=" . urlencode("Log has been created."));
 exit;

@@ -12,6 +12,20 @@ if (count($Logs) > 0) {
     $getLog = $Logs[0];
 }
 
+$sql = "SELECT * FROM glu_log_notes WHERE log_id = :id ";
+$Notes = getQuery($sql, [
+    "id" => $id
+]);
+
+$hash_key_token_cs  = isset($_REQUEST['hash_key_token_cs']) ? ($_REQUEST['hash_key_token_cs']) : "";
+
+$ip = $_SERVER['REMOTE_ADDR'];
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
+$ipArr = explode(".", $ip);
+$userAgentArr = explode(" ", $user_agent);
+$string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
+$hash_key = md5($string_to_hash);
+
 /*/
 if (!isset($_SESSION['user'])) {
     header("Location: /login.php");
@@ -65,17 +79,49 @@ if (!isset($_SESSION['user'])) {
                     <?php echo $getLog['level']; ?>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="textinput">Notes (Optional)</label>
-                <div class="col-md-4">
-                    <textarea name="notes" id="notes" class="form-control" rows="5" id="comment"><?php echo $getLog['notes']; ?></textarea>
-                </div>
-            </div>
         </fieldset>
-        <input type="hidden" name="id" id="id" value="<?php echo $id; ?>" />
-        <a href="javascript:void(0);" onclick="$('#frmEditBill').submit();" class="btn btn-primary">Update</a>
     </form>
 
+    <form class="form-horizontal" id="frmAddNote" action="proc_add_note.php" method="post" >
+        <fieldset>
+            <!--<legend>View Log</legend>-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Add New Note:</label>
+                <div class="col-md-4">
+                    <textarea name="notes" id="notes" class="form-control" rows="5" id="comment"></textarea>
+                </div>
+                <div style="clear: both; height: 7px;" ></div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <input type="hidden" name="log_id" id="log_id" value="<?php echo $id; ?>" />
+                    <a href="javascript:void(0);" onclick="$('#frmAddNote').submit();" class="btn btn-primary">Add</a>
+                </div>
+            </div>
+            <input type="hidden" name="hash_key_token_cs" id="hash_key_token_cs" value="<?php echo $hash_key; ?>" />
+        </fieldset>
+    </form>
+
+    <?php foreach ($Notes as $getNote) { ?>
+        <form class="form-horizontal" id="frmEditBill<?php echo $getNote['id']; ?>" action="proc_edit_note.php" method="post" >
+            <fieldset>
+                <!--<legend>View Log</legend>-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="textinput">Note: <?php echo date("m/d/Y g:i A", strtotime($getNote['date_entered'])); ?></label>
+                    <div class="col-md-4">
+                        <textarea name="notes" id="notes" class="form-control" rows="5" id="comment"><?php echo $getNote['note']; ?></textarea>
+                    </div>
+                    <div style="clear: both; height: 7px;" ></div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <input type="hidden" name="log_id" id="log_id" value="<?php echo $id; ?>" />
+                        <input type="hidden" name="id" id="id" value="<?php echo $getNote['id']; ?>" />
+                        <a href="javascript:void(0);" onclick="$('#frmEditBill<?php echo $getNote['id']; ?>').submit();" class="btn btn-primary">Update</a>&nbsp; <a href="delete_note.php?id=<?php echo $getNote['id']; ?>&log_id=<?php echo $id; ?>&hash_key_token_cs=<?php echo $hash_key; ?>" class="btn btn-info">Delete</a>
+                    </div>
+                </div>
+                <input type="hidden" name="hash_key_token_cs" id="hash_key_token_cs" value="<?php echo $hash_key; ?>" />
+            </fieldset>
+        </form>
+    <?php } ?>
 </div>
 </body>
 <script src="https://code.jquery.com/jquery.js"></script>
