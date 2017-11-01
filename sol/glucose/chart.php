@@ -19,7 +19,9 @@ if ($date2 == 1) {
     $lastYear = $curYear;
 }
 
-$lastMonthDate = date($lastYear . "-" . $lastMonth . "-1");
+$lastMonthDateFirst = date($lastYear . "-" . $lastMonth . "-1");
+$dateLast = date($lastYear . "-" . $lastMonth . "-1");
+$lastMonthDateLast = date("Y-m-t 23:59:59", strtotime($dateLast));
 
 $firstToday = date("Y-m-1");
 
@@ -37,8 +39,6 @@ $resultset = getQuery($sql, [
 ]);
 
 $allResults = array();
-$morningResults = array();
-$eveningResults = array();
 foreach ($resultset as $getItem) {
 
     if ($getItem['time_of_day'] == "Morning") {
@@ -48,9 +48,31 @@ foreach ($resultset as $getItem) {
     }
 }
 
+$sql = "SELECT *,
+        CASE WHEN DATE_FORMAT(date_taken, '%k') <= 11 THEN
+          'Morning'
+        ELSE
+          'Evening'
+        END as time_of_day
+        FROM glu_glucose_log
+        WHERE date_taken between :lastMonthDateFirst and :lastMonthDateLast
+        ORDER BY date_taken ASC ";
+$resultset = getQuery($sql, [
+    "lastMonthDateFirst" => $lastMonthDateFirst,
+    "lastMonthDateLast" => $lastMonthDateLast
+]);
 
+$allResultsLast = array();
+foreach ($resultset as $getItem) {
 
-$lastMonthName = date("F", strtotime($lastMonthDate));
+    if ($getItem['time_of_day'] == "Morning") {
+        $allResultsLast[date("Y-m-d", strtotime($getItem['date_taken']))]['morning'] = $getItem;
+    } else {
+        $allResultsLast[date("Y-m-d", strtotime($getItem['date_taken']))]['evening'] = $getItem;
+    }
+}
+
+$lastMonthName = date("F", strtotime($lastMonthDateFirst));
 $curMonthName = date("F");
 ?>
 <!DOCTYPE html>
@@ -73,13 +95,21 @@ $curMonthName = date("F");
         </div>
     <?php } ?>
 
-    <h2>Glucose Log Chart</h2>
+    <h1>Glucose Log Chart</h1>
 
     <div style="clear: both; height: 7px"></div>
     <a href="index.php" >Back</a>
     <div style="clear: both; height: 7px;" ></div>
 
-    <canvas id="myChart" style="height: 370px; width: 100%;"></canvas>
+    <h2>Previous Month - <?php echo $lastMonthName; ?></h2>
+    <canvas id="myChartLast" style="height: 370px; width: 100%;"></canvas>
+    <div style="clear: both; height: 7px;" ></div>
+
+    <h2>Current Month - <?php echo $curMonthName; ?></h2>
+    <canvas id="myChartCurrent" style="height: 370px; width: 100%;"></canvas>
+
+
+
 </div>
 </body>
 <script src="https://code.jquery.com/jquery.js"></script>
@@ -89,8 +119,8 @@ $curMonthName = date("F");
 <script src="/js/nav.js" ></script>
 <script>
 
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
+    var ctxCurrent = document.getElementById('myChartCurrent').getContext('2d');
+    var myChartCurrent = new Chart(ctxCurrent, {
         type: 'line',
         data: {
             labels: [
@@ -125,4 +155,44 @@ $curMonthName = date("F");
             }]
         }
     });
+
+
+    var ctxLast = document.getElementById('myChartLast').getContext('2d');
+    var myChartLast = new Chart(ctxLast, {
+        type: 'line',
+        data: {
+            labels: [
+                <?php foreach ($allResultsLast as $date => $getItem) : ?>
+                "<?php echo date("jS", strtotime($date)); ?>",
+                <?php endforeach; ?>,
+            ],
+            datasets: [{
+                label: 'Morning',
+                data: [
+                    <?php foreach ($allResultsLast as $date => $getItem) : ?>
+                    <?php if (isset($getItem['morning'])) { ?>
+                    <?php echo $getItem['morning']['level']; ?>,
+                    <?php } else if (isset($getItem['evening'])) { ?>
+                    null,
+                    <?php } ?>
+                    <?php endforeach; ?>
+                ],
+                backgroundColor: "rgba(237,139,16,0.4)"
+            }, {
+                label: 'Evening',
+                data: [
+                    <?php foreach ($allResultsLast as $date => $getItem) : ?>
+                    <?php if (isset($getItem['evening'])) { ?>
+                    <?php echo $getItem['evening']['level']; ?>,
+                    <?php } else if (isset($getItem['morning'])) { ?>
+                    null,
+                    <?php } ?>
+                    <?php endforeach; ?>
+                ],
+                backgroundColor: "rgba(68,138,252,0.4)"
+            }]
+        }
+    });
+
+
 </script>
