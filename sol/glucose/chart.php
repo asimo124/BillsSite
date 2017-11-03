@@ -102,11 +102,11 @@ $curMonthName = date("F");
     <div style="clear: both; height: 7px;" ></div>
 
     <h2>Previous Month - <?php echo $lastMonthName; ?></h2>
-    <canvas id="myChartLast" style="height: 370px; width: 100%;"></canvas>
+    <canvas id="myChartLast" style="height: 370px; width: <?php echo (count($allResults) > 10) ? "100%" : "96%"; ?>;"></canvas>
     <div style="clear: both; height: 7px;" ></div>
 
     <h2>Current Month - <?php echo $curMonthName; ?></h2>
-    <canvas id="myChartCurrent" style="height: 370px; width: 100%;"></canvas>
+    <canvas id="myChartCurrent" style="height: 370px; width: <?php echo (count($allResults) > 10) ? "100%" : "96%"; ?>;"></canvas>
 
 
 
