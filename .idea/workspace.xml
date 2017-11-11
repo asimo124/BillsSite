@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a2afb100-9492-4794-888f-87188d2c08b9" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sol/glucose/chart.php" afterPath="$PROJECT_DIR$/sol/glucose/chart.php" />
     </list>
@@ -49,15 +47,15 @@
       <file leaf-file-name="chart.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sol/glucose/chart.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="115" column="73" lean-forward="false" selection-start-line="115" selection-start-column="73" selection-end-line="115" selection-end-column="73" />
+            <state relative-caret-position="413">
+              <caret line="67" column="0" lean-forward="true" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#3;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#canvas#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#4;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <marker date="1510424639000" expanded="true" signature="681:969" ph="SELECT *, CA... glu_glucose_log" />
+                <marker date="1510425568720" expanded="true" signature="554:878" ph="SELECT *, CA... glu_glucose_log" />
               </folding>
             </state>
           </provider>
@@ -423,7 +421,7 @@
       <workItem from="1508603494596" duration="3893000" />
       <workItem from="1508682882819" duration="1753000" />
       <workItem from="1509216743964" duration="2721000" />
-      <workItem from="1510423936252" duration="849000" />
+      <workItem from="1510423936252" duration="1623000" />
     </task>
     <task id="LOCAL-00001" summary="fixed color issue">
       <created>1495227677869</created>
@@ -551,11 +549,18 @@
       <option name="project" value="LOCAL" />
       <updated>1509219477562</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="working on chart order of months">
+      <created>1510424819093</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1510424819093</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15918000" />
+    <option name="totallyTimeSpent" value="16692000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -566,7 +571,7 @@
       <window_info id="DB Execution Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32646593" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2203514" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -612,6 +617,16 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
       <collection />
@@ -642,7 +657,8 @@
     <MESSAGE value="more changes for sol on glucose log, including adding extra line for morning evening, abilty to add notes and view them" />
     <MESSAGE value="tried to change colors, doesn't work in free version" />
     <MESSAGE value="added ability to add multiple notes to a log, edit and delete them" />
-    <option name="LAST_COMMIT_MESSAGE" value="added ability to add multiple notes to a log, edit and delete them" />
+    <MESSAGE value="working on chart order of months" />
+    <option name="LAST_COMMIT_MESSAGE" value="working on chart order of months" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1041,15 +1057,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sol/glucose/chart.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="115" column="73" lean-forward="false" selection-start-line="115" selection-start-column="73" selection-end-line="115" selection-end-column="73" />
+        <state relative-caret-position="413">
+          <caret line="67" column="0" lean-forward="true" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
           <folding>
             <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#3;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#canvas#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#4;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1510424639000" expanded="true" signature="681:969" ph="SELECT *, CA... glu_glucose_log" />
+            <marker date="1510425568720" expanded="true" signature="554:878" ph="SELECT *, CA... glu_glucose_log" />
           </folding>
         </state>
       </provider>

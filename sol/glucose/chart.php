@@ -11,13 +11,8 @@ if (!isset($_SESSION['user'])) {
 
 $curMonth = intval(date("m"));
 $curYear = date("Y");
-if ($date2 == 1) {
-    $lastMonth = 12;
-    $lastYear = $curYear - 1;
-} else {
-    $lastMonth = $curMonth - 1;
-    $lastYear = $curYear;
-}
+$lastYear = $curYear;
+$lastMonth = $curMonth;
 
 $monthNames = array();
 $monthResults = array();
@@ -27,8 +22,6 @@ for ($t = 0; $t < 7; $t++) {
     $dateLast = date($lastYear . "-" . $lastMonth . "-t");
     $lastMonthDateLast = date("Y-m-t 23:59:59", strtotime($dateLast));
 
-    $firstToday = date("Y-m-1");
-
     $sql = "SELECT *,  
             CASE WHEN DATE_FORMAT(date_taken, '%k') <= 11 THEN
               'Morning' 
@@ -36,14 +29,15 @@ for ($t = 0; $t < 7; $t++) {
               'Evening'
             END AS time_of_day
             FROM glu_glucose_log 
-            WHERE date_taken >= :firstToday  
+            WHERE date_taken between :lastMonthDateFirst and :lastMonthDateLast  
             ORDER BY date_taken ASC ";
+
     $resultset = getQuery($sql, [
-        "firstToday" => $firstToday
+        "lastMonthDateFirst" => $lastMonthDateFirst,
+        "lastMonthDateLast" => $lastMonthDateLast
     ]);
 
     $allResults = array();
-    preformat($resultset);
     if (count($resultset) > 0) {
         foreach ($resultset as $getItem) {
 
@@ -57,12 +51,21 @@ for ($t = 0; $t < 7; $t++) {
         break;
     }
     $monthResults[] = $allResults;
-
     $lastMonthName = date("F", strtotime($lastMonthDateFirst));
     $monthNames[] = $lastMonthName;
+
+    $curMonth = intval(date("m", strtotime($lastMonthDateFirst)));
+    $curYear = date("Y", strtotime($lastMonthDateFirst));
+
+    if ($curMonth == 1) {
+        $lastMonth = 12;
+        $lastYear = $curYear - 1;
+    } else {
+        $lastMonth = $curMonth - 1;
+        $lastYear = $curYear;
+    }
 }
 
-//$curMonthName = date("F");
 ?>
 <!DOCTYPE html>
 <html>
@@ -92,15 +95,11 @@ for ($t = 0; $t < 7; $t++) {
 
     <?php foreach ($monthResults as $i => $getResults) { ?>
 
-        <h2><?php echo ($i == 0) ? "Current" : "Previous"; ?> Month - <?php echo $lastMonthName; ?></h2>
+        <h2><?php echo ($i == 0) ? "Current" : "Previous"; ?> Month - <?php echo $monthNames[$i]; ?></h2>
         <canvas id="myChart<?php echo $i; ?>" style="height: 370px; width: <?php echo (count($getResults) > 10) ? "100%" : "96%"; ?>;"></canvas>
         <div style="clear: both; height: 7px;" ></div>
 
     <?php } ?>
-
-
-
-
 
 </div>
 </body>
@@ -151,6 +150,5 @@ for ($t = 0; $t < 7; $t++) {
         });
 
     <?php } ?>
-
 
 </script>
