@@ -21,10 +21,11 @@ if ($vnd_bill == "" || $amount <= 0) {
 }
 
 $sql = "INSERT INTO vnd_bills
-        ( vnd_bill,  amount,  vnd_is_auto,  vnd_frequency_notes,  vnd_frequency,  vnd_frequency_type,  vnd_frequency_value) VALUES
-        (:vnd_bill, :amount, :vnd_is_auto, :vnd_frequency_notes, :vnd_frequency, :vnd_frequency_type, :vnd_frequency_value) ";
+        ( vnd_user_id,  vnd_bill,  amount,  vnd_is_auto,  vnd_frequency_notes,  vnd_frequency,  vnd_frequency_type,  vnd_frequency_value) VALUES
+        (:vnd_user_id, :vnd_bill, :amount, :vnd_is_auto, :vnd_frequency_notes, :vnd_frequency, :vnd_frequency_type, :vnd_frequency_value) ";
 
 execQuery($sql, [
+    "vnd_user_id" => 1,
     "vnd_bill" => $vnd_bill,
     "amount" => $amount,
     "vnd_is_auto" => $vnd_is_auto,
