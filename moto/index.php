@@ -60,76 +60,39 @@ if (isset($_REQUEST['send_moto'])) {
         $payPeriods = $balance / $rate;
 
         $currentDate = date("Y-m-d");
-        $currentDay = intval(date("d"));
+        $currentDay = intval(date("d", strtotime($currentDate)));
 
-        $currentYear = date("Y");
-        $currentMonth = intval(date("m"));
+        $currentYear = date("Y", strtotime($currentDate));
+        $currentMonth = intval(date("m", strtotime($currentDate)));
 
+        $monthsFloat = $payPeriods / 2;
+        $monthsInt = intval($payPeriods / 2);
 
-        if ($currentDay < 15) {
-
-
-            $monthsFloat = $payPeriods / 2;
-            $monthsInt = intval($payPeriods / 2);
-            if ($monthsFloat - $monthsInt > 0.50) {
-
-
-                $monthPaid = intval($currentMonth + ($payPeriods / 2));
-                $dayPaid = 15;
-                $yearPaid = 2018;
-                if ($monthPaid > 12) {
-                    $monthPaid = $monthPaid - 12;
-
-                }
-            } else {
-
-                $monthPaid = intval($currentMonth + ($payPeriods / 2));
-
-                $dayPaid = 1;
-                $yearPaid = 2018;
-                if ($monthPaid > 12) {
-                    $monthPaid = $monthPaid - 12;
-                }
-            }
-        } else {
-
-
-
-            $monthsFloat = $payPeriods / 2;
-            $monthsInt = intval($payPeriods / 2);
-            if ($monthsFloat - $monthsInt > 0.50) {
-                $monthPaid = $currentMonth + intval(($payPeriods / 2));
-
-                $dayPaid = 1;
-                $yearPaid = 2018;
-                if ($monthPaid > 12) {
-
-                    $monthPaid = $monthPaid - 12 + 1;
-                }
-
-
-
-            } else {
-
-
-
-                $monthPaid = $currentMonth + intval(($payPeriods / 2));
-
-                $dayPaid = 15;
-                $yearPaid = 2018;
-                if ($monthPaid > 12) {
-
-                    $monthPaid = $monthPaid - 12;
-                }
-            }
+        $addPayPeriod = 0;
+        if ($currentDay >= 15) {
+            $addDayPeriod = 0.5;
         }
-
-
+        $monthPaid = $currentMonth + (intval($payPeriods) / 2);
+        $dayPaid = 1;
+        $yearPaid = $currentYear;
+        if ($monthPaid > 12) {
+            $monthPaid = $monthPaid - 12;;
+            $yearPaid++;
+        }
+        if ($monthsFloat - $monthsInt > 0.65) {
+            $monthPaid += 1;
+        } else if ($monthsFloat - $monthsInt > 0.15) {
+            $monthPaid += 0.5;
+        }
+        $monthPaid += $addDayPeriod;
+        $monthPaidInt = intval($monthPaid);
+        if ($monthPaid - $monthPaidInt > 0) {
+            $dayPaid = 15;
+        } else {
+            $dayPaid = 1;
+        }
         $monthsToPay = round($payPeriods / 2, 2);
-        $dayPaid = date("m/d/Y", strtotime($yearPaid . "-" . $monthPaid . "-" . $dayPaid));
-
-
-
+        $dayPaid = date("m/d/Y", strtotime($yearPaid . "-" . $monthPaidInt . "-" . $dayPaid));
     }
 }
 ?>
