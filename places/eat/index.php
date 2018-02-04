@@ -9,8 +9,30 @@ if (!isset($_SESSION['user'])) {
 }
 //*/
 
-$sql = "SELECT * FROM glu_glucose_log ORDER BY date_taken DESC LIMIT 30 ";
-$resultset = getQuery($sql);
+$sql = "SELECT cat.id, cat.category_name 
+        FROM res_categories cat 
+        INNER JOIN res_places pl 
+          ON cat.id = pl.category_id
+        GROUP BY cat.id 
+        ORDER BY cat.category_name ";
+$Categories = getQuery($sql);
+
+$sql = "SELECT pl.* 
+        FROM res_places pl 
+        WHERE pl.category_id = :category_id 
+        ORDER BY pl.place_name  ";
+$stmt_sel_places = $db_conn->prepare($sql);
+
+$resultset = array();
+foreach ($Categories as $index => $getCat) {
+    $stmt_sel_places->execute([
+        "category_id" => $getCat['id']
+    ]);
+    $Places = $stmt_sel_places->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($Places as $getPlace) {
+        $resultset[$getCat['category_name']][] = $getPlace;
+    }
+}
 
 $ip = $_SERVER['REMOTE_ADDR'];
 $user_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -18,20 +40,11 @@ $ipArr = explode(".", $ip);
 $userAgentArr = explode(" ", $user_agent);
 $string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
 $hash_key = md5($string_to_hash);
-
-function isMorning($date2) {
-    $date3 = intval(date("H", strtotime($date2)));
-    if ($date3 <= 11) {
-        return true;
-    } else {
-        return false;
-    }
-}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Glucose Log</title>
+    <title>Places to Eat</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
@@ -53,16 +66,13 @@ function isMorning($date2) {
         </div>
     <?php } ?>
 
-    <h2>Glucose Level Log</h2>
+    <h2>Places to Eat</h2>
 
-    <div style="clear: both; height: 7px"></div>
-
-    <a href="chart.php" class="btn btn-primary" >Chart</a>
     <div style="clear: both; height: 7px"></div>
 
     <div class="row">
         <div class="col-md-12">
-            <a href="add.php" class="btn btn-primary">Add Log</a>
+            <a href="add.php" class="btn btn-primary">Add Restaurant</a>
         </div>
     </div>
     <div style="clear: both; height: 12px"></div>
@@ -72,24 +82,32 @@ function isMorning($date2) {
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Level</th>
+                    <th >Place</th>
                     <th colspan="1">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php if (count($resultset) > 0) { ?>
-                    <?php foreach ($resultset as $getLog) { ?>
-                        <tr style="background-color: <?php echo isMorning($getLog['date_taken']) ? "#fcc480" : "#72dbff"; ?>">
-                            <td><?php echo date("m/d/Y @ g:i A", strtotime($getLog['date_taken'])); ?></td>
-                            <td><?php echo $getLog['level']; ?></td>
-                            <?php /*<td><a href="edit.php?id=<?php echo $getLog['vnd_id']; ?>" class="btn btn-primary">Edit</a></td>*/ ?>
-                            <td><a class="btn btn-primary edit_btn" href="view.php?id=<?php echo $getLog['id']; ?>" >View</a>&nbsp; <a class="btn btn-default del_btn" data-id="<?php echo $getLog['id']; ?>" data-toggle="modal" data-target="#delBill">Delete</a></td>
+                    <?php foreach ($resultset as $catName => $places) { ?>
+                        <tr style="background-color: #bce8f1; color: #000;">
+                            <td colspan="2"><strong></strong><?php echo $catName; ?></strong></td>
                         </tr>
+                        <?php foreach ($places as $getPlace) { ?>
+                            <tr>
+                                <td >
+                                    &nbsp; &nbsp; <a href="<?php echo (($getPlace['google_link']) ? $getPlace['google_link'] : "#"); ?>" target="_blank" ><?php echo $getPlace['place_name']; ?></a>
+                                    <?php /**/ ?>
+
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary edit_btn" href="edit.php?id=<?php echo $getPlace['id']; ?>" >Edit</a>&nbsp; <a class="btn btn-default del_btn" data-id="<?php echo $getPlace['id']; ?>" data-toggle="modal" data-target="#delBill">Delete</a>
+                                </td>
+                            </tr>
+                        <?php } ?>
                     <?php } ?>
                 <?php } else { ?>
                     <tr>
-                        <td colspan="3" align="center">No Glucose Logs to Show</td>
+                        <td colspan="3" align="center">No Restaurants to Show</td>
                     </tr>
                 <?php } ?>
                 </tbody>
@@ -102,13 +120,13 @@ function isMorning($date2) {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Delete Log</h5>
+                        <h5 class="modal-title">Delete Restaurant</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Are you sure you wish to delete this Log?</p>
+                        <p>Are you sure you wish to delete this Restaurant?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary" id="save_del_btn" data-id="">Delete</button>

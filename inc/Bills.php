@@ -35,10 +35,10 @@ class Bills {
 		global $db_conn;
 		
 		$query = "
-		DELETE FROM vnd_bill_dates WHERE vnd_date < :dateNow ";
+		truncate vnd_bill_dates ";
 		
 		$data = array();
-		$data['dateNow'] = date("Y-m-d H:i:s");
+		//$data['dateNow'] = date("Y-m-d H:i:s");
 		
 		$sth = $db_conn->prepare($query);
 		$sth->execute($data);
