@@ -27,9 +27,11 @@ if ($hash_key_token_cs != $hash_key) {
 $place_name = isset($_REQUEST['place_name']) ? trim($_REQUEST['place_name']) : "";
 $google_link = isset($_REQUEST['google_link']) ? trim($_REQUEST['google_link']) : "";
 $category_id = isset($_REQUEST['category_id']) ? intval($_REQUEST['category_id']) : 0;
+
 $close_easy = isset($_REQUEST['close_easy']) ? intval($_REQUEST['close_easy']) : 0;
 $sol_likes = isset($_REQUEST['sol_likes']) ? intval($_REQUEST['sol_likes']) : 0;
 $alex_likes = isset($_REQUEST['alex_likes']) ? intval($_REQUEST['alex_likes']) : 0;
+$other_category = isset($_REQUEST['other_category']) ? trim($_REQUEST['other_category']) : "";
 
 if (!$place_name) {
     header("Location: add.php?Message=" . urlencode("You did not enter a Restaurant Name.") . "&error=1");
@@ -37,8 +39,26 @@ if (!$place_name) {
 }
 
 if ($category_id <= 0) {
-    header("Location: add.php?Message=" . urlencode("You did not select a category.") . "&error=1");
-    exit;
+
+    if ($category_id == -1) {
+        if ($other_category) {
+            $sql = "SELECT * FROM res_categories WHERE category_name = :other_category LIMIT 1 ";
+            $HasCats = getQuery($sql, [
+                "other_category" => $other_category
+            ]);
+            if (count($HasCats) > 0) {
+                header("Location: add.php?Message=" . urlencode("This \"Other\" Category already exists.") . "&error=1");
+                exit;
+            }
+        } else {
+            header("Location: add.php?Message=" . urlencode("You selected \"Other\" Category, but did not type in a new category.") . "&error=1");
+            exit;
+        }
+    } else {
+
+        header("Location: add.php?Message=" . urlencode("You did not select a category.") . "&error=1");
+        exit;
+    }
 }
 
 if ($google_link) {
@@ -46,6 +66,14 @@ if ($google_link) {
         header("Location: add.php?Message=" . urlencode("The google link must contain the 'https://' at the beginning.") . "&error=1");
         exit;
     }
+}
+
+if ($category_id == -1 && $other_category) {
+    $sql = "INSERT INTO res_categories (category_name) VALUES (:other_category) ";
+    execQuery($sql, [
+        "other_category" => $other_category
+    ]);
+    $category_id = $db_conn->lastInsertId();
 }
 
 $sql = "INSERT INTO res_places

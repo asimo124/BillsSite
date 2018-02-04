@@ -63,7 +63,14 @@ $hash_key = md5($string_to_hash);
                         <?php foreach ($Categories as $getCat) { ?>
                             <option value="<?php echo $getCat['id']; ?>"><?php echo $getCat['category_name']; ?></option>
                         <?php } ?>
+                        <option value="-1" >Other</option>
                     </select>
+                </div>
+            </div>
+            <div class="form-group other_cat" style="display: none;">
+                <label class="col-md-4 control-label" for="textinput">Other Category</label>
+                <div class="col-md-4">
+                    <input id="other_category" name="other_category" type="text" placeholder="Other Category" class="form-control input-md" value="" />
                 </div>
             </div>
             <div class="form-group">
@@ -109,6 +116,13 @@ $hash_key = md5($string_to_hash);
         //$('#date_taken').datepicker({});
         //$('#time_taken').timepicker();
 
+        $('#category_id').change(function() {
+            if ($(this).val() == "-1") {
+                $('.other_cat').show();
+            } else {
+                $('.other_cat').hide();
+            }
+        })
     })
 
 </script>
