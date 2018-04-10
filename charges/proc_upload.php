@@ -19,7 +19,6 @@ if ($hash_key_token_cs != $hash_key) {
     die;
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     if (empty($_REQUEST['code'])) {
@@ -58,101 +57,110 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
         //*/
     } else {
-        $content = isset($_REQUEST['code']) ? $_REQUEST['code'] : "";
 
+        $content = isset($_REQUEST['code']) ? $_REQUEST['code'] : "";
+        /*/
         if (!validateTags($content)) {
             die("You have entered invalid content. Please re-enter");
         }
         $content = strip_tags($content);
+        //*/
     }
+
+    $contentArr = explode('<div id="accountTransactions">', $content);
+
+    $content2 = "";
+    if (count($contentArr) > 1) {
+        $content2 = $contentArr[1];
+    }
+
+    $contentArr2 = explode("</table>", $content2);
+
+    $content3 = "";
+    if (count($contentArr2) > 0) {
+        $content3 = $contentArr2[0];
+    }
+    $content = '<!doctype html><html lang="en"><head><meta charset="UTF-8"><title>Document</title></head><body><div id="accountTransactions" >' . $content3 . '</table></div></body></html>';
 
     $doc = new DOMDocument();
 
-    /*/
     $config = array(
         'clean' => 'yes',
         'output-html' => 'yes',
     );
     $tidy = tidy_parse_string($content, $config, 'utf8');
     $tidy->cleanRepair();
-    //*/
     $tidy = $content;
 
-    $doc->loadHTML($tidy);
+    @$doc->loadHTML($tidy);
     $doc->preserveWhiteSpace = false;
-    $accountDiv = $doc->getElementById('accountTransactions');
+    $accountDiv = $doc->getElementsByTagname('div')->item(0);
     $children = $accountDiv->childNodes;
+    $contentText = $accountDiv->nodeValue;
+    $contentTextArr2 = preg_split("/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/", $contentText);
+    $contentTextArr = [];
+    foreach ($contentTextArr2 as $index => $getItem) {
+        $itemArr = preg_split("/\n/", $getItem);
+        $itemArr2 = [];
+        $i = 0;
+        foreach ($itemArr as $index2 => $getCol) {
+            if (trim($getCol) != "") {
+                if ($i == 0) {
+                    $getCol = substr($getCol, 0, strlen($getCol) - 2) . "/2018";
+                }
+                $itemArr2[] = trim($getCol);
+                $i++;
+            }
+        }
+        $contentTextArr[] = $itemArr2;
+    }
 
+    foreach ($contentTextArr as $index => $getItem) {
 
-    foreach ($children as $child) {
-        $children2 = $child->childNodes;
-        foreach ($children2 as $i => $child2) {
-            if ($i == 2) {
-                $children3 = $child2->childNodes;
-                foreach ($children3 as $j => $child3) {
-                    $date = "";
-                    $desc = "";
-                    $charge = "";
-                    $credit = "";
-                    $children4 = $child3->childNodes;
-                    foreach ($children4 as $k => $child4) {
-                        switch ($k)
-                        {
-                            case 0:
-                                $date = (string)$child4->nodeValue;
-                                break;
-                            case 2:
-                                $desc = (string)$child4->nodeValue;
-                                break;
-                            case 3:
-                                if ($child4->nodeValue) {
-                                    $charge = (string)$child4->nodeValue;
-                                }
-                                $charge = str_replace("$", "", $charge);
-                                $charge = str_replace(",", "", $charge);
-                                break;
-                            case 4:
-                                if ($child4->nodeValue) {
-                                    $credit = (string)$child4->nodeValue;
-                                }
-                                $credit = str_replace("$", "", $credit);
-                                $credit = str_replace(",", "", $credit);
-                        }
-                    }
-                    if ($desc != "") {
-                        if ($charge != "") {
-                            $sql = "SELECT id from vnd_bills_charges
-                                    WHERE date between DATE(DATE_ADD(:date, INTERVAL -$days_range DAY))
-                                    AND DATE(DATE_ADD(:date, INTERVAL $days_range DAY))
-                                    AND description = :desc and CAST(charge AS DECIMAL(4,2)) = CAST(:charge AS DECIMAL(4,2)) ";
-                            $data = [
-                                "date" => date("Y-m-d", strtotime($date)),
-                                "desc" => preg_replace("/[0-9]{2}\/[0-9]{2}/", "", $desc),
-                                "charge" => $charge
-                            ];
-                            $ins_data = $data;
-                            $ins_data['credit'] = "";
-                        } else if ($credit != "") {
-                            $sql = "SELECT id from vnd_bills_charges
-                                    WHERE date between DATE(DATE_ADD(:date, INTERVAL -$days_range DAY))
-                                    AND DATE(DATE_ADD(:date, INTERVAL $days_range DAY))
-                                    AND description = :desc and CAST(credit AS DECIMAL(4,2)) = CAST(:credit AS DECIMAL(4,2)) ";
-                            $data = [
-                                "date" => date("Y-m-d", strtotime($date)),
-                                "desc" => preg_replace("/[0-9]{2}\/[0-9]{2}/", "", $desc),
-                                "credit" => $credit
-                            ];
-                            $ins_data = $data;
-                            $ins_data['charge'] = "";
-                        }
-                        $results = getQuery($sql, $data);
-                        if (count($results) == 0) {
-                            $sql = "INSERT INTO vnd_bills_charges
-                                    ( date,  description, charge,  credit, entrydate) VALUES
-                                    (:date, :desc,       :charge, :credit, now()) ";
-                            execQuery($sql, $ins_data);
-                        }
-                    }
+        if ($index > 0) {
+
+            $date = $getItem[0];
+            $desc = $getItem[1];
+            $charge = $getItem[2];
+            $credit = $getItem[3];
+
+            $charge = str_replace("$", "", $charge);
+            $charge = str_replace(",", "", $charge);
+            $credit = str_replace("$", "", $credit);
+            $credit = str_replace(",", "", $credit);
+
+            if ($desc != "") {
+                if ($charge != "") {
+                    $sql = "SELECT id from vnd_bills_charges
+                                        WHERE date between DATE(DATE_ADD(:date, INTERVAL -$days_range DAY))
+                                        AND DATE(DATE_ADD(:date, INTERVAL $days_range DAY))
+                                        AND description = :desc and CAST(charge AS DECIMAL(4,2)) = CAST(:charge AS DECIMAL(4,2)) ";
+                    $data = [
+                        "date" => date("Y-m-d", strtotime($date)),
+                        "desc" => preg_replace("/[0-9]{2}\/[0-9]{2}/", "", $desc),
+                        "charge" => $charge
+                    ];
+                    $ins_data = $data;
+                    $ins_data['credit'] = "";
+                } else if ($credit != "") {
+                    $sql = "SELECT id from vnd_bills_charges
+                                        WHERE date between DATE(DATE_ADD(:date, INTERVAL -$days_range DAY))
+                                        AND DATE(DATE_ADD(:date, INTERVAL $days_range DAY))
+                                        AND description = :desc and CAST(credit AS DECIMAL(4,2)) = CAST(:credit AS DECIMAL(4,2)) ";
+                    $data = [
+                        "date" => date("Y-m-d", strtotime($date)),
+                        "desc" => preg_replace("/[0-9]{2}\/[0-9]{2}/", "", $desc),
+                        "credit" => $credit
+                    ];
+                    $ins_data = $data;
+                    $ins_data['charge'] = "";
+                }
+                $results = getQuery($sql, $data);
+                if (count($results) == 0) {
+                    $sql = "INSERT INTO vnd_bills_charges
+                                        ( date,  description, charge,  credit, entrydate) VALUES
+                                        (:date, :desc,       :charge, :credit, now()) ";
+                    execQuery($sql, $ins_data);
                 }
             }
         }
@@ -160,6 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     header("Location: upload.php?Message=" . urlencode("Charge uploaded."));
     exit;
+
 } else {
     die("You do not have access to this page.");
 }
