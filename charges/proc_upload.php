@@ -161,11 +161,23 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                         ( date,  description, charge,  credit, entrydate) VALUES
                                         (:date, :desc,       :charge, :credit, now()) ";
                     execQuery($sql, $ins_data);
+
+                    $id = $db_conn->lastInsertId();
+
                 }
             }
         }
     }
 
+    $sql = "UPDATE vnd_bills_charges bc 
+            INNER JOIN vnd_bills_charge_description_categories dc 
+            SET bc.category_id = dc.category_id 
+            WHERE bc.description LIKE CONCAT('%', dc.`desc`, '%')
+            AND (ABS(bc.charge) BETWEEN dc.min_range AND dc.max_range
+              OR dc.max_range = 0) ";
+    execQuery($sql);
+
+    //die();
     header("Location: upload.php?Message=" . urlencode("Charge uploaded."));
     exit;
 

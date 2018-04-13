@@ -7,8 +7,8 @@ class Bills {
 	public $sthInsertDate;
 	public $sthCheckDate;
 	public $user_id;
-	
-	public function __construct($numReps=50) {	
+
+    public function __construct($numReps=50) {
 		$numReps = intval($numReps);
 		$this->numReps = $numReps;
 	}
