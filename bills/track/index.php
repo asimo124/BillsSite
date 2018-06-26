@@ -28,7 +28,7 @@ if (!isset($_SESSION['user'])) {
 
     <div class="row">
         <div class="col-md-12">
-            <form action="" name="frmTransaction" id="frmTransaction" method="post">
+            <form>
                 <fieldset>
                     <!-- Form Name -->
                     <legend>Track Bills</legend>

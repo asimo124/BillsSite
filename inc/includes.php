@@ -23,6 +23,20 @@ function logCharge($str) {
 
 }
 
+function logCharge2($str) {
+
+	//return false;
+	//if (defined("CURRENT_PATH")) {
+
+		$file_name = "log_" . date("Ymd") . ".txt";
+		$file_path = "/usr/home/asimo124/public_html/logs/" . $file_name;
+		$fh = fopen($file_path, 'a');
+		fwrite($fh, print_r($str, true) . "\n\n");
+		fclose($fh);
+	//}
+
+}
+
 include "config.php";
 include "UploadValidator.php";
 include "QueryUtils.php";

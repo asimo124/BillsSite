@@ -15,11 +15,11 @@ $string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgen
 $hash_key = md5($string_to_hash);
 
 if ($hash_key_token_cs != $hash_key) {
-    echo "You do not have access to this page. Please contact Site Admin.";
-    die;
+    //echo "You do not have access to this page. Please contact Site Admin.";
+    //die;
 }
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
+//if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     if (empty($_REQUEST['code'])) {
         die("You did not paste any code");
@@ -67,20 +67,41 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         //*/
     }
 
-    $contentArr = explode('<div id="accountTransactions">', $content);
+    //logCharge2("content: ");
+    //logCharge2($content);
+    /*/ 
+    if (!isset($_REQUEST['sora_regt_est'])) {
+        logCharge2("not set sora");
+    } else {
+        logCharge2("sora_regt_est: " . $_REQUEST['sora_regt_est']);
+    }
+    //*/
+
+    if (!isset($_REQUEST['sora_regt_est']) || $_REQUEST['sora_regt_est'] != "4920UGIRU@#%$!#@") {
+        die("You do not have access to this page.");
+        exit;    
+    }
+
+
+    $contentArr = preg_split('/accountTransactions.[^\>]{0,50}>/', $content);
 
     $content2 = "";
     if (count($contentArr) > 1) {
         $content2 = $contentArr[1];
     }
 
+
     $contentArr2 = explode("</table>", $content2);
+
 
     $content3 = "";
     if (count($contentArr2) > 0) {
         $content3 = $contentArr2[0];
     }
     $content = '<!doctype html><html lang="en"><head><meta charset="UTF-8"><title>Document</title></head><body><div id="accountTransactions" >' . $content3 . '</table></div></body></html>';
+
+    //logCharge2("content at 2: ");
+    //logCharge2($content);
 
     $doc = new DOMDocument();
 
@@ -92,21 +113,41 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $tidy->cleanRepair();
     $tidy = $content;
 
+    $is_desktop = isset($_REQUEST['desktop']);
+
     @$doc->loadHTML($tidy);
     $doc->preserveWhiteSpace = false;
     $accountDiv = $doc->getElementsByTagname('div')->item(0);
     $children = $accountDiv->childNodes;
     $contentText = $accountDiv->nodeValue;
+
+    //logCharge2("contentText: ");
+    //logCharge2($contentText);
+
+    //preformat($contentText);
+
     $contentTextArr2 = preg_split("/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/", $contentText);
     $contentTextArr = [];
+
+    //logCharge2("contentTextArr2: ");
+    //logCharge2($contentTextArr2);
+
+
+
+    //preformat($contentTextArr2);
+
     foreach ($contentTextArr2 as $index => $getItem) {
-        $itemArr = preg_split("/\n/", $getItem);
+        $itemArr = preg_split("/[\n]{1,2}/", $getItem);
         $itemArr2 = [];
         $i = 0;
         foreach ($itemArr as $index2 => $getCol) {
             if (trim($getCol) != "") {
                 if ($i == 0) {
-                    $getCol = substr($getCol, 0, strlen($getCol) - 2) . "/2018";
+                    if ($is_desktop) {
+                        $getCol = substr(trim($getCol), 0, strlen(trim($getCol))) . "/" . date("Y");
+                    } else {
+                        $getCol .= "/" . date("Y");
+                    }
                 }
                 $itemArr2[] = trim($getCol);
                 $i++;
@@ -115,14 +156,37 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $contentTextArr[] = $itemArr2;
     }
 
+    //logCharge2($contentTextArr);
+
     foreach ($contentTextArr as $index => $getItem) {
 
         if ($index > 0) {
 
-            $date = $getItem[0];
-            $desc = $getItem[1];
-            $charge = $getItem[2];
-            $credit = $getItem[3];
+            if ($is_desktop) {
+
+                $date = $getItem[0];
+                $desc = $getItem[1];
+
+                $amount = floatval(strip_tags(str_replace("$", "", $getItem[2])));
+
+                if ($amount < 0) {
+                    $charge = abs($amount);
+                    $credit = 0;
+                } else {
+                    $credit = $amount;
+                    $charge = 0;
+                }
+
+                //$charge = $getItem[2];
+                //$credit = $getItem[4];
+            } else {
+                
+                $date = $getItem[0];
+                $desc = $getItem[1];
+                $charge = $getItem[2];
+                $credit = $getItem[3];
+
+            }
 
             $charge = str_replace("$", "", $charge);
             $charge = str_replace(",", "", $charge);
@@ -177,11 +241,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
               OR dc.max_range = 0) ";
     execQuery($sql);
 
-    //die();
+    die("success");
     header("Location: upload.php?Message=" . urlencode("Charge uploaded."));
     exit;
 
-} else {
-    die("You do not have access to this page.");
-}
+//} else {
+    //die("You do not have access to this page.");
+//}
 ?>

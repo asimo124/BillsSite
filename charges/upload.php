@@ -49,6 +49,8 @@ $hash_key = md5($string_to_hash);
             </div>
         </fieldset>
         <input type="hidden" name="hash_key_token_cs" id="hash_key_token_cs" value="<?php echo $hash_key; ?>" />
+        <input type="hidden" name="sora_regt_est" id="sora_regt_est" value="4920UGIRU@#%$!#@" />
+        <input type="hidden" name="desktop" id="desktop" value="1" />
         <a href="javascript:void(0);" onclick="$('#frmUpload').submit();" class="btn btn-primary">Upload</a>
     </form>
 </div>

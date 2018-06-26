@@ -11,7 +11,7 @@ $date3ago = date("Y-m-d", strtotime("- 3 month"));
 $sql = "SELECT *
         FROM vnd_bills_charges
         WHERE date >= :date3ago AND ifnull(category_id, '') = ''
-        ORDER BY date, description";
+        ORDER BY date DESC, description";
 
 $resultset2 = getQuery($sql, [
     "date3ago" => $date3ago
@@ -148,9 +148,9 @@ $categories = getQuery($sql);
 
                 if ($(this).val() != "") {
                     if (query_str) {
-                        query_str += "category_id[]=" + $(this).val() + "&id[]=" + $(this).attr("data-id");
-                    } else {
                         query_str += "&category_id[]=" + $(this).val() + "&id[]=" + $(this).attr("data-id");
+                    } else {
+                        query_str += "category_id[]=" + $(this).val() + "&id[]=" + $(this).attr("data-id");
                     }
                 }
             })
