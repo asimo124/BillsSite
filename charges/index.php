@@ -18,7 +18,7 @@ $sql = "SELECT SUM(c.charge) as totalCharges
         WHERE date >= :date3ago
         AND ifnull(category_id, '') <> ''
         AND cc.cat_name NOT LIKE '%Ignore%' 
-        AND cc.cat_name NOT LIKE 'Bills%' ";
+        AND cc.cat_name LIKE 'Bills%' ";
 
 $resultset = getQuery($sql, [
     "date3ago" => $date3ago
@@ -37,9 +37,10 @@ $sql = "SELECT cc.cat_name, ROUND((SUM(ABS(ifnull(c.charge, 0))) / " . $totalCha
         WHERE date >= :date3ago
         AND ifnull(category_id, '') <> ''
         AND cc.cat_name NOT LIKE '%Ignore%'
-        AND cc.cat_name NOT LIKE 'Bills%' 
+        AND cc.cat_name LIKE 'Bills%' 
         GROUP BY category_id
         ORDER BY ROUND((SUM(c.charge) / " . $totalCharges . ") * 100) DESC ";
+
 
 $resultset = getQuery($sql, [
     "date3ago" => $date3ago
