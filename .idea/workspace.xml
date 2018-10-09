@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a2afb100-9492-4794-888f-87188d2c08b9" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
+    <list default="true" id="a2afb100-9492-4794-888f-87188d2c08b9" name="Default" comment="Looked at my bills. Fixed an issue with proc upload charge, but only for desktop">
+      <change beforePath="" afterPath="$PROJECT_DIR$/composer.json" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/crons/p2p.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/crons/sendp2p.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/crons/setp2p.php" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/bills/track/index.php" afterPath="$PROJECT_DIR$/bills/track/index.php" />
-      <change beforePath="$PROJECT_DIR$/charges/categorize.php" afterPath="$PROJECT_DIR$/charges/categorize.php" />
-      <change beforePath="$PROJECT_DIR$/charges/index.php" afterPath="$PROJECT_DIR$/charges/index.php" />
-      <change beforePath="$PROJECT_DIR$/charges/proc_upload.php" afterPath="$PROJECT_DIR$/charges/proc_upload.php" />
-      <change beforePath="$PROJECT_DIR$/charges/upload.php" afterPath="$PROJECT_DIR$/charges/upload.php" />
-      <change beforePath="$PROJECT_DIR$/inc/Bills.php" afterPath="$PROJECT_DIR$/inc/Bills.php" />
-      <change beforePath="$PROJECT_DIR$/inc/includes.php" afterPath="$PROJECT_DIR$/inc/includes.php" />
     </list>
     <ignored path="Bills.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -49,48 +44,7 @@
     <favorites_list name="Bills" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="proc_upload.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/charges/proc_upload.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="169" column="80" lean-forward="false" selection-start-line="169" selection-start-column="80" selection-end-line="169" selection-end-column="80" />
-              <folding>
-                <marker date="1529974977071" expanded="true" signature="5833:6194" ph="SELECT id fr... vnd_bills_charges" />
-                <marker date="1529974977071" expanded="true" signature="6602:6963" ph="SELECT id fr... vnd_bills_charges" />
-                <marker date="1529974977071" expanded="true" signature="7439:7651" ph="INSERT INTO vnd_bills_charges... " />
-                <marker date="1529974977071" expanded="true" signature="7838:8153" ph="UPDATE vnd_bills_charges... " />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/charges/index.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="39" column="28" lean-forward="false" selection-start-line="39" selection-start-column="28" selection-end-line="39" selection-end-column="28" />
-              <folding>
-                <marker date="1529975833779" expanded="true" signature="325:640" ph="SELECT SUM(c... vnd_bills_charges" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="categorize.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/charges/categorize.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="116">
-              <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
-              <folding>
-                <marker date="1529971232176" expanded="true" signature="184:328" ph="SELECT * FRO... vnd_bills_charges" />
-                <marker date="1529971232176" expanded="true" signature="615:674" ph="SELECT * FRO... vnd_bills_charge_categories" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -106,6 +60,7 @@
       <find>(SP_[a-zA-Z_]{1,50})[^\n]{1,300}</find>
       <find>(SP_[a-zA-Z_0-9]{1,50})[^\n]{1,300}</find>
       <find>(FN_[a-zA-Z_0-9]{1,50})[^\n]{1,300}</find>
+      <find>\/\/ [0-9]{1}</find>
     </findStrings>
     <replaceStrings>
       <replace>Place</replace>
@@ -119,10 +74,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/charges/cats/proc_add.php" />
-        <option value="$PROJECT_DIR$/charges/cats/proc_edit.php" />
-        <option value="$PROJECT_DIR$/expenses/delete.php" />
-        <option value="$PROJECT_DIR$/expenses/save_expense.php" />
         <option value="$PROJECT_DIR$/expenses/update.php" />
         <option value="$PROJECT_DIR$/login_bk3.php" />
         <option value="$PROJECT_DIR$/login.php" />
@@ -168,8 +119,12 @@
         <option value="$PROJECT_DIR$/charges/truncate_charges.php" />
         <option value="$PROJECT_DIR$/charges/proc_update_desc_cats.php" />
         <option value="$PROJECT_DIR$/charges/categorize.php" />
-        <option value="$PROJECT_DIR$/charges/proc_upload.php" />
         <option value="$PROJECT_DIR$/charges/index.php" />
+        <option value="$PROJECT_DIR$/charges/proc_upload.php" />
+        <option value="$PROJECT_DIR$/crons/p2p.php" />
+        <option value="$PROJECT_DIR$/composer.json" />
+        <option value="$PROJECT_DIR$/crons/sendp2p.php" />
+        <option value="$PROJECT_DIR$/crons/setp2p.php" />
       </list>
     </option>
   </component>
@@ -184,10 +139,9 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1382" />
-    <option name="height" value="744" />
+    <option name="x" value="676" />
+    <option name="width" value="697" />
+    <option name="height" value="735" />
   </component>
   <component name="ProjectLevelVcsManager">
     <OptionsSetting value="false" id="Update" />
@@ -207,8 +161,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -219,38 +171,23 @@
             <path>
               <item name="Bills" type="b2602c69:ProjectViewProjectNode" />
               <item name="billssite" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="charges" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="crons" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
             <path>
               <item name="Bills" type="b2602c69:ProjectViewProjectNode" />
               <item name="billssite" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="places" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
-            <path>
-              <item name="Bills" type="b2602c69:ProjectViewProjectNode" />
-              <item name="billssite" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="places" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="eat" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
-            <path>
-              <item name="Bills" type="b2602c69:ProjectViewProjectNode" />
-              <item name="billssite" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="sol" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
-            <path>
-              <item name="Bills" type="b2602c69:ProjectViewProjectNode" />
-              <item name="billssite" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="sol" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="glucose" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="vendor" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../jsrcWorkOrder_V2" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="WebServerToolWindowFactoryState" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.editor" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
@@ -287,12 +224,12 @@
           <option name="mySupportsDeletion" value="false" />
           <option name="myCanBeAbsent" value="false" />
           <option name="myId" value="UPDATED" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/.idea/dataSources.ids</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/.idea/dataSources.local.xml</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/.idea/dataSources.xml</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/.idea/workspace.xml</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/charges/proc_upload.php</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/templates/nav.php</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/api/loadBillDates.php</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/charges/index.php</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/indie.txt</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/metal.txt</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/rap.txt</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/test2.php</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
           <option name="myUpdateName" value="Created" />
@@ -300,8 +237,7 @@
           <option name="mySupportsDeletion" value="false" />
           <option name="myCanBeAbsent" value="false" />
           <option name="myId" value="CREATED" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/charges/delete_desc.php</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/charges/manage_desc.php</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/api/recipe_react/get_recipes.php</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
           <option name="myUpdateName" value="Deleted" />
@@ -492,7 +428,9 @@
       <workItem from="1522810041578" duration="1980000" />
       <workItem from="1523587963979" duration="4283000" />
       <workItem from="1528573855624" duration="35000" />
-      <workItem from="1529970652096" duration="2479000" />
+      <workItem from="1529970652096" duration="3070000" />
+      <workItem from="1530061162367" duration="17000" />
+      <workItem from="1539045394217" duration="7267000" />
     </task>
     <task id="LOCAL-00001" summary="fixed color issue">
       <created>1495227677869</created>
@@ -669,29 +607,35 @@
       <option name="project" value="LOCAL" />
       <updated>1523592270159</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Looked at my bills. Fixed an issue with proc upload charge, but only for desktop">
+      <created>1529975900718</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1529975900718</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40630000" />
+    <option name="totallyTimeSpent" value="48505000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32646593" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2203514" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18960468" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18960468" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24597365" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="DB Browser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -779,7 +723,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fixed color issue" />
     <MESSAGE value="added ability to edit bills" />
     <MESSAGE value="added more links" />
     <MESSAGE value="small changes" />
@@ -804,55 +747,14 @@
     <MESSAGE value="made &quot;Online Restaurants List&quot; for me and sol" />
     <MESSAGE value="added &quot;Other Category&quot; to online Restaurant List" />
     <MESSAGE value="finished Track Charges changes, almost done, just need to finish swift app after upgrading to XCode 9" />
-    <option name="LAST_COMMIT_MESSAGE" value="finished Track Charges changes, almost done, just need to finish swift app after upgrading to XCode 9" />
+    <MESSAGE value="Looked at my bills. Fixed an issue with proc upload charge, but only for desktop" />
+    <option name="LAST_COMMIT_MESSAGE" value="Looked at my bills. Fixed an issue with proc upload charge, but only for desktop" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/charges/cats/edit.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="51" column="30" lean-forward="false" selection-start-line="51" selection-start-column="30" selection-end-line="51" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/charges/cats/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="110" column="35" lean-forward="false" selection-start-line="110" selection-start-column="35" selection-end-line="110" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/nav.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="9" column="50" lean-forward="false" selection-start-line="9" selection-start-column="50" selection-end-line="9" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bills2/admin/add.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bills2/admin/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/getCurBalance.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/expenses/save_expense.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1072,13 +974,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/inc/includes.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
-          <caret line="48" column="9" lean-forward="false" selection-start-line="48" selection-start-column="9" selection-end-line="48" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/places/eat/proc_add.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
@@ -1135,36 +1030,92 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/charges/categorize.php">
+    <entry file="file://$PROJECT_DIR$/charges/proc_upload.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="116">
-          <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
-          <folding>
-            <marker date="1529971232176" expanded="true" signature="184:328" ph="SELECT * FRO... vnd_bills_charges" />
-            <marker date="1529971232176" expanded="true" signature="615:674" ph="SELECT * FRO... vnd_bills_charge_categories" />
-          </folding>
+        <state relative-caret-position="107">
+          <caret line="158" column="6" lean-forward="false" selection-start-line="158" selection-start-column="6" selection-end-line="158" selection-end-column="6" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/charges/proc_upload.php">
+    <entry file="file://$PROJECT_DIR$/inc/includes.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="169" column="80" lean-forward="false" selection-start-line="169" selection-start-column="80" selection-end-line="169" selection-end-column="80" />
-          <folding>
-            <marker date="1529974977071" expanded="true" signature="5833:6194" ph="SELECT id fr... vnd_bills_charges" />
-            <marker date="1529974977071" expanded="true" signature="6602:6963" ph="SELECT id fr... vnd_bills_charges" />
-            <marker date="1529974977071" expanded="true" signature="7439:7651" ph="INSERT INTO vnd_bills_charges... " />
-            <marker date="1529974977071" expanded="true" signature="7838:8153" ph="UPDATE vnd_bills_charges... " />
-          </folding>
+        <state relative-caret-position="17">
+          <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/charges/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="39" column="28" lean-forward="false" selection-start-line="39" selection-start-column="28" selection-end-line="39" selection-end-column="28" />
+        <state relative-caret-position="17">
+          <caret line="20" column="24" lean-forward="false" selection-start-line="20" selection-start-column="24" selection-end-line="20" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/charges/categorize.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="8" column="17" lean-forward="true" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crons/sendp2p.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-148">
+          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1529975833779" expanded="true" signature="325:640" ph="SELECT SUM(c... vnd_bills_charges" />
+            <marker date="1539052664905" expanded="true" signature="244:335" ph="SELECT * FRO... p2p_settings" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/composer.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="25" lean-forward="false" selection-start-line="2" selection-start-column="25" selection-end-line="2" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crons/p2p.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="2" lean-forward="false" selection-start-line="2" selection-start-column="2" selection-end-line="2" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crons/loadDates.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="53" lean-forward="true" selection-start-line="1" selection-start-column="4" selection-end-line="3" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crons/setp2p.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2601">
+          <caret line="155" column="18" lean-forward="false" selection-start-line="155" selection-start-column="18" selection-end-line="155" selection-end-column="18" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/recipe_react/get_recipes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1539052662188" expanded="true" signature="49:287" ph="SELECT ri.re... rec_recipe_ingredient" />
+            <marker date="1539052662188" expanded="true" signature="349:467" ph="SELECT * FRO... rec_recipe_steps" />
+            <marker date="1539052662188" expanded="true" signature="523:827" ph="SELECT ri.re... rec_recipe_ingredient" />
+            <marker date="1539052662188" expanded="true" signature="899:948" ph="SELECT * FRO... rec_recipe" />
+            <marker date="1539052662188" expanded="true" signature="1087:1175" ph="SELECT * FRO... rec_recipe_ingredient" />
+            <marker date="1539052662188" expanded="true" signature="1395:1478" ph="SELECT * FRO... rec_recipe_steps" />
+            <marker date="1539052662188" expanded="true" signature="1680:1984" ph="SELECT ri.re... rec_recipe_ingredient" />
           </folding>
         </state>
       </provider>
