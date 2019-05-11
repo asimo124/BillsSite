@@ -1,7 +1,7 @@
 <?php
 include "../../inc/includes.php";
 
-$sql = "SELECT ri.recipe_id, ri.ingredient_id, ri.quantity, ri.unit_of_measure, i.ingredient
+$sql = "SELECT ri.id, ri.recipe_id, ri.ingredient_id, ri.quantity, ri.unit_of_measure, i.ingredient
         FROM rec_recipe_ingredient ri
         INNER JOIN rec_ingredient i 
           ON ri.ingredient_id = i.id  
@@ -14,7 +14,7 @@ $sql = "SELECT *
         ORDER BY rs.display_order ";
 $stmt_sel_steps = $db_conn->prepare($sql);
 
-$sql = "SELECT ri.recipe_id, ri.ingredient_id, i.ingredient
+$sql = "SELECT ai.id, ri.recipe_id, ri.ingredient_id, i.ingredient
         FROM rec_recipe_ingredient ri 
         INNER JOIN rec_available_ingredient ai 
           ON ri.ingredient_id = ai.ingredient_id 
@@ -64,7 +64,7 @@ foreach ($resultset2 as $getRecipe2) {
     $resultset[] = $getRecipe;
 }
 
-
+header("Access-Control-Allow-Origin: *");
 header("Content-type: text/json");
 $retVal = [
     "data" => $resultset

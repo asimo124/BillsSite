@@ -40,6 +40,7 @@ function logCharge2($str) {
 include "config.php";
 include "UploadValidator.php";
 include "QueryUtils.php";
+include "SortOrderHelper.php";
 
 try {
 	$db_conn = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.MYSQL_DATABASE, MYSQL_USERNAME, MYSQL_PASSWORD);

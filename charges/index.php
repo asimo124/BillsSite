@@ -30,7 +30,8 @@ if (count($resultset) > 0) {
     $totalCharges = abs(floatval($getResult['totalCharges']));
 }
 
-$sql = "SELECT cc.cat_name, ROUND((SUM(ABS(ifnull(c.charge, 0))) / " . $totalCharges . ") * 100) as percent
+$sql = "SELECT cc.cat_name, ROUND((SUM(ABS(ifnull(c.charge, 0))) / " . $totalCharges . ") * 100) as percent,
+        ROUND((SUM(ABS(ifnull(c.charge, 0))))) AS category_amount
         FROM vnd_bills_charges c
         INNER JOIN vnd_bills_charge_categories cc
           ON c.category_id = cc.id
@@ -87,10 +88,13 @@ $datasets = [];
 $datasets[0] = [
     "backgroundColor" => array()
 ];
+
+setlocale(LC_MONETARY, 'en_US');
+
 foreach ($resultset as $i => $getResult) {
-    $labels[] = $getResult['cat_name'] . " (" . $getResult['percent'] . "%)";
+    $labels[] = $getResult['cat_name'] . " (" . $getResult['percent'] . "%)" . " - " . money_format('%i', $getResult['category_amount']);
     $datasets[0]['backgroundColor'][] = $colors[$i];
-    $datasets[0]['data'][] = $getResult['percent'];
+    $datasets[0]['data'][] = $getResult['percent'] . " - " . money_format('%i', $getResult['category_amount']);
 }
 $data = [
     "labels" => $labels,
@@ -113,18 +117,18 @@ $data = [
         }
         .span3 {
             width: 100%
-            max-width: 800px;
+            max-width: 1152px;
             height: auto !important;
         }
         canvas{
             width: 100% !important;
-            max-width: 800px;
+            max-width: 1152px;
             height: auto !important;
         }
         @media (max-width: 979px) {
             canvas {
                 width: 100% !important;
-                max-width: 800px;
+                max-width: 1152px;
                 height: auto !important;
             }
         }
@@ -177,6 +181,7 @@ $data = [
 <script src="/js/nav.js" ></script>
 <script>
     var data = <?php echo(json_encode($data, JSON_HEX_QUOT)); ?>;
+    console.log("data: ", data);
     var ctx = document.getElementById("myChart").getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'pie',

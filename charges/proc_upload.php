@@ -158,6 +158,9 @@ if ($hash_key_token_cs != $hash_key) {
 
     //logCharge2($contentTextArr);
 
+    $sql = "DELETE FROM vnd_bills_charges";
+    execQuery($sql, []);
+
     foreach ($contentTextArr as $index => $getItem) {
 
         if ($index > 0) {
