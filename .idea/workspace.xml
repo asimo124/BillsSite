@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a2afb100-9492-4794-888f-87188d2c08b9" name="Default" comment="Added stacked column chart with charge categories, that links to a datatable below with all charges for that category.">
-      <change afterPath="$PROJECT_DIR$/css/fs-modal.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/fs-modal-min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+    <list default="true" id="a2afb100-9492-4794-888f-87188d2c08b9" name="Default" comment="Completed Pill Tracker.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crons/loadDates_bk3.php" beforeDir="false" afterPath="$PROJECT_DIR$/crons/loadDates_bk3.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/pills_style.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/pills_style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pill_history.php" beforeDir="false" afterPath="$PROJECT_DIR$/pill_history.php" afterDir="false" />
     </list>
     <ignored path="Bills.iws" />
@@ -43,14 +38,15 @@
     <favorites_list name="Bills" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pill_history.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="263">
-              <caret line="203" column="16" selection-start-line="198" selection-end-line="203" selection-end-column="16" />
+            <state relative-caret-position="492">
+              <caret line="142" column="88" selection-start-line="142" selection-start-column="88" selection-end-line="142" selection-end-column="88" />
               <folding>
-                <element signature="e#4200#4207#1#HTML" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
@@ -68,7 +64,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/fs-modal-min.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
+            <state relative-caret-position="17">
               <caret column="1562" selection-start-column="1562" selection-end-column="1562" />
             </state>
           </provider>
@@ -77,7 +73,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/fs-modal.min.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
+            <state relative-caret-position="17">
               <caret column="1427" selection-start-column="1427" selection-end-column="1427" />
             </state>
           </provider>
@@ -86,7 +82,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/pills_style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="841">
+            <state relative-caret-position="1071">
               <caret line="63" column="1" selection-start-line="63" selection-start-column="1" selection-end-line="63" selection-end-column="1" />
             </state>
           </provider>
@@ -289,7 +285,8 @@
       <workItem from="1538666210169" duration="695000" />
       <workItem from="1554130769127" duration="3181000" />
       <workItem from="1560903682956" duration="3884000" />
-      <workItem from="1560915735033" duration="6715000" />
+      <workItem from="1560915735033" duration="6857000" />
+      <workItem from="1560922837970" duration="540000" />
     </task>
     <task id="LOCAL-00001" summary="fixed color issue">
       <created>1495227677869</created>
@@ -494,17 +491,24 @@
       <option name="project" value="LOCAL" />
       <updated>1560907589340</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Completed Pill Tracker.">
+      <created>1560922775803</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1560922775804</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29579000" />
+    <option name="totallyTimeSpent" value="30261000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1358" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19616205" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19829424" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="DB Browser" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -519,7 +523,7 @@
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.32733223" />
-      <window_info anchor="bottom" id="File Transfer" order="11" weight="0.32286024" />
+      <window_info anchor="bottom" id="File Transfer" order="11" visible="true" weight="0.32286024" />
       <window_info anchor="bottom" id="Messages" order="12" />
       <window_info anchor="bottom" id="Docker" order="13" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="14" />
@@ -582,7 +586,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added more links" />
     <MESSAGE value="changes after download" />
     <MESSAGE value="began work on Health &amp; Wellness" />
     <MESSAGE value="secured website after hack, password protection, csrf protection, tag/script injection protection" />
@@ -607,7 +610,8 @@
     <MESSAGE value="Created API to load recipe data for React Recipe App created on root of site." />
     <MESSAGE value="Added stacked column chart with charge categories, that links to a datatable below with all charges for that category." />
     <MESSAGE value="Downloaded from remote. Almost done with Pill Tracker App." />
-    <option name="LAST_COMMIT_MESSAGE" value="Downloaded from remote. Almost done with Pill Tracker App." />
+    <MESSAGE value="Completed Pill Tracker." />
+    <option name="LAST_COMMIT_MESSAGE" value="Completed Pill Tracker." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/bills2/index.php">
@@ -903,33 +907,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/pills_style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="841">
-          <caret line="63" column="1" selection-start-line="63" selection-start-column="1" selection-end-line="63" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/fs-modal-min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret column="1562" selection-start-column="1562" selection-end-column="1562" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/css/fs-modal.min.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret column="1427" selection-start-column="1427" selection-end-column="1427" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pill_history.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="263">
-          <caret line="203" column="16" selection-start-line="198" selection-end-line="203" selection-end-column="16" />
+        <state relative-caret-position="492">
+          <caret line="142" column="88" selection-start-line="142" selection-start-column="88" selection-end-line="142" selection-end-column="88" />
           <folding>
-            <element signature="e#4200#4207#1#HTML" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
@@ -940,6 +924,27 @@
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/fs-modal-min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret column="1562" selection-start-column="1562" selection-end-column="1562" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/fs-modal.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret column="1427" selection-start-column="1427" selection-end-column="1427" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/pills_style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1071">
+          <caret line="63" column="1" selection-start-line="63" selection-start-column="1" selection-end-line="63" selection-end-column="1" />
         </state>
       </provider>
     </entry>

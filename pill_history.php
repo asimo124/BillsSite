@@ -38,50 +38,6 @@ curl_close($ch);
     </div>
     <div class="pills_content">
 
-        <?php /*foreach ($DaysArr as $week => $days) : ?>
-        <div class="row">
-            <?php if ($week == 0) : ?>
-                <h2>Two Weeks Ago</h2>
-            <?php elseif ($week == 1): ?>
-                <h2>Past Week</h2>
-            <?php else : ?>
-                <h2>Current Week</h2>
-            <?php endif; ?>
-            <div style="clear: both; width: 100%; height: 22px;" ></div>
-            <?php foreach ($days as $date => $getDay) : ?>
-                <div class="day_cards" data-date="<?php echo $date; ?>">
-                    <?php echo ($getDay->month) ? $getDay->month . " " : ""; ?><?php echo $getDay->day; ?>
-                    <div style="clear: both; height: 25px;" ></div>
-
-                    <?php if ($getDay->metformin) : ?>
-                        <a href="javascript:void(0);" class="btn btn-ion">Metformin</a>
-                        <div style="clear: both; height: 7px;" ></div>
-                    <?php endif; ?>
-                    <?php if ($getDay->diaplex) : ?>
-                        <a href="javascript:void(0);" class="btn btn-ion2">Diaplex</a>
-                        <div style="clear: both; height: 7px;" ></div>
-                    <?php endif; ?>
-                    <?php if ($getDay->multivitamin) : ?>
-                        <a href="javascript:void(0);" class="btn btn-ion3">Multivitamin</a>
-                        <div style="clear: both; height: 7px;" ></div>
-                    <?php endif; ?>
-                    <?php if ($getDay->vitamin_d) : ?>
-                        <a href="javascript:void(0);" class="btn btn-ion4">Vitamin D</a>
-                        <div style="clear: both; height: 7px;" ></div>
-                    <?php endif; ?>
-                    <?php if ($getDay->b12) : ?>
-                        <a href="javascript:void(0);" class="btn btn-ion5">B12</a>
-                        <div style="clear: both; height: 7px;" ></div>
-                    <?php endif; ?>
-                    <?php if ($getDay->b12_complex) : ?>
-                        <a href="javascript:void(0);" class="btn btn-ion6">B Complex</a>
-                        <div style="clear: both; height: 7px;" ></div>
-                    <?php endif; ?>
-                </div>
-            <?php endforeach; ?>
-            <div style="clear: both; width: 100%; height: 22px;" ></div>
-        </div>
-        <?php endforeach; */?>
     </div>
 </div>
 
@@ -107,7 +63,9 @@ curl_close($ch);
                     <option value="multivitamin">Multivitamin</option>
                     <option value="vitamin_d">Vitamin D</option>
                     <option value="b12">B12</option>
-                    <option value="b12_complex">B12 Complex</option>
+                    <option value="b122">B12 - 2 Pills</option>
+                    <option value="b12_complex">B Complex</option>
+                    <option value="b12_complex2">B Complex - 2 Pills</option>
                 </select>
             </div>
             <div class="modal-footer">
@@ -173,8 +131,16 @@ $(document).ready(function() {
                             output += '<a href="javascript:void(0);" class="btn btn-ion5 delete_pill" data-date="' + curDate + '" data-pill="b12">B12</a>';
                             output += '<div style="clear: both; height: 7px;" ></div>'
                         }
+                        if (day.b122 == 1) {
+                            output += '<a href="javascript:void(0);" class="btn btn-ion2 delete_pill" data-date="' + curDate + '" data-pill="b122">B12 - 2 Pills</a>';
+                            output += '<div style="clear: both; height: 7px;" ></div>'
+                        }
                         if (day.b12_complex == 1) {
                             output += '<a href="javascript:void(0);" class="btn btn-ion6 delete_pill" data-date="' + curDate + '" data-pill="b12_complex">B Complex</a>';
+                            output += '<div style="clear: both; height: 7px;" ></div>'
+                        }
+                        if (day.b12_complex2 == 1) {
+                            output += '<a href="javascript:void(0);" class="btn btn-ion4 delete_pill" data-date="' + curDate + '" data-pill="b12_complex2">B Complex - 2 Pills</a>';
                             output += '<div style="clear: both; height: 7px;" ></div>'
                         }
                         output += '</div>';
