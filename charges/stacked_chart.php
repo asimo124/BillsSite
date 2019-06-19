@@ -253,10 +253,6 @@ $data = [
         }
         $('#category_name').html(categoryName);
         $(document).scrollTop( $("#certificates_table").offset().top );
-
-
-
-
     }
 
     var use_data = [];
