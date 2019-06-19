@@ -1,7 +1,7 @@
 
 
 .main_content {
-    margin-top: 68px;
+    margin-top: 15px;
 }
 
 header>nav.navbar.bg-ion {
@@ -55,4 +55,10 @@ header>nav.navbar.bg-ion {
     font-size: 14px;
     color: white;
     width: 100%;
+}
+
+@media (max-width: 767px) {
+    #content .modal.fade.in {
+        top: 5%;
+    }
 }
