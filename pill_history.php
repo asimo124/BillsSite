@@ -58,14 +58,14 @@ curl_close($ch);
             <div class="modal-body">
                 <label for="add_pill_taken" >Which pill did you take?</label>
                 <select name="add_pill_taken" class="form-control" id="add_pill_taken">
-                    <option value="metformin">Metformin</option>
-                    <option value="diaplex">Diaplex</option>
-                    <option value="multivitamin">Multivitamin</option>
-                    <option value="vitamin_d">Vitamin D</option>
-                    <option value="b12">B12</option>
-                    <option value="b122">B12 - 2 Pills</option>
-                    <option value="b12_complex">B Complex</option>
-                    <option value="b12_complex2">B Complex - 2 Pills</option>
+                    <option value="Metformin">Metformin</option>
+                    <option value="Diaplex">Diaplex</option>
+                    <option value="Multivitamin">Multivitamin</option>
+                    <option value="Vitamin D">Vitamin D</option>
+                    <option value="B12">B12</option>
+                    <option value="B12~2">B12 - 2 Pills</option>
+                    <option value="B Complex">B Complex</option>
+                    <option value="B Complex~2">B Complex - 2 Pills</option>
                 </select>
             </div>
             <div class="modal-footer">
@@ -112,35 +112,35 @@ $(document).ready(function() {
                         output += '<div style="clear: both; height: 25px;" ></div>';
 
                         if (day.metformin == 1) {
-                            output += '<a href="javascript:void(0);" class="btn btn-ion delete_pill" data-date="' + curDate + '" data-pill="metformin">Metformin</a>';
+                            output += '<a href="javascript:void(0);" class="btn btn-ion delete_pill" data-date="' + curDate + '" data-pill="Metformin">Metformin</a>';
                             output += '<div style="clear: both; height: 7px;" ></div>'
                         }
                         if (day.diaplex == 1) {
-                            output += '<a href="javascript:void(0);" class="btn btn-ion2 delete_pill" data-date="' + curDate + '" data-pill="diaplex">Diaplex</a>';
+                            output += '<a href="javascript:void(0);" class="btn btn-ion2 delete_pill" data-date="' + curDate + '" data-pill="Diaplex">Diaplex</a>';
                             output += '<div style="clear: both; height: 7px;" ></div>'
                         }
                         if (day.multivitamin == 1) {
-                            output += '<a href="javascript:void(0);" class="btn btn-ion3 delete_pill" data-date="' + curDate + '" data-pill="multivitamin">Multivitamin</a>';
+                            output += '<a href="javascript:void(0);" class="btn btn-ion3 delete_pill" data-date="' + curDate + '" data-pill="Multivitamin">Multivitamin</a>';
                             output += '<div style="clear: both; height: 7px;" ></div>'
                         }
                         if (day.vitamin_d == 1) {
-                            output += '<a href="javascript:void(0);" class="btn btn-ion4 delete_pill" data-date="' + curDate + '" data-pill="vitamin_d">Vitamin D</a>';
+                            output += '<a href="javascript:void(0);" class="btn btn-ion4 delete_pill" data-date="' + curDate + '" data-pill="Vitamin D">Vitamin D</a>';
                             output += '<div style="clear: both; height: 7px;" ></div>'
                         }
                         if (day.b12 == 1) {
-                            output += '<a href="javascript:void(0);" class="btn btn-ion5 delete_pill" data-date="' + curDate + '" data-pill="b12">B12</a>';
+                            output += '<a href="javascript:void(0);" class="btn btn-ion5 delete_pill" data-date="' + curDate + '" data-pill="B12">B12</a>';
                             output += '<div style="clear: both; height: 7px;" ></div>'
                         }
                         if (day.b122 == 1) {
-                            output += '<a href="javascript:void(0);" class="btn btn-ion2 delete_pill" data-date="' + curDate + '" data-pill="b122">B12 - 2 Pills</a>';
+                            output += '<a href="javascript:void(0);" class="btn btn-ion2 delete_pill" data-date="' + curDate + '" data-pill="B12~2">B12 - 2 Pills</a>';
                             output += '<div style="clear: both; height: 7px;" ></div>'
                         }
                         if (day.b12_complex == 1) {
-                            output += '<a href="javascript:void(0);" class="btn btn-ion6 delete_pill" data-date="' + curDate + '" data-pill="b12_complex">B Complex</a>';
+                            output += '<a href="javascript:void(0);" class="btn btn-ion6 delete_pill" data-date="' + curDate + '" data-pill="B Complex">B Complex</a>';
                             output += '<div style="clear: both; height: 7px;" ></div>'
                         }
                         if (day.b12_complex2 == 1) {
-                            output += '<a href="javascript:void(0);" class="btn btn-ion4 delete_pill" data-date="' + curDate + '" data-pill="b12_complex2">B Complex - 2 Pills</a>';
+                            output += '<a href="javascript:void(0);" class="btn btn-ion4 delete_pill" data-date="' + curDate + '" data-pill="B Complex~2">B Complex - 2 Pills</a>';
                             output += '<div style="clear: both; height: 7px;" ></div>'
                         }
                         output += '</div>';
@@ -173,7 +173,6 @@ $(document).ready(function() {
 
     $('#btnAddPillTaken').click(function() {
 
-        console.log("curDate: ", window.curDate);
 
         var add_pill_taken = $('#add_pill_taken').val();
         $.post("http://alexhawley-api.info/api/pill_history/add_pill_taken.php", {
