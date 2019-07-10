@@ -28,7 +28,8 @@ if (count($resultset) > 0) {
     $totalCharges = abs(floatval($getResult['totalCharges']));
 }
 
-$sql = "SELECT cc.cat_name, ROUND((SUM(ABS(ifnull(c.charge, 0))) / " . $totalCharges . ") * 100) as percent
+$sql = "SELECT cc.cat_name, ROUND((SUM(ABS(ifnull(c.charge, 0))) / " . $totalCharges . ") * 100) as percent,
+        ROUND((SUM(ABS(ifnull(c.charge, 0))))) AS category_amount
         FROM vnd_bills_charges c
         INNER JOIN vnd_bills_charge_categories cc
           ON c.category_id = cc.id
@@ -84,6 +85,8 @@ $datasets[0] = [
     "backgroundColor" => array()
 ];
 
+setlocale(LC_MONETARY, 'en_US');
+
 $totalPercent = 0;
 foreach ($resultset as $i => $getResult) {
     $totalPercent += $getResult['percent'];
@@ -91,11 +94,11 @@ foreach ($resultset as $i => $getResult) {
         $totalPercent = 100;
     }
     $labels[] = [
-        "cat_name" => $getResult['cat_name'],
+        "cat_name" => $getResult['cat_name'] . " - " . '$' . number_format($getResult['category_amount'], 2),
         "percent" => $totalPercent
     ];
     $datasets[0]['backgroundColor'][] = $colors[$i];
-    $datasets[0]['data'][] = $getResult['percent'];
+    $datasets[0]['data'][] = $getResult['percent'] . " - " . '$' . number_format($getResult['category_amount'], 2);
 }
 $data = [
     "labels" => $labels,
