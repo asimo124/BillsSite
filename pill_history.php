@@ -59,6 +59,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="/js/fs-modal-min.js"></script>
+<script src="/js/mobile-bootstrap-modal.js"></script>
 <script>
 $(document).ready(function() {
     function loadAllPillData() {
@@ -168,33 +169,6 @@ $(document).ready(function() {
             }, 1250);
         });
     });
-    var adjustModal = function($modal) {
-        var top;
-        if ($(window).width() <= 480) {
-            if ($modal.hasClass('modal-fullscreen')) {
-                if ($modal.height() >= $(window).height()) {
-                    top = $(window).scrollTop();
-                } else {
-                    top = $(window).scrollTop() + ($(window).height() - $modal.height()) / 2;
-                }
-            } else if ($modal.height() >= $(window).height() - 10) {
-                top = $(window).scrollTop() + 10;
-            } else {
-                top = $(window).scrollTop() + ($(window).height() - $modal.height()) / 2;
-            }
-        } else {
-            top = '50%';
-            if ($modal.hasClass('modal-fullscreen')) {
-                $modal.stop().animate({
-                    marginTop  : -($modal.outerHeight() / 2)
-                    , marginLeft : -($modal.outerWidth() / 2)
-                    , top        : top
-                }, "fast");
-                return;
-            }
-        }
-        $modal.stop().animate({ 'top': top }, "fast");
-    };
     var show = function() {
         var $modal = $(this);
         adjustModal($modal);
