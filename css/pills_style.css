@@ -1,0 +1,64 @@
+
+
+.main_content {
+    margin-top: 15px;
+}
+
+header>nav.navbar.bg-ion {
+    background-color: #387ef5 !important;
+}
+
+.day_cards {
+    display: inline-block;
+    width: 14%;
+    min-height: 110px;
+    border: solid 1px #387ef5;
+}
+
+.btn-ion {
+    background-color: #387ef5 !important;
+    font-size: 14px;
+    color: white;
+    width: 100%;
+}
+
+.btn-ion2 {
+    background-color: #11c1f3 !important;
+    font-size: 14px;
+    color: white;
+    width: 100%;
+}
+
+.btn-ion3 {
+    background-color: #33cd5f !important;
+    font-size: 14px;
+    color: white;
+    width: 100%;
+}
+
+.btn-ion4 {
+    background-color: #886aea !important;
+    font-size: 14px;
+    color: white;
+    width: 100%;
+}
+
+.btn-ion5 {
+    background-color: #ffc900 !important;
+    font-size: 14px;
+    color: white;
+    width: 100%;
+}
+
+.btn-ion6 {
+    background-color: #ef473a !important;
+    font-size: 14px;
+    color: white;
+    width: 100%;
+}
+
+@media (max-width: 767px) {
+    #content .modal.fade.in {
+        top: 5%;
+    }
+}

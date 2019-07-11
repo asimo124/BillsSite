@@ -80,22 +80,17 @@ $(document).ready(function() {
             });
         }
         $.when(loadPillDates(), loadPills()).done(function (data, data_pills) {
-            var data = data[0];
+            var weekNames = data[0].week_names;
+            var data = data[0].days;
             var data_pills = data_pills[0];
             var output = "";
             $.each(data, function (index, days) {
                 output += '<div class="row">';
-                if (index == 0) {
-                    output += '<h2>Two Weeks Ago</h2>';
-                } else if (index == 1) {
-                    output += '<h2>Past Week</h2>';
-                } else {
-                    output += '<h2>Current Week</h2>';
-                }
+                output += '<h2>' + weekNames[index] + '</h2>';
                 output += '<div style="clear: both; width: 100%; height: 22px;" ></div>';
                 $.each(days, function (curDate, day) {
                     output += '<div class="day_cards" data-date="' + curDate + '">';
-                    output += ((day.month) ? day.month + '&nbsp;' : '') + day.day_of_week + ' ' + day.day;
+                    output += day.day_text;
                     output += '<div style="clear: both; height: 25px;" ></div>';
                     var i = 1;
                     $.each(day.pills, function (index, item) {
