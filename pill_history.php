@@ -59,12 +59,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="/js/fs-modal-min.js"></script>
+<script src="/js/mobile-bootstrap-modal.js"></script>
 <script>
 $(document).ready(function() {
     function loadAllPillData() {
         function loadPillDates() {
             return $.ajax({
-                url: 'http://alexhawley-api.info/api/pill_history/get_history.php',
+                url: 'http://alexhawley-api.info/pills/history',
                 dataType: 'json',
                 type: 'GET',
                 processData: false
@@ -72,7 +73,7 @@ $(document).ready(function() {
         };
         function loadPills() {
             return $.ajax({
-                url: 'http://alexhawley-api.info/api/pill_history/get_pills.php',
+                url: 'http://alexhawley-api.info/pills/show',
                 dataType: 'json',
                 type: 'GET',
                 processData: false
@@ -125,7 +126,6 @@ $(document).ready(function() {
         });
     };
     loadAllPillData();
-
     window.didClickPill = false;
     window.curDate = "";
     $(document).on('click touchstart', '.day_cards', function() {
@@ -140,7 +140,7 @@ $(document).ready(function() {
     $('#btnAddPillTaken').click(function() {
         var add_pill_taken = $('#add_pill_taken').val();
         var qty = $('#qty').val();
-        $.post("http://alexhawley-api.info/api/pill_history/add_pill_taken.php", {
+        $.post("http://alexhawley-api.info/pills/add", {
             cur_date: window.curDate,
             pill_taken: add_pill_taken,
             qty: qty
@@ -156,7 +156,7 @@ $(document).ready(function() {
         var curDate2 = $(this).attr("data-date");
         var add_pill_taken = $(this).attr("data-pill-id");
         var qty = $(this).attr("data-qty");
-        $.post("http://alexhawley-api.info/api/pill_history/delete_pill_taken.php", {
+        $.post("http://alexhawley-api.info/pills/delete", {
             cur_date: curDate2,
             pill_taken: add_pill_taken,
             qty: qty
@@ -168,52 +168,6 @@ $(document).ready(function() {
             }, 1250);
         });
     });
-    var adjustModal = function($modal) {
-        var top;
-        if ($(window).width() <= 480) {
-            if ($modal.hasClass('modal-fullscreen')) {
-                if ($modal.height() >= $(window).height()) {
-                    top = $(window).scrollTop();
-                } else {
-                    top = $(window).scrollTop() + ($(window).height() - $modal.height()) / 2;
-                }
-            } else if ($modal.height() >= $(window).height() - 10) {
-                top = $(window).scrollTop() + 10;
-            } else {
-                top = $(window).scrollTop() + ($(window).height() - $modal.height()) / 2;
-            }
-        } else {
-            top = '50%';
-            if ($modal.hasClass('modal-fullscreen')) {
-                $modal.stop().animate({
-                    marginTop  : -($modal.outerHeight() / 2)
-                    , marginLeft : -($modal.outerWidth() / 2)
-                    , top        : top
-                }, "fast");
-                return;
-            }
-        }
-        $modal.stop().animate({ 'top': top }, "fast");
-    };
-    var show = function() {
-        var $modal = $(this);
-        adjustModal($modal);
-    };
-    var checkShow = function() {
-        $('.modal').each(function() {
-            var $modal = $(this);
-            if ($modal.css('display') !== 'block') return;
-            adjustModal($modal);
-        });
-    };
-    var modalWindowResize = function() {
-        $('.modal').not('.modal-gallery').on('show', show);
-        $('.modal-gallery').on('displayed', show);
-        checkShow();
-    };
-    $(modalWindowResize);
-    $(window).resize(modalWindowResize);
-    $(window).scroll(checkShow);
 })
 </script>
 </html>
