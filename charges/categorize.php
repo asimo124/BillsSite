@@ -36,7 +36,13 @@ $categories = getQuery($sql);
     <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/alertify.min.css"/>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/default.min.css"/>
+
     <link rel="stylesheet" href="/css/nav.css" />
+
+
 
 </head>
 <body>
@@ -109,7 +115,7 @@ $categories = getQuery($sql);
                         <?php foreach ($resultset[$date] as $getCharge) { ?>
                             <tr>
                                 <td><?php echo $getCharge['description']; ?></td>
-                                <td><?php echo $getCharge['charge']; ?></td>
+                                <td><input type="text" name="charge" id="charge" class="form-control charge_text" value="<?php echo $getCharge['charge']; ?>" /></td>
                                 <td>
                                     <select name="category_id<?php echo $getCharge['id']; ?>" id="category_id<?php echo $getCharge['id']; ?>" data-id="<?php echo $getCharge['id']; ?>" class="form-control" >
                                         <option value="" >- Select One -</option>
@@ -134,11 +140,13 @@ $categories = getQuery($sql);
 </body>
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js"></script>
 <script src="/js/nav.js" ></script>
 <script>
 
     $(document).ready(function() {
-        $('#btnUpdateAll').click(function() {
+
+        var updateChargeCategories = function() {
             var data = {
                 "category_id": [],
                 "id": []
@@ -160,16 +168,37 @@ $categories = getQuery($sql);
                     url: "proc_update_all.php",
                     data: query_str,
                     success: function (r) {
-                        alert("Categories updated.");
+                        alertify.alert("Charges categorized.");
                         setTimeout(function() {
                             window.location.reload();
-                        }, 3500);
+                        }, 750);
                     }
                 });
             } else {
-                alert("No Category ID's set");
+                alertify.alert("No Category ID's set");
             }
+        }
+
+        $('#btnUpdateAll').click(function() {
+            updateChargeCategories();
         })
+
+        $( function () {
+            $.fn.onEnter = function(func) {
+                this.bind('keypress', function(e) {
+                    if (e.keyCode == 13) func.apply(this, [e]);
+                });
+                return this;
+            };
+        });
+
+        $( function () {
+            $('.charge_text').each(function() {
+                $(this).onEnter(function () {
+                    updateChargeCategories()
+                });
+            });
+        });
 
         $('#btnTruncateCharges').click(function() {
 
@@ -181,12 +210,12 @@ $categories = getQuery($sql);
                     url: "truncate_charges.php",
                     success: function (r) {
                         alert("Charges truncated.");
-                        setTimeout(function() {
+                        setTimeout(function () {
                             window.location.reload();
                         }, 3500);
                     }
                 });
             }
-        })
+        });
     })
 </script>

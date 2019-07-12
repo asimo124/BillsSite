@@ -97,6 +97,7 @@ foreach ($resultset as $i => $getResult) {
         "cat_name" => $getResult['cat_name'] . " - " . '$' . number_format($getResult['category_amount'], 2),
         "percent" => $totalPercent
     ];
+    $catNameIds[$getResult['cat_name'] . " - " . '$' . number_format($getResult['category_amount'], 2)] = $getResult['category_id'];
     $datasets[0]['backgroundColor'][] = $colors[$i];
     $datasets[0]['data'][] = $getResult['percent'] . " - " . '$' . number_format($getResult['category_amount'], 2);
 }
@@ -113,6 +114,13 @@ $data = [
     <title>Upload Charges</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
+
+    <link rel="stylesheet" href='/js/DataTables/media/css/jquery.dataTables.min.css' />
+    <link rel="stylesheet" href='/js/DataTables/media/css/buttons.dataTables.min.css' />
+    <link rel="stylesheet" href='/js/DataTables/media/css/select.dataTables.min.css' />
+    <link rel="stylesheet" href='/js/DataTables/media/css/editor.bootstrap.min.css' />
+    <link rel="stylesheet" href='/js/DataTables/media/css/buttons.bootstrap.min.css' />
+
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/nav.css" />
@@ -123,18 +131,18 @@ $data = [
         }
         .span3 {
             width: 100%
-            max-width: 800px;
+            max-width: 1152px;
             height: auto !important;
         }
         canvas{
             width: 100% !important;
-            max-width: 800px;
+            max-width: 1152px;
             height: auto !important;
         }
         @media (max-width: 979px) {
             canvas {
                 width: 100% !important;
-                max-width: 800px;
+                max-width: 1152px;
                 height: auto !important;
             }
         }
@@ -156,7 +164,26 @@ $data = [
     <div style="clear: both; height: 7px"></div>
 
     <div class="span3">
-        <div id="chartContainer" style="height: 1000px; max-width: 920px; margin: 0px auto;"></div>
+        <div id="chartContainer" style="height: 1000px; max-width: 1152px; margin: 0px auto;"></div>
+    </div>
+    <input type="hidden" name="category_id" id="category_id" value="0" />
+
+    <div class="row">
+        <col-md-12>
+            <h2 id="category_name"></h2>
+            <table class="table-bordered" id="certificates_table">
+                <thead>
+                <tr>
+                    <th >Date</th>
+                    <th >Description</th>
+                    <th >Charge</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </col-md-12>
     </div>
 </div>
 </body>
@@ -164,15 +191,71 @@ $data = [
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+<script type="text/javascript" src="/js/DataTables/media/js/jquery.dataTables.min.js" ></script>
+<script type="text/javascript" src="/js/DataTables/media/js/dataTables.bootstrap.min.js" ></script>
+<script type="text/javascript" src="/js/DataTables/media/js/dataTables.editor.min.js" ></script>
+<script type="text/javascript" src="/js/DataTables/media/js/editor.bootstrap.min.js" ></script>
+<script type="text/javascript" src="/js/DataTables/media/js/dataTables.keyTable.min.js" ></script>
+<script type="text/javascript" src="/js/DataTables/media/js/dataTables.buttons.min.js" ></script>
+<script type="text/javascript" src="/js/DataTables/media/js/dataTables.select.min.js" ></script>
+<script type="text/javascript" src="/js/DataTables/media/js/buttons.bootstrap.min.js" ></script>
 <script src="/js/nav.js" ></script>
 <script>
 
 
-    var data = <?php echo(json_encode($data, JSON_HEX_QUOT)); ?>
+    var data = <?php echo(json_encode($data, JSON_HEX_QUOT)); ?>;
+    var catNameIds = <?php echo(json_encode($catNameIds, JSON_HEX_QUOT)); ?>;
 
-    //console.log(data);
+    window.loadedTable = false;
+    var loadChargesTable = function(category_id, categoryName) {
+
+        if (loadedTable == false) {
+            window.cert_dataTable = $('#certificates_table').DataTable({
+                dom: " B <'dt-toolbar'<'col-xs-12 col-sm-6'<'title-company-contracts'>><'col-sm-6 col-xs-12 hidden-xs'fl<'xtra-company-contracts'>>r>" +
+                    "t " +
+                    "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+                ajax: {
+                    url: "/api/get_charges_by_category.php",
+                    data: function ( d ) {
+                        d.category_id = $('#category_id').val();
+                    }
+                },
+                "serverSide": true,
+                order: [[1, 'asc']],
+                "language": {
+                    "lengthMenu": '<select name="invoices_disbursements_table_length" aria-controls="invoices_disbursements_table" class="form-control">' +
+                        '<option value="500">500</option>' +
+                        '               </select>',
+                    "sSearch": ""
+                },
+                columns: [
+                    {data: "date"},
+                    {data: "description"},
+                    {data: "charge"}
+                ],
+                select: {
+                    style: 'os',
+                    selector: 'td:first-child'
+                },
+                buttons: []
+            });
+
+            setTimeout(function () {
+                $('[name$="_table_length"]').val(500).change();
+
+            }, 200);
+            window.loadedTable = true;
+
+        } else {
+
+            window.cert_dataTable.page(0).draw(true)
+        }
+        $('#category_name').html(categoryName);
+        $(document).scrollTop( $("#certificates_table").offset().top );
+    }
 
     var use_data = [];
+    var percentCategoryNames = {};
     $.each(data.labels, function(index, item) {
 
         console.log(item);
@@ -181,80 +264,26 @@ $data = [
             name: item.cat_name,
             showInLegend: true,
             yValueFormatString: "#,##0\"%\"",
+            click: function(e){
+                var pointPercent = String(e.dataPoint.y);
+                var categoryName = percentCategoryNames[pointPercent];
+                var categoryId = catNameIds[categoryName];
+                $('#category_id').val(categoryId);
+                loadChargesTable(categoryId, categoryName);
+                //alert("categoryId: " + categoryId);
+            },
             dataPoints: [
                 { label: "Budget", y: item.percent },
             ]
         }
+        console.log(item.cat_name + ": " + item.percent);
+        var getPercent = String(item.percent);
+        percentCategoryNames[getPercent] = item.cat_name;
         use_data.push(eachData);
     });
-    console.log("use_data: ", use_data);
-
-        /*/
-        [
-            {
-                type: "stackedColumn100",
-                name: "WholeSale",
-                showInLegend: true,
-                yValueFormatString: "#,##0\"%\"",
-                dataPoints: [
-                    { label: "Q1", y: 44 },
-                ]
-            },
-            {
-                type: "stackedColumn100",
-                name: "Retail",
-                showInLegend: true,
-                yValueFormatString: "#,##0\"%\"",
-                dataPoints: [
-                    { label: "Q1", y: 48 },
-                ]
-            },
-            {
-                type: "stackedColumn100",
-                name: "Inside Sales",
-                showInLegend: true,
-                yValueFormatString: "#,##0\"%\"",
-                dataPoints: [
-                    { label: "Q1", y: 19 },
-                ]
-            },
-            {
-                type: "stackedColumn100",
-                name: "Mail Order",
-                showInLegend: true,
-                yValueFormatString: "#,##0\"%\"",
-                dataPoints: [
-                    { label: "Q1", y: 20 },
-                ]
-            }
-        ]
-        //*/
-
-    /*/
-    var ctx = document.getElementById("myChart").getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'pie',
-        fullWidth: true,
-        options: {
-            responsive: true,
-            fullWidth: true
-        },
-        data: data
-    });
-    $("#myChart").click(
-        function(evt){
-            var elements = myChart.getElementsAtEvent(evt);
-            var label = null;
-            if (elements[0]._model.label) {
-                label = elements[0]._model.label;
-            }
-        }
-    );
-    /*/
 
     window.onload = function () {
 
-//Better to construct options first and then pass it as a parameter
         var options = {
             animationEnabled: true,
             title:{
@@ -274,8 +303,11 @@ $data = [
             },
             data: use_data
         };
-
         $("#chartContainer").CanvasJSChart(options);
+
+
+
+
     }
     //*/
 </script>
