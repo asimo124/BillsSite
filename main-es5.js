@@ -41,7 +41,7 @@ module.exports = "\n<div class=\"row \">\n    <div class=\"col-xs-12 col-md-4\">
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<header>\r\n    <!-- Fixed navbar -->\r\n    <nav class=\"navbar navbar-expand-md navbar-dark fixed-top bg-dark\">\r\n        <a class=\"navbar-brand\" href=\"#\">Pill  Tracker</a>\r\n    </nav>\r\n</header>\r\n\r\n<!-- Begin page content -->\r\n<main role=\"main\" class=\"container-fluid\">\r\n    <div style=\"clear: both; height: 25px;\" ></div>\r\n    <h1 class=\"mt-5\">Pill History</h1>\r\n\r\n    <div style=\"clear: both; height: 17px;\" ></div>\r\n    \r\n    <app-pill-history *ngIf=\"!addPillFormShowing\" [pill_history]=\"pillHistory\" [week_names]=\"weekNames\" ></app-pill-history>\r\n    <app-add-pill *ngIf=\"addPillFormShowing\" [weekNum]=\"weekNum\" [currentDate]=\"currentDayInForm\" (change)=\"onSubmitAddPill($event)\"></app-add-pill>\r\n\r\n</main>\r\n\r\n<footer class=\"footer\">\r\n    <div class=\"container\">\r\n        <span class=\"text-muted\"></span>\r\n    </div>\r\n</footer>"
+module.exports = "<header>\r\n    <!-- Fixed navbar -->\r\n    <nav class=\"navbar navbar-expand-md navbar-dark fixed-top bg-dark\">\r\n        <a class=\"navbar-brand\" href=\"#\">Pill  Tracker</a>\r\n    </nav>\r\n</header>\r\n\r\n<!-- Begin page content -->\r\n<main role=\"main\" class=\"container-fluid\">\r\n    <div style=\"clear: both; height: 25px;\" ></div>\r\n    <h1 class=\"mt-5\" style=\"margin-left: -15px;\">Pill History</h1>\r\n\r\n    <div style=\"clear: both; height: 17px;\" ></div>\r\n    \r\n    <app-pill-history *ngIf=\"!addPillFormShowing\" [pill_history]=\"pillHistory\" [week_names]=\"weekNames\" ></app-pill-history>\r\n    <app-add-pill *ngIf=\"addPillFormShowing\" [weekNum]=\"weekNum\" [currentDate]=\"currentDayInForm\" (change)=\"onSubmitAddPill($event)\"></app-add-pill>\r\n\r\n</main>\r\n\r\n<footer class=\"footer\">\r\n    <div class=\"container\">\r\n        <span class=\"text-muted\"></span>\r\n    </div>\r\n</footer>"
 
 /***/ }),
 
@@ -52,7 +52,7 @@ module.exports = "<header>\r\n    <!-- Fixed navbar -->\r\n    <nav class=\"navb
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n    <strong>{{ month }}</strong> {{ dayOfWeek }} {{ day }}\r\n    <div style=\"clear: both; height: 12px;\"></div>\r\n      \r\n    <app-pills\r\n        *ngFor=\"let pill of pills | keyvalue; let i = index\"\r\n        [style.display]=\"(pill.value.qty == 0) ? 'none' : ''\"\r\n        [loopIndex]=\"i\"\r\n        [pillId]=\"pill.key\"\r\n        [pillName]=\"pill.value.pill_name\"\r\n        [pillQty]=\"pill.value.qty\"\r\n        [currentDate]=\"currentDate\"\r\n        [weekNum]=\"weekNum\"\r\n        ></app-pills>  \r\n         "
+module.exports = "\r\n    <strong>{{ month }}</strong> {{ dayOfWeek }} {{ day }}\r\n    <div style=\"clear: both; height: 12px;\"></div>\r\n      \r\n    <ng-container \r\n        *ngFor=\"let pill of pills | keyvalue\"\r\n        >\r\n        <ng-container *ngIf=\"pill.value.qty > 0\" >\r\n            <div style=\"clear: both; height: 5px;\" ></div>\r\n            <a [routerLink]=\"\" class=\"btn\" \r\n                [className]=\"'btn btn-ion' + pill.value.pill_id\" \r\n                (change)=\"onDeletePill($event)\" \r\n                (click)=\"onClick($event, pill.value.pill_id)\"\r\n                >{{ pill.value.pill_name }} <span *ngIf=\"pill.value.qty > 1\">- {{ pill.value.qty }}</span></a>        \r\n        </ng-container>                \r\n    </ng-container>\r\n         "
 
 /***/ }),
 
@@ -63,18 +63,7 @@ module.exports = "\r\n    <strong>{{ month }}</strong> {{ dayOfWeek }} {{ day }}
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n\r\n<div class=\"row\" *ngFor=\"let history of pill_history; let i = index\">\r\n    <div style=\"width: 100%; clear: both; height: 20px;\"></div>\r\n    <h2>{{ week_names[i] }}</h2>\r\n    <div style=\"width: 100%; clear: both; height: 4px;\"></div>\r\n    <app-history-day *ngFor=\"let item of history | keyvalue\" \r\n        [currentDate]=\"item.key\" \r\n        [weekNum]=\"i\"\r\n        [dayText]=\"item.value.day_text\"\r\n        [month]=\"item.value.month\"\r\n        [day]=\"item.value.day\"\r\n        [dayOfWeek]=\"item.value.day_of_week\"\r\n        [pills]=\"item.value.pills\"\r\n        (click)=\"onClickDay($event, i, item.key)\"\r\n        [class.day_cards]=\"true\"></app-history-day>\r\n        \r\n</div>"
-
-/***/ }),
-
-/***/ "./node_modules/raw-loader/index.js!./src/app/pills/pills.component.html":
-/*!**********************************************************************!*\
-  !*** ./node_modules/raw-loader!./src/app/pills/pills.component.html ***!
-  \**********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "<ng-container  >\n    <div *ngIf=\"loopIndex > 0\" style=\"clear: both; height: 5px;\" ></div>\n    <a [routerLink]=\"\" class=\"btn\" \n        [className]=\"'btn btn-ion' + pillId\" \n        (change)=\"onDeletePill($event)\" \n        (click)=\"onClick($event, pillId)\" >{{ pillName }} <span *ngIf=\"pillQty > 1\">- {{ pillQty }}</span></a>\n</ng-container>\n"
+module.exports = "\r\n\r\n<div class=\"row\" *ngFor=\"let history of pill_history; let i = index\">\r\n    <div style=\"width: 100%; clear: both; height: 20px;\"></div>\r\n    <h2>{{ week_names[i] }}</h2>\r\n    <div style=\"width: 100%; clear: both; height: 4px;\"></div>\r\n    <app-history-day *ngFor=\"let item of history | keyvalue\" \r\n        [currentDate]=\"item.key\" \r\n        [weekNum]=\"i\"\r\n        [dayText]=\"item.value.day_text\"\r\n        [month]=\"item.value.month\"\r\n        [day]=\"item.value.day\"\r\n        [dayOfWeek]=\"item.value.day_of_week\"\r\n        [pills]=\"item.value.pills\"\r\n        (click)=\"onClickDay($event, i, item.key)\"\r\n        [className]=\"'col-4 col-sm-3 col-md day_cards mt-1'\"></app-history-day>\r\n        \r\n</div>"
 
 /***/ }),
 
@@ -302,9 +291,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _add_pill_add_pill_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./add-pill/add-pill.component */ "./src/app/add-pill/add-pill.component.ts");
 /* harmony import */ var src_message_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! src/message.service */ "./src/message.service.ts");
 /* harmony import */ var src_dayname_pipe__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! src/dayname.pipe */ "./src/dayname.pipe.ts");
-/* harmony import */ var _pills_pills_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./pills/pills.component */ "./src/app/pills/pills.component.ts");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
-
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
 
 
 
@@ -326,13 +313,12 @@ var AppModule = /** @class */ (function () {
                 _pill_history_pill_history_component__WEBPACK_IMPORTED_MODULE_5__["PillHistoryComponent"],
                 _history_day_history_day_component__WEBPACK_IMPORTED_MODULE_6__["HistoryDayComponent"],
                 _add_pill_add_pill_component__WEBPACK_IMPORTED_MODULE_7__["AddPillComponent"],
-                src_dayname_pipe__WEBPACK_IMPORTED_MODULE_9__["DayNamePipe"],
-                _pills_pills_component__WEBPACK_IMPORTED_MODULE_10__["PillsComponent"]
+                src_dayname_pipe__WEBPACK_IMPORTED_MODULE_9__["DayNamePipe"]
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
                 _app_routing_module__WEBPACK_IMPORTED_MODULE_3__["AppRoutingModule"],
-                _angular_common__WEBPACK_IMPORTED_MODULE_11__["CommonModule"]
+                _angular_common__WEBPACK_IMPORTED_MODULE_10__["CommonModule"]
             ],
             providers: [
                 src_message_service__WEBPACK_IMPORTED_MODULE_8__["MessageService"]
@@ -354,7 +340,7 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2hpc3RvcnktZGF5L2hpc3RvcnktZGF5LmNvbXBvbmVudC5jc3MifQ== */"
+module.exports = "\r\n\r\n.btn-ion1 {\r\n    background-color: #387ef5 !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n\r\n.btn-ion2 {\r\n    background-color: #11c1f3 !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n\r\n.btn-ion3 {\r\n    background-color: #33cd5f !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n\r\n.btn-ion4 {\r\n    background-color: #886aea !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n\r\n.btn-ion5 {\r\n    background-color: #ffc900 !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n\r\n.btn-ion6 {\r\n    background-color: #ef473a !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaGlzdG9yeS1kYXkvaGlzdG9yeS1kYXkuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUVBO0lBQ0ksb0NBQW9DO0lBQ3BDLGVBQWU7SUFDZixZQUFZO0lBQ1osV0FBVztBQUNmOztBQUVBO0lBQ0ksb0NBQW9DO0lBQ3BDLGVBQWU7SUFDZixZQUFZO0lBQ1osV0FBVztBQUNmOztBQUVBO0lBQ0ksb0NBQW9DO0lBQ3BDLGVBQWU7SUFDZixZQUFZO0lBQ1osV0FBVztBQUNmOztBQUVBO0lBQ0ksb0NBQW9DO0lBQ3BDLGVBQWU7SUFDZixZQUFZO0lBQ1osV0FBVztBQUNmOztBQUVBO0lBQ0ksb0NBQW9DO0lBQ3BDLGVBQWU7SUFDZixZQUFZO0lBQ1osV0FBVztBQUNmOztBQUVBO0lBQ0ksb0NBQW9DO0lBQ3BDLGVBQWU7SUFDZixZQUFZO0lBQ1osV0FBVztBQUNmIiwiZmlsZSI6InNyYy9hcHAvaGlzdG9yeS1kYXkvaGlzdG9yeS1kYXkuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIlxyXG5cclxuLmJ0bi1pb24xIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICMzODdlZjUgIWltcG9ydGFudDtcclxuICAgIGZvbnQtc2l6ZTogMTRweDtcclxuICAgIGNvbG9yOiB3aGl0ZTtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG59XHJcblxyXG4uYnRuLWlvbjIge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogIzExYzFmMyAhaW1wb3J0YW50O1xyXG4gICAgZm9udC1zaXplOiAxNHB4O1xyXG4gICAgY29sb3I6IHdoaXRlO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbn1cclxuXHJcbi5idG4taW9uMyB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjMzNjZDVmICFpbXBvcnRhbnQ7XHJcbiAgICBmb250LXNpemU6IDE0cHg7XHJcbiAgICBjb2xvcjogd2hpdGU7XHJcbiAgICB3aWR0aDogMTAwJTtcclxufVxyXG5cclxuLmJ0bi1pb240IHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICM4ODZhZWEgIWltcG9ydGFudDtcclxuICAgIGZvbnQtc2l6ZTogMTRweDtcclxuICAgIGNvbG9yOiB3aGl0ZTtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG59XHJcblxyXG4uYnRuLWlvbjUge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogI2ZmYzkwMCAhaW1wb3J0YW50O1xyXG4gICAgZm9udC1zaXplOiAxNHB4O1xyXG4gICAgY29sb3I6IHdoaXRlO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbn1cclxuXHJcbi5idG4taW9uNiB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjZWY0NzNhICFpbXBvcnRhbnQ7XHJcbiAgICBmb250LXNpemU6IDE0cHg7XHJcbiAgICBjb2xvcjogd2hpdGU7XHJcbiAgICB3aWR0aDogMTAwJTtcclxufSJdfQ== */"
 
 /***/ }),
 
@@ -378,8 +364,18 @@ var HistoryDayComponent = /** @class */ (function () {
     function HistoryDayComponent(messageService) {
         this.messageService = messageService;
         this.pills = [];
+        this.change = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
     }
     HistoryDayComponent.prototype.ngOnInit = function () {
+    };
+    HistoryDayComponent.prototype.onClick = function ($event, pillId) {
+        $event.stopPropagation();
+        this.messageService.sendMessage({
+            weekNum: this.weekNum,
+            doShowForm: false,
+            currentDate: this.currentDate,
+            deletePillId: pillId
+        });
     };
     HistoryDayComponent.ctorParameters = function () { return [
         { type: src_message_service__WEBPACK_IMPORTED_MODULE_2__["MessageService"] }
@@ -412,6 +408,10 @@ var HistoryDayComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Number)
     ], HistoryDayComponent.prototype, "weekNum", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], HistoryDayComponent.prototype, "change", void 0);
     HistoryDayComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-history-day',
@@ -434,7 +434,7 @@ var HistoryDayComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".day_cards {\r\n    display: inline-block;\r\n    width: 13%;\r\n    min-height: 110px;\r\n    border-top: solid 1px #387ef5;\r\n    border-bottom: solid 1px #387ef5;\r\n    border-left: solid 1px #387ef5;\r\n    border-right: solid 1px #387ef5;\r\n    padding: 5px;\r\n    border-radius: 12px;\r\n    margin-right: 1px;\r\n    margin-left: 4px\r\n}\r\n\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcGlsbC1oaXN0b3J5L3BpbGwtaGlzdG9yeS5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0lBQ0kscUJBQXFCO0lBQ3JCLFVBQVU7SUFDVixpQkFBaUI7SUFDakIsNkJBQTZCO0lBQzdCLGdDQUFnQztJQUNoQyw4QkFBOEI7SUFDOUIsK0JBQStCO0lBQy9CLFlBQVk7SUFDWixtQkFBbUI7SUFDbkIsaUJBQWlCO0lBQ2pCO0FBQ0oiLCJmaWxlIjoic3JjL2FwcC9waWxsLWhpc3RvcnkvcGlsbC1oaXN0b3J5LmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuZGF5X2NhcmRzIHtcclxuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcclxuICAgIHdpZHRoOiAxMyU7XHJcbiAgICBtaW4taGVpZ2h0OiAxMTBweDtcclxuICAgIGJvcmRlci10b3A6IHNvbGlkIDFweCAjMzg3ZWY1O1xyXG4gICAgYm9yZGVyLWJvdHRvbTogc29saWQgMXB4ICMzODdlZjU7XHJcbiAgICBib3JkZXItbGVmdDogc29saWQgMXB4ICMzODdlZjU7XHJcbiAgICBib3JkZXItcmlnaHQ6IHNvbGlkIDFweCAjMzg3ZWY1O1xyXG4gICAgcGFkZGluZzogNXB4O1xyXG4gICAgYm9yZGVyLXJhZGl1czogMTJweDtcclxuICAgIG1hcmdpbi1yaWdodDogMXB4O1xyXG4gICAgbWFyZ2luLWxlZnQ6IDRweFxyXG59XHJcblxyXG4iXX0= */"
+module.exports = "\r\n\r\n.day_cards {\r\n    min-height: 156px;\r\n    border-top: solid 1px #387ef5;\r\n    border-bottom: solid 1px #387ef5;\r\n    border-left: solid 1px #387ef5;\r\n    \r\n    padding: 5px;\r\n    border-radius: 12px;\r\n}\r\n\r\n.day_cards:last-child {\r\n    border-right: solid 1px #387ef5;\r\n}\r\n\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcGlsbC1oaXN0b3J5L3BpbGwtaGlzdG9yeS5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBRUE7SUFDSSxpQkFBaUI7SUFDakIsNkJBQTZCO0lBQzdCLGdDQUFnQztJQUNoQyw4QkFBOEI7O0lBRTlCLFlBQVk7SUFDWixtQkFBbUI7QUFDdkI7O0FBRUE7SUFDSSwrQkFBK0I7QUFDbkMiLCJmaWxlIjoic3JjL2FwcC9waWxsLWhpc3RvcnkvcGlsbC1oaXN0b3J5LmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyJcclxuXHJcbi5kYXlfY2FyZHMge1xyXG4gICAgbWluLWhlaWdodDogMTU2cHg7XHJcbiAgICBib3JkZXItdG9wOiBzb2xpZCAxcHggIzM4N2VmNTtcclxuICAgIGJvcmRlci1ib3R0b206IHNvbGlkIDFweCAjMzg3ZWY1O1xyXG4gICAgYm9yZGVyLWxlZnQ6IHNvbGlkIDFweCAjMzg3ZWY1O1xyXG4gICAgXHJcbiAgICBwYWRkaW5nOiA1cHg7XHJcbiAgICBib3JkZXItcmFkaXVzOiAxMnB4O1xyXG59XHJcblxyXG4uZGF5X2NhcmRzOmxhc3QtY2hpbGQge1xyXG4gICAgYm9yZGVyLXJpZ2h0OiBzb2xpZCAxcHggIzM4N2VmNTtcclxufVxyXG5cclxuIl19 */"
 
 /***/ }),
 
@@ -457,11 +457,11 @@ __webpack_require__.r(__webpack_exports__);
 var PillHistoryComponent = /** @class */ (function () {
     function PillHistoryComponent(messageService) {
         this.messageService = messageService;
+        this.clickChange = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
     }
     PillHistoryComponent.prototype.ngOnInit = function () {
     };
     PillHistoryComponent.prototype.onClickDay = function ($event, weekNum, currentDate) {
-        console.log("did click onclick");
         this.messageService.sendMessage({
             weekNum: weekNum,
             doShowForm: true,
@@ -480,6 +480,10 @@ var PillHistoryComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
     ], PillHistoryComponent.prototype, "week_names", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], PillHistoryComponent.prototype, "clickChange", void 0);
     PillHistoryComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-pill-history',
@@ -1398,90 +1402,6 @@ var PillsService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
     ], PillsService);
     return PillsService;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pills/pills.component.css":
-/*!*******************************************!*\
-  !*** ./src/app/pills/pills.component.css ***!
-  \*******************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = ".hidden { display: none !important;}\r\n\r\n.btn-ion1 {\r\n    background-color: #387ef5 !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n\r\n.btn-ion2 {\r\n    background-color: #11c1f3 !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n\r\n.btn-ion3 {\r\n    background-color: #33cd5f !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n\r\n.btn-ion4 {\r\n    background-color: #886aea !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n\r\n.btn-ion5 {\r\n    background-color: #ffc900 !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n\r\n.btn-ion6 {\r\n    background-color: #ef473a !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcGlsbHMvcGlsbHMuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxVQUFVLHdCQUF3QixDQUFDOztBQUVuQztJQUNJLG9DQUFvQztJQUNwQyxlQUFlO0lBQ2YsWUFBWTtJQUNaLFdBQVc7QUFDZjs7QUFFQTtJQUNJLG9DQUFvQztJQUNwQyxlQUFlO0lBQ2YsWUFBWTtJQUNaLFdBQVc7QUFDZjs7QUFFQTtJQUNJLG9DQUFvQztJQUNwQyxlQUFlO0lBQ2YsWUFBWTtJQUNaLFdBQVc7QUFDZjs7QUFFQTtJQUNJLG9DQUFvQztJQUNwQyxlQUFlO0lBQ2YsWUFBWTtJQUNaLFdBQVc7QUFDZjs7QUFFQTtJQUNJLG9DQUFvQztJQUNwQyxlQUFlO0lBQ2YsWUFBWTtJQUNaLFdBQVc7QUFDZjs7QUFFQTtJQUNJLG9DQUFvQztJQUNwQyxlQUFlO0lBQ2YsWUFBWTtJQUNaLFdBQVc7QUFDZiIsImZpbGUiOiJzcmMvYXBwL3BpbGxzL3BpbGxzLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuaGlkZGVuIHsgZGlzcGxheTogbm9uZSAhaW1wb3J0YW50O31cclxuXHJcbi5idG4taW9uMSB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjMzg3ZWY1ICFpbXBvcnRhbnQ7XHJcbiAgICBmb250LXNpemU6IDE0cHg7XHJcbiAgICBjb2xvcjogd2hpdGU7XHJcbiAgICB3aWR0aDogMTAwJTtcclxufVxyXG5cclxuLmJ0bi1pb24yIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICMxMWMxZjMgIWltcG9ydGFudDtcclxuICAgIGZvbnQtc2l6ZTogMTRweDtcclxuICAgIGNvbG9yOiB3aGl0ZTtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG59XHJcblxyXG4uYnRuLWlvbjMge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogIzMzY2Q1ZiAhaW1wb3J0YW50O1xyXG4gICAgZm9udC1zaXplOiAxNHB4O1xyXG4gICAgY29sb3I6IHdoaXRlO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbn1cclxuXHJcbi5idG4taW9uNCB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjODg2YWVhICFpbXBvcnRhbnQ7XHJcbiAgICBmb250LXNpemU6IDE0cHg7XHJcbiAgICBjb2xvcjogd2hpdGU7XHJcbiAgICB3aWR0aDogMTAwJTtcclxufVxyXG5cclxuLmJ0bi1pb241IHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICNmZmM5MDAgIWltcG9ydGFudDtcclxuICAgIGZvbnQtc2l6ZTogMTRweDtcclxuICAgIGNvbG9yOiB3aGl0ZTtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG59XHJcblxyXG4uYnRuLWlvbjYge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogI2VmNDczYSAhaW1wb3J0YW50O1xyXG4gICAgZm9udC1zaXplOiAxNHB4O1xyXG4gICAgY29sb3I6IHdoaXRlO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbn0iXX0= */"
-
-/***/ }),
-
-/***/ "./src/app/pills/pills.component.ts":
-/*!******************************************!*\
-  !*** ./src/app/pills/pills.component.ts ***!
-  \******************************************/
-/*! exports provided: PillsComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PillsComponent", function() { return PillsComponent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var src_message_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/message.service */ "./src/message.service.ts");
-
-
-
-var PillsComponent = /** @class */ (function () {
-    function PillsComponent(messageService) {
-        this.messageService = messageService;
-    }
-    PillsComponent.prototype.ngOnInit = function () {
-    };
-    PillsComponent.prototype.onClick = function ($event, pillId) {
-        $event.stopPropagation();
-        this.messageService.sendMessage({
-            weekNum: this.weekNum,
-            doShowForm: false,
-            currentDate: this.currentDate,
-            deletePillId: pillId
-        });
-    };
-    PillsComponent.ctorParameters = function () { return [
-        { type: src_message_service__WEBPACK_IMPORTED_MODULE_2__["MessageService"] }
-    ]; };
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Number)
-    ], PillsComponent.prototype, "loopIndex", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Number)
-    ], PillsComponent.prototype, "pillId", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
-    ], PillsComponent.prototype, "pillName", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Number)
-    ], PillsComponent.prototype, "pillQty", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
-    ], PillsComponent.prototype, "currentDate", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Number)
-    ], PillsComponent.prototype, "weekNum", void 0);
-    PillsComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-pills',
-            template: __webpack_require__(/*! raw-loader!./pills.component.html */ "./node_modules/raw-loader/index.js!./src/app/pills/pills.component.html"),
-            styles: [__webpack_require__(/*! ./pills.component.css */ "./src/app/pills/pills.component.css")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_message_service__WEBPACK_IMPORTED_MODULE_2__["MessageService"]])
-    ], PillsComponent);
-    return PillsComponent;
 }());
 
 

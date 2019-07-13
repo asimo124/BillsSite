@@ -1,53 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a2afb100-9492-4794-888f-87188d2c08b9" name="Default" comment="Merging GitHub with this BitBucket repo.">
-      <change afterPath="$PROJECT_DIR$/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main-es2015.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main-es2015.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main-es5.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main-es5.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/main-es2015.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/main-es2015.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/main-es5.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/main-es5.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/polyfills-es2015.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/polyfills-es2015.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/polyfills-es5.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/polyfills-es5.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/runtime-es2015.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/runtime-es2015.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/runtime-es5.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/runtime-es5.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/styles-es2015.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/styles-es2015.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/styles-es5.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/styles-es5.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/vendor-es2015.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/vendor-es2015.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/vendor-es5.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pill-history/vendor-es5.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pillhistory.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/polyfills-es2015.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/polyfills-es2015.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/polyfills-es5.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/polyfills-es5.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runtime-es2015.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runtime-es2015.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runtime-es5.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runtime-es5.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/styles-es2015.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/styles-es2015.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/styles-es5.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/styles-es5.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor-es2015.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor-es2015.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor-es5.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor-es5.js.map" afterDir="false" />
+    <list default="true" id="a2afb100-9492-4794-888f-87188d2c08b9" name="Default" comment="Completed Angular Pill History App, except for Http Requests to persist to db.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main-es2015.js" beforeDir="false" afterPath="$PROJECT_DIR$/main-es2015.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main-es2015.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/main-es2015.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main-es5.js" beforeDir="false" afterPath="$PROJECT_DIR$/main-es5.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main-es5.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/main-es5.js.map" afterDir="false" />
     </list>
     <ignored path="Bills.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -82,44 +41,29 @@
     <favorites_list name="Bills" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+    <leaf>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pill_history.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="246">
-              <caret line="131" column="47" selection-start-line="131" selection-start-column="47" selection-end-line="131" selection-end-column="47" />
-              <folding>
-                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pill-history/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="19" lean-forward="true" selection-end-line="14" />
-            </state>
-          </provider>
+        <entry file="file://$PROJECT_DIR$/vendor-es2015.js.map">
+          <provider selected="true" editor-type-id="text-editor" />
+          <provider editor-type-id="sourcemapFileViewerProvider" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pillhistory.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
+            <state relative-caret-position="272">
               <caret line="14" selection-start-line="14" selection-end-line="14" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vendor-es2015.js.map">
-          <provider editor-type-id="sourcemapFileViewerProvider" />
-          <provider selected="true" editor-type-id="text-editor" />
+        <entry file="file://$PROJECT_DIR$/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="8" column="27" selection-end-line="14" />
+            </state>
+          </provider>
         </entry>
       </file>
     </leaf>
@@ -202,6 +146,12 @@
   <component name="PhpServers">
     <servers />
   </component>
+  <component name="PhpWorkspaceProjectConfiguration">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/twilio/sdk" />
+    </include_path>
+  </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="1895" />
     <option name="y" value="156" />
@@ -216,6 +166,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -237,7 +188,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -256,15 +206,15 @@
     <property name="settings.editor.selected.configurable" value="preferences.editor" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\AHawley\Documents\Bills\js" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\asimo\Documents\billssite" />
       <recent name="C:\Users\AHawley\Documents\Bills" />
       <recent name="C:\Users\AHawley\Documents\Bills\charges" />
       <recent name="C:\Users\asimo\Documents\billssite\sol\glucose" />
       <recent name="C:\Users\AHawley\Documents\PHPSites\Bills" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\AHawley\Documents\Bills\js" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -318,6 +268,7 @@
       <workItem from="1561067211593" duration="348000" />
       <workItem from="1561067581961" duration="677000" />
       <workItem from="1562790017961" duration="4612000" />
+      <workItem from="1563039929366" duration="88000" />
     </task>
     <task id="LOCAL-00001" summary="fixed color issue">
       <created>1495227677869</created>
@@ -529,17 +480,24 @@
       <option name="project" value="LOCAL" />
       <updated>1561067604145</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Completed Angular Pill History App, except for Http Requests to persist to db.">
+      <created>1562983407454</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1562983407454</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="33745000" />
+    <option name="totallyTimeSpent" value="34019000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1358" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18763326" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18976545" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="DB Browser" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -555,14 +513,14 @@
       <window_info anchor="bottom" id="Terminal" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" weight="0.32998326" />
       <window_info anchor="bottom" id="Version Control" order="11" weight="0.32837406" />
-      <window_info anchor="bottom" id="File Transfer" order="12" visible="true" weight="0.32286024" />
+      <window_info anchor="bottom" id="File Transfer" order="12" weight="0.32286024" />
       <window_info anchor="bottom" id="Docker" order="13" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="14" />
       <window_info anchor="bottom" id="Migrations" order="15" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Remote Host" order="3" visible="true" weight="0.22014925" />
+      <window_info anchor="right" id="Remote Host" order="3" weight="0.22014925" />
       <window_info anchor="right" id="Database" order="4" weight="0.2457356" />
     </layout>
     <layout-to-restore>
@@ -618,7 +576,8 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added more links" />
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="changes after download" />
     <MESSAGE value="began work on Health &amp; Wellness" />
     <MESSAGE value="secured website after hack, password protection, csrf protection, tag/script injection protection" />
@@ -643,10 +602,11 @@
     <MESSAGE value="Created API to load recipe data for React Recipe App created on root of site." />
     <MESSAGE value="-Revamped Charge Category Module, with a Stacked Column Graph for the UI." />
     <MESSAGE value="- Created Pill History Bootstrap Page" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Created Pill History Bootstrap Page" />
+    <MESSAGE value="Completed Angular Pill History App, except for Http Requests to persist to db." />
+    <option name="LAST_COMMIT_MESSAGE" value="Completed Angular Pill History App, except for Http Requests to persist to db." />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/api/getCurBalance.php" />
     <entry file="file://$PROJECT_DIR$/api/loadBillDates.php" />
     <entry file="file://$PROJECT_DIR$/bills2/index.php">
       <provider selected="true" editor-type-id="text-editor" />
@@ -891,6 +851,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pill-history/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="19" lean-forward="true" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pill_history.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="246">
@@ -905,19 +872,19 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/vendor-es2015.js.map">
-      <provider editor-type-id="sourcemapFileViewerProvider" />
       <provider selected="true" editor-type-id="text-editor" />
+      <provider editor-type-id="sourcemapFileViewerProvider" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/pill-history/index.html">
+    <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="19" lean-forward="true" selection-end-line="14" />
+        <state relative-caret-position="136">
+          <caret line="8" column="27" selection-end-line="14" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pillhistory.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
+        <state relative-caret-position="272">
           <caret line="14" selection-start-line="14" selection-end-line="14" />
         </state>
       </provider>
