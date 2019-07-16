@@ -41,7 +41,7 @@ module.exports = "\n<div class=\"row \">\n    <div class=\"col-xs-12 col-md-4\">
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<header>\r\n    <!-- Fixed navbar -->\r\n    <nav class=\"navbar navbar-expand-md navbar-dark fixed-top bg-dark\">\r\n        <a class=\"navbar-brand\" href=\"#\">Pill  Tracker</a>\r\n    </nav>\r\n</header>\r\n\r\n<!-- Begin page content -->\r\n<main role=\"main\" class=\"container-fluid\">\r\n    <div style=\"clear: both; height: 25px;\" ></div>\r\n    <h1 class=\"mt-5\" style=\"margin-left: -15px;\">Pill History</h1>\r\n\r\n    <div style=\"clear: both; height: 17px;\" ></div>\r\n    \r\n    <app-pill-history *ngIf=\"!addPillFormShowing\" [pill_history]=\"pillHistory\" [week_names]=\"weekNames\" ></app-pill-history>\r\n    <app-add-pill *ngIf=\"addPillFormShowing\" [weekNum]=\"weekNum\" [currentDate]=\"currentDayInForm\" (change)=\"onSubmitAddPill($event)\"></app-add-pill>\r\n\r\n</main>\r\n\r\n<footer class=\"footer\">\r\n    <div class=\"container\">\r\n        <span class=\"text-muted\"></span>\r\n    </div>\r\n</footer>"
+module.exports = "<header>\r\n    <!-- Fixed navbar -->\r\n    <nav class=\"navbar navbar-expand-md navbar-dark fixed-top bg-dark\">\r\n        <a class=\"navbar-brand\" href=\"#\">Pill  Tracker</a>\r\n    </nav>\r\n</header>\r\n\r\n<!-- Begin page content -->\r\n<main role=\"main\" class=\"container-fluid\">\r\n    <div style=\"clear: both; height: 25px;\" ></div>\r\n    <h1 class=\"mt-5\" style=\"margin-left: -15px;border-top: solid 1px #387ef5;\">Pill History</h1>\r\n\r\n    <div style=\"clear: both; height: 17px;\" ></div>\r\n    \r\n    <app-pill-history *ngIf=\"!addPillFormShowing\" [pill_history]=\"pillHistory\" [week_names]=\"weekNames\" ></app-pill-history>\r\n    <app-add-pill *ngIf=\"addPillFormShowing\" [weekNum]=\"weekNum\" [currentDate]=\"currentDayInForm\" (change)=\"onSubmitAddPill($event)\"></app-add-pill>\r\n\r\n</main>\r\n\r\n<footer class=\"footer\">\r\n    <div class=\"container\">\r\n        <span class=\"text-muted\"></span>\r\n    </div>\r\n</footer>"
 
 /***/ }),
 
@@ -211,19 +211,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _pillhistory_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pillhistory.service */ "./src/app/pillhistory.service.ts");
 /* harmony import */ var src_message_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/message.service */ "./src/message.service.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+
 
 
 
 
 var AppComponent = /** @class */ (function () {
-    function AppComponent(pillHistoryService, messageService) {
+    function AppComponent(pillHistoryService, messageService, http) {
         var _this = this;
         this.pillHistoryService = pillHistoryService;
         this.messageService = messageService;
+        this.http = http;
         this.title = 'pill-history';
         this.addPillFormShowing = false;
         this.pillHistory = [];
         this.weekNames = [];
+        var self = this;
+        http.get("http://alexhawley-api.info/pills/history").subscribe(function (res) {
+            self.pillHistory = res.days;
+            self.weekNames = res.week_names;
+        });
         this.pillHistory = this.pillHistoryService.getPillHistory();
         this.weekNames = this.pillHistoryService.getWeekNames();
         this.subscription = this.messageService.getMessage().subscribe(function (message) {
@@ -231,30 +239,42 @@ var AppComponent = /** @class */ (function () {
                 _this.addPillFormShowing = true;
             }
             else if (message.deletePillId > 0) {
-                _this.pillHistoryService.setPillHistoryItem(message.weekNum, message.currentDate, message.deletePillId, 0);
+                _this.setPillHistoryItem(message.weekNum, message.currentDate, message.deletePillId, 0);
+                var body = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpParams"]()
+                    .set('cur_date', message.currentDate)
+                    .set('pill_taken', String(message.deletePillId))
+                    .set('qty', String("0"));
+                var ob = _this.http.post("http://alexhawley-api.info/pills/delete", body).toPromise()
+                    .then(function (resp) {
+                    //console.log("resp: ", resp);
+                });
             }
-            console.log("message object: ", message);
             _this.weekNum = message.weekNum;
             _this.currentDayInForm = message.currentDate;
         });
     }
-    AppComponent.prototype.ngOnChanges = function () {
-        this.pillHistory = this.pillHistoryService.getPillHistory();
-    };
     AppComponent.prototype.ngOnDestroy = function () {
         this.subscription.unsubscribe();
     };
+    AppComponent.prototype.setPillHistoryItem = function (weekNum, currentDate, pillId, qty) {
+        this.pillHistory[weekNum][currentDate].pills[pillId].qty = qty;
+    };
     AppComponent.prototype.onSubmitAddPill = function (eventArgs) {
-        console.log("weekNum: ", eventArgs.weekNum);
-        console.log("currentDate: ", eventArgs.currentDate);
-        console.log("pill_taken: ", eventArgs.pill_id);
-        console.log("qty: ", eventArgs.qty);
-        this.pillHistoryService.setPillHistoryItem(eventArgs.weekNum, eventArgs.currentDate, eventArgs.pill_id, eventArgs.qty);
+        this.setPillHistoryItem(eventArgs.weekNum, eventArgs.currentDate, eventArgs.pill_id, eventArgs.qty);
         this.addPillFormShowing = false;
+        var body = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpParams"]()
+            .set('cur_date', eventArgs.currentDate)
+            .set('pill_taken', String(eventArgs.pill_id))
+            .set('qty', String(eventArgs.qty));
+        var ob = this.http.post("http://alexhawley-api.info/pills/add", body).toPromise()
+            .then(function (resp) {
+            //console.log("resp: ", resp);
+        });
     };
     AppComponent.ctorParameters = function () { return [
         { type: _pillhistory_service__WEBPACK_IMPORTED_MODULE_2__["PillHistoryService"] },
-        { type: src_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"] }
+        { type: src_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"] },
+        { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"] }
     ]; };
     AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -262,7 +282,7 @@ var AppComponent = /** @class */ (function () {
             template: __webpack_require__(/*! raw-loader!./app.component.html */ "./node_modules/raw-loader/index.js!./src/app/app.component.html"),
             styles: [__webpack_require__(/*! ./app.component.css */ "./src/app/app.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_pillhistory_service__WEBPACK_IMPORTED_MODULE_2__["PillHistoryService"], src_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_pillhistory_service__WEBPACK_IMPORTED_MODULE_2__["PillHistoryService"], src_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"], _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -292,6 +312,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_message_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! src/message.service */ "./src/message.service.ts");
 /* harmony import */ var src_dayname_pipe__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! src/dayname.pipe */ "./src/dayname.pipe.ts");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+
 
 
 
@@ -318,7 +340,8 @@ var AppModule = /** @class */ (function () {
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
                 _app_routing_module__WEBPACK_IMPORTED_MODULE_3__["AppRoutingModule"],
-                _angular_common__WEBPACK_IMPORTED_MODULE_10__["CommonModule"]
+                _angular_common__WEBPACK_IMPORTED_MODULE_10__["CommonModule"],
+                _angular_common_http__WEBPACK_IMPORTED_MODULE_11__["HttpClientModule"]
             ],
             providers: [
                 src_message_service__WEBPACK_IMPORTED_MODULE_8__["MessageService"]

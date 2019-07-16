@@ -41,7 +41,7 @@ module.exports = "\n<div class=\"row \">\n    <div class=\"col-xs-12 col-md-4\">
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<header>\r\n    <!-- Fixed navbar -->\r\n    <nav class=\"navbar navbar-expand-md navbar-dark fixed-top bg-dark\">\r\n        <a class=\"navbar-brand\" href=\"#\">Pill  Tracker</a>\r\n    </nav>\r\n</header>\r\n\r\n<!-- Begin page content -->\r\n<main role=\"main\" class=\"container-fluid\">\r\n    <div style=\"clear: both; height: 25px;\" ></div>\r\n    <h1 class=\"mt-5\" style=\"margin-left: -15px;\">Pill History</h1>\r\n\r\n    <div style=\"clear: both; height: 17px;\" ></div>\r\n    \r\n    <app-pill-history *ngIf=\"!addPillFormShowing\" [pill_history]=\"pillHistory\" [week_names]=\"weekNames\" ></app-pill-history>\r\n    <app-add-pill *ngIf=\"addPillFormShowing\" [weekNum]=\"weekNum\" [currentDate]=\"currentDayInForm\" (change)=\"onSubmitAddPill($event)\"></app-add-pill>\r\n\r\n</main>\r\n\r\n<footer class=\"footer\">\r\n    <div class=\"container\">\r\n        <span class=\"text-muted\"></span>\r\n    </div>\r\n</footer>"
+module.exports = "<header>\r\n    <!-- Fixed navbar -->\r\n    <nav class=\"navbar navbar-expand-md navbar-dark fixed-top bg-dark\">\r\n        <a class=\"navbar-brand\" href=\"#\">Pill  Tracker</a>\r\n    </nav>\r\n</header>\r\n\r\n<!-- Begin page content -->\r\n<main role=\"main\" class=\"container-fluid\">\r\n    <div style=\"clear: both; height: 25px;\" ></div>\r\n    <h1 class=\"mt-5\" style=\"margin-left: -15px;border-top: solid 1px #387ef5;\">Pill History</h1>\r\n\r\n    <div style=\"clear: both; height: 17px;\" ></div>\r\n    \r\n    <app-pill-history *ngIf=\"!addPillFormShowing\" [pill_history]=\"pillHistory\" [week_names]=\"weekNames\" ></app-pill-history>\r\n    <app-add-pill *ngIf=\"addPillFormShowing\" [weekNum]=\"weekNum\" [currentDate]=\"currentDayInForm\" (change)=\"onSubmitAddPill($event)\"></app-add-pill>\r\n\r\n</main>\r\n\r\n<footer class=\"footer\">\r\n    <div class=\"container\">\r\n        <span class=\"text-muted\"></span>\r\n    </div>\r\n</footer>"
 
 /***/ }),
 
@@ -207,18 +207,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
 /* harmony import */ var _pillhistory_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pillhistory.service */ "./src/app/pillhistory.service.ts");
 /* harmony import */ var src_message_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/message.service */ "./src/message.service.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+
 
 
 
 
 let AppComponent = class AppComponent {
-    constructor(pillHistoryService, messageService) {
+    constructor(pillHistoryService, messageService, http) {
         this.pillHistoryService = pillHistoryService;
         this.messageService = messageService;
+        this.http = http;
         this.title = 'pill-history';
         this.addPillFormShowing = false;
         this.pillHistory = [];
         this.weekNames = [];
+        let self = this;
+        http.get("http://alexhawley-api.info/pills/history").subscribe((res) => {
+            self.pillHistory = res.days;
+            self.weekNames = res.week_names;
+        });
         this.pillHistory = this.pillHistoryService.getPillHistory();
         this.weekNames = this.pillHistoryService.getWeekNames();
         this.subscription = this.messageService.getMessage().subscribe(message => {
@@ -226,31 +234,43 @@ let AppComponent = class AppComponent {
                 this.addPillFormShowing = true;
             }
             else if (message.deletePillId > 0) {
-                this.pillHistoryService.setPillHistoryItem(message.weekNum, message.currentDate, message.deletePillId, 0);
+                this.setPillHistoryItem(message.weekNum, message.currentDate, message.deletePillId, 0);
+                let body = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpParams"]()
+                    .set('cur_date', message.currentDate)
+                    .set('pill_taken', String(message.deletePillId))
+                    .set('qty', String("0"));
+                let ob = this.http.post("http://alexhawley-api.info/pills/delete", body).toPromise()
+                    .then(resp => {
+                    //console.log("resp: ", resp);
+                });
             }
-            console.log("message object: ", message);
             this.weekNum = message.weekNum;
             this.currentDayInForm = message.currentDate;
         });
     }
-    ngOnChanges() {
-        this.pillHistory = this.pillHistoryService.getPillHistory();
-    }
     ngOnDestroy() {
         this.subscription.unsubscribe();
     }
+    setPillHistoryItem(weekNum, currentDate, pillId, qty) {
+        this.pillHistory[weekNum][currentDate].pills[pillId].qty = qty;
+    }
     onSubmitAddPill(eventArgs) {
-        console.log("weekNum: ", eventArgs.weekNum);
-        console.log("currentDate: ", eventArgs.currentDate);
-        console.log("pill_taken: ", eventArgs.pill_id);
-        console.log("qty: ", eventArgs.qty);
-        this.pillHistoryService.setPillHistoryItem(eventArgs.weekNum, eventArgs.currentDate, eventArgs.pill_id, eventArgs.qty);
+        this.setPillHistoryItem(eventArgs.weekNum, eventArgs.currentDate, eventArgs.pill_id, eventArgs.qty);
         this.addPillFormShowing = false;
+        let body = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpParams"]()
+            .set('cur_date', eventArgs.currentDate)
+            .set('pill_taken', String(eventArgs.pill_id))
+            .set('qty', String(eventArgs.qty));
+        let ob = this.http.post("http://alexhawley-api.info/pills/add", body).toPromise()
+            .then(resp => {
+            //console.log("resp: ", resp);
+        });
     }
 };
 AppComponent.ctorParameters = () => [
     { type: _pillhistory_service__WEBPACK_IMPORTED_MODULE_2__["PillHistoryService"] },
-    { type: src_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"] }
+    { type: src_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"] },
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"] }
 ];
 AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -258,7 +278,7 @@ AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         template: __webpack_require__(/*! raw-loader!./app.component.html */ "./node_modules/raw-loader/index.js!./src/app/app.component.html"),
         styles: [__webpack_require__(/*! ./app.component.css */ "./src/app/app.component.css")]
     }),
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_pillhistory_service__WEBPACK_IMPORTED_MODULE_2__["PillHistoryService"], src_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"]])
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_pillhistory_service__WEBPACK_IMPORTED_MODULE_2__["PillHistoryService"], src_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"], _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"]])
 ], AppComponent);
 
 
@@ -286,6 +306,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_message_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! src/message.service */ "./src/message.service.ts");
 /* harmony import */ var src_dayname_pipe__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! src/dayname.pipe */ "./src/dayname.pipe.ts");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm2015/common.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+
 
 
 
@@ -311,7 +333,8 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         imports: [
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
             _app_routing_module__WEBPACK_IMPORTED_MODULE_3__["AppRoutingModule"],
-            _angular_common__WEBPACK_IMPORTED_MODULE_10__["CommonModule"]
+            _angular_common__WEBPACK_IMPORTED_MODULE_10__["CommonModule"],
+            _angular_common_http__WEBPACK_IMPORTED_MODULE_11__["HttpClientModule"]
         ],
         providers: [
             src_message_service__WEBPACK_IMPORTED_MODULE_8__["MessageService"]
