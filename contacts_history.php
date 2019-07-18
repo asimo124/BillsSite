@@ -36,7 +36,7 @@ curl_close($ch);
     <div class="row">
         <h1 class="mt-5">Contacts Replaced</h1>
     </div>
-    <div class="contacts_content">
+    <div class="event_types_content">
 
     </div>
 </div>
@@ -47,6 +47,25 @@ curl_close($ch);
     </div>
 </footer>
 
+<div class="modal " id="addEventTypeModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Choose Item</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label for="add_event_taken" >Which item did you use?</label>
+                <select name="add_event_type" class="form-control" id="add_event_type">
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnAddEventType" >Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" ></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -56,88 +75,122 @@ curl_close($ch);
 
 $(document).ready(function() {
 
-    var loadContactDates = function() {
+    function loadAllItemData() {
+        function loadContactDates() {
+            return $.ajax({
+                url: 'http://alexhawley-api.info/items-used/history',
+                dataType: 'json',
+                type: 'GET',
+                processData: false
+            });
+        };
+        function loadEventTypes() {
+            return $.ajax({
+                url: 'http://alexhawley-api.info/event-types/show',
+                dataType: 'json',
+                type: 'GET',
+                processData: false
+            });
+        }
+        $.when(loadContactDates(), loadEventTypes()).done(function (data, event_types) {
 
-        $.ajax({
-            url: 'http://alexhawley-api.info/api/contacts_history/get_history.php',
-            dataType: 'json',
-            type: 'GET',
-            processData: false,
-            success: function (data, textStatus, jQxhr) {
+            var weekNames = data[0].week_names;
+            var data = data[0].days;
+            var event_types = event_types[0];
 
-                var output = "";
-                $.each(data, function (index, days) {
+            console.log("event_types: ", event_types);
 
-                    output += '<div class="row">';
-                    if (index == 0) {
-                        output += '<h2>Five Weeks Ago</h2>';
-                    } else if (index == 1) {
-                        output += '<h2>Four Weeks Ago</h2>';
-                    } else if (index == 2) {
-                        output += '<h2>Three Weeks Ago</h2>';
-                    } else if (index == 3) {
-                        output += '<h2>Last Week</h2>';
-                    } else {
-                        output += '<h2>Current Week</h2>';
-                    }
-                    output += '<div style="clear: both; width: 100%; height: 22px;" ></div>';
-                    $.each(days, function (curDate, day) {
+            var output = "";
+            $.each(data, function (index, days) {
 
-                        output += '<div class="day_cards" data-date="' + curDate + '">';
-                        output += ((day.month) ? day.month + '&nbsp;' : '') + day.day;
-                        output += '<div style="clear: both; height: 25px;" ></div>';
+                output += '<div class="row">';
+                if (index == 0) {
+                    output += '<h2>Five Weeks Ago</h2>';
+                } else if (index == 1) {
+                    output += '<h2>Four Weeks Ago</h2>';
+                } else if (index == 2) {
+                    output += '<h2>Three Weeks Ago</h2>';
+                } else if (index == 3) {
+                    output += '<h2>Last Week</h2>';
+                } else {
+                    output += '<h2>Current Week</h2>';
+                }
+                output += '<div style="clear: both; width: 100%; height: 22px;" ></div>';
 
-                        if (day.did_replace == 1) {
-                            output += '<a href="javascript:void(0);" class="btn btn-ion3 delete_contact" data-date="' + curDate + '">Replaced Contacts</a>';
+                $.each(days, function (curDate, day) {
+                    output += '<div class="col-4 col-sm-3 col-md day_cards mt-1" data-date="' + curDate + '">';
+                    output += day.day_text;
+                    output += '<div style="clear: both; height: 25px;" ></div>';
+                    var i = 1;
+                    $.each(day.items_used, function (index, item) {
+                        var j = String(item.event_type_id);
+                        if (j == "1") {
+                            j = "";
+                        }
+                        if (item.was_used == 1) {
+                            output += '<a href="javascript:void(0);" class="btn btn-ion' + j + ' delete_item" data-date="' + curDate + '" data-event-type-id="' + item.event_type_id + '" >' + item.event_type + '</a>';
                             output += '<div style="clear: both; height: 7px;" ></div>'
                         }
-                        output += '</div>';
-                    });
+                    })
                     output += '</div>';
-                    output += '<div style="clear: both; width: 100%; height: 22px;" ></div>';
                 });
-                $('.contacts_content').html(output);
-            },
-            error: function (jqXhr, textStatus, errorThrown) {
-                console.log(errorThrown);
-            }
+                output += '</div>';
+                output += '<div style="clear: both; width: 100%; height: 22px;" ></div>';
+            });
+            $('.event_types_content').html(output);
+            var event_types_dropdown_str = "";
+            $.each(event_types, function (index, item) {
+                event_types_dropdown_str += '<option value="' + item.id + '">' + item.event_type + '</option>' + "\n";
+            });
+            $('#add_event_type').html(event_types_dropdown_str);
+        });
+        loadContactDates().fail(function(error) {
+            console.log(error);
+        });
+        loadEventTypes().fail(function(error) {
+            console.log(error);
         });
     };
-
-    loadContactDates();
+    loadAllItemData();
 
     window.didClickPill = false;
     window.curDate = "";
     $(document).on('click touchstart', '.day_cards', function() {
-
         window.curDate = $(this).attr("data-date");
-        $.post("http://alexhawley-api.info/api/contacts_history/add_contact_replaced.php", {
+        setTimeout(function() {
+            if (window.didClickPill == false) {
+                $("#addEventTypeModal").modal();
+            }
+        }, 650);
+    })
+
+    $('#btnAddEventType').click(function() {
+        var add_event_type = $('#add_event_type').val();
+        $.post("http://alexhawley-api.info/items-used/add", {
             cur_date: window.curDate,
-            contacts_replaced: 1
+            event_type: add_event_type
         }).done(function (data) {
-            loadContactDates();
+            $("#addEventTypeModal").modal('hide');
+            loadAllItemData();
         });
     })
 
+    $(document).on('click', '.delete_item', function (e) {
 
-    $('#btnAddPillTaken').click(function() {
-
-        console.log("curDate: ", window.curDate);
-
-
-    })
-
-    $(document).on('click', '.delete_contact', function (e) {
-
+        window.didClickPill = true;
         e.stopPropagation();
         e.preventDefault();
         var curDate2 = $(this).attr("data-date");
-        $.post("http://alexhawley-api.info/api/contacts_history/delete_contact_replaced.php", {
+        var event_type_id = $(this).attr("data-event-type-id");
+        $.post("http://alexhawley-api.info/items-used/delete", {
             cur_date: curDate2,
-            contact_delete: 1
+            event_type: event_type_id
         }).done(function (data) {
             console.log("data: ", data);
-            loadContactDates();
+            loadAllItemData();
+            setTimeout(function() {
+                window.didClickPill = false;
+            }, 1250);
         });
     });
 })
