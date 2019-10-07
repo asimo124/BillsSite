@@ -11,18 +11,70 @@ header>nav.navbar.bg-ion {
 
 
 .day_cards {
-    min-height: 156px;
+    /*min-height: 156px;
     border-top: solid 1px #387ef5;
     border-bottom: solid 1px #387ef5;
     border-left: solid 1px #387ef5;
 
     padding: 5px;
-    border-radius: 12px;
+    border-radius: 12px;*/
 }
 
 .day_cards:last-child {
-    border-right: solid 1px #387ef5;
+    /*border-right: solid 1px #387ef5;*/
 }
+
+
+
+
+.ion-text, .ion-text2, .ion-text3, .ion-text4, .ion-text5, .ion-text6 {
+    font-weight: bold;
+}
+
+.ion-text {
+    color: #387ef5 !important;
+}
+
+.ion-text2 {
+    color: #11c1f3 !important;
+}
+
+.ion-text3 {
+    color: #33cd5f !important;
+}
+
+.ion-text4 {
+    color: #886aea !important;
+}
+
+.ion-text5 {
+    color: #ffc900 !important;
+}
+
+.ion-text6 {
+    color: #ef473a !important;
+}
+
+.plus_symbol {
+    background-color: #007bff;
+    color: white;
+    padding: 7px 5px;
+    border-radius: 5px;
+}
+
+
+
+.list-group-item:first-child {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.list-group-item:last-child {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+
 
 
 .btn-ion {

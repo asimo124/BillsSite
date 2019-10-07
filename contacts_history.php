@@ -17,6 +17,7 @@ curl_close($ch);
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="/css/fs-modal.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
 
     <link rel="stylesheet" href="/css/pills_style.css" />
 </head>
@@ -36,8 +37,9 @@ curl_close($ch);
     <div class="row">
         <h1 class="mt-5">Contacts Replaced</h1>
     </div>
-    <div class="event_types_content">
-
+    <div class="row">
+        <div class="col-12 pt-4 pb-4 event_types_content" style="background-color: #fcba03;">
+        </div>
     </div>
 </div>
 
@@ -78,7 +80,7 @@ $(document).ready(function() {
     function loadAllItemData() {
         function loadContactDates() {
             return $.ajax({
-                url: 'http://alexhawley-api.info/items-used/history',
+                url: 'http://alexhawley-api.info/items-used/history-2',
                 dataType: 'json',
                 type: 'GET',
                 processData: false
@@ -103,39 +105,46 @@ $(document).ready(function() {
             var output = "";
             $.each(data, function (index, days) {
 
-                output += '<div class="row">';
-                if (index == 0) {
-                    output += '<h2>Five Weeks Ago</h2>';
-                } else if (index == 1) {
-                    output += '<h2>Four Weeks Ago</h2>';
-                } else if (index == 2) {
-                    output += '<h2>Three Weeks Ago</h2>';
-                } else if (index == 3) {
-                    output += '<h2>Last Week</h2>';
-                } else {
-                    output += '<h2>Current Week</h2>';
-                }
-                output += '<div style="clear: both; width: 100%; height: 22px;" ></div>';
-
                 $.each(days, function (curDate, day) {
-                    output += '<div class="col-4 col-sm-3 col-md day_cards mt-1" data-date="' + curDate + '">';
-                    output += day.day_text;
-                    output += '<div style="clear: both; height: 25px;" ></div>';
+
+                    output += '<div class="d-flex justify-content-between align-items-baseline" ' +
+                        '       style="padding-right: 5px;">' +
+                        '         <div class="p-2 ">' +
+                        '              <h4 style="margin-left: 10px;">' + day.new_day_text + '</h4>' +
+                                        ((day.isLast) ? '<span id="currentDay" ></span>' : '') +
+                        '         </div>\n' +
+                        '         <div class="p-2 "><i class="fas fa-plus plus_symbol day_cards" data-date="' + curDate + '"></i></div>\n' +
+                        '     </div>\n' +
+                        '     <div style="clear: both; height: 0px;"></div>\n' +
+                        '     <div class="row">\n' +
+                        '         <div class="col-12" style="width: 94%; padding: 0 25px 15px; ">\n' +
+                        '             <ul class="list-group" style="">\n';
+
                     var i = 1;
+                    var anyUsed = false;
                     $.each(day.items_used, function (index, item) {
                         var j = String(item.event_type_id);
                         if (j == "1") {
                             j = "";
                         }
-                        if (item.was_used == 1) {
-                            output += '<a href="javascript:void(0);" class="btn btn-ion' + j + ' delete_item" data-date="' + curDate + '" data-event-type-id="' + item.event_type_id + '" >' + item.event_type + '</a>';
-                            output += '<div style="clear: both; height: 7px;" ></div>'
+                        if (item.was_used) {
+                            anyUsed = true;
+                            output += '<li class="list-group-item "><a href="javascript: void(0);" ' +
+                                'style="text-decoration: none;" class="ion-text' + j + ' ' +
+                                'delete_item" data-date="' + curDate + '" ' +
+                                'data-event-type-id="' + item.event_type_id + '">' + item.event_type + '</a></li>\n';
+
                         }
                     })
-                    output += '</div>';
+                    /*if (anyUsed == false) {
+                        output += '<li class="list-group-item ">&nbsp;</li>\n';
+                    }*/
+
+                    output += '                        </ul>\n' +
+                        '                    </div>\n' +
+                        '                </div>\n' +
+                        '                <div style="clear: both; height: 15px;"></div>';
                 });
-                output += '</div>';
-                output += '<div style="clear: both; width: 100%; height: 22px;" ></div>';
             });
             $('.event_types_content').html(output);
             var event_types_dropdown_str = "";
@@ -143,6 +152,7 @@ $(document).ready(function() {
                 event_types_dropdown_str += '<option value="' + item.id + '">' + item.event_type + '</option>' + "\n";
             });
             $('#add_event_type').html(event_types_dropdown_str);
+            $(document).scrollTop($("#currentDay").offset().top);
         });
         loadContactDates().fail(function(error) {
             console.log(error);
