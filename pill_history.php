@@ -98,8 +98,10 @@ $(document).ready(function() {
                         if (j == "1") {
                             j = "";
                         }
-                        output += '<a href="javascript:void(0);" class="btn btn-ion' + j + ' delete_pill" data-date="' + curDate + '" data-pill-id="' + item.pill_id + '" data-qty="' + item.qty + '">' + item.pill_name + ((item.qty > 1) ? (" - " + item.qty) : "") + '</a>';
-                        output += '<div style="clear: both; height: 7px;" ></div>'
+                        if (item.qty > 0) {
+                            output += '<a href="javascript:void(0);" class="btn btn-ion' + j + ' delete_pill" data-date="' + curDate + '" data-pill-id="' + item.pill_id + '" data-qty="' + item.qty + '">' + item.pill_name + ((item.qty > 1) ? (" - " + item.qty) : "") + '</a>';
+                            output += '<div style="clear: both; height: 7px;" ></div>'
+                        }
                     })
                     output += '</div>';
                 });
@@ -126,7 +128,6 @@ $(document).ready(function() {
     $(document).on('click touchstart', '.day_cards', function() {
         window.curDate = $(this).attr("data-date");
         setTimeout(function() {
-            console.log("did click pill: ", window.didClickPill);
             if (window.didClickPill == false) {
                 $("#addPillModal").modal();
             }

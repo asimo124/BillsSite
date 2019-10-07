@@ -117,18 +117,18 @@ $data = [
         }
         .span3 {
             width: 100%
-            max-width: 800px;
+            max-width: 1152px;
             height: auto !important;
         }
         canvas{
             width: 100% !important;
-            max-width: 800px;
+            max-width: 1152px;
             height: auto !important;
         }
         @media (max-width: 979px) {
             canvas {
                 width: 100% !important;
-                max-width: 800px;
+                max-width: 1152px;
                 height: auto !important;
             }
         }

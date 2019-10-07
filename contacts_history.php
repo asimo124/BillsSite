@@ -13,7 +13,7 @@ curl_close($ch);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Items Used History</title>
+    <title>Contacts History</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="/css/fs-modal.min.css" rel="stylesheet">
@@ -24,7 +24,7 @@ curl_close($ch);
 <header>
     <!-- Fixed navbar -->
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-ion">
-        <a class="navbar-brand" href="#">Items Used Tracker</a>
+        <a class="navbar-brand" href="#">Contact Replacement Tracker</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -34,7 +34,7 @@ curl_close($ch);
 <!-- Begin page content -->
 <div class="container-fluid main_content">
     <div class="row">
-        <h1 class="mt-5">Items Used Tracker</h1>
+        <h1 class="mt-5">Contacts Replaced</h1>
     </div>
     <div class="event_types_content">
 
