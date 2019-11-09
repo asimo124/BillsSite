@@ -1,6 +1,11 @@
 
 
+.ida
 .idea/
 .idea/*
+
+/.idea/
+/.idea
+/.idea/*
 
 inc/config.php
