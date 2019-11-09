@@ -1,6 +1,11 @@
 
 
-.ida
+.idea/codeStyles/Project.xml
+.idea/dbnavigator.xml
+.idea/php.xml
+.idea/workspace.xml
+
+.idea
 .idea/
 .idea/*
 
