@@ -9,6 +9,8 @@ if ($date < 15) {
 }
 
 $category_id = isset($_REQUEST['category_id']) ? intval($_REQUEST['category_id']) : 0;
+$from_date = isset($_REQUEST['from_date']) ? $_REQUEST['from_date'] : '';
+$to_date = isset($_REQUEST['to_date']) ? $_REQUEST['to_date'] : '';
 
 $requestArr = array();
 foreach ($_POST as $key => $value) {
@@ -23,12 +25,24 @@ $sql = "SELECT COUNT(c.id) AS count2
         FROM vnd_bills_charges c
         INNER JOIN vnd_bills_charge_categories cc
           ON c.category_id = cc.id
-        WHERE category_id = :category_id
-        ORDER BY charge DESC;";
+        WHERE category_id = :category_id ";
 
-$resultset = getQuery($sql, [
+if (strtotime($from_date) > 0 && strtotime($to_date) > 0) {
+    $sql .=" and c.date BETWEEN :from_date AND :to_date 
+    ";
+}
+
+$sql .= "ORDER BY charge DESC;";
+
+$dataParams = [
     "category_id" => $category_id
-]);
+];
+if (strtotime($from_date) > 0 && strtotime($to_date) > 0) {
+    $dataParams['from_date'] = $from_date;
+    $dataParams['to_date'] = $to_date;
+}
+
+$resultset = getQuery($sql, $dataParams);
 if (count($resultset) > 0) {
     $totalRecords = $resultset[0]['count2'];
 }
@@ -47,12 +61,24 @@ $sql = "SELECT
         FROM vnd_bills_charges c
         INNER JOIN vnd_bills_charge_categories cc
           ON c.category_id = cc.id
-        WHERE category_id = :category_id
-        ORDER BY $orderBy ";
+        WHERE category_id = :category_id ";
 
-$resultset = getQuery($sql, [
+if (strtotime($from_date) > 0 && strtotime($to_date) > 0) {
+    $sql .=" and c.date BETWEEN :from_date AND :to_date 
+    ";
+}
+
+$sql .= "ORDER BY $orderBy ";
+
+$dataParams = [
     "category_id" => $category_id
-]);
+];
+if (strtotime($from_date) > 0 && strtotime($to_date) > 0) {
+    $dataParams['from_date'] = $from_date;
+    $dataParams['to_date'] = $to_date;
+}
+
+$resultset = getQuery($sql, $dataParams);
 
 header("Content-type: text/json");
 

@@ -21,6 +21,7 @@ if ($hash_key_token_cs != $hash_key) {
 }
 
 $cat_name = isset($_REQUEST['cat_name']) ? trim($_REQUEST['cat_name']) : "";
+
 if (!validateTags($cat_name)) {
     die("You have entered invalid content. Please re-enter");
 }

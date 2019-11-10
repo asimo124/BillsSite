@@ -128,6 +128,7 @@ $(document).ready(function() {
     $(document).on('click touchstart', '.day_cards', function() {
         window.curDate = $(this).attr("data-date");
         setTimeout(function() {
+            console.log("did click pill: ", window.didClickPill);
             if (window.didClickPill == false) {
                 $("#addPillModal").modal();
             }

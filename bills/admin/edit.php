@@ -72,6 +72,7 @@ if (count($Bills) > 0) {
                 <div class="col-md-4">
                     <select name="vnd_frequency" id="vnd_frequency" class="form-control" >
                         <option value="Once Per Month" >Once Per Month</option>
+                        <option value="Every 4 Weeks" <?php echo ($Bill['vnd_frequency_notes'] == "Every 4 Weeks") ? "SELECTED" : ""; ?>>Every 4 Weeks</option>
                         <option value="Every 2 Weeks" <?php echo ($Bill['vnd_frequency_notes'] == "Every 2 Weeks") ? "SELECTED" : ""; ?>>Every 2 Weeks</option>
                         <option value="Every 1 Week" <?php echo ($Bill['vnd_frequency_notes'] == "Every 1 Week") ? "SELECTED" : ""; ?>>Every 1 Week</option>
                     </select>

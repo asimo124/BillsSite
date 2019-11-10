@@ -57,6 +57,7 @@ if (!isset($_SESSION['user'])) {
                 <div class="col-md-4">
                     <select name="vnd_frequency" id="vnd_frequency" class="form-control" >
                         <option value="Once Per Month" >Once Per Month</option>
+                        <option value="Every 4 Weeks" >Every 4 Weeks</option>
                         <option value="Every 2 Weeks" >Every 2 Weeks</option>
                         <option value="Every 1 Week" >Every 1 Week</option>
                     </select>

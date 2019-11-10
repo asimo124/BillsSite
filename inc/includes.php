@@ -86,7 +86,7 @@ function validateTags($str) {
 
 	if (strpos($str, "<") !== false || strpos($str, ">") !== false
 		|| strpos($str, "&gt;") !== false || strpos($str, "&lt;") !== false
-		|| strpos($str, "script") !== false)
+		|| strpos($str, "<script") !== false)
 	{
 		return false;
 	}

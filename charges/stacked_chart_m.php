@@ -28,6 +28,9 @@ if (count($resultset) > 0) {
     $totalCharges = abs(floatval($getResult['totalCharges']));
 }
 
+$from_date = isset($_REQUEST['from_date']) ? $_REQUEST['from_date'] : '';
+$to_date = isset($_REQUEST['to_date']) ? $_REQUEST['to_date'] : '';
+
 $sql = "SELECT cc.cat_name, ROUND((SUM(ABS(ifnull(c.charge, 0))) / " . $totalCharges . ") * 100) as percent, cc.id as category_id,
         ROUND((SUM(ABS(ifnull(c.charge, 0))))) AS category_amount
         FROM vnd_bills_charges c
@@ -35,8 +38,15 @@ $sql = "SELECT cc.cat_name, ROUND((SUM(ABS(ifnull(c.charge, 0))) / " . $totalCha
           ON c.category_id = cc.id
         WHERE date >= :date3ago
         AND ifnull(category_id, '') <> ''
-        GROUP BY category_id
-        ORDER BY ROUND((SUM(c.charge) / " . $totalCharges . ") * 100) ASC ";
+        ";
+
+if (strtotime($from_date) > 0 && strtotime($to_date) > 0) {
+    $sql .=" and date BETWEEN '" . $from_date . "' AND '" . $to_date . "' 
+    ";
+}
+
+$sql .= "GROUP BY category_id
+         ORDER BY ROUND((SUM(c.charge) / " . $totalCharges . ") * 100) ASC ";
 
 $resultset = getQuery($sql, [
     "date3ago" => $date3ago
@@ -124,6 +134,7 @@ $data = [
 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/css/nav.css" />
     <style type="text/css">
 
@@ -179,6 +190,25 @@ $data = [
     <?php include "../templates/nav.php"; ?>
     <div style="clear: both; height: 7px"></div>
 
+    <div style="clear: both; height: 30px;"></div>
+    <form action="stacked_chart_m.php" method="POST">
+        <div class="row" >
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label for="from_date">From Date</label>
+                    <input type="text" name="from_date" id="from_date" value="<?php echo $from_date; ?>" class="form-control" />
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label for="to_date">To Date</label>
+                    <input type="text" name="to_date" id="to_date" value="<?php echo $to_date; ?>" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
     <div class="container">
         <canvas id="chartContainer" ></canvas>
     </div>
@@ -207,6 +237,7 @@ $data = [
 <script src="/js/jquery.3.3.1.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script src="/js/chart.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript" src="/js/DataTables/media/js/jquery.dataTables.min.js" ></script>
 <script type="text/javascript" src="/js/DataTables/media/js/dataTables.bootstrap.min.js" ></script>
 <script type="text/javascript" src="/js/DataTables/media/js/dataTables.editor.min.js" ></script>
@@ -215,6 +246,7 @@ $data = [
 <script type="text/javascript" src="/js/DataTables/media/js/dataTables.buttons.min.js" ></script>
 <script type="text/javascript" src="/js/DataTables/media/js/dataTables.select.min.js" ></script>
 <script type="text/javascript" src="/js/DataTables/media/js/buttons.bootstrap.min.js" ></script>
+<script src="//cdn.jsdelivr.net/npm/mobile-detect@1.4.4/mobile-detect.min.js"></script>
 <script src="/js/nav.js" ></script>
 <script>
 
@@ -238,6 +270,8 @@ $data = [
                     url: "/api/get_charges_by_category.php",
                     data: function ( d ) {
                         d.category_id = $('#category_id').val();
+                        d.from_date = $('#from_date').val();
+                        d.to_date = $('#to_date').val();
                     }
                 },
                 "serverSide": true,
@@ -277,7 +311,11 @@ $data = [
 
     $(document).ready(function() {
 
-        //*/
+
+        $("#from_date").datepicker({ dateFormat: 'yy-mm-dd' });
+        $("#to_date").datepicker({ dateFormat: 'yy-mm-dd' });
+
+
         var use_data = [];
         var percentCategoryNames = {};
 
