@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="99d306a3-9d7b-48c2-952c-2006c5e0f7af" name="PairServerAsimo124" url="http://alexhawley.info">
+        <fileTransfer host="asimo124.pairserver.com" port="22" rootFolder="/usr/home/asimo124/public_html" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
