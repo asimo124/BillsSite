@@ -10,13 +10,22 @@ if (isset($_POST['doSubmit'])) {
     }
 }
 
+$from_date = isset($_REQUEST['from_date']) ? $_REQUEST['from_date'] : '';
+$to_date = isset($_REQUEST['to_date']) ? $_REQUEST['to_date'] : '';
+
 $date3ago = date("Y-m-d", strtotime("- 3 month"));
 $sql = "SELECT SUM(c.charge) as totalCharges
         FROM vnd_bills_charges c
         INNER JOIN vnd_bills_charge_categories cc
           ON c.category_id = cc.id
-        WHERE date >= :date3ago
-        AND ifnull(category_id, '') <> '' ";
+        WHERE 1 = 1 ";
+
+if (strtotime($from_date) > 0 && strtotime($to_date) > 0) {
+    $sql .=" and date BETWEEN '" . $from_date . "' AND '" . $to_date . "' 
+    ";
+}
+
+$sql .= "AND ifnull(category_id, '') <> '' ";
 
 $resultset = getQuery($sql, [
     "date3ago" => $date3ago
@@ -28,15 +37,12 @@ if (count($resultset) > 0) {
     $totalCharges = abs(floatval($getResult['totalCharges']));
 }
 
-$from_date = isset($_REQUEST['from_date']) ? $_REQUEST['from_date'] : '';
-$to_date = isset($_REQUEST['to_date']) ? $_REQUEST['to_date'] : '';
-
 $sql = "SELECT cc.cat_name, ROUND((SUM(ABS(ifnull(c.charge, 0))) / " . $totalCharges . ") * 100) as percent, cc.id as category_id,
         ROUND((SUM(ABS(ifnull(c.charge, 0))))) AS category_amount
         FROM vnd_bills_charges c
         INNER JOIN vnd_bills_charge_categories cc
           ON c.category_id = cc.id
-        WHERE date >= :date3ago
+        WHERE 1 = 1
         AND ifnull(category_id, '') <> ''
         ";
 
@@ -116,6 +122,8 @@ $data = [
     "labels" => $labels,
     "datasets" => $datasets,
 ];
+
+
 
 //
 ?>
@@ -368,7 +376,7 @@ $data = [
                 },
                 title: {
                     display: true,
-                    text: 'Budget Charges'
+                    text: 'Budget Charges - Total: $<?php echo number_format($totalCharges, 2); ?>'
                 },
                 responsive: true,
                 maintainAspectRatio: false

@@ -34,6 +34,7 @@ if (strtotime($from_date) > 0 && strtotime($to_date) > 0) {
 
 $sql .= "ORDER BY charge DESC;";
 
+
 $dataParams = [
     "category_id" => $category_id
 ];
