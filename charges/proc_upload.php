@@ -170,10 +170,11 @@ if ($hash_key_token_cs != $hash_key) {
                 $date = $getItem[0];
                 $desc = $getItem[1];
 
-                $amount = floatval(strip_tags(str_replace("$", "", $getItem[2])));
+                $amount = floatval(strip_tags(str_replace("$", "",
+                    str_replace(",", "", $getItem[2]))));
 
                 if ($amount < 0) {
-                    $charge = abs($amount);
+                    $charge = $amount;
                     $credit = 0;
                 } else {
                     $credit = $amount;
@@ -197,11 +198,15 @@ if ($hash_key_token_cs != $hash_key) {
             $credit = str_replace(",", "", $credit);
 
             if ($desc != "") {
-                if ($charge != "") {
+                if ($charge) {
                     $sql = "SELECT id from vnd_bills_charges
                                         WHERE date between DATE(DATE_ADD(:date, INTERVAL -$days_range DAY))
                                         AND DATE(DATE_ADD(:date, INTERVAL $days_range DAY))
                                         AND description = :desc and CAST(charge AS DECIMAL(4,2)) = CAST(:charge AS DECIMAL(4,2)) ";
+
+                    $charge = $charge * -1;
+
+
                     $data = [
                         "date" => date("Y-m-d", strtotime($date)),
                         "desc" => preg_replace("/[0-9]{2}\/[0-9]{2}/", "", $desc),
@@ -210,6 +215,7 @@ if ($hash_key_token_cs != $hash_key) {
                     $ins_data = $data;
                     $ins_data['credit'] = "";
                 } else if ($credit != "") {
+
                     $sql = "SELECT id from vnd_bills_charges
                                         WHERE date between DATE(DATE_ADD(:date, INTERVAL -$days_range DAY))
                                         AND DATE(DATE_ADD(:date, INTERVAL $days_range DAY))

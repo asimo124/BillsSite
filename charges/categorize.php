@@ -6,25 +6,6 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 
-$date3ago = date("Y-m-d", strtotime("- 3 month"));
-
-$sql = "SELECT *
-        FROM vnd_bills_charges
-        WHERE date >= :date3ago AND ifnull(category_id, '') = ''
-        ORDER BY date DESC, description";
-
-$resultset2 = getQuery($sql, [
-    "date3ago" => $date3ago
-]);
-
-$resultset = array();
-foreach ($resultset2 as $getItem2) {
-    if (!isset($getItem[$getItem2['date']])) {
-        $getItem[$getItem2['date']] = array();
-    }
-    $resultset[$getItem2['date']][] = $getItem2;
-}
-
 $sql = "SELECT * FROM vnd_bills_charge_categories ORDER BY cat_name ";
 $categories = getQuery($sql);
 ?>
@@ -90,7 +71,24 @@ $categories = getQuery($sql);
                 <a href="javascript:void(0);" id="btnUpdateDescCat" class="btn btn-primary" onclick="$('#frmDescCat').submit();" >Save Desc Categories</a>
                 <div style="clear: both; height: 22px"></div>
 
-                <a href="javascript:void(0);" id="btnUpdateAll" class="btn btn-primary" >Update All</a>&nbsp; <a href="javascript:void(0);" id="btnTruncateCharges" class="btn btn-danger" >Truncate Charges</a>
+                <style type="text/css">
+
+                    .float{
+                        position:fixed;
+                        bottom:40px;
+                        right:40px;
+                        color:#FFF;
+                        box-shadow: 2px 2px 3px #999;
+                    }
+
+                </style>
+
+                <a href="javascript:void(0);" id="btnTruncateCharges" class="btn btn-danger" >Truncate Charges</a>
+
+                <a href="javascript:void(0);" id="btnUpdateAll" class="btn btn-primary float" >Update All</a>&nbsp;
+
+
+
                 <div style="clear: both; height: 22px"></div>
             </form>
         </div>
@@ -102,36 +100,13 @@ $categories = getQuery($sql);
                 <thead>
                 <tr>
                     <th>Desc</th>
-                    <th>Amount</th>
+                    <th>Charge</th>
+                    <th>Credit</th>
                     <th >Actions</th>
                 </tr>
                 </thead>
-                <tbody>
-                <?php if (count($resultset) > 0) { ?>
-                    <?php foreach (array_keys($resultset) as $date) { ?>
-                        <tr style="background-color: #91e6ea;">
-                            <td colspan="3" style="background-color: #91e6ea;"><?php echo date("m/d", strtotime($date)); ?></td>
-                        </tr>
-                        <?php foreach ($resultset[$date] as $getCharge) { ?>
-                            <tr>
-                                <td><?php echo $getCharge['description']; ?></td>
-                                <td><input type="text" name="charge" id="charge" class="form-control charge_text" value="<?php echo $getCharge['charge']; ?>" /></td>
-                                <td>
-                                    <select name="category_id<?php echo $getCharge['id']; ?>" id="category_id<?php echo $getCharge['id']; ?>" data-id="<?php echo $getCharge['id']; ?>" class="form-control" >
-                                        <option value="" >- Select One -</option>
-                                        <?php foreach ($categories as $getCat) { ?>
-                                            <option value="<?php echo $getCat['id']; ?>" ><?php echo $getCat['cat_name']; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    <?php } ?>
-                <?php } else { ?>
-                    <tr>
-                        <td colspan="2" align="center">No Charges to Show</td>
-                    </tr>
-                <?php } ?>
+                <tbody class="show_charges">
+
                 </tbody>
             </table>
         </div>
@@ -141,10 +116,63 @@ $categories = getQuery($sql);
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" ></script>
 <script src="/js/nav.js" ></script>
 <script>
 
     $(document).ready(function() {
+        var loadCharges = function() {
+            $.ajax({
+                type: "GET",
+                url: "/api/load_charges.php",
+                dataType: "JSON",
+                success: function (data) {
+                    var resultset = data.resultset;
+                    var categories = data.categories;
+                    var content = '';
+                    if (Object.keys(resultset).length > 0) {
+                        $.each(resultset, function (date, getItem) {
+                            var formattedDate = new Date(date);
+                            showDate = moment(formattedDate).format("MMM-DD");
+                            content += '<tr style="background-color: #91e6ea;">' +
+                                '<td colspan="4" style="background-color: #91e6ea;">' + showDate + '</td>' +
+                                '</tr>';
+                            $.each(getItem, function (index, getCharge) {
+                                content += '<tr>' +
+                                    '<td>' + getCharge.description + '</td>' +
+                                    '<td><input type="text" name="charge" id="charge" ' +
+                                    'class="form-control charge_text" ' +
+                                    'value="' + getCharge.charge + '" /></td>' +
+                                    '<td>' +
+                                    '<input type="text" name="credit" id="credit" ' +
+                                    'class="form-control charge_text" value="" /></td>' +
+                                    '<td>';
+                                if (getCharge.charge) {
+                                    content += '<select name="category_id' + getCharge.id + '" ' +
+                                        'id="category_id' + getCharge.id + '" ' +
+                                        'data-id="' + getCharge.id + '" class="form-control" >' +
+                                        '<option value="" >- Select One -</option>';
+                                    $.each(categories, function (catIndex, getCat) {
+                                        content += '<option value="' + getCat.id + '" >' +
+                                            getCat.cat_name + '</option>';
+                                    })
+                                    content += '</select>';
+                                }
+                                content += '</td>' +
+                                    '</tr>';
+                            });
+                        })
+                    } else {
+                        content += '<tr>' +
+                            '<td colspan="4" align="center">No Charges to Show</td>' +
+                            '</tr>'
+                    }
+                    $('.show_charges').html(content);
+                }
+            });
+        };
+
+        loadCharges();
 
         var updateChargeCategories = function() {
             var data = {
@@ -169,9 +197,7 @@ $categories = getQuery($sql);
                     data: query_str,
                     success: function (r) {
                         alertify.alert("Charges categorized.");
-                        setTimeout(function() {
-                            window.location.reload();
-                        }, 750);
+                        loadCharges();
                     }
                 });
             } else {
@@ -209,10 +235,8 @@ $categories = getQuery($sql);
                     type: "POST",
                     url: "truncate_charges.php",
                     success: function (r) {
-                        alert("Charges truncated.");
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 3500);
+                        alertify.alert("Charges truncated.");
+                        loadCharges();
                     }
                 });
             }
