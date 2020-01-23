@@ -4,13 +4,69 @@
 	//ini_set("display_errors", 1);
 
 $user_id 			= isset($_REQUEST['user_id']) ? intval($_REQUEST['user_id']) : 0;
-$current_balance 	= isset($_REQUEST['current_balance']) ? intval($_REQUEST['current_balance']) : 960;
+$current_balance 	= isset($_REQUEST['current_balance']) ? intval($_REQUEST['current_balance']) : 0;
 $pay_date 			= isset($_REQUEST['pay_date']) ? trim($_REQUEST['pay_date']) : "";
 
 if ($pay_date == "") {
 	$pay_date = date("Y-m-d");
 }
 
+if (!$current_balance) {
+
+    /**
+     * Get Current Balance
+     */
+    $query = "
+    SELECT * FROM vnd_user_settings 
+    WHERE vnd_user_id = :vnd_user_id ";
+
+    $data = array();
+    $data['vnd_user_id'] = $user_id;
+
+    $sth = $db_conn->prepare($query);
+    $sth->execute($data);
+
+    $current_balance = 960;
+    $settings = $sth->fetchAll();
+    if (count($settings) > 0) {
+        $current_balance = $settings[0]['vnd_current_balance'];
+    }
+
+} else {
+
+    $hash_key_token_cs  = isset($_REQUEST['hash_key_token_cs']) ? ($_REQUEST['hash_key_token_cs']) : "";
+
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+    $ipArr = explode(".", $ip);
+    $userAgentArr = explode(" ", $user_agent);
+    $string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
+    $hash_key = md5($string_to_hash);
+
+    if ($hash_key_token_cs == $hash_key && validateTags($current_balance)) {
+
+        $current_balance = strip_tags($current_balance);
+
+        $query = "
+        UPDATE vnd_user_settings
+        SET vnd_current_balance = :vnd_current_balance 
+        WHERE vnd_user_id = :vnd_user_id ";
+
+        $data = array();
+        $data['vnd_current_balance'] = $current_balance;
+        $data['vnd_user_id'] = $user_id;
+
+        $sth = $db_conn->prepare($query);
+        $sth->execute($data);
+    }
+}
+
+$ip = $_SERVER['REMOTE_ADDR'];
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
+$ipArr = explode(".", $ip);
+$userAgentArr = explode(" ", $user_agent);
+$string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
+$hash_key = md5($string_to_hash);
 
 
 $end_date = "";
@@ -111,7 +167,11 @@ header('Access-Control-Allow-Origin: *');
 
 
 
-$results = array("results" => $days_arr);
+$results = [
+    "results" => $days_arr,
+    "hash_key" => $hash_key,
+    "cur_balance" => $current_balance
+];
 echo json_encode($results);
 
 function getDaySuffix($num) {
