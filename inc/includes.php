@@ -9,6 +9,10 @@ function preformat($str) {
 	preformat2($str);
 }
 
+function printArray($str) {
+	echo "<pre>" . print_r($str, true) . "\n</pre>";
+}
+
 function logCharge($str) {
 
 	return false;

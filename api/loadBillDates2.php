@@ -102,6 +102,7 @@ foreach ($billDates as $getDate) {
 $days_arr = array();
 $full_cur_amount = $current_balance;
 
+$pastStartWeek = false;
 $timestamp = strtotime($start_date);
 while ($timestamp <= strtotime($end_date)) {
 
@@ -132,7 +133,26 @@ while ($timestamp <= strtotime($end_date)) {
     }
     $my_day .= ", " . getDaySuffix(intval(date("d", $timestamp)));
 
-	$get_day = array();
+	if ($day > 0 && $pastStartWeek == false) {
+
+	    $lastIndex = 0;
+        $pastStartWeek = true;
+        for ($p = 0; $p < $day; $p++) {
+            $get_day = array();
+            $get_day['showAsDay'] = false;
+            $get_day['weekDayNum'] = $p;
+            $get_day['Day'] = '';
+            $get_day['Timestamp'] = 0;
+            $get_day['Date'] = '';
+            $get_day['desc'] = [];
+            $days_arr[] = $get_day;
+            $lastIndex = $p;
+        }
+    }
+
+    $get_day = array();
+    $get_day['showAsDay'] = true;
+    $get_day['weekDayNum'] = $day;
 	$get_day['Day'] = $my_day;
 	$get_day['Timestamp'] = $timestamp;
 	$get_day['Date'] = date("m/d/Y 00:00:00", $timestamp);
@@ -153,8 +173,26 @@ while ($timestamp <= strtotime($end_date)) {
 		$get_day['Balance'] = "";
 	}*/
 	$timestamp = strtotime('+1 days', $timestamp);
-	$days_arr[] = $get_day;
 
+	$days_arr[] = $get_day;
+}
+
+$i = 0;
+$daysWeeksArr = [];
+foreach ($days_arr as $get_day) {
+    if ($i == 0) {
+        $eachWeek = [];
+    }
+    $eachWeek[] = $get_day;
+    if ($i > 5) {
+        $daysWeeksArr[] = [
+            'title' => 'Week',
+            'days' => $eachWeek
+        ];
+        $i = 0;
+    } else {
+        $i++;
+    }
 }
 
 header("Content-type: text/json");
@@ -168,7 +206,7 @@ header('Access-Control-Allow-Origin: *');
 
 
 $results = [
-    "results" => $days_arr,
+    "results" => $daysWeeksArr,
     "hash_key" => $hash_key,
     "cur_balance" => $current_balance
 ];
