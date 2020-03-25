@@ -80,12 +80,6 @@ if ($start_day < 16) {
 	$end_date = $d->format( 'Y-m-t' );
 }
 
-/*/
-echo "<pre>";
-print_r("end_date: " . $end_date . "\n");
-die();
-//*/
-
 $MyBills = array();
 $Bill = new Bills();
 $Bill->setPayPeriod($end_date, $start_date);
@@ -179,12 +173,12 @@ while ($timestamp <= strtotime($end_date)) {
 
 $i = 0;
 $daysWeeksArr = [];
-foreach ($days_arr as $get_day) {
+foreach ($days_arr as $index => $get_day) {
     if ($i == 0) {
         $eachWeek = [];
     }
     $eachWeek[] = $get_day;
-    if ($i > 5) {
+    if ($i > 5 || $index == count($days_arr) - 1) {
         $daysWeeksArr[] = [
             'title' => 'Week',
             'days' => $eachWeek
@@ -196,7 +190,6 @@ foreach ($days_arr as $get_day) {
 }
 
 header("Content-type: text/json");
-
 
 /**
  * TODO - Comment this
