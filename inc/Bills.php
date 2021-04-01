@@ -133,6 +133,7 @@ class Bills {
 			$date2 = strtotime($this->today);
 			$month = date("m", $date2);
 			$year = date("Y", $date2);
+
 			for ($i = 0; $i < $this->numReps; $i++) {
 				if ($month < 10 && substr($month, 0, 1) != "0") {
 					$month = "0" . (String)$month;
@@ -140,28 +141,36 @@ class Bills {
 				if ($freq_value < 10 && substr($freq_value, 0, 1) != "0") {
 					$freq_value = "0" . (String)$freq_value;
 				}
-				$data = array();
-				$data['vnd_bill_desc'] = $bill_desc;
-				$data['user_id'] = $this->user_id;
-				$data['vnd_date'] = $year . "-" . $month . "-" . $freq_value;
-				$this->sthCheckDate->execute($data);
-				$HasDates = $this->sthCheckDate->fetchAll();
-				if (count($HasDates) == 0) {
+
+				if ($month == 02) {
+					if ($freq_value > 28) {
+						$freq_value = 28;
+					}
+				}
+
+				if ($freq_value < 32) {
 					$data = array();
 					$data['vnd_bill_desc'] = $bill_desc;
-					$data['vnd_user_id'] = $this->user_id;
-					$data['vnd_amount'] = $amount;
+					$data['user_id'] = $this->user_id;
 					$data['vnd_date'] = $year . "-" . $month . "-" . $freq_value;
-					$data['vnd_is_future'] = $is_future;
-					$this->sthInsertDate->execute($data);
-				}
-				$month = intval($month);
-				if ($month < 12) {
-					$month++;
-				}
-				else {
-					$year++;
-					$month = 1;
+					$this->sthCheckDate->execute($data);
+					$HasDates = $this->sthCheckDate->fetchAll();
+					if (count($HasDates) == 0) {
+						$data = array();
+						$data['vnd_bill_desc'] = $bill_desc;
+						$data['vnd_user_id'] = $this->user_id;
+						$data['vnd_amount'] = $amount;
+						$data['vnd_date'] = $year . "-" . $month . "-" . $freq_value;
+						$data['vnd_is_future'] = $is_future;
+						$this->sthInsertDate->execute($data);
+					}
+					$month = intval($month);
+					if ($month < 12) {
+						$month++;
+					} else {
+						$year++;
+						$month = 1;
+					}
 				}
 			}
 		}
@@ -212,6 +221,7 @@ class Bills {
 				$data['vnd_date'] = $use_date;
 				$this->sthCheckDate->execute($data);
 				$HasDates = $this->sthCheckDate->fetchAll();
+
 				if (count($HasDates) == 0) {
 					$data = array();
 					$data['vnd_bill_desc'] = $bill_desc;
@@ -242,6 +252,7 @@ class Bills {
 				$data['vnd_date'] = $use_date;
 				$this->sthCheckDate->execute($data);
 				$HasDates = $this->sthCheckDate->fetchAll();
+
 				if (count($HasDates) == 0) {
 					$data = array();
 					$data['vnd_bill_desc'] = $bill_desc;

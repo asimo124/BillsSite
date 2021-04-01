@@ -44,7 +44,7 @@ if (count($resultset) > 0) {
     );
     execQuery($sql, $dataParams);
 
-    header("Location: /bills");
+    header("Location: /bills/admin/index.php");
     exit;
 } else {
     header("Location: /login.php?Message=" . urlencode("You did not enter the correct username/password combination"));
