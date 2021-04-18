@@ -7,8 +7,46 @@ $user_id 			= isset($_REQUEST['user_id']) ? intval($_REQUEST['user_id']) : 0;
 $current_balance 	= isset($_REQUEST['current_balance']) ? intval($_REQUEST['current_balance']) : 0;
 $pay_date 			= isset($_REQUEST['pay_date']) ? trim($_REQUEST['pay_date']) : "";
 
+$prev_date          = isset($_REQUEST['prev_date']) ? intval($_REQUEST['prev_date']) : 0;
+$next_date          = isset($_REQUEST['next_date']) ? intval($_REQUEST['next_date']) : 0;
+
 if ($pay_date == "") {
 	$pay_date = date("Y-m-d");
+}
+
+if ($prev_date || $next_date) {
+
+    $getCurYear6 = intval(date("Y", strtotime($pay_date)));
+    $getCurMonth6 = intval(date("m", strtotime($pay_date)));
+    $getCurDay6 = intval(date("d", strtotime($pay_date)));
+
+    if ($prev_date) {
+        if ($getCurDay6 < 16) {
+            $getCurDay6 = 16;
+        } else {
+            $getCurDay6 = 1;
+        }
+        if ($getCurMonth6 > 1) {
+            $getCurMonth6--;
+        } else {
+            $getCurMonth6 = 12;
+            $getCurYear6--;
+        }
+        $pay_date = $getCurYear6 . "-" . $getCurMonth6 . "-" . $getCurDay6;
+    } else {
+        if ($getCurDay6 < 16) {
+            $getCurDay6 = 16;
+        } else {
+            $getCurDay6 = 1;
+        }
+        if ($getCurMonth6 < 12) {
+            $getCurMonth6++;
+        } else {
+            $getCurMonth6 = 1;
+            $getCurYear6++;
+        }
+        $pay_date = $getCurYear6 . "-" . $getCurMonth6 . "-" . $getCurDay6;
+    }
 }
 
 if (!$current_balance) {
@@ -89,6 +127,7 @@ foreach ($billDates as $getDate) {
 	$newDate = array();
 	$newDate['desc'] = $getDate['vnd_bill_desc'];
 	$newDate['amount'] = $getDate['vnd_amount'];
+	$newDate['is_heavy'] = $getDate['is_heavy'];
 	$key = strtotime(date("Y-m-d 00:00:00", strtotime($getDate['vnd_date'])));
 	$MyBills[$key][] = $newDate;
 }
@@ -157,7 +196,10 @@ while ($timestamp <= strtotime($end_date)) {
 	foreach ($MyBills[$timestamp] as $getBill) {
 
 		$hasBills = true;
-        $billsDescArr[] = $getBill['desc'] . " - $" . $getBill["amount"];
+        $billsDescArr[] = [
+            "title" => $getBill['desc'] . " - $" . $getBill["amount"],
+            "is_heavy" => intval($getBill['is_heavy'])
+        ];
 		$full_cur_amount -= $getBill["amount"];
 	}
 	$get_day['desc'] = $billsDescArr;
@@ -201,7 +243,8 @@ header('Access-Control-Allow-Origin: *');
 $results = [
     "results" => $daysWeeksArr,
     "hash_key" => $hash_key,
-    "cur_balance" => $current_balance
+    "cur_balance" => $current_balance,
+    "pay_date" => $pay_date
 ];
 echo json_encode($results);
 

@@ -42,6 +42,9 @@ class Bills {
 		
 		$sth = $db_conn->prepare($query);
 		$sth->execute($data);
+
+		$sql = "DELETE FROM vnd_bills WHERE vnd_frequency = 'Once' AND DATE_SUB(NOW(), INTERVAL 2 DAY) > DATE(vnd_frequency_value) ";
+		execQuery($sql, []);
 	}
 	
 	public function loadBillsByUserID($user_id) {
@@ -89,8 +92,8 @@ class Bills {
 		$this->user_id = $user_id;
 		
 		$queryInsertDate = "INSERT INTO vnd_bill_dates 
-		(vnd_bill_desc, vnd_user_id, vnd_amount, vnd_date, vnd_is_future) VALUES
-		(:vnd_bill_desc, :vnd_user_id, :vnd_amount, :vnd_date, :vnd_is_future) ";
+		(vnd_bill_desc, vnd_user_id, vnd_amount, vnd_date, vnd_is_future, is_heavy) VALUES
+		(:vnd_bill_desc, :vnd_user_id, :vnd_amount, :vnd_date, :vnd_is_future, :is_heavy) ";
 		$this->sthInsertDate = $db_conn->prepare($queryInsertDate);
 		
 		$queryCheckDate = "
@@ -98,33 +101,34 @@ class Bills {
 		WHERE vnd_bill_desc = :vnd_bill_desc 
 		and vnd_date = :vnd_date and vnd_user_id = :user_id LIMIT 1 ";
 		$this->sthCheckDate = $db_conn->prepare($queryCheckDate);
-		
+
+
 		$resultset = $this->loadBillsByUserID($user_id);
 		foreach ($resultset as $getItem) {
 
 			switch ($getItem['vnd_frequency']) {
 				case "Once":
-					$this->loadOnce($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future']);
+					$this->loadOnce($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future'], $getItem['is_heavy']);
 					break;
 				case "Once Per Month":
-					$this->loadOncePerMonth($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future']);
+					$this->loadOncePerMonth($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future'], $getItem['is_heavy']);
 					break;
 				case "Once Per Week":
-					$this->loadOncePerWeek($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future']);
+					$this->loadOncePerWeek($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future'], $getItem['is_heavy']);
 					break;
 				case "Every 2 Weeks":
-					$this->loadEveryXWeeks($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], 2, $getItem['is_future']);
+					$this->loadEveryXWeeks($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], 2, $getItem['is_future'], $getItem['is_heavy']);
 					break;
 				case "Every 1 Week":
-					$this->loadEveryXWeeks($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], 1, $getItem['is_future']);
+					$this->loadEveryXWeeks($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], 1, $getItem['is_future'], $getItem['is_heavy']);
 					break;
 				case "Every 4 Weeks":
-					$this->loadEveryXWeeks($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], 4, $getItem['is_future']);
+					$this->loadEveryXWeeks($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], 4, $getItem['is_future'], $getItem['is_heavy']);
 					break;
 			}
 		}
 	}
-	public function loadOncePerMonth($freq_value, $bill_desc, $amount, $freq_type="Day of Month", $is_future=0) {
+	public function loadOncePerMonth($freq_value, $bill_desc, $amount, $freq_type="Day of Month", $is_future=0, $is_heavy=0) {
 		
 		global $db_conn;
 		
@@ -162,6 +166,7 @@ class Bills {
 						$data['vnd_amount'] = $amount;
 						$data['vnd_date'] = $year . "-" . $month . "-" . $freq_value;
 						$data['vnd_is_future'] = $is_future;
+						$data['is_heavy'] = $is_heavy;
 						$this->sthInsertDate->execute($data);
 					}
 					$month = intval($month);
@@ -176,7 +181,7 @@ class Bills {
 		}
 	}
 
-	public function loadOnce($freq_value, $bill_desc, $amount, $freq_type, $is_future=0) {
+	public function loadOnce($freq_value, $bill_desc, $amount, $freq_type, $is_future=0, $is_heavy=0) {
 		global $db_conn;
 
 		$data = array();
@@ -192,11 +197,12 @@ class Bills {
 			$data['vnd_amount'] = $amount;
 			$data['vnd_date'] = $freq_value;
 			$data['vnd_is_future'] = $is_future;
+			$data['is_heavy'] = $is_heavy;
 			$this->sthInsertDate->execute($data);
 		}
 	}
 
-	public function loadOncePerWeek($freq_value, $bill_desc, $amount, $freq_type="Day of Week", $is_future=0) {
+	public function loadOncePerWeek($freq_value, $bill_desc, $amount, $freq_type="Day of Week", $is_future=0, $is_heavy=0) {
 		global $db_conn;
 		if ($freq_type == "Day of Week") {
 			$date2 = strtotime($this->today);
@@ -229,13 +235,14 @@ class Bills {
 					$data['vnd_amount'] = $amount;
 					$data['vnd_date'] = $use_date;
 					$data['vnd_is_future'] = $is_future;
+					$data['is_heavy'] = $is_heavy;
 					$this->sthInsertDate->execute($data);
 				}
 				$each_date = $use_date;
 			}
 		}
 	}
-	public function loadEveryXWeeks($freq_value, $bill_desc, $amount, $freq_type="Starting From", $numWeeks=2, $is_future=0) {
+	public function loadEveryXWeeks($freq_value, $bill_desc, $amount, $freq_type="Starting From", $numWeeks=2, $is_future=0, $is_heavy=0) {
 	
 		global $db_conn;
 		
@@ -260,6 +267,7 @@ class Bills {
 					$data['vnd_amount'] = $amount;
 					$data['vnd_date'] = $use_date;
 					$data['vnd_is_future'] = $is_future;
+					$data['is_heavy'] = $is_heavy;
 					$this->sthInsertDate->execute($data);
 				}
 				$each_date = $use_date;
