@@ -240,13 +240,11 @@ header("Content-type: text/json");
  */
 header('Access-Control-Allow-Origin: *');
 
-
-
 $results = [
     "results" => $daysWeeksArr,
     "hash_key" => $hash_key,
     "cur_balance" => $current_balance,
-    "pay_date" => $pay_date
+    "pay_date" => date("m/d/Y 12:00:00 A", strtotime($pay_date))
 ];
 echo json_encode($results);
 

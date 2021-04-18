@@ -24,13 +24,13 @@ $sort1_dir = "ASC";
 $sort2 = "";
 $sort2_dir = "";
 $frequencyShow = [
-    "Every 1 Week" => 1,
-    "Every 2 Weeks" => 1,
-    "Every 4 Weeks" => 1,
-    "Once Per Month - Day of Month" => 1,
-    "Once Per Month - Starting From" => 1,
-    "Every 3 Months" => 1,
-    "Once" => 1
+    "Every 1 Week" => 0,
+    "Every 2 Weeks" => 0,
+    "Every 4 Weeks" => 0,
+    "Once Per Month - Day of Month" => 0,
+    "Once Per Month - Starting From" => 0,
+    "Every 3 Months" => 0,
+    "Once" => 0
 ];
 if (isset($_POST['btnSearch'])) {
 
@@ -117,7 +117,7 @@ $stmt_sel_bills_type = $db_conn->prepare($sql);
 $resulset = [];
 foreach ($frequencyArr as $getFrequency) {
 
-    if ($frequencyShow[$getFrequency]) {
+    if ($frequencyShow[$getFrequency] || !isset($_POST['btnSearch'])) {
 
         if (strpos($getFrequency, " - ") === false) {
 
