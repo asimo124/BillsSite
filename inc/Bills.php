@@ -116,6 +116,9 @@ class Bills {
 				case "Every 3 Months":
 					$this->loadEveryXMonths($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], 3, $getItem['is_future'], $getItem['is_heavy']);
 					break;
+				case "Every 1 Month":
+					$this->loadEveryXMonths($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], 1, $getItem['is_future'], $getItem['is_heavy']);
+					break;
 				case "Once Per Week":
 					$this->loadOncePerWeek($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future'], $getItem['is_heavy']);
 					break;
@@ -187,16 +190,6 @@ class Bills {
 	public function loadEveryXMonths($freq_value, $bill_desc, $amount, $freq_type="Day of Month", $numMonths=1, $is_future=0, $is_heavy=0) {
 
 		global $db_conn;
-
-		printArray([
-			"freq_value" => $freq_value,
-			"bill_desc" => $bill_desc,
-			"amount" => $amount,
-			"freq_type" => $freq_type,
-			"numMonths" => $numMonths,
-			"is_future" => $is_future,
-			"is_heavy" => $is_heavy,
-		]);
 
 		if ($freq_type == "Starting From") {
 			$date2 = strtotime($this->today);
