@@ -14,6 +14,7 @@ $frequencyArr = [
     "Every 4 Weeks",
     "Once Per Month - Day of Month",
     "Once Per Month - Starting From",
+    "Every 3 Months",
     "Once"
 ];
 
@@ -28,6 +29,7 @@ $frequencyShow = [
     "Every 4 Weeks" => 1,
     "Once Per Month - Day of Month" => 1,
     "Once Per Month - Starting From" => 1,
+    "Every 3 Months" => 1,
     "Once" => 1
 ];
 if (isset($_POST['btnSearch'])) {
@@ -47,6 +49,7 @@ if (isset($_POST['btnSearch'])) {
         "Every 4 Weeks" => 1,
         "Once Per Month - Day of Month" => 1,
         "Once Per Month - Starting From" => 1,
+        "Every 3 Months" => 1,
         "Once" => 1
     ];
 }
@@ -293,6 +296,14 @@ foreach ($frequencyArr as $getFrequency) {
                     value="1"
                     <?php echo ($frequencyShow['Once Per Month - Starting From']) ? "CHECKED" : ""; ?>
                 />&nbsp;Once Per Month - Starting From
+            </div>
+            <div class="col-md-2">
+                <input
+                        type="checkbox"
+                        name="frequency[Every 3 Months]"
+                        value="1"
+                    <?php echo ($frequencyShow['Every 3 Months']) ? "CHECKED" : ""; ?>
+                />&nbsp;Every 3 Months
             </div>
             <div class="col-md-2">
                 <input

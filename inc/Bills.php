@@ -113,6 +113,9 @@ class Bills {
 				case "Once Per Month":
 					$this->loadOncePerMonth($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future'], $getItem['is_heavy']);
 					break;
+				case "Every 3 Months":
+					$this->loadEveryXMonths($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], 3, $getItem['is_future'], $getItem['is_heavy']);
+					break;
 				case "Once Per Week":
 					$this->loadOncePerWeek($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future'], $getItem['is_heavy']);
 					break;
@@ -177,6 +180,49 @@ class Bills {
 						$month = 1;
 					}
 				}
+			}
+		}
+	}
+
+	public function loadEveryXMonths($freq_value, $bill_desc, $amount, $freq_type="Day of Month", $numMonths=1, $is_future=0, $is_heavy=0) {
+
+		global $db_conn;
+
+		printArray([
+			"freq_value" => $freq_value,
+			"bill_desc" => $bill_desc,
+			"amount" => $amount,
+			"freq_type" => $freq_type,
+			"numMonths" => $numMonths,
+			"is_future" => $is_future,
+			"is_heavy" => $is_heavy,
+		]);
+
+		if ($freq_type == "Starting From") {
+			$date2 = strtotime($this->today);
+			$numDays = $numMonths * 30;
+			$startDate = date('Y-m-d', strtotime($freq_value));
+			$each_date = $startDate;
+			for ($i = 0; $i < $this->numReps; $i++) {
+				$use_date = date('Y-m-d', strtotime($each_date . " +" . $numDays . " days"));
+				$data = array();
+				$data['vnd_bill_desc'] = $bill_desc;
+				$data['user_id'] = $this->user_id;
+				$data['vnd_date'] = $use_date;
+				$this->sthCheckDate->execute($data);
+				$HasDates = $this->sthCheckDate->fetchAll();
+
+				if (count($HasDates) == 0) {
+					$data = array();
+					$data['vnd_bill_desc'] = $bill_desc;
+					$data['vnd_user_id'] = $this->user_id;
+					$data['vnd_amount'] = $amount;
+					$data['vnd_date'] = $use_date;
+					$data['vnd_is_future'] = $is_future;
+					$data['is_heavy'] = $is_heavy;
+					$this->sthInsertDate->execute($data);
+				}
+				$each_date = $use_date;
 			}
 		}
 	}

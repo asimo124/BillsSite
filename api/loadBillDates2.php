@@ -23,28 +23,30 @@ if ($prev_date || $next_date) {
     if ($prev_date) {
         if ($getCurDay6 < 16) {
             $getCurDay6 = 16;
+            if ($getCurMonth6 > 1) {
+                $getCurMonth6--;
+            } else {
+                $getCurMonth6 = 12;
+                $getCurYear6--;
+            }
         } else {
             $getCurDay6 = 1;
         }
-        if ($getCurMonth6 > 1) {
-            $getCurMonth6--;
-        } else {
-            $getCurMonth6 = 12;
-            $getCurYear6--;
-        }
+
         $pay_date = $getCurYear6 . "-" . $getCurMonth6 . "-" . $getCurDay6;
     } else {
         if ($getCurDay6 < 16) {
             $getCurDay6 = 16;
         } else {
             $getCurDay6 = 1;
+            if ($getCurMonth6 < 12) {
+                $getCurMonth6++;
+            } else {
+                $getCurMonth6 = 1;
+                $getCurYear6++;
+            }
         }
-        if ($getCurMonth6 < 12) {
-            $getCurMonth6++;
-        } else {
-            $getCurMonth6 = 1;
-            $getCurYear6++;
-        }
+
         $pay_date = $getCurYear6 . "-" . $getCurMonth6 . "-" . $getCurDay6;
     }
 }
