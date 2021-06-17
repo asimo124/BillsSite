@@ -10,8 +10,14 @@ $pay_date 			= isset($_REQUEST['pay_date']) ? trim($_REQUEST['pay_date']) : "";
 $prev_date          = isset($_REQUEST['prev_date']) ? intval($_REQUEST['prev_date']) : 0;
 $next_date          = isset($_REQUEST['next_date']) ? intval($_REQUEST['next_date']) : 0;
 
+$vegas_trip          = isset($_REQUEST['vegas_trip']) ? intval($_REQUEST['vegas_trip']) : 0;
+
 if ($pay_date == "") {
 	$pay_date = date("Y-m-d");
+}
+
+if (strtotime($pay_date) < strtotime("2021-06-20 23:59:59") && strtotime($pay_date) >= strtotime("2021-06-17 00:00:00")) {
+    $vegas_trip = 1;
 }
 
 if ($prev_date || $next_date) {
@@ -124,6 +130,20 @@ $MyBills = array();
 $Bill = new Bills();
 $Bill->setPayPeriod($end_date, $start_date);
 $billDates = $Bill->loadBillDatesByUserID($user_id);
+
+if ($vegas_trip) {
+    $billDates2 = $billDates;
+    $billDates = [];
+    foreach ($billDates2 as $index => $getItem) {
+        if ($getItem['vnd_bill_desc'] != "Cay Payment" && $getItem['vnd_bill_desc'] != "Pay Rest of Mastercard"
+            && $getItem['vnd_bill_desc'] != "SSFCU Personal Loan"
+            && $getItem['vnd_bill_desc'] != "Vegas Plane Ticket Credit Card"
+            && $getItem['vnd_bill_desc'] != "Rent 16th")
+        {
+            $billDates[] = $getItem;
+        }
+    }
+}
 
 foreach ($billDates as $getDate) {
 	$newDate = array();
