@@ -55,6 +55,15 @@ try {
 	exit;
 }
 
+try {
+	$db_conn2 = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.MYSQL_DATABASE2, MYSQL_USERNAME, MYSQL_PASSWORD);
+	$db_conn2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+	echo 'ERROR: ' . $e->getMessage() . "<br />";
+	echo 'Could not establish database connection';
+	exit;
+}
+
 function cleanRS($rs) {
 	foreach ($rs as $index => $item) {
 		for ($i = 0; $i < 200; $i++) {
@@ -72,10 +81,25 @@ function execQuery($sql, $data=array()) {
 	$stmt->execute($data);
 }
 
+function execQuery2($sql, $data=array()) {
+	global $db_conn2;
+
+	$stmt = $db_conn2->prepare($sql);
+	$stmt->execute($data);
+}
+
 function getQuery($sql, $data=array()) {
 	global $db_conn;
 
 	$stmt = $db_conn->prepare($sql);
+	$stmt->execute($data);
+	return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getQuery2($sql, $data=array()) {
+	global $db_conn2;
+
+	$stmt = $db_conn2->prepare($sql);
 	$stmt->execute($data);
 	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
