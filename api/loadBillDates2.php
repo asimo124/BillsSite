@@ -20,6 +20,29 @@ if (strtotime($pay_date) < strtotime("2021-06-20 23:59:59") && strtotime($pay_da
     $vegas_trip = 1;
 }
 
+$numDays9 = 1;
+$monthNum9 = intval(date("m", strtotime($pay_date)));
+$dayNum9 = intval(date("d", strtotime($pay_date)));
+$payPeriodNum = ($dayNum9 < 16) ? 1 : 2;
+
+$sql = "SELECT num_days
+        FROM vnd_pay_period_days 
+        WHERE month_num = :month_num
+        AND pay_period_num = :pay_period_num 
+        LIMIT 1";
+$data = array();
+$data['month_num'] = $monthNum9;
+$data['pay_period_num'] = $payPeriodNum;
+$sth = $db_conn->prepare($sql);
+$sth->execute($data);
+
+//*/
+$HasNumDays = $sth->fetch(2);
+if ($HasNumDays) {
+    $numDays9 = $HasNumDays['num_days'];
+}
+//*/
+
 if ($prev_date || $next_date) {
 
     $getCurYear6 = intval(date("Y", strtotime($pay_date)));
@@ -264,7 +287,9 @@ $results = [
     "results" => $daysWeeksArr,
     "hash_key" => $hash_key,
     "cur_balance" => $current_balance,
-    "pay_date" => date("m/d/Y 12:00:00 A", strtotime($pay_date))
+    "pay_date" => date("m/d/Y 12:00:00 A", strtotime($pay_date)),
+    "num_days_pay_period" => intval($numDays9),
+    "remaining_balance" => $full_cur_amount
 ];
 echo json_encode($results);
 
