@@ -8,7 +8,7 @@ $monthNum = intval(date("m", strtotime($pay_date)));
 $day = intval(date("d", strtotime($pay_date)));
 $payPeriodNum = ($day < 16) ? 1 : 2;
 
-header("Access-Control-Allow-Origin: *");
+//header("Access-Control-Allow-Origin: *");
 header("Content-type: text/json");
 if ($monthNum && $day && $payPeriodNum) {
 

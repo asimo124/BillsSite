@@ -19,7 +19,7 @@ $frequencyArr = [
 ];
 
 $vndBill = "";
-$sort1 = "frequency";
+$sort1 = "bill";
 $sort1_dir = "ASC";
 $sort2 = "";
 $sort2_dir = "";
@@ -39,7 +39,7 @@ if (isset($_POST['btnSearch'])) {
     if ($vndBill) {
         $vndBill = '%' . $vndBill . '%';
     }
-    $sort1 = isset($_POST['sort1']) ? $_POST['sort1'] : "frequency";
+    $sort1 = isset($_POST['sort1']) ? $_POST['sort1'] : "bill";
     $sort1_dir = isset($_POST['sort1_dir']) ? $_POST['sort1_dir'] : "ASC";
     $sort2 = isset($_POST['sort2']) ? $_POST['sort2'] : "";
     $sort2_dir = isset($_POST['sort2_dir']) ? $_POST['sort2_dir'] : "";
@@ -195,6 +195,7 @@ foreach ($frequencyArr as $getFrequency) {
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/nav.css" />
+    <link rel="stylesheet" href="/css/bills_admin.css" />
 </head>
 <body>
 <div class="container">
@@ -229,8 +230,8 @@ foreach ($frequencyArr as $getFrequency) {
             <div class="col-md-2 col-xs-6">
                 <select name="sort1" class="form-control" width="100%">
                     <option value="" > - Select Sort 1 - </option>
-                    <option value="frequency" <?php echo ($sort1 == "frequency") ? "SELECTED" : ""; ?>>Frequency</option>
                     <option value="bill" <?php echo ($sort1 == "bill") ? "SELECTED" : ""; ?>>Bill Name</option>
+                    <option value="frequency" <?php echo ($sort1 == "frequency") ? "SELECTED" : ""; ?>>Frequency</option>
                     <option value="amount" <?php echo ($sort1 == "amount") ? "SELECTED" : ""; ?>>Amount</option>
                 </select>
             </div>
@@ -243,8 +244,8 @@ foreach ($frequencyArr as $getFrequency) {
             <div class="col-md-2 col-xs-6">
                 <select name="sort2" class="form-control" width="100%">
                     <option value="" > - Select Sort 2 - </option>
-                    <option value="frequency" <?php echo ($sort2 == "frequency") ? "SELECTED" : ""; ?>>Frequency</option>
                     <option value="bill" <?php echo ($sort2 == "bill") ? "SELECTED" : ""; ?>>Bill Name</option>
+                    <option value="frequency" <?php echo ($sort2 == "frequency") ? "SELECTED" : ""; ?>>Frequency</option>
                     <option value="amount" <?php echo ($sort2 == "amount") ? "SELECTED" : ""; ?>>Amount</option>
                 </select>
             </div>
@@ -257,60 +258,62 @@ foreach ($frequencyArr as $getFrequency) {
         </div>
         <div style="clear: both; height: 15px;"></div>
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-2 filter-cols">
                 <input
                     type="checkbox"
                     name="frequency[Every 1 Week]"
                     value="1"
-                    <?php echo ($frequencyShow['Every 1 Week']) ? "CHECKED" : ""; ?>
+                    <?php echo ($frequencyShow['Every 1 Week'] || !isset($_POST['btnSearch'])) ? "CHECKED" : ""; ?>
                 />&nbsp;Every 1 Week
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2 filter-cols">
                 <input
                     type="checkbox"
                     name="frequency[Every 2 Weeks]"
                     value="1"
-                    <?php echo ($frequencyShow['Every 2 Weeks']) ? "CHECKED" : ""; ?>
+                    <?php echo ($frequencyShow['Every 2 Weeks'] || !isset($_POST['btnSearch'])) ? "CHECKED" : ""; ?>
                 />&nbsp;Every 2 Weeks
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2 filter-cols">
                 <input
                     type="checkbox"
                     name="frequency[Every 4 Weeks]"
                     value="1"
-                    <?php echo ($frequencyShow['Every 4 Weeks']) ? "CHECKED" : ""; ?>
+                    <?php echo ($frequencyShow['Every 4 Weeks'] || !isset($_POST['btnSearch'])) ? "CHECKED" : ""; ?>
                 />&nbsp;Every 4 Weeks
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2 filter-cols">
                 <input
                     type="checkbox"
                     name="frequency[Once Per Month - Day of Month]"
                     value="1"
-                    <?php echo ($frequencyShow['Once Per Month - Day of Month']) ? "CHECKED" : ""; ?>
+                    <?php echo ($frequencyShow['Once Per Month - Day of Month'] || !isset($_POST['btnSearch'])) ? "CHECKED" : ""; ?>
                 />&nbsp;Once Per Month - Day of Month
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2 filter-cols">
                 <input
                     type="checkbox"
                     name="frequency[Once Per Month - Starting From]"
                     value="1"
-                    <?php echo ($frequencyShow['Once Per Month - Starting From']) ? "CHECKED" : ""; ?>
+                    <?php echo ($frequencyShow['Once Per Month - Starting From'] || !isset($_POST['btnSearch'])) ? "CHECKED" : ""; ?>
                 />&nbsp;Once Per Month - Starting From
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2 filter-cols">
                 <input
                         type="checkbox"
                         name="frequency[Every 3 Months]"
                         value="1"
-                    <?php echo ($frequencyShow['Every 3 Months']) ? "CHECKED" : ""; ?>
+                    <?php echo ($frequencyShow['Every 3 Months'] || !isset($_POST['btnSearch'])) ? "CHECKED" : ""; ?>
                 />&nbsp;Every 3 Months
             </div>
-            <div class="col-md-2">
+        </div>
+        <div class="row">
+            <div class="col-md-2 filter-cols">
                 <input
                     type="checkbox"
                     name="frequency[Once]"
                     value="1"
-                    <?php echo ($frequencyShow['Once']) ? "CHECKED" : ""; ?>
+                    <?php echo ($frequencyShow['Once'] || !isset($_POST['btnSearch'])) ? "CHECKED" : ""; ?>
                 />&nbsp;Once
             </div>
         </div>
