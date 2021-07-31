@@ -260,6 +260,17 @@ foreach ($frequencyArr as $getFrequency) {
         <div class="row">
             <div class="col-md-2 filter-cols">
                 <input
+                        type="checkbox"
+                        name="checkAll"
+                        id="checkAll"
+                        CHECKED
+                        value="1"
+                />&nbsp;Check All
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 filter-cols">
+                <input
                     type="checkbox"
                     name="frequency[Every 1 Week]"
                     value="1"
@@ -398,6 +409,14 @@ foreach ($frequencyArr as $getFrequency) {
     $(document).ready(function() {
         $('.del_btn').click(function() {
             $('#del_id').val($(this).attr("data-id"));
+        })
+
+        $('#checkAll').click(function() {
+            if ($(this).prop('checked')) {
+                $('[name^="frequency"]').prop('checked', true);
+            } else {
+                $('[name^="frequency"]').prop('checked', false);
+            }
         })
     })
 </script>
