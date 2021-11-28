@@ -166,7 +166,7 @@ $tags = getQuery2($sql);
 
     <div style="clear: both; height: 12px"></div>
 
-    <?php include "../../templates/nav3.php"; ?>
+    <?php include "../../templates/nav.php"; ?>
     <div style="clear: both; height: 7px"></div>
 
     <div style="clear: both; height: 15px;"></div>

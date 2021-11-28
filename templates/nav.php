@@ -26,6 +26,7 @@
     <a href="/bills/index.php">Bills</a>
     <a href="/expenses/index.php">Add Expense</a>
     <a href="/bills/admin/index.php">Bills Admin</a>
+    <a href="/eat/out/index.php">Eating Out</a>
     <a href="/charges/stacked_chart.php">Charges Chart</a>
     <a href="/charges/upload.php">Upload Charges</a>
     <a href="/charges/categorize.php">Categorize Charges</a>
