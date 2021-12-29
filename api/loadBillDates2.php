@@ -173,7 +173,12 @@ foreach ($billDates as $getDate) {
 	$newDate['desc'] = $getDate['vnd_bill_desc'];
 	$newDate['amount'] = $getDate['vnd_amount'];
 	$newDate['is_heavy'] = $getDate['is_heavy'];
-	$key = strtotime(date("Y-m-d 00:00:00", strtotime($getDate['vnd_date'])));
+
+    $key = strtotime(date("Y-m-d 00:00:00", strtotime($getDate['vnd_date'])));
+	$dateDay = intval(date("d", strtotime($getDate['vnd_date'])));
+	if ($dateDay == 28) {
+	    $key = strtotime(date("Y-m-t 00:00:00", strtotime($getDate['vnd_date'])));
+    }
 	$MyBills[$key][] = $newDate;
 }
 
