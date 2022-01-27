@@ -23,7 +23,7 @@ if (strtotime($pay_date) < strtotime("2021-06-20 23:59:59") && strtotime($pay_da
 $numDays9 = 1;
 $monthNum9 = intval(date("m", strtotime($pay_date)));
 $dayNum9 = intval(date("d", strtotime($pay_date)));
-$payPeriodNum = ($dayNum9 < 16) ? 1 : 2;
+$payPeriodNum = ($dayNum9 < 15) ? 1 : 2;
 
 $sql = "SELECT num_days
         FROM vnd_pay_period_days 
@@ -50,8 +50,8 @@ if ($prev_date || $next_date) {
     $getCurDay6 = intval(date("d", strtotime($pay_date)));
 
     if ($prev_date) {
-        if ($getCurDay6 < 16) {
-            $getCurDay6 = 16;
+        if ($getCurDay6 < 15) {
+            $getCurDay6 = 15;
             if ($getCurMonth6 > 1) {
                 $getCurMonth6--;
             } else {
@@ -64,8 +64,9 @@ if ($prev_date || $next_date) {
 
         $pay_date = $getCurYear6 . "-" . $getCurMonth6 . "-" . $getCurDay6;
     } else {
-        if ($getCurDay6 < 16) {
-            $getCurDay6 = 16;
+
+        if ($getCurDay6 < 15) {
+            $getCurDay6 = 15;
         } else {
             $getCurDay6 = 1;
             if ($getCurMonth6 < 12) {
@@ -75,7 +76,6 @@ if ($prev_date || $next_date) {
                 $getCurYear6++;
             }
         }
-
         $pay_date = $getCurYear6 . "-" . $getCurMonth6 . "-" . $getCurDay6;
     }
 }
@@ -140,17 +140,19 @@ $hash_key = md5($string_to_hash);
 
 $end_date = "";
 $start_date = date("Y-m-d", strtotime($pay_date));
-$start_day = intval(date("d", strtotime($start_date)));
+$start_day = intval(date("d", strtotime($pay_date)));
 
-if ($start_day < 16) {
-	$end_date = date("Y-m-15", strtotime($start_date));
+if ($start_day < 15) {
+	$end_date = date("Y-m-14", strtotime($start_date));
 } else {
+
 	$d = new DateTime($start_date);
 	$end_date = $d->format( 'Y-m-t' );
 }
 
 $MyBills = array();
 $Bill = new Bills();
+
 $Bill->setPayPeriod($end_date, $start_date);
 $billDates = $Bill->loadBillDatesByUserID($user_id);
 
@@ -243,6 +245,7 @@ while ($timestamp <= strtotime($end_date)) {
 	$hasBills = false;
 
 	$billsDescArr = [];
+
 	foreach ($MyBills[$timestamp] as $getBill) {
 
 		$hasBills = true;
@@ -296,7 +299,7 @@ $results = [
     "num_days_pay_period" => intval($numDays9),
     "remaining_balance" => $full_cur_amount
 ];
-echo json_encode($results);
+echo json_encode($results, JSON_PRETTY_PRINT);
 
 function getDaySuffix($num) {
 

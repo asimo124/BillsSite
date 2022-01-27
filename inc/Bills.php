@@ -20,9 +20,9 @@ class Bills {
 		$start_date = $today;
 		$start_day = intval(date("d", strtotime($start_date)));
 		
-		if ($start_day < 16) {
+		if ($start_day < 15) {
 			
-			$nextPayDay = date("Y-m-15", strtotime($start_date));
+			$nextPayDay = date("Y-m-14", strtotime($start_date));
 		} else {
 			
 			$d = new DateTime($start_date); 
@@ -78,7 +78,7 @@ class Bills {
 		$data['user_id'] = $user_id;
 		$data['start_date'] = $this->today;
 		$data['end_date'] = $this->nextPayDay;
-		
+
 		$sth = $db_conn->prepare($query);
 		$sth->execute($data);
 		$resultset = $sth->fetchAll();
