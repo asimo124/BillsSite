@@ -175,6 +175,8 @@ foreach ($billDates as $getDate) {
 	$newDate['desc'] = $getDate['vnd_bill_desc'];
 	$newDate['amount'] = $getDate['vnd_amount'];
 	$newDate['is_heavy'] = $getDate['is_heavy'];
+	$newDate['vnd_frequency'] = $getDate['vnd_frequency'];
+	$newDate['vnd_frequency_type'] = $getDate['vnd_frequency_type'];
 
     $key = strtotime(date("Y-m-d 00:00:00", strtotime($getDate['vnd_date'])));
 	$dateDay = intval(date("d", strtotime($getDate['vnd_date'])));
@@ -251,7 +253,9 @@ while ($timestamp <= strtotime($end_date)) {
 		$hasBills = true;
         $billsDescArr[] = [
             "title" => $getBill['desc'] . " - $" . $getBill["amount"],
-            "is_heavy" => intval($getBill['is_heavy'])
+            "is_heavy" => intval($getBill['is_heavy']),
+            "vnd_frequency" => ($getBill['vnd_frequency']),
+            "vnd_frequency_type" => ($getBill['vnd_frequency_type'])
         ];
 		$full_cur_amount -= $getBill["amount"];
 	}
