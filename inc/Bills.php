@@ -204,6 +204,11 @@ class Bills {
 			$numDays = $numMonths * 30;
 			$startDate = date('Y-m-d', strtotime($freq_value));
 			$each_date = $startDate;
+			$oldNumReps = $this->numReps;
+			if ($numMonths == 0) {
+				$numMonths = 1;
+			}
+			$this->numReps = 12 / $numMonths * 15;
 			for ($i = 0; $i < $this->numReps; $i++) {
 				$use_date = date('Y-m-d', strtotime($each_date . " +" . $numDays . " days"));
 				$data = array();
@@ -227,6 +232,7 @@ class Bills {
 				}
 				$each_date = $use_date;
 			}
+			$this->numReps = $oldNumReps;
 		}
 	}
 
@@ -309,6 +315,11 @@ class Bills {
 			$numDays = $numWeeks * 7;
 			$startDate = date('Y-m-d', strtotime($freq_value));
 			$each_date = $startDate;
+			$oldNumReps = $this->numReps;
+			if ($numWeeks == 0) {
+				$numWeeks = 1;
+			}
+			$this->numReps = 52 / $numWeeks * 15;
 			for ($i = 0; $i < $this->numReps; $i++) {
 				$use_date = date('Y-m-d', strtotime($each_date . " +" . $numDays . " days"));
 				$data = array();
@@ -332,6 +343,7 @@ class Bills {
 				}
 				$each_date = $use_date;
 			}
+			$this->numReps = $oldNumReps;
 		}
 	}
 

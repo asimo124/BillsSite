@@ -1,0 +1,11 @@
+-- UPDATE ri_recipe ri 
+-- SET ri.difficulty_rating = 1 
+-- WHERE ri.difficulty_level_id  = 2;
+-- 
+-- UPDATE ri_recipe ri
+-- SET ri.difficulty_rating = 3 
+-- WHERE ri.difficulty_level_id = 3;
+-- 
+-- UPDATE ri_recipe ri
+-- SET ri.difficulty_rating = 5 
+-- WHERE ri.difficulty_level_id = 4;
