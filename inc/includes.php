@@ -46,8 +46,15 @@ include "UploadValidator.php";
 include "QueryUtils.php";
 include "SortOrderHelper.php";
 
+$testMode = isset($_SESSION['testMode']) ? $_SESSION['testMode'] : 0;
+if (isset($changeTestMode)) {
+	$testMode = $changeTestMode;
+}
+
+$mysqlDatabase = $testMode == 1 ? MYSQL_DATABASE3 : MYSQL_DATABASE;
+
 try {
-	$db_conn = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.MYSQL_DATABASE, MYSQL_USERNAME, MYSQL_PASSWORD);
+	$db_conn = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.$mysqlDatabase, MYSQL_USERNAME, MYSQL_PASSWORD);
 	$db_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $e) {
 	echo 'ERROR: ' . $e->getMessage() . "<br />";
@@ -58,6 +65,24 @@ try {
 try {
 	$db_conn2 = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.MYSQL_DATABASE2, MYSQL_USERNAME, MYSQL_PASSWORD);
 	$db_conn2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+	echo 'ERROR: ' . $e->getMessage() . "<br />";
+	echo 'Could not establish database connection';
+	exit;
+}
+
+try {
+	$db_conn1 = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.MYSQL_DATABASE, MYSQL_USERNAME, MYSQL_PASSWORD);
+	$db_conn1->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+	echo 'ERROR: ' . $e->getMessage() . "<br />";
+	echo 'Could not establish database connection';
+	exit;
+}
+
+try {
+	$db_conn3 = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.MYSQL_DATABASE3, MYSQL_USERNAME, MYSQL_PASSWORD);
+	$db_conn3->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $e) {
 	echo 'ERROR: ' . $e->getMessage() . "<br />";
 	echo 'Could not establish database connection';
@@ -88,6 +113,20 @@ function execQuery2($sql, $data=array()) {
 	$stmt->execute($data);
 }
 
+function execQuery1($sql, $data=array()) {
+	global $db_conn1;
+
+	$stmt = $db_conn1->prepare($sql);
+	$stmt->execute($data);
+}
+
+function execQuery3($sql, $data=array()) {
+	global $db_conn3;
+
+	$stmt = $db_conn3->prepare($sql);
+	$stmt->execute($data);
+}
+
 function getQuery($sql, $data=array()) {
 	global $db_conn;
 
@@ -104,10 +143,61 @@ function getQuery2($sql, $data=array()) {
 	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function getQuery1($sql, $data=array()) {
+	global $db_conn1;
+
+	$stmt = $db_conn1->prepare($sql);
+	$stmt->execute($data);
+	return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getQuery3($sql, $data=array()) {
+	global $db_conn3;
+
+	$stmt = $db_conn3->prepare($sql);
+	$stmt->execute($data);
+	return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function curlExec($requestMethod, $url, $data = [])
+{
+	switch ($requestMethod)
+	{
+		case "PUT":
+
+			// Initialize cURL session
+			$ch = curl_init($url);
+
+			// Set cURL options
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT"); // Use PUT request
+			if (!empyt($data)) {
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data); // Attach the JSON payload
+
+			}
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return response as a string
+			curl_setopt($ch, CURLOPT_HTTPHEADER, [
+				'Content-Type: application/json', // Set content type to JSON
+				'Content-Length: ' . strlen($data) // Set content length
+			]);
+
+			// Execute the request and get the response
+			$response = curl_exec($ch);
+
+			// Check for errors
+			curl_close($ch);
+			if (curl_errno($ch)) {
+				echo 'Error: ' . curl_error($ch);
+				die();
+			} else {
+				return $response;
+			}
+			break;
+	}
+}
+
 function formatCurrency($amount) {
 
-	$formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
-	return $formatter->formatCurrency($amount, 'USD');
+	return '$' . number_format($amount, 2);
 }
 
 function validateTags($str) {

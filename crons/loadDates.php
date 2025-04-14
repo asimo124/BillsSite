@@ -4,7 +4,7 @@
 	require_once($path_file . "/../inc/includes.php");
 	require_once($path_file . "/../inc/Bills.php");
 
-$numReps = 25;
+$numReps = 50;
 $user_id = 1;
 	
 $Bill = new Bills($numReps);

@@ -17,12 +17,15 @@ if (count($resultset) > 0) {
 
 $today = date("Y-m-d");
 
-if ($sendDate == md5($today)) {
+//if ($sendDate == md5($today)) {
 
     // Your Account SID and Auth Token from twilio.com/console
     $sid = 'ACb5e8ebd1c2bcd4416943d67520d7a60a';
-    $token = 'b8218b645892021e87502dddd2fdf04e';
+    $token = 'f4fc1616fdb81c2a48fdead2b70f3d9f';
     $client = new Client($sid, $token);
+
+
+    //die("don't run");
 
     // Use the client to do fun stuff like send text messages!
     $client->messages->create(
@@ -30,12 +33,12 @@ if ($sendDate == md5($today)) {
         '+12102142245',
         array(
             // A Twilio phone number you purchased at twilio.com/console
-            'from' => '+18305005541',
+            'from' => '+14253812651',
             // the body of the text message you'd like to send
             'body' => 'p2p time - go for it'
         )
     );
-}
+//}
 
 echo "<pre>Done \n";
 ?>

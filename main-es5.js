@@ -23,17 +23,6 @@ webpackEmptyAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
 
 /***/ }),
 
-/***/ "./node_modules/raw-loader/index.js!./src/app/add-pill/add-pill.component.html":
-/*!****************************************************************************!*\
-  !*** ./node_modules/raw-loader!./src/app/add-pill/add-pill.component.html ***!
-  \****************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "\n<div class=\"row \">\n    <div class=\"col-xs-12 col-md-4\">\n        <div class=\"form-group\">\n            <label for=\"add_pill_taken\" >Which pill did you take?</label>\n            <select name=\"add_pill_taken\" class=\"form-control\" #pill_taken >\n                <option *ngFor=\"let pill of pills\" [value]=\"pill.id\">{{ pill.pill_name }}</option>\n            </select>\n        </div>\n        <div class=\"form-group\">\n            <label for=\"qty\" >Qty</label>\n            <input type=\"number\" name=\"qty\" class=\"form-control\" value=\"1\" #qty />\n        </div>            \n        <div class=\"form-group\">\n            <button type=\"button\" class=\"btn btn-primary\" (click)=\"onClick($event, pill_taken, qty)\" >Add</button>\n        </div>\n    </div>        \n</div>"
-
-/***/ }),
-
 /***/ "./node_modules/raw-loader/index.js!./src/app/app.component.html":
 /*!**************************************************************!*\
   !*** ./node_modules/raw-loader!./src/app/app.component.html ***!
@@ -41,115 +30,29 @@ module.exports = "\n<div class=\"row \">\n    <div class=\"col-xs-12 col-md-4\">
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<header>\r\n    <!-- Fixed navbar -->\r\n    <nav class=\"navbar navbar-expand-md navbar-dark fixed-top bg-dark\">\r\n        <a class=\"navbar-brand\" href=\"#\">Pill  Tracker</a>\r\n    </nav>\r\n</header>\r\n\r\n<!-- Begin page content -->\r\n<main role=\"main\" class=\"container-fluid\">\r\n    <div style=\"clear: both; height: 25px;\" ></div>\r\n    <h1 class=\"mt-5\" style=\"margin-left: -15px;border-top: solid 1px #387ef5;\">Pill History</h1>\r\n\r\n    <div style=\"clear: both; height: 17px;\" ></div>\r\n    \r\n    <app-pill-history *ngIf=\"!addPillFormShowing\" [pill_history]=\"pillHistory\" [week_names]=\"weekNames\" ></app-pill-history>\r\n    <app-add-pill *ngIf=\"addPillFormShowing\" [weekNum]=\"weekNum\" [currentDate]=\"currentDayInForm\" (change)=\"onSubmitAddPill($event)\"></app-add-pill>\r\n\r\n</main>\r\n\r\n<footer class=\"footer\">\r\n    <div class=\"container\">\r\n        <span class=\"text-muted\"></span>\r\n    </div>\r\n</footer>"
+module.exports = "<nz-layout class=\"layout\">\n  <nz-header>\n    <div class=\"logo\"\n         [style.background]=\"'url(assets/img/expense_icon2_ex.png)'\"></div>\n    <div class=\"logo-text\">Bills Manager</div>\n<!--    <ul nz-menu nzTheme=\"dark\" nzMode=\"horizontal\">-->\n<!--      <li nz-menu-item>nav 1</li>-->\n<!--    </ul>-->\n  </nz-header>\n  <nz-content>\n<!--    <nz-breadcrumb>-->\n<!--      <nz-breadcrumb-item>Home</nz-breadcrumb-item>-->\n<!--      <nz-breadcrumb-item>List</nz-breadcrumb-item>-->\n<!--      <nz-breadcrumb-item>App</nz-breadcrumb-item>-->\n<!--    </nz-breadcrumb>-->\n    <div class=\"inner-content\">\n\n      <div nz-row >\n        <div nz-col [nzMd]=\"{ span: 8 }\" [nzXs]=\"{ span: 12 }\" *ngIf=\"billResults\">\n            <nz-form-control>\n              <input\n                nz-input\n                placeholder=\"Balance\"\n                [(ngModel)]=\"curBalance\"\n                [value]=\"billResults.cur_balance\"\n              />\n            </nz-form-control>\n        </div>\n        <div nz-col [nzMd]=\"{ span: 6 }\" [nzXs]=\"{ span: 12 }\" >\n            <nz-form-control>\n              <nz-date-picker [(ngModel)]=\"currentDate\" (ngModelChange)=\"onChange($event)\" ></nz-date-picker>\n\n            </nz-form-control>\n        </div>\n        <div nz-col [nzMd]=\"{ span: 6 }\" [nzXs]=\"{ span: 8 }\" >\n          <nz-form-control>\n            <input\n              nz-input\n              placeholder=\"Extra Days\"\n              [(ngModel)]=\"numDaysPayPeriod\"\n              [value]=\"numDaysPayPeriod\"\n            />\n          </nz-form-control>\n        </div>\n        <div nz-col [nzMd]=\"{ span: 4 }\" [nzXs]=\"{ span: 6 }\" >\n          <nz-form-control>\n            <button nz-button [nzType]=\"'primary'\" (click)=\"updatePayPeriodNumDays()\">Update</button>\n          </nz-form-control>\n        </div>\n        <div nz-col [nzMd]=\"{ span: 10 }\" [nzXs]=\"{ span: 24 }\" >\n          <nz-form-control>\n            <button nz-button [nzType]=\"'default'\" (click)=\"loadToday()\">Today</button>\n            <button nz-button [nzType]=\"'default'\" (click)=\"loadPrevDate()\">Previous</button>\n            <button nz-button [nzType]=\"'default'\" (click)=\"loadNextDate()\">Next</button>\n            <button nz-button [nzType]=\"'danger'\" (click)=\"toggleExpand()\">{{ (!isExpanded) ? 'Expand' : 'Collapse' }}</button>\n            <button nz-button [nzType]=\"'primary'\" (click)=\"setDefaultsAndSearch()\">Search</button>\n          </nz-form-control>\n        </div>\n        <div nz-col [nzMd]=\"{ span: 10 }\" [nzXs]=\"{ span: 24 }\" >\n          <nz-form-control>\n\n            Daily: <input\n              nz-input\n              placeholder=\"Day\"\n              [(ngModel)]=\"disposablePerDay\"\n              [value]=\"disposablePerDay\"\n              [style.width]=\"'50px'\"\n            />&nbsp;\n            Height: <input\n            nz-input\n            placeholder=\"Day\"\n            [(ngModel)]=\"expandHeight\"\n            [value]=\"expandHeight\"\n            [style.width]=\"'50px'\" />&nbsp;\n            Days: <span style=\"font-weight: bold; color: #1890ff\">{{ finalDays }}</span>\n            Dispose Need:\n            <span style=\"font-weight: bold; color: #1890ff\">${{ getDisposableNeeded() }}</span>&nbsp;Dispose Left: <span style=\"font-weight: bold; color: #2aa80a\">${{ getDisposableLeft() }}</span>&nbsp;\n            Test Mode: <nz-switch [(ngModel)]=\"testMode\"></nz-switch>\n\n            Add Last Days: <nz-switch [(ngModel)]=\"addLastDays\" (ngModelChange)=\"updateLastDays()\"></nz-switch>\n\n          </nz-form-control>\n\n        </div>\n      </div>\n\n      <div style=\"clear: both; height: 15px;\"></div>\n\n\n\n      <app-days-of-week\n        [billsDays]=\"billsList\"\n        [isExpanded]=\"isExpanded\"\n        [expandHeight]=\"expandHeight\"\n        (shouldCallToggleEnabled)=\"updateRunningTotals()\"\n      ></app-days-of-week>\n    </div>\n  </nz-content>\n\n</nz-layout>\n"
 
 /***/ }),
 
-/***/ "./node_modules/raw-loader/index.js!./src/app/history-day/history-day.component.html":
-/*!**********************************************************************************!*\
-  !*** ./node_modules/raw-loader!./src/app/history-day/history-day.component.html ***!
-  \**********************************************************************************/
+/***/ "./node_modules/raw-loader/index.js!./src/app/components/days-of-week/days-of-week.component.html":
+/*!***********************************************************************************************!*\
+  !*** ./node_modules/raw-loader!./src/app/components/days-of-week/days-of-week.component.html ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n    <strong>{{ month }}</strong> {{ dayOfWeek }} {{ day }}\r\n    <div style=\"clear: both; height: 12px;\"></div>\r\n      \r\n    <ng-container \r\n        *ngFor=\"let pill of pills | keyvalue\"\r\n        >\r\n        <ng-container *ngIf=\"pill.value.qty > 0\" >\r\n            <div style=\"clear: both; height: 5px;\" ></div>\r\n            <a [routerLink]=\"\" class=\"btn\" \r\n                [className]=\"'btn btn-ion' + pill.value.pill_id\" \r\n                (change)=\"onDeletePill($event)\" \r\n                (click)=\"onClick($event, pill.value.pill_id)\"\r\n                >{{ pill.value.pill_name }} <span *ngIf=\"pill.value.qty > 1\">- {{ pill.value.qty }}</span></a>        \r\n        </ng-container>                \r\n    </ng-container>\r\n         "
+module.exports = "<div\n  nz-row nzType=\"flex\"\n  nzJustify=\"space-around\"\n  [style.margin-bottom]=\"(isExpanded) ? expandHeight + 'px' : ''\"\n  *ngFor=\"let week of billsDays\">\n    <div\n      *ngFor=\"let day of week.days\"\n      nz-col\n      nzXs=\"8\"\n      nzSm=\"3\"\n      [className]=\"day.showAsDay ? 'cal-day' : 'cal-day'\"\n    >\n      <span style=\"font-weight: bold\">{{ day.Day }}</span>\n      <app-expense\n        [expenses]=\"day.desc\"\n        (didToggleEnabled)=\"callToggleEnabled($event)\"\n      ></app-expense>\n      <div style=\"clear:both; height: 4px\"></div>\n      <span [style.visibility]=\"day.showAsDay ? 'visible' : 'hidden'\">Balance - <strong>{{ day.Balance }}</strong></span>\n    </div>\n</div>\n"
 
 /***/ }),
 
-/***/ "./node_modules/raw-loader/index.js!./src/app/pill-history/pill-history.component.html":
-/*!************************************************************************************!*\
-  !*** ./node_modules/raw-loader!./src/app/pill-history/pill-history.component.html ***!
-  \************************************************************************************/
+/***/ "./node_modules/raw-loader/index.js!./src/app/components/expense/expense.component.html":
+/*!*************************************************************************************!*\
+  !*** ./node_modules/raw-loader!./src/app/components/expense/expense.component.html ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n\r\n<div class=\"row\" *ngFor=\"let history of pill_history; let i = index\">\r\n    <div style=\"width: 100%; clear: both; height: 20px;\"></div>\r\n    <h2>{{ week_names[i] }}</h2>\r\n    <div style=\"width: 100%; clear: both; height: 4px;\"></div>\r\n    <app-history-day *ngFor=\"let item of history | keyvalue\" \r\n        [currentDate]=\"item.key\" \r\n        [weekNum]=\"i\"\r\n        [dayText]=\"item.value.day_text\"\r\n        [month]=\"item.value.month\"\r\n        [day]=\"item.value.day\"\r\n        [dayOfWeek]=\"item.value.day_of_week\"\r\n        [pills]=\"item.value.pills\"\r\n        (click)=\"onClickDay($event, i, item.key)\"\r\n        [className]=\"'col-4 col-sm-3 col-md day_cards mt-1'\"></app-history-day>\r\n        \r\n</div>"
-
-/***/ }),
-
-/***/ "./src/app/add-pill/add-pill.component.css":
-/*!*************************************************!*\
-  !*** ./src/app/add-pill/add-pill.component.css ***!
-  \*************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2FkZC1waWxsL2FkZC1waWxsLmNvbXBvbmVudC5jc3MifQ== */"
-
-/***/ }),
-
-/***/ "./src/app/add-pill/add-pill.component.ts":
-/*!************************************************!*\
-  !*** ./src/app/add-pill/add-pill.component.ts ***!
-  \************************************************/
-/*! exports provided: AddPillComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AddPillComponent", function() { return AddPillComponent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _pills_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../pills.service */ "./src/app/pills.service.ts");
-/* harmony import */ var _pillhistory_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../pillhistory.service */ "./src/app/pillhistory.service.ts");
-
-
-
-
-var AddPillComponent = /** @class */ (function () {
-    function AddPillComponent(pillsService, pillHistoryService) {
-        this.pillsService = pillsService;
-        this.pillHistoryService = pillHistoryService;
-        this.change = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
-        this.pills = [];
-        this.pills = pillsService.getPills();
-    }
-    AddPillComponent.prototype.ngOnInit = function () {
-        console.log("currentDate at 7: ", this.currentDate);
-    };
-    AddPillComponent.prototype.onClick = function ($event, pill_taken, qty) {
-        console.log("did click");
-        console.log({
-            weekNum: this.weekNum,
-            currentDate: this.currentDate,
-            pill_id: parseInt(pill_taken.value),
-            qty: parseInt(qty.value)
-        });
-        this.change.emit({
-            weekNum: this.weekNum,
-            currentDate: this.currentDate,
-            pill_id: parseInt(pill_taken.value),
-            qty: parseInt(qty.value)
-        });
-    };
-    AddPillComponent.ctorParameters = function () { return [
-        { type: _pills_service__WEBPACK_IMPORTED_MODULE_2__["PillsService"] },
-        { type: _pillhistory_service__WEBPACK_IMPORTED_MODULE_3__["PillHistoryService"] }
-    ]; };
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
-    ], AddPillComponent.prototype, "currentDate", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Number)
-    ], AddPillComponent.prototype, "weekNum", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
-    ], AddPillComponent.prototype, "change", void 0);
-    AddPillComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-add-pill',
-            template: __webpack_require__(/*! raw-loader!./add-pill.component.html */ "./node_modules/raw-loader/index.js!./src/app/add-pill/add-pill.component.html"),
-            styles: [__webpack_require__(/*! ./add-pill.component.css */ "./src/app/add-pill/add-pill.component.css")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_pills_service__WEBPACK_IMPORTED_MODULE_2__["PillsService"], _pillhistory_service__WEBPACK_IMPORTED_MODULE_3__["PillHistoryService"]])
-    ], AddPillComponent);
-    return AddPillComponent;
-}());
-
-
+module.exports = "<ng-container *ngFor=\"let expense of expenses; let i = index\">\n  <ng-container *ngIf=\"!expense.is_heavy && expense.vnd_frequency != 'Once'\" >\n    <div class=\"cal-day-item\"  [style.background-color]=\"getColor(i)\" (click)=\"toggleEnabled(i)\"\n         [style.text-decoration]=\"(!expense.isEnabled) ? 'line-through' : ''\"\n    >\n      {{ expense.title }}\n    </div>\n  </ng-container>\n  <ng-container *ngIf=\"expense.vnd_frequency == 'Once' && !expense.is_heavy\">\n    <div class=\"cal-day-item\" style=\"background-color: yellow; border: 1px solid #2aa80a; color: #2aa80a;\"\n         (click)=\"toggleEnabled(i)\" [style.text-decoration]=\"(!expense.isEnabled) ? 'line-through' : ''\"\n    >\n      {{ expense.title }}\n    </div>\n  </ng-container>\n  <ng-container *ngIf=\"expense.is_heavy && expense.vnd_frequency != 'Once'\" >\n    <div class=\"cal-day-item\" style=\"background-color: white; border: 1px solid red; color: red;\"\n         (click)=\"toggleEnabled(i)\" [style.text-decoration]=\"(!expense.isEnabled) ? 'line-through' : ''\"\n    >\n      {{ expense.title }}\n    </div>\n  </ng-container>\n</ng-container>\n"
 
 /***/ }),
 
@@ -186,14 +89,14 @@ var AppRoutingModule = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/app.component.css":
-/*!***********************************!*\
-  !*** ./src/app/app.component.css ***!
-  \***********************************/
+/***/ "./src/app/app.component.scss":
+/*!************************************!*\
+  !*** ./src/app/app.component.scss ***!
+  \************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2FwcC5jb21wb25lbnQuY3NzIn0= */"
+module.exports = ".layout {\n  height: 100vh;\n}\n\n.logo {\n  width: 31px;\n  height: 31px;\n  /*background: rgba(255, 255, 255, 0.2);*/\n  margin: 16px 16px 16px 0;\n  float: left;\n}\n\n.logo-text {\n  width: 125px;\n  height: 31px;\n  float: left;\n  color: white;\n  font-size: 18px;\n  font-family: \"DIN Alternate\";\n}\n\nnz-header {\n  /*position: fixed;*/\n  width: 100%;\n}\n\n[nz-menu] {\n  line-height: 64px;\n}\n\nnz-content {\n  padding: 0 0;\n  /*margin-top: 64px;*/\n  min-height: 1250px;\n}\n\nnz-breadcrumb {\n  margin: 16px 0;\n}\n\n.inner-content {\n  background: #fff;\n  padding: 15px;\n  /*min-height: 380px;*/\n  display: block;\n}\n\nnz-footer {\n  text-align: center;\n}\n\n.cal-day {\n  border-radius: 7px;\n  border: 1px solid #ddd;\n  height: 200px;\n  padding: 4px 4px;\n  font-size: 12px;\n}\n\n.cal-day-no-border {\n  border-radius: 7px;\n  border: 1px solid #fff;\n  height: 200px;\n  padding: 4px 4px;\n  font-size: 12px;\n}\n\n.cal-day-item {\n  padding: 0 3px;\n  background-color: #5adbb7;\n  color: white;\n  border-radius: 7px;\n}\n\n@media (min-width: 576px) {\n  .ant-col-sm-3 {\n    display: block;\n    box-sizing: border-box;\n    width: 14.2%;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9BbGV4YW5kZXJIYXdsZXkvRG9jdW1lbnRzL0FuZ3VsYXJQcm9qZWN0cy9iaWxsczIxL3NyYy9hcHAvYXBwLmNvbXBvbmVudC5zY3NzIiwic3JjL2FwcC9hcHAuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxhQUFBO0FDQ0Y7O0FERUE7RUFDRSxXQUFBO0VBQ0EsWUFBQTtFQUNBLHdDQUFBO0VBQ0Esd0JBQUE7RUFDQSxXQUFBO0FDQ0Y7O0FER0E7RUFDRSxZQUFBO0VBQ0EsWUFBQTtFQUNBLFdBQUE7RUFDQSxZQUFBO0VBQ0EsZUFBQTtFQUNBLDRCQUFBO0FDQUY7O0FER0E7RUFDRSxtQkFBQTtFQUNBLFdBQUE7QUNBRjs7QURHQTtFQUNFLGlCQUFBO0FDQUY7O0FER0E7RUFDRSxZQUFBO0VBQ0Esb0JBQUE7RUFDQSxrQkFBQTtBQ0FGOztBREdBO0VBQ0UsY0FBQTtBQ0FGOztBREdBO0VBQ0UsZ0JBQUE7RUFDQSxhQUFBO0VBQ0EscUJBQUE7RUFDQSxjQUFBO0FDQUY7O0FER0E7RUFDRSxrQkFBQTtBQ0FGOztBREdBO0VBQ0Usa0JBQUE7RUFDQSxzQkFBQTtFQUNBLGFBQUE7RUFDQSxnQkFBQTtFQUNBLGVBQUE7QUNBRjs7QURHQTtFQUNFLGtCQUFBO0VBQ0Esc0JBQUE7RUFDQSxhQUFBO0VBQ0EsZ0JBQUE7RUFDQSxlQUFBO0FDQUY7O0FER0E7RUFDRSxjQUFBO0VBQ0EseUJBQUE7RUFDQSxZQUFBO0VBQ0Esa0JBQUE7QUNBRjs7QURHQTtFQUNFO0lBQ0UsY0FBQTtJQUNBLHNCQUFBO0lBQ0EsWUFBQTtFQ0FGO0FBQ0YiLCJmaWxlIjoic3JjL2FwcC9hcHAuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIubGF5b3V0IHtcbiAgaGVpZ2h0OiAxMDB2aDtcbn1cblxuLmxvZ28ge1xuICB3aWR0aDogMzFweDtcbiAgaGVpZ2h0OiAzMXB4O1xuICAvKmJhY2tncm91bmQ6IHJnYmEoMjU1LCAyNTUsIDI1NSwgMC4yKTsqL1xuICBtYXJnaW46IDE2cHggMTZweCAxNnB4IDA7XG4gIGZsb2F0OiBsZWZ0O1xuXG59XG5cbi5sb2dvLXRleHQge1xuICB3aWR0aDogMTI1cHg7XG4gIGhlaWdodDogMzFweDtcbiAgZmxvYXQ6IGxlZnQ7XG4gIGNvbG9yOiB3aGl0ZTtcbiAgZm9udC1zaXplOiAxOHB4O1xuICBmb250LWZhbWlseTogJ0RJTiBBbHRlcm5hdGUnXG59XG5cbm56LWhlYWRlciB7XG4gIC8qcG9zaXRpb246IGZpeGVkOyovXG4gIHdpZHRoOiAxMDAlO1xufVxuXG5bbnotbWVudV0ge1xuICBsaW5lLWhlaWdodDogNjRweDtcbn1cblxubnotY29udGVudCB7XG4gIHBhZGRpbmc6IDAgMDtcbiAgLyptYXJnaW4tdG9wOiA2NHB4OyovXG4gIG1pbi1oZWlnaHQ6IDEyNTBweDtcbn1cblxubnotYnJlYWRjcnVtYiB7XG4gIG1hcmdpbjogMTZweCAwO1xufVxuXG4uaW5uZXItY29udGVudCB7XG4gIGJhY2tncm91bmQ6ICNmZmY7XG4gIHBhZGRpbmc6IDE1cHg7XG4gIC8qbWluLWhlaWdodDogMzgwcHg7Ki9cbiAgZGlzcGxheTogYmxvY2s7XG59XG5cbm56LWZvb3RlciB7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbn1cblxuLmNhbC1kYXkge1xuICBib3JkZXItcmFkaXVzOiA3cHg7XG4gIGJvcmRlcjogMXB4IHNvbGlkICNkZGQ7XG4gIGhlaWdodDogMjAwcHg7XG4gIHBhZGRpbmc6IDRweCA0cHg7XG4gIGZvbnQtc2l6ZTogMTJweDtcbn1cblxuLmNhbC1kYXktbm8tYm9yZGVyIHtcbiAgYm9yZGVyLXJhZGl1czogN3B4O1xuICBib3JkZXI6IDFweCBzb2xpZCAjZmZmO1xuICBoZWlnaHQ6IDIwMHB4O1xuICBwYWRkaW5nOiA0cHggNHB4O1xuICBmb250LXNpemU6IDEycHg7XG59XG5cbi5jYWwtZGF5LWl0ZW0ge1xuICBwYWRkaW5nOiAwIDNweDtcbiAgYmFja2dyb3VuZC1jb2xvcjogIzVhZGJiNztcbiAgY29sb3I6IHdoaXRlO1xuICBib3JkZXItcmFkaXVzOiA3cHg7XG59XG5cbkBtZWRpYSAobWluLXdpZHRoOiA1NzZweCkge1xuICAuYW50LWNvbC1zbS0zIHtcbiAgICBkaXNwbGF5OiBibG9jaztcbiAgICBib3gtc2l6aW5nOiBib3JkZXItYm94O1xuICAgIHdpZHRoOiAxNC4yJTtcbiAgfVxufVxuXG5cblxuXG4iLCIubGF5b3V0IHtcbiAgaGVpZ2h0OiAxMDB2aDtcbn1cblxuLmxvZ28ge1xuICB3aWR0aDogMzFweDtcbiAgaGVpZ2h0OiAzMXB4O1xuICAvKmJhY2tncm91bmQ6IHJnYmEoMjU1LCAyNTUsIDI1NSwgMC4yKTsqL1xuICBtYXJnaW46IDE2cHggMTZweCAxNnB4IDA7XG4gIGZsb2F0OiBsZWZ0O1xufVxuXG4ubG9nby10ZXh0IHtcbiAgd2lkdGg6IDEyNXB4O1xuICBoZWlnaHQ6IDMxcHg7XG4gIGZsb2F0OiBsZWZ0O1xuICBjb2xvcjogd2hpdGU7XG4gIGZvbnQtc2l6ZTogMThweDtcbiAgZm9udC1mYW1pbHk6IFwiRElOIEFsdGVybmF0ZVwiO1xufVxuXG5uei1oZWFkZXIge1xuICAvKnBvc2l0aW9uOiBmaXhlZDsqL1xuICB3aWR0aDogMTAwJTtcbn1cblxuW256LW1lbnVdIHtcbiAgbGluZS1oZWlnaHQ6IDY0cHg7XG59XG5cbm56LWNvbnRlbnQge1xuICBwYWRkaW5nOiAwIDA7XG4gIC8qbWFyZ2luLXRvcDogNjRweDsqL1xuICBtaW4taGVpZ2h0OiAxMjUwcHg7XG59XG5cbm56LWJyZWFkY3J1bWIge1xuICBtYXJnaW46IDE2cHggMDtcbn1cblxuLmlubmVyLWNvbnRlbnQge1xuICBiYWNrZ3JvdW5kOiAjZmZmO1xuICBwYWRkaW5nOiAxNXB4O1xuICAvKm1pbi1oZWlnaHQ6IDM4MHB4OyovXG4gIGRpc3BsYXk6IGJsb2NrO1xufVxuXG5uei1mb290ZXIge1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG59XG5cbi5jYWwtZGF5IHtcbiAgYm9yZGVyLXJhZGl1czogN3B4O1xuICBib3JkZXI6IDFweCBzb2xpZCAjZGRkO1xuICBoZWlnaHQ6IDIwMHB4O1xuICBwYWRkaW5nOiA0cHggNHB4O1xuICBmb250LXNpemU6IDEycHg7XG59XG5cbi5jYWwtZGF5LW5vLWJvcmRlciB7XG4gIGJvcmRlci1yYWRpdXM6IDdweDtcbiAgYm9yZGVyOiAxcHggc29saWQgI2ZmZjtcbiAgaGVpZ2h0OiAyMDBweDtcbiAgcGFkZGluZzogNHB4IDRweDtcbiAgZm9udC1zaXplOiAxMnB4O1xufVxuXG4uY2FsLWRheS1pdGVtIHtcbiAgcGFkZGluZzogMCAzcHg7XG4gIGJhY2tncm91bmQtY29sb3I6ICM1YWRiYjc7XG4gIGNvbG9yOiB3aGl0ZTtcbiAgYm9yZGVyLXJhZGl1czogN3B4O1xufVxuXG5AbWVkaWEgKG1pbi13aWR0aDogNTc2cHgpIHtcbiAgLmFudC1jb2wtc20tMyB7XG4gICAgZGlzcGxheTogYmxvY2s7XG4gICAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbiAgICB3aWR0aDogMTQuMiU7XG4gIH1cbn0iXX0= */"
 
 /***/ }),
 
@@ -209,80 +112,195 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppComponent", function() { return AppComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _pillhistory_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pillhistory.service */ "./src/app/pillhistory.service.ts");
-/* harmony import */ var src_message_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/message.service */ "./src/message.service.ts");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-
-
+/* harmony import */ var _services_bills_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./services/bills.service */ "./src/app/services/bills.service.ts");
 
 
 
 var AppComponent = /** @class */ (function () {
-    function AppComponent(pillHistoryService, messageService, http) {
-        var _this = this;
-        this.pillHistoryService = pillHistoryService;
-        this.messageService = messageService;
-        this.http = http;
-        this.title = 'pill-history';
-        this.addPillFormShowing = false;
-        this.pillHistory = [];
-        this.weekNames = [];
-        var self = this;
-        http.get("http://alexhawley-api.info/pills/history").subscribe(function (res) {
-            self.pillHistory = res.days;
-            self.weekNames = res.week_names;
-        });
-        this.pillHistory = this.pillHistoryService.getPillHistory();
-        this.weekNames = this.pillHistoryService.getWeekNames();
-        this.subscription = this.messageService.getMessage().subscribe(function (message) {
-            if (message.doShowForm) {
-                _this.addPillFormShowing = true;
-            }
-            else if (message.deletePillId > 0) {
-                _this.setPillHistoryItem(message.weekNum, message.currentDate, message.deletePillId, 0);
-                var body = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpParams"]()
-                    .set('cur_date', message.currentDate)
-                    .set('pill_taken', String(message.deletePillId))
-                    .set('qty', String("0"));
-                var ob = _this.http.post("http://alexhawley-api.info/pills/delete", body).toPromise()
-                    .then(function (resp) {
-                    //console.log("resp: ", resp);
-                });
-            }
-            _this.weekNum = message.weekNum;
-            _this.currentDayInForm = message.currentDate;
-        });
+    function AppComponent(billsService) {
+        this.billsService = billsService;
+        this.isExpanded = false;
+        this.expandHeight = '720';
+        this.prevDate = false;
+        this.nextDate = false;
+        this.curBalance = 0;
+        this.title = 'bills2';
+        this.numDaysPayPeriod = 1;
+        this.remainingBalance = 950;
+        this.daysLeftCount = 0;
+        this.disposablePerDay = 60;
+        this.finalDays = 14;
+        this.testMode = false;
+        this.addLastDays = true;
+        this.subs = [];
     }
-    AppComponent.prototype.ngOnDestroy = function () {
-        this.subscription.unsubscribe();
+    AppComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        if (localStorage.getItem('expandHeight')) {
+            this.expandHeight = localStorage.expandHeight;
+        }
+        this.currentDate = new Date();
+        var disposablePerDay = localStorage.getItem('disposablePerDay');
+        if (disposablePerDay) {
+            this.disposablePerDay = parseInt(disposablePerDay, 10);
+        }
+        // get and subscribe to Coachee Growth Benchmarks Download Data
+        this.subs.push(this.billsService.billsList.subscribe(function (response) {
+            if (response) {
+                _this.billResults = response;
+                _this.billsList = response.results;
+                _this.processResults();
+            }
+        }));
+        this.loadBills();
     };
-    AppComponent.prototype.setPillHistoryItem = function (weekNum, currentDate, pillId, qty) {
-        this.pillHistory[weekNum][currentDate].pills[pillId].qty = qty;
+    AppComponent.prototype.ngOnChanges = function (changes) {
+        console.log('changes: ', changes);
     };
-    AppComponent.prototype.onSubmitAddPill = function (eventArgs) {
-        this.setPillHistoryItem(eventArgs.weekNum, eventArgs.currentDate, eventArgs.pill_id, eventArgs.qty);
-        this.addPillFormShowing = false;
-        var body = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpParams"]()
-            .set('cur_date', eventArgs.currentDate)
-            .set('pill_taken', String(eventArgs.pill_id))
-            .set('qty', String(eventArgs.qty));
-        var ob = this.http.post("http://alexhawley-api.info/pills/add", body).toPromise()
-            .then(function (resp) {
-            //console.log("resp: ", resp);
+    AppComponent.prototype.onChange = function (event) {
+        console.log('event: ', event.toLocaleString());
+    };
+    AppComponent.prototype.updateLastDays = function () {
+        this.processResults();
+    };
+    AppComponent.prototype.processResults = function () {
+        //*/
+        var self = this;
+        this.daysLeftCount = 0;
+        this.billsList.forEach(function getWeek(week) {
+            week.days.forEach(function getDay(day) {
+                if (day.showAsDay) {
+                    self.daysLeftCount++;
+                }
+            });
         });
+        //*/
+        this.curBalance = this.billResults.cur_balance;
+        this.currentDate = null;
+        this.currentDate = new Date(this.billResults.pay_date);
+        this.numDaysPayPeriod = 0;
+        var date2 = new Date();
+        var currentDay = date2.getDate();
+        var currentMonth = date2.getMonth() + 1;
+        if (this.addLastDays) {
+            if (currentDay > 25) {
+                var firstMonth_1 = null;
+                var startsFirst_1 = false;
+                var i_1 = 0;
+                this.billsList.forEach(function getWeek(week) {
+                    week.days.forEach(function getDay(day) {
+                        if (day.showAsDay) {
+                            if (i_1 === 0) {
+                                if (day.Day.indexOf(', 1st') > -1) {
+                                    var firstDate = day.Date;
+                                    firstMonth_1 = parseInt(firstDate.split('\/')[0], 10);
+                                    startsFirst_1 = true;
+                                }
+                            }
+                            i_1++;
+                        }
+                    });
+                });
+                var nextMonth = null;
+                if (startsFirst_1) {
+                    var numDaysAdd = 0;
+                    while (true) {
+                        numDaysAdd += 1;
+                        date2.setDate(date2.getDate() + 1);
+                        if (date2.getDate() === 1) {
+                            nextMonth = date2.getMonth() + 1;
+                            break;
+                        }
+                    }
+                    if (firstMonth_1 - 1 === currentMonth) {
+                        //this.numDaysPayPeriod += numDaysAdd;
+                    }
+                    console.log('numDaysAdd: ', numDaysAdd);
+                }
+            }
+        }
+        this.remainingBalance = this.billResults.remaining_balance;
+        console.log('billsList: ', this.billsList);
+    };
+    AppComponent.prototype.loadPrevDate = function () {
+        this.nextDate = false;
+        this.prevDate = true;
+        this.loadBills();
+    };
+    AppComponent.prototype.loadNextDate = function () {
+        this.prevDate = false;
+        this.nextDate = true;
+        this.loadBills();
+    };
+    AppComponent.prototype.toggleExpand = function () {
+        if (!this.isExpanded) {
+            this.isExpanded = true;
+            localStorage.setItem('expandHeight', this.expandHeight);
+        }
+        else {
+            this.isExpanded = false;
+        }
+    };
+    AppComponent.prototype.loadToday = function () {
+        this.currentDate = new Date();
+        this.setDefaultsAndSearch();
+    };
+    AppComponent.prototype.setDefaultsAndSearch = function () {
+        this.prevDate = false;
+        this.nextDate = false;
+        if (this.disposablePerDay) {
+            localStorage.setItem('disposablePerDay', String(this.disposablePerDay));
+        }
+        this.loadBills();
+    };
+    AppComponent.prototype.loadBills = function () {
+        var hashCode = '';
+        if (this.billResults && this.billResults.hash_key) {
+            hashCode = this.billResults.hash_key;
+        }
+        var balance = this.curBalance ? this.curBalance : 0;
+        this.billsService.loadBills(balance, this.currentDate, hashCode, this.prevDate, this.nextDate, this.testMode);
+    };
+    AppComponent.prototype.updateRunningTotals = function () {
+        this.runningTotalBalance = this.curBalance;
+        var i = 0;
+        var self = this;
+        var dayBalance = this.runningTotalBalance;
+        this.billsList.forEach(function getWeek(week) {
+            var j = 0;
+            week.days.forEach(function getDay(day) {
+                day.desc.forEach(function getExpense(expense) {
+                    dayBalance -= expense.amount;
+                });
+                self.billsList[i].days[j].Balance = dayBalance;
+                self.remainingBalance = dayBalance;
+                j++;
+            });
+            i++;
+        });
+    };
+    AppComponent.prototype.updatePayPeriodNumDays = function () {
+        if (this.disposablePerDay) {
+            localStorage.setItem('disposablePerDay', String(this.disposablePerDay));
+        }
+        this.billsService.savePayPeriodNumDays(this.numDaysPayPeriod, this.currentDate);
+    };
+    AppComponent.prototype.getDisposableNeeded = function () {
+        this.finalDays = this.daysLeftCount + this.numDaysPayPeriod;
+        return this.finalDays * this.disposablePerDay;
+    };
+    AppComponent.prototype.getDisposableLeft = function () {
+        return (this.remainingBalance - this.getDisposableNeeded()).toFixed(2);
     };
     AppComponent.ctorParameters = function () { return [
-        { type: _pillhistory_service__WEBPACK_IMPORTED_MODULE_2__["PillHistoryService"] },
-        { type: src_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"] },
-        { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"] }
+        { type: _services_bills_service__WEBPACK_IMPORTED_MODULE_2__["BillsService"] }
     ]; };
     AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-root',
             template: __webpack_require__(/*! raw-loader!./app.component.html */ "./node_modules/raw-loader/index.js!./src/app/app.component.html"),
-            styles: [__webpack_require__(/*! ./app.component.css */ "./src/app/app.component.css")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_pillhistory_service__WEBPACK_IMPORTED_MODULE_2__["PillHistoryService"], src_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"], _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"]])
+            styles: [__webpack_require__(/*! ./app.component.scss */ "./src/app/app.component.scss")]
+        })
     ], AppComponent);
     return AppComponent;
 }());
@@ -306,13 +324,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
-/* harmony import */ var _pill_history_pill_history_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./pill-history/pill-history.component */ "./src/app/pill-history/pill-history.component.ts");
-/* harmony import */ var _history_day_history_day_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./history-day/history-day.component */ "./src/app/history-day/history-day.component.ts");
-/* harmony import */ var _add_pill_add_pill_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./add-pill/add-pill.component */ "./src/app/add-pill/add-pill.component.ts");
-/* harmony import */ var src_message_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! src/message.service */ "./src/message.service.ts");
-/* harmony import */ var src_dayname_pipe__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! src/dayname.pipe */ "./src/dayname.pipe.ts");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _angular_service_worker__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/service-worker */ "./node_modules/@angular/service-worker/fesm5/service-worker.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var ng_zorro_antd__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ng-zorro-antd */ "./node_modules/ng-zorro-antd/fesm5/ng-zorro-antd.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/platform-browser/animations */ "./node_modules/@angular/platform-browser/fesm5/animations.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _angular_common_locales_en__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/common/locales/en */ "./node_modules/@angular/common/locales/en.js");
+/* harmony import */ var _angular_common_locales_en__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_angular_common_locales_en__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var _services_bills_service__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./services/bills.service */ "./src/app/services/bills.service.ts");
+/* harmony import */ var _components_days_of_week_days_of_week_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./components/days-of-week/days-of-week.component */ "./src/app/components/days-of-week/days-of-week.component.ts");
+/* harmony import */ var _components_expense_expense_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./components/expense/expense.component */ "./src/app/components/expense/expense.component.ts");
 
 
 
@@ -325,6 +348,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+Object(_angular_common__WEBPACK_IMPORTED_MODULE_11__["registerLocaleData"])(_angular_common_locales_en__WEBPACK_IMPORTED_MODULE_12___default.a);
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
@@ -332,20 +360,19 @@ var AppModule = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
             declarations: [
                 _app_component__WEBPACK_IMPORTED_MODULE_4__["AppComponent"],
-                _pill_history_pill_history_component__WEBPACK_IMPORTED_MODULE_5__["PillHistoryComponent"],
-                _history_day_history_day_component__WEBPACK_IMPORTED_MODULE_6__["HistoryDayComponent"],
-                _add_pill_add_pill_component__WEBPACK_IMPORTED_MODULE_7__["AddPillComponent"],
-                src_dayname_pipe__WEBPACK_IMPORTED_MODULE_9__["DayNamePipe"]
+                _components_days_of_week_days_of_week_component__WEBPACK_IMPORTED_MODULE_14__["DaysOfWeekComponent"],
+                _components_expense_expense_component__WEBPACK_IMPORTED_MODULE_15__["ExpenseComponent"]
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
                 _app_routing_module__WEBPACK_IMPORTED_MODULE_3__["AppRoutingModule"],
-                _angular_common__WEBPACK_IMPORTED_MODULE_10__["CommonModule"],
-                _angular_common_http__WEBPACK_IMPORTED_MODULE_11__["HttpClientModule"]
+                _angular_service_worker__WEBPACK_IMPORTED_MODULE_5__["ServiceWorkerModule"].register('ngsw-worker.js', { enabled: _environments_environment__WEBPACK_IMPORTED_MODULE_6__["environment"].production }),
+                ng_zorro_antd__WEBPACK_IMPORTED_MODULE_7__["NgZorroAntdModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_8__["FormsModule"],
+                _angular_common_http__WEBPACK_IMPORTED_MODULE_9__["HttpClientModule"],
+                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_10__["BrowserAnimationsModule"]
             ],
-            providers: [
-                src_message_service__WEBPACK_IMPORTED_MODULE_8__["MessageService"]
-            ],
+            providers: [{ provide: ng_zorro_antd__WEBPACK_IMPORTED_MODULE_7__["NZ_I18N"], useValue: ng_zorro_antd__WEBPACK_IMPORTED_MODULE_7__["en_US"] }, _services_bills_service__WEBPACK_IMPORTED_MODULE_13__["BillsService"]],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_4__["AppComponent"]]
         })
     ], AppModule);
@@ -356,1138 +383,231 @@ var AppModule = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/history-day/history-day.component.css":
-/*!*******************************************************!*\
-  !*** ./src/app/history-day/history-day.component.css ***!
-  \*******************************************************/
+/***/ "./src/app/components/days-of-week/days-of-week.component.scss":
+/*!*********************************************************************!*\
+  !*** ./src/app/components/days-of-week/days-of-week.component.scss ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n\r\n.btn-ion1 {\r\n    background-color: #387ef5 !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n\r\n.btn-ion2 {\r\n    background-color: #11c1f3 !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n\r\n.btn-ion3 {\r\n    background-color: #33cd5f !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n\r\n.btn-ion4 {\r\n    background-color: #886aea !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n\r\n.btn-ion5 {\r\n    background-color: #ffc900 !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n\r\n.btn-ion6 {\r\n    background-color: #ef473a !important;\r\n    font-size: 14px;\r\n    color: white;\r\n    width: 100%;\r\n}\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaGlzdG9yeS1kYXkvaGlzdG9yeS1kYXkuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUVBO0lBQ0ksb0NBQW9DO0lBQ3BDLGVBQWU7SUFDZixZQUFZO0lBQ1osV0FBVztBQUNmOztBQUVBO0lBQ0ksb0NBQW9DO0lBQ3BDLGVBQWU7SUFDZixZQUFZO0lBQ1osV0FBVztBQUNmOztBQUVBO0lBQ0ksb0NBQW9DO0lBQ3BDLGVBQWU7SUFDZixZQUFZO0lBQ1osV0FBVztBQUNmOztBQUVBO0lBQ0ksb0NBQW9DO0lBQ3BDLGVBQWU7SUFDZixZQUFZO0lBQ1osV0FBVztBQUNmOztBQUVBO0lBQ0ksb0NBQW9DO0lBQ3BDLGVBQWU7SUFDZixZQUFZO0lBQ1osV0FBVztBQUNmOztBQUVBO0lBQ0ksb0NBQW9DO0lBQ3BDLGVBQWU7SUFDZixZQUFZO0lBQ1osV0FBVztBQUNmIiwiZmlsZSI6InNyYy9hcHAvaGlzdG9yeS1kYXkvaGlzdG9yeS1kYXkuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIlxyXG5cclxuLmJ0bi1pb24xIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICMzODdlZjUgIWltcG9ydGFudDtcclxuICAgIGZvbnQtc2l6ZTogMTRweDtcclxuICAgIGNvbG9yOiB3aGl0ZTtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG59XHJcblxyXG4uYnRuLWlvbjIge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogIzExYzFmMyAhaW1wb3J0YW50O1xyXG4gICAgZm9udC1zaXplOiAxNHB4O1xyXG4gICAgY29sb3I6IHdoaXRlO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbn1cclxuXHJcbi5idG4taW9uMyB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjMzNjZDVmICFpbXBvcnRhbnQ7XHJcbiAgICBmb250LXNpemU6IDE0cHg7XHJcbiAgICBjb2xvcjogd2hpdGU7XHJcbiAgICB3aWR0aDogMTAwJTtcclxufVxyXG5cclxuLmJ0bi1pb240IHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICM4ODZhZWEgIWltcG9ydGFudDtcclxuICAgIGZvbnQtc2l6ZTogMTRweDtcclxuICAgIGNvbG9yOiB3aGl0ZTtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG59XHJcblxyXG4uYnRuLWlvbjUge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogI2ZmYzkwMCAhaW1wb3J0YW50O1xyXG4gICAgZm9udC1zaXplOiAxNHB4O1xyXG4gICAgY29sb3I6IHdoaXRlO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbn1cclxuXHJcbi5idG4taW9uNiB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjZWY0NzNhICFpbXBvcnRhbnQ7XHJcbiAgICBmb250LXNpemU6IDE0cHg7XHJcbiAgICBjb2xvcjogd2hpdGU7XHJcbiAgICB3aWR0aDogMTAwJTtcclxufSJdfQ== */"
+module.exports = ".cal-day {\n  border-radius: 7px;\n  border: 1px solid #ddd;\n  height: 275px;\n  padding: 4px 4px;\n  font-size: 12px;\n  -webkit-box-flex: 1;\n          flex: 1 1 0;\n}\n\n.cal-day-no-border {\n  border-radius: 7px;\n  border: 1px solid #fff;\n  height: 275px;\n  padding: 4px 4px;\n  font-size: 12px;\n}\n\n.cal-day-item {\n  padding: 0 3px;\n  background-color: #5adbb7;\n  color: white;\n  border-radius: 7px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9BbGV4YW5kZXJIYXdsZXkvRG9jdW1lbnRzL0FuZ3VsYXJQcm9qZWN0cy9iaWxsczIxL3NyYy9hcHAvY29tcG9uZW50cy9kYXlzLW9mLXdlZWsvZGF5cy1vZi13ZWVrLmNvbXBvbmVudC5zY3NzIiwic3JjL2FwcC9jb21wb25lbnRzL2RheXMtb2Ytd2Vlay9kYXlzLW9mLXdlZWsuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxrQkFBQTtFQUNBLHNCQUFBO0VBQ0EsYUFBQTtFQUNBLGdCQUFBO0VBQ0EsZUFBQTtFQUNBLG1CQUFBO1VBQUEsV0FBQTtBQ0NGOztBREVBO0VBQ0Usa0JBQUE7RUFDQSxzQkFBQTtFQUNBLGFBQUE7RUFDQSxnQkFBQTtFQUNBLGVBQUE7QUNDRjs7QURFQTtFQUNFLGNBQUE7RUFDQSx5QkFBQTtFQUNBLFlBQUE7RUFDQSxrQkFBQTtBQ0NGIiwiZmlsZSI6InNyYy9hcHAvY29tcG9uZW50cy9kYXlzLW9mLXdlZWsvZGF5cy1vZi13ZWVrLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmNhbC1kYXkge1xuICBib3JkZXItcmFkaXVzOiA3cHg7XG4gIGJvcmRlcjogMXB4IHNvbGlkICNkZGQ7XG4gIGhlaWdodDogMjc1cHg7XG4gIHBhZGRpbmc6IDRweCA0cHg7XG4gIGZvbnQtc2l6ZTogMTJweDtcbiAgZmxleDogMSAxIDA7XG59XG5cbi5jYWwtZGF5LW5vLWJvcmRlciB7XG4gIGJvcmRlci1yYWRpdXM6IDdweDtcbiAgYm9yZGVyOiAxcHggc29saWQgI2ZmZjtcbiAgaGVpZ2h0OiAyNzVweDtcbiAgcGFkZGluZzogNHB4IDRweDtcbiAgZm9udC1zaXplOiAxMnB4O1xufVxuXG4uY2FsLWRheS1pdGVtIHtcbiAgcGFkZGluZzogMCAzcHg7XG4gIGJhY2tncm91bmQtY29sb3I6ICM1YWRiYjc7XG4gIGNvbG9yOiB3aGl0ZTtcbiAgYm9yZGVyLXJhZGl1czogN3B4O1xufVxuIiwiLmNhbC1kYXkge1xuICBib3JkZXItcmFkaXVzOiA3cHg7XG4gIGJvcmRlcjogMXB4IHNvbGlkICNkZGQ7XG4gIGhlaWdodDogMjc1cHg7XG4gIHBhZGRpbmc6IDRweCA0cHg7XG4gIGZvbnQtc2l6ZTogMTJweDtcbiAgZmxleDogMSAxIDA7XG59XG5cbi5jYWwtZGF5LW5vLWJvcmRlciB7XG4gIGJvcmRlci1yYWRpdXM6IDdweDtcbiAgYm9yZGVyOiAxcHggc29saWQgI2ZmZjtcbiAgaGVpZ2h0OiAyNzVweDtcbiAgcGFkZGluZzogNHB4IDRweDtcbiAgZm9udC1zaXplOiAxMnB4O1xufVxuXG4uY2FsLWRheS1pdGVtIHtcbiAgcGFkZGluZzogMCAzcHg7XG4gIGJhY2tncm91bmQtY29sb3I6ICM1YWRiYjc7XG4gIGNvbG9yOiB3aGl0ZTtcbiAgYm9yZGVyLXJhZGl1czogN3B4O1xufSJdfQ== */"
 
 /***/ }),
 
-/***/ "./src/app/history-day/history-day.component.ts":
-/*!******************************************************!*\
-  !*** ./src/app/history-day/history-day.component.ts ***!
-  \******************************************************/
-/*! exports provided: HistoryDayComponent */
+/***/ "./src/app/components/days-of-week/days-of-week.component.ts":
+/*!*******************************************************************!*\
+  !*** ./src/app/components/days-of-week/days-of-week.component.ts ***!
+  \*******************************************************************/
+/*! exports provided: DaysOfWeekComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HistoryDayComponent", function() { return HistoryDayComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DaysOfWeekComponent", function() { return DaysOfWeekComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var src_message_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/message.service */ "./src/message.service.ts");
 
 
-
-var HistoryDayComponent = /** @class */ (function () {
-    function HistoryDayComponent(messageService) {
-        this.messageService = messageService;
-        this.pills = [];
-        this.change = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
+var DaysOfWeekComponent = /** @class */ (function () {
+    function DaysOfWeekComponent() {
+        this.isExpanded = false;
+        this.expandHeight = '720';
+        this.shouldCallToggleEnabled = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
     }
-    HistoryDayComponent.prototype.ngOnInit = function () {
+    DaysOfWeekComponent.prototype.ngOnInit = function () {
     };
-    HistoryDayComponent.prototype.onClick = function ($event, pillId) {
-        $event.stopPropagation();
-        this.messageService.sendMessage({
-            weekNum: this.weekNum,
-            doShowForm: false,
-            currentDate: this.currentDate,
-            deletePillId: pillId
-        });
+    DaysOfWeekComponent.prototype.callToggleEnabled = function (retVal) {
+        this.shouldCallToggleEnabled.emit(1);
     };
-    HistoryDayComponent.ctorParameters = function () { return [
-        { type: src_message_service__WEBPACK_IMPORTED_MODULE_2__["MessageService"] }
-    ]; };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
-    ], HistoryDayComponent.prototype, "currentDate", void 0);
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
+    ], DaysOfWeekComponent.prototype, "billsDays", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
-    ], HistoryDayComponent.prototype, "month", void 0);
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
+    ], DaysOfWeekComponent.prototype, "isExpanded", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
-    ], HistoryDayComponent.prototype, "day", void 0);
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
+    ], DaysOfWeekComponent.prototype, "expandHeight", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
-    ], HistoryDayComponent.prototype, "dayOfWeek", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
-    ], HistoryDayComponent.prototype, "dayText", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
-    ], HistoryDayComponent.prototype, "pills", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Number)
-    ], HistoryDayComponent.prototype, "weekNum", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
-    ], HistoryDayComponent.prototype, "change", void 0);
-    HistoryDayComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])()
+    ], DaysOfWeekComponent.prototype, "shouldCallToggleEnabled", void 0);
+    DaysOfWeekComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-history-day',
-            template: __webpack_require__(/*! raw-loader!./history-day.component.html */ "./node_modules/raw-loader/index.js!./src/app/history-day/history-day.component.html"),
-            styles: [__webpack_require__(/*! ./history-day.component.css */ "./src/app/history-day/history-day.component.css")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_message_service__WEBPACK_IMPORTED_MODULE_2__["MessageService"]])
-    ], HistoryDayComponent);
-    return HistoryDayComponent;
+            selector: 'app-days-of-week',
+            template: __webpack_require__(/*! raw-loader!./days-of-week.component.html */ "./node_modules/raw-loader/index.js!./src/app/components/days-of-week/days-of-week.component.html"),
+            styles: [__webpack_require__(/*! ./days-of-week.component.scss */ "./src/app/components/days-of-week/days-of-week.component.scss")]
+        })
+    ], DaysOfWeekComponent);
+    return DaysOfWeekComponent;
 }());
 
 
 
 /***/ }),
 
-/***/ "./src/app/pill-history/pill-history.component.css":
+/***/ "./src/app/components/expense/expense.component.scss":
+/*!***********************************************************!*\
+  !*** ./src/app/components/expense/expense.component.scss ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".cal-day {\n  border-radius: 7px;\n  border: 1px solid #ddd;\n  height: 200px;\n  padding: 4px 4px;\n  font-size: 12px;\n}\n\n.cal-day-item {\n  padding: 0 3px;\n  color: white;\n  border-radius: 7px;\n  margin-bottom: 4px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9BbGV4YW5kZXJIYXdsZXkvRG9jdW1lbnRzL0FuZ3VsYXJQcm9qZWN0cy9iaWxsczIxL3NyYy9hcHAvY29tcG9uZW50cy9leHBlbnNlL2V4cGVuc2UuY29tcG9uZW50LnNjc3MiLCJzcmMvYXBwL2NvbXBvbmVudHMvZXhwZW5zZS9leHBlbnNlLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0Usa0JBQUE7RUFDQSxzQkFBQTtFQUNBLGFBQUE7RUFDQSxnQkFBQTtFQUNBLGVBQUE7QUNDRjs7QURFQTtFQUNFLGNBQUE7RUFDQSxZQUFBO0VBQ0Esa0JBQUE7RUFDQSxrQkFBQTtBQ0NGIiwiZmlsZSI6InNyYy9hcHAvY29tcG9uZW50cy9leHBlbnNlL2V4cGVuc2UuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuY2FsLWRheSB7XG4gIGJvcmRlci1yYWRpdXM6IDdweDtcbiAgYm9yZGVyOiAxcHggc29saWQgI2RkZDtcbiAgaGVpZ2h0OiAyMDBweDtcbiAgcGFkZGluZzogNHB4IDRweDtcbiAgZm9udC1zaXplOiAxMnB4O1xufVxuXG4uY2FsLWRheS1pdGVtIHtcbiAgcGFkZGluZzogMCAzcHg7XG4gIGNvbG9yOiB3aGl0ZTtcbiAgYm9yZGVyLXJhZGl1czogN3B4O1xuICBtYXJnaW4tYm90dG9tOiA0cHg7XG59XG4iLCIuY2FsLWRheSB7XG4gIGJvcmRlci1yYWRpdXM6IDdweDtcbiAgYm9yZGVyOiAxcHggc29saWQgI2RkZDtcbiAgaGVpZ2h0OiAyMDBweDtcbiAgcGFkZGluZzogNHB4IDRweDtcbiAgZm9udC1zaXplOiAxMnB4O1xufVxuXG4uY2FsLWRheS1pdGVtIHtcbiAgcGFkZGluZzogMCAzcHg7XG4gIGNvbG9yOiB3aGl0ZTtcbiAgYm9yZGVyLXJhZGl1czogN3B4O1xuICBtYXJnaW4tYm90dG9tOiA0cHg7XG59Il19 */"
+
+/***/ }),
+
+/***/ "./src/app/components/expense/expense.component.ts":
 /*!*********************************************************!*\
-  !*** ./src/app/pill-history/pill-history.component.css ***!
+  !*** ./src/app/components/expense/expense.component.ts ***!
   \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "\r\n\r\n.day_cards {\r\n    min-height: 156px;\r\n    border-top: solid 1px #387ef5;\r\n    border-bottom: solid 1px #387ef5;\r\n    border-left: solid 1px #387ef5;\r\n    \r\n    padding: 5px;\r\n    border-radius: 12px;\r\n}\r\n\r\n.day_cards:last-child {\r\n    border-right: solid 1px #387ef5;\r\n}\r\n\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcGlsbC1oaXN0b3J5L3BpbGwtaGlzdG9yeS5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBRUE7SUFDSSxpQkFBaUI7SUFDakIsNkJBQTZCO0lBQzdCLGdDQUFnQztJQUNoQyw4QkFBOEI7O0lBRTlCLFlBQVk7SUFDWixtQkFBbUI7QUFDdkI7O0FBRUE7SUFDSSwrQkFBK0I7QUFDbkMiLCJmaWxlIjoic3JjL2FwcC9waWxsLWhpc3RvcnkvcGlsbC1oaXN0b3J5LmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyJcclxuXHJcbi5kYXlfY2FyZHMge1xyXG4gICAgbWluLWhlaWdodDogMTU2cHg7XHJcbiAgICBib3JkZXItdG9wOiBzb2xpZCAxcHggIzM4N2VmNTtcclxuICAgIGJvcmRlci1ib3R0b206IHNvbGlkIDFweCAjMzg3ZWY1O1xyXG4gICAgYm9yZGVyLWxlZnQ6IHNvbGlkIDFweCAjMzg3ZWY1O1xyXG4gICAgXHJcbiAgICBwYWRkaW5nOiA1cHg7XHJcbiAgICBib3JkZXItcmFkaXVzOiAxMnB4O1xyXG59XHJcblxyXG4uZGF5X2NhcmRzOmxhc3QtY2hpbGQge1xyXG4gICAgYm9yZGVyLXJpZ2h0OiBzb2xpZCAxcHggIzM4N2VmNTtcclxufVxyXG5cclxuIl19 */"
-
-/***/ }),
-
-/***/ "./src/app/pill-history/pill-history.component.ts":
-/*!********************************************************!*\
-  !*** ./src/app/pill-history/pill-history.component.ts ***!
-  \********************************************************/
-/*! exports provided: PillHistoryComponent */
+/*! exports provided: ExpenseComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PillHistoryComponent", function() { return PillHistoryComponent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var src_message_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/message.service */ "./src/message.service.ts");
-
-
-
-var PillHistoryComponent = /** @class */ (function () {
-    function PillHistoryComponent(messageService) {
-        this.messageService = messageService;
-        this.clickChange = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
-    }
-    PillHistoryComponent.prototype.ngOnInit = function () {
-    };
-    PillHistoryComponent.prototype.onClickDay = function ($event, weekNum, currentDate) {
-        this.messageService.sendMessage({
-            weekNum: weekNum,
-            doShowForm: true,
-            currentDate: currentDate,
-            deletePillId: 0
-        });
-    };
-    PillHistoryComponent.ctorParameters = function () { return [
-        { type: src_message_service__WEBPACK_IMPORTED_MODULE_2__["MessageService"] }
-    ]; };
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
-    ], PillHistoryComponent.prototype, "pill_history", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
-    ], PillHistoryComponent.prototype, "week_names", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
-    ], PillHistoryComponent.prototype, "clickChange", void 0);
-    PillHistoryComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-pill-history',
-            template: __webpack_require__(/*! raw-loader!./pill-history.component.html */ "./node_modules/raw-loader/index.js!./src/app/pill-history/pill-history.component.html"),
-            styles: [__webpack_require__(/*! ./pill-history.component.css */ "./src/app/pill-history/pill-history.component.css")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_message_service__WEBPACK_IMPORTED_MODULE_2__["MessageService"]])
-    ], PillHistoryComponent);
-    return PillHistoryComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pillhistory.service.ts":
-/*!****************************************!*\
-  !*** ./src/app/pillhistory.service.ts ***!
-  \****************************************/
-/*! exports provided: PillHistoryService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PillHistoryService", function() { return PillHistoryService; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExpenseComponent", function() { return ExpenseComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 
 
-var PillHistoryService = /** @class */ (function () {
-    function PillHistoryService() {
-        this.week_names = [
-            "Two Weeks Ago",
-            "Last Week",
-            "Current Week"
-        ];
-        this.pill_history = [
-            {
-                "2019-06-23": {
-                    "month": "Jun",
-                    "day_of_week": "Sun",
-                    "day_text": "Jun Sun 23",
-                    "day": "23",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-06-24": {
-                    "month": "",
-                    "day_of_week": "Mon",
-                    "day_text": "Mon 24",
-                    "day": "24",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-06-25": {
-                    "month": "",
-                    "day_of_week": "Tue",
-                    "day_text": "Tue 25",
-                    "day": "25",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-06-26": {
-                    "month": "",
-                    "day_of_week": "Wed",
-                    "day_text": "Wed 26",
-                    "day": "26",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-06-27": {
-                    "month": "",
-                    "day_of_week": "Thu",
-                    "day_text": "Thu 27",
-                    "day": "27",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-06-28": {
-                    "month": "",
-                    "day_of_week": "Fri",
-                    "day_text": "Fri 28",
-                    "day": "28",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-06-29": {
-                    "month": "",
-                    "day_of_week": "Sat",
-                    "day_text": "Sat 29",
-                    "day": "29",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                }
-            },
-            {
-                "2019-06-30": {
-                    "month": "",
-                    "day_of_week": "Sun",
-                    "day_text": "Sun 30",
-                    "day": "30",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-07-01": {
-                    "month": "Jul",
-                    "day_of_week": "Mon",
-                    "day_text": "Jul Mon 1",
-                    "day": "1",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-07-02": {
-                    "month": "",
-                    "day_of_week": "Tue",
-                    "day_text": "Tue 2",
-                    "day": "2",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-07-03": {
-                    "month": "",
-                    "day_of_week": "Wed",
-                    "day_text": "Wed 3",
-                    "day": "3",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-07-04": {
-                    "month": "",
-                    "day_of_week": "Thu",
-                    "day_text": "Thu 4",
-                    "day": "4",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-07-05": {
-                    "month": "",
-                    "day_of_week": "Fri",
-                    "day_text": "Fri 5",
-                    "day": "5",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-07-06": {
-                    "month": "",
-                    "day_of_week": "Sat",
-                    "day_text": "Sat 6",
-                    "day": "6",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 1
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 1
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 1
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                }
-            },
-            {
-                "2019-07-07": {
-                    "month": "",
-                    "day_of_week": "Sun",
-                    "day_text": "Sun 7",
-                    "day": "7",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-07-08": {
-                    "month": "",
-                    "day_of_week": "Mon",
-                    "day_text": "Mon 8",
-                    "day": "8",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 1
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 1
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 1
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-07-09": {
-                    "month": "",
-                    "day_of_week": "Tue",
-                    "day_text": "Tue 9",
-                    "day": "9",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-07-10": {
-                    "month": "",
-                    "day_of_week": "Wed",
-                    "day_text": "Wed 10",
-                    "day": "10",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-07-11": {
-                    "month": "",
-                    "day_of_week": "Thu",
-                    "day_text": "Thu 11",
-                    "day": "11",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-07-12": {
-                    "month": "",
-                    "day_of_week": "Fri",
-                    "day_text": "Fri 12",
-                    "day": "12",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 1
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 1
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 1
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                },
-                "2019-07-13": {
-                    "month": "",
-                    "day_of_week": "Sat",
-                    "day_text": "Sat 13",
-                    "day": "13",
-                    "pills": {
-                        "1": {
-                            "pill_id": 1,
-                            "pill_name": "Metformin",
-                            "qty": 0
-                        },
-                        "2": {
-                            "pill_id": 2,
-                            "pill_name": "Diaplex",
-                            "qty": 0
-                        },
-                        "3": {
-                            "pill_id": 3,
-                            "pill_name": "Multivitamin",
-                            "qty": 0
-                        },
-                        "4": {
-                            "pill_id": 4,
-                            "pill_name": "Vitamin D",
-                            "qty": 0
-                        },
-                        "5": {
-                            "pill_id": 5,
-                            "pill_name": "B12",
-                            "qty": 0
-                        },
-                        "6": {
-                            "pill_id": 6,
-                            "pill_name": "B Complex",
-                            "qty": 0
-                        }
-                    }
-                }
-            }
+var ExpenseComponent = /** @class */ (function () {
+    function ExpenseComponent() {
+        this.didToggleEnabled = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
+        this.colors = [
+            '#18cc99',
+            '#ff0266',
+            '#ffc412',
+            '#7d52e3',
+            '#ff9e22',
+            '#0336ff',
+            '#ee0290'
         ];
     }
-    PillHistoryService.prototype.getPillHistory = function () {
-        return this.pill_history;
+    ExpenseComponent.prototype.ngOnInit = function () {
     };
-    PillHistoryService.prototype.getWeekNames = function () {
-        return this.week_names;
-    };
-    PillHistoryService.prototype.setPillHistoryItem = function (weekNum, currentDate, pillId, qty) {
-        this.pill_history[weekNum][currentDate].pills[pillId].qty = qty;
-    };
-    PillHistoryService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-            providedIn: 'root'
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
-    ], PillHistoryService);
-    return PillHistoryService;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pills.service.ts":
-/*!**********************************!*\
-  !*** ./src/app/pills.service.ts ***!
-  \**********************************/
-/*! exports provided: PillsService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PillsService", function() { return PillsService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-
-
-var PillsService = /** @class */ (function () {
-    function PillsService() {
-        this.pills = [
-            {
-                "id": "1",
-                "pill_name": "Metformin"
-            },
-            {
-                "id": "2",
-                "pill_name": "Diaplex"
-            },
-            {
-                "id": "3",
-                "pill_name": "Multivitamin"
-            },
-            {
-                "id": "4",
-                "pill_name": "Vitamin D"
-            },
-            {
-                "id": "5",
-                "pill_name": "B12"
-            },
-            {
-                "id": "6",
-                "pill_name": "B Complex"
-            }
-        ];
-    }
-    PillsService.prototype.getPills = function () {
-        return this.pills;
-    };
-    PillsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-            providedIn: 'root'
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
-    ], PillsService);
-    return PillsService;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/dayname.pipe.ts":
-/*!*****************************!*\
-  !*** ./src/dayname.pipe.ts ***!
-  \*****************************/
-/*! exports provided: DayNamePipe */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DayNamePipe", function() { return DayNamePipe; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-
-
-var DayNamePipe = /** @class */ (function () {
-    function DayNamePipe() {
-    }
-    DayNamePipe.prototype.transform = function (value) {
-        if (!value)
-            return null;
-        var valnum = parseInt(value);
-        value = String(valnum);
-        var initialChar = "";
-        if (value.length > 1) {
-            initialChar = value.charAt(0);
-        }
-        var finalChar = value.charAt(value.length - 1);
-        if (initialChar != "1") {
-            switch (finalChar) {
-                case "1":
-                    return value + "st";
-                    break;
-                case "2":
-                    return value + "nd";
-                    break;
-                case "3":
-                    return value + "rd";
-                    break;
-                case "4":
-                case "5":
-                case "6":
-                case "7":
-                case "8":
-                case "9":
-                    return value + "th";
-            }
+    ExpenseComponent.prototype.getColor = function (index) {
+        if (index < 7) {
+            return this.colors[index];
         }
         else {
-            return value + "th";
+            var newIndex = index % 7;
+            return this.colors[newIndex];
         }
     };
-    DayNamePipe = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Pipe"])({
-            name: 'dayname'
+    ExpenseComponent.prototype.toggleEnabled = function (index) {
+        this.expenses[index].isEnabled = !(this.expenses[index].isEnabled);
+        if (!this.expenses[index].isEnabled) {
+            this.expenses[index].amount = 0;
+        }
+        else {
+            this.expenses[index].amount = this.expenses[index].savedAmount;
+        }
+        this.didToggleEnabled.emit(1);
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])()
+    ], ExpenseComponent.prototype, "didToggleEnabled", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
+    ], ExpenseComponent.prototype, "expenses", void 0);
+    ExpenseComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-expense',
+            template: __webpack_require__(/*! raw-loader!./expense.component.html */ "./node_modules/raw-loader/index.js!./src/app/components/expense/expense.component.html"),
+            styles: [__webpack_require__(/*! ./expense.component.scss */ "./src/app/components/expense/expense.component.scss")]
         })
-    ], DayNamePipe);
-    return DayNamePipe;
+    ], ExpenseComponent);
+    return ExpenseComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/services/bills.service.ts":
+/*!*******************************************!*\
+  !*** ./src/app/services/bills.service.ts ***!
+  \*******************************************/
+/*! exports provided: BillsService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BillsService", function() { return BillsService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+// items.service.ts
+
+
+
+
+var BillsService = /** @class */ (function () {
+    function BillsService(http) {
+        this.http = http;
+        this.billsSource = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](this.billResults);
+        this.billsList = this.billsSource.asObservable();
+    }
+    BillsService.prototype.loadBills = function (curBalance, payDate, hashCode, prevDate, nextDate, testMode) {
+        var _this = this;
+        if (testMode === void 0) { testMode = false; }
+        var date = null;
+        if (!payDate) {
+            var today = new Date();
+            date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        }
+        else {
+            date = payDate.toLocaleString();
+        }
+        console.log('date: ', date);
+        var requestParams = 'user_id=1&pay_date=' + date + '&';
+        if (curBalance) {
+            requestParams += 'current_balance=' + curBalance + '&';
+        }
+        if (hashCode) {
+            requestParams += 'hash_key_token_cs=' + hashCode + '&';
+        }
+        if (prevDate) {
+            requestParams += 'prev_date=1' + '&';
+        }
+        else if (nextDate) {
+            requestParams += 'next_date=1' + '&';
+        }
+        if (testMode) {
+            requestParams += 'test_mode=1' + '&';
+        }
+        this.http.get('https://budget.hawleywebdesign.com/api/loadBillDates2.php?' + requestParams).subscribe(function (response) {
+            _this.billsSource.next(response);
+        }, function (err) {
+            console.log('error', 'Error loading Growth By Standards : ' + err.error.message);
+        });
+    };
+    BillsService.prototype.savePayPeriodNumDays = function (numDays, payDate) {
+        var date = null;
+        if (!payDate) {
+            var today = new Date();
+            date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        }
+        else {
+            date = payDate.toLocaleString();
+        }
+        if (!numDays) {
+            numDays = 1;
+        }
+        var requestParams = 'pay_date=' + date + '&num_days=' + numDays;
+        this.http.get('https://budget.hawleywebdesign.com/api/save_pay_period_num_days.php?' + requestParams).subscribe(function (response) {
+        }, function (err) {
+            console.log('error', 'Error loading Growth By Standards : ' + err.error.message);
+        });
+    };
+    BillsService.ctorParameters = function () { return [
+        { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] }
+    ]; };
+    BillsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])()
+    ], BillsService);
+    return BillsService;
 }());
 
 
@@ -1548,47 +668,6 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 
 /***/ }),
 
-/***/ "./src/message.service.ts":
-/*!********************************!*\
-  !*** ./src/message.service.ts ***!
-  \********************************/
-/*! exports provided: MessageService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MessageService", function() { return MessageService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-
-
-
-var MessageService = /** @class */ (function () {
-    function MessageService() {
-        this.subject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
-    }
-    MessageService.prototype.sendMessage = function (message) {
-        console.log("got message");
-        console.log("message.currentDate: ", message.currentDate);
-        this.subject.next(message);
-    };
-    MessageService.prototype.clearMessage = function () {
-        this.subject.next();
-    };
-    MessageService.prototype.getMessage = function () {
-        return this.subject.asObservable();
-    };
-    MessageService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])()
-    ], MessageService);
-    return MessageService;
-}());
-
-
-
-/***/ }),
-
 /***/ 0:
 /*!***************************!*\
   !*** multi ./src/main.ts ***!
@@ -1596,7 +675,7 @@ var MessageService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\asimo\Documents\AngularSites\PillHistoryAngular\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /Users/AlexanderHawley/Documents/AngularProjects/bills21/src/main.ts */"./src/main.ts");
 
 
 /***/ })

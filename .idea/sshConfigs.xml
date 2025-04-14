@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" connectionConfig="{&quot;serverAliveInterval&quot;:300}" host="asimo124.pairserver.com" id="8f6b3366-e871-4810-b414-c58cb1814d6c" port="22" customName="PairServerAsimo124" nameFormat="CUSTOM" useOpenSSHConfig="true">
+        <option name="customName" value="PairServerAsimo124" />
+      </sshConfig>
+    </configs>
+  </component>
+</project>

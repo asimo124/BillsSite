@@ -1,0 +1,67 @@
+.progress-bar-holder {
+    display: block;
+    height: 100px;
+    width: 100%;
+    background-color: #f1f1f1;
+}
+
+.months-holder {
+    display: block;
+    height: 32px;
+    width: 100%;
+}
+
+.month-milestone {
+    display: inline;
+    float: left;
+    text-align: left;
+    margin-left: 0px;
+}
+
+.month-milestone-last {
+    display: inline;
+    float: left;
+    width: 3px;
+    text-align: left;
+    margin-left: 2px;
+}
+
+.stage-1-months {
+    display: inline;
+    float: left;
+}
+
+.stage-2-months {
+    display: inline;
+    float: left;
+}
+
+.stage-3-months {
+    display: inline;
+    float: left;
+}
+
+
+.stage-1-total {
+    height: 100px;
+    float: left;
+    background-color: #1de9b6;
+    border: 0.3rem solid #1a7d64;
+    border-radius: 10px;
+}
+
+.stage-2-total {
+    height: 100px;
+    float: left;
+    background-color: #40c4ff;
+    border: 0.3rem solid #044a69;
+    border-radius: 10px;
+}
+
+.stage-3-total {
+    height: 100px;
+    float: left;
+    background-color: #f27eac;
+    border: 0.3rem solid #ff0266;
+    border-radius: 10px;
+}

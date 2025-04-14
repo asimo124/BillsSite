@@ -215,7 +215,7 @@ if ($hash_key_token_cs != $hash_key) {
                     $ins_data = $data;
                     $ins_data['credit'] = "";
                 } else if ($credit != "") {
-
+                    
                     $sql = "SELECT id from vnd_bills_charges
                                         WHERE date between DATE(DATE_ADD(:date, INTERVAL -$days_range DAY))
                                         AND DATE(DATE_ADD(:date, INTERVAL $days_range DAY))

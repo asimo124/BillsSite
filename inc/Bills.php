@@ -1,15 +1,14 @@
 <?php
 class Bills {
 	
-	public $numReps = 600;
+	public $numReps = 300;
 	public $today = "";
 	public $nextPayDay;
 	public $sthInsertDate;
 	public $sthCheckDate;
 	public $user_id;
 	
-	public function __construct($numReps=50) {	
-		$numReps = intval($numReps);
+	public function __construct($numReps = 50) {
 		$this->numReps = $numReps;
 	}
 	public function setPayPeriod($nextPayDay="", $today="") {	
@@ -111,10 +110,10 @@ class Bills {
 			switch ($getItem['vnd_frequency']) {
 				case "Once":
 
-					$this->loadOnce($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future'], $getItem['is_heavy'], $getItem['vnd_frequency'], $getItem['vnd_frequency_type']);
+						$this->loadOnce($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future'], $getItem['is_heavy'], $getItem['vnd_frequency'], $getItem['vnd_frequency_type']);
 					break;
 				case "Once Per Month":
-					$this->loadOncePerMonth($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future'], $getItem['is_heavy'], $getItem['vnd_frequency'], $getItem['vnd_frequency_type']);
+					$this->loadOncePerMonth($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future'], $getItem['is_heavy'], $getItem['vnd_frequency'], $getItem['vnd_frequency_type'], $getItem['end_date']);
 					break;
 				case "Every 3 Months":
 					$this->loadEveryXMonths($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], 3, $getItem['is_future'], $getItem['is_heavy'], $getItem['vnd_frequency'], $getItem['vnd_frequency_type']);
@@ -138,7 +137,7 @@ class Bills {
 		}
 	}
 	public function loadOncePerMonth($freq_value, $bill_desc, $amount, $freq_type="Day of Month", $is_future=0,
-									 $is_heavy=0, $vnd_frequency, $vnd_frequency_type) {
+									 $is_heavy=0, $vnd_frequency, $vnd_frequency_type, $end_date=null) {
 		
 		global $db_conn;
 		
@@ -163,23 +162,35 @@ class Bills {
 				}
 
 				if ($freq_value < 32) {
-					$data = array();
-					$data['vnd_bill_desc'] = $bill_desc;
-					$data['user_id'] = $this->user_id;
-					$data['vnd_date'] = $year . "-" . $month . "-" . $freq_value;
-					$this->sthCheckDate->execute($data);
-					$HasDates = $this->sthCheckDate->fetchAll();
-					if (count($HasDates) == 0) {
+
+					$passesFutureValidation = false;
+					if (!$end_date || $end_date == "0000-00-00") {
+						$passesFutureValidation = true;
+					} else {
+						if (strtotime($year . "-" . $month . "-" . $freq_value) <= strtotime($end_date)) {
+							$passesFutureValidation = true;
+						}
+					}
+
+					if ($passesFutureValidation) {
 						$data = array();
 						$data['vnd_bill_desc'] = $bill_desc;
-						$data['vnd_user_id'] = $this->user_id;
-						$data['vnd_amount'] = $amount;
+						$data['user_id'] = $this->user_id;
 						$data['vnd_date'] = $year . "-" . $month . "-" . $freq_value;
-						$data['vnd_is_future'] = $is_future;
-						$data['is_heavy'] = $is_heavy;
-						$data['vnd_frequency'] = $vnd_frequency;
-						$data['vnd_frequency_type'] = $vnd_frequency_type;
-						$this->sthInsertDate->execute($data);
+						$this->sthCheckDate->execute($data);
+						$HasDates = $this->sthCheckDate->fetchAll();
+						if (count($HasDates) == 0) {
+							$data = array();
+							$data['vnd_bill_desc'] = $bill_desc;
+							$data['vnd_user_id'] = $this->user_id;
+							$data['vnd_amount'] = $amount;
+							$data['vnd_date'] = $year . "-" . $month . "-" . $freq_value;
+							$data['vnd_is_future'] = $is_future;
+							$data['is_heavy'] = $is_heavy;
+							$data['vnd_frequency'] = $vnd_frequency;
+							$data['vnd_frequency_type'] = $vnd_frequency_type;
+							$this->sthInsertDate->execute($data);
+						}
 					}
 					$month = intval($month);
 					if ($month < 12) {
@@ -204,11 +215,9 @@ class Bills {
 			$numDays = $numMonths * 30;
 			$startDate = date('Y-m-d', strtotime($freq_value));
 			$each_date = $startDate;
-			$oldNumReps = $this->numReps;
 			if ($numMonths == 0) {
 				$numMonths = 1;
 			}
-			$this->numReps = 12 / $numMonths * 15;
 			for ($i = 0; $i < $this->numReps; $i++) {
 				$use_date = date('Y-m-d', strtotime($each_date . " +" . $numDays . " days"));
 				$data = array();
@@ -232,7 +241,6 @@ class Bills {
 				}
 				$each_date = $use_date;
 			}
-			$this->numReps = $oldNumReps;
 		}
 	}
 
@@ -315,11 +323,9 @@ class Bills {
 			$numDays = $numWeeks * 7;
 			$startDate = date('Y-m-d', strtotime($freq_value));
 			$each_date = $startDate;
-			$oldNumReps = $this->numReps;
 			if ($numWeeks == 0) {
 				$numWeeks = 1;
 			}
-			$this->numReps = 52 / $numWeeks * 15;
 			for ($i = 0; $i < $this->numReps; $i++) {
 				$use_date = date('Y-m-d', strtotime($each_date . " +" . $numDays . " days"));
 				$data = array();
@@ -343,7 +349,6 @@ class Bills {
 				}
 				$each_date = $use_date;
 			}
-			$this->numReps = $oldNumReps;
 		}
 	}
 

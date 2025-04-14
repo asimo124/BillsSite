@@ -104,16 +104,20 @@ a.btn {
 		<table width="100%" align="left" >
 		<?php foreach ($expenses as $get_expense) : ?>
 			<tr>
-				<td width="29%">
+				<td width="22%">
 					<?php echo $get_expense['vnd_bill']; ?>
 				</td>
-				<td width="29%">
+				<td width="22%">
 					<input type="text" name="vnd_frequency_value[<?php echo $get_expense['vnd_id']; ?>]" id="vnd_frequency_value<?php echo $get_expense['vnd_id']; ?>" value="<?php echo $get_expense['vnd_frequency_value']; ?>" class="expenses_text" />
 				</td>
-				<td width="29%">
+				<td width="22%">
 					<input type="text" name="amount[<?php echo $get_expense['vnd_id']; ?>]" id="amount<?php echo $get_expense['vnd_id']; ?>" value="<?php echo $get_expense['amount']; ?>" class="expenses_text" />
 				</td>
-				<td width="12%">
+                <td width="22%" align="left" style="padding-left: 24px;">
+                    <input type="checkbox" name="watch_flag[<?php echo $get_expense['vnd_id']; ?>]" id="watch_flag<?php
+                        echo $get_expense['vnd_id']; ?>" value="1" <?php echo ($get_expense['watch_flag']) ? "CHECKED" : ""; ?> />&nbsp; Watched
+                </td>
+				<td width="14%">
 					<a href="delete.php?vnd_id=<?php echo $get_expense['vnd_id']; ?>&hash_key_token_cs=<?php echo urlencode($hash_key); ?>" class="delete btn" >Delete</a>
 				</td>
 			</tr>

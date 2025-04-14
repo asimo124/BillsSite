@@ -1,7 +1,8 @@
 <?php
-	include "../inc/includes.php";
-	include "../inc/Bills.php";
-	//ini_set("display_errors", 1);
+$changeTestMode            = isset($_REQUEST['test_mode']) ? intval($_REQUEST['test_mode']) : 0;
+include "../inc/Bills.php";
+include "../inc/includes.php";
+//ini_set("display_errors", 1);
 
 $user_id 			= isset($_REQUEST['user_id']) ? intval($_REQUEST['user_id']) : 0;
 $current_balance 	= isset($_REQUEST['current_balance']) ? intval($_REQUEST['current_balance']) : 0;
@@ -12,8 +13,11 @@ $next_date          = isset($_REQUEST['next_date']) ? intval($_REQUEST['next_dat
 
 $vegas_trip          = isset($_REQUEST['vegas_trip']) ? intval($_REQUEST['vegas_trip']) : 0;
 
+
+
 if ($pay_date == "") {
 	$pay_date = date("Y-m-d");
+    $pay_date = "2023-05-31";
 }
 
 if (strtotime($pay_date) < strtotime("2021-06-20 23:59:59") && strtotime($pay_date) >= strtotime("2021-06-17 00:00:00")) {
@@ -36,7 +40,8 @@ $data['pay_period_num'] = $payPeriodNum;
 $sth = $db_conn->prepare($sql);
 $sth->execute($data);
 
-//*/
+$HasNumDays = 0;
+/*/
 $HasNumDays = $sth->fetch(2);
 if ($HasNumDays) {
     $numDays9 = $HasNumDays['num_days'];
@@ -142,12 +147,15 @@ $end_date = "";
 $start_date = date("Y-m-d", strtotime($pay_date));
 $start_day = intval(date("d", strtotime($pay_date)));
 
+$d = new DateTime($start_date);
+$end_date2 = $d->format( 'Y-m-t');
+
 if ($start_day < 15) {
 	$end_date = date("Y-m-14", strtotime($start_date));
 } else {
 
-	$d = new DateTime($start_date);
-	$end_date = $d->format( 'Y-m-t' );
+
+    $end_date = date("Y-m-d", strtotime($end_date2) - 86400);
 }
 
 $MyBills = array();
@@ -173,15 +181,17 @@ if ($vegas_trip) {
 foreach ($billDates as $getDate) {
 	$newDate = array();
 	$newDate['desc'] = $getDate['vnd_bill_desc'];
-	$newDate['amount'] = $getDate['vnd_amount'];
-	$newDate['is_heavy'] = $getDate['is_heavy'];
+    $amount = formatFloat($getDate['vnd_amount']);
+
+	$newDate['amount'] = $amount;
+	$newDate['is_heavy'] = round(floatval($getDate['is_heavy']), 2);
 	$newDate['vnd_frequency'] = $getDate['vnd_frequency'];
 	$newDate['vnd_frequency_type'] = $getDate['vnd_frequency_type'];
 
     $key = strtotime(date("Y-m-d 00:00:00", strtotime($getDate['vnd_date'])));
 	$dateDay = intval(date("d", strtotime($getDate['vnd_date'])));
 	if ($dateDay == 28) {
-	    $key = strtotime(date("Y-m-t 00:00:00", strtotime($getDate['vnd_date'])));
+	    $key = strtotime(date("Y-m-t 00:00:00", strtotime($getDate['vnd_date']))) - 86400;
     }
 	$MyBills[$key][] = $newDate;
 }
@@ -253,6 +263,9 @@ while ($timestamp <= strtotime($end_date)) {
 		$hasBills = true;
         $billsDescArr[] = [
             "title" => $getBill['desc'] . " - $" . $getBill["amount"],
+            "amount" => $getBill['amount'],
+            "savedAmount" => $getBill['amount'],
+            "isEnabled" => 1,
             "is_heavy" => intval($getBill['is_heavy']),
             "vnd_frequency" => ($getBill['vnd_frequency']),
             "vnd_frequency_type" => ($getBill['vnd_frequency_type'])
@@ -261,7 +274,7 @@ while ($timestamp <= strtotime($end_date)) {
 	}
 	$get_day['desc'] = $billsDescArr;
 	//if ($hasBills == true) {
-		$get_day['Balance'] = '$' . $full_cur_amount;
+		$get_day['Balance'] = formatFloat($full_cur_amount);
 	/*} else {
 		$get_day['Balance'] = "";
 	}*/
@@ -298,12 +311,22 @@ header('Access-Control-Allow-Origin: *');
 $results = [
     "results" => $daysWeeksArr,
     "hash_key" => $hash_key,
-    "cur_balance" => $current_balance,
+    "cur_balance" => formatFloat($current_balance),
     "pay_date" => date("m/d/Y 12:00:00 A", strtotime($pay_date)),
     "num_days_pay_period" => intval($numDays9),
     "remaining_balance" => $full_cur_amount
 ];
 echo json_encode($results, JSON_PRETTY_PRINT);
+
+function formatFloat($num) {
+    $retVal = round(floatval($num), 2);
+    /*/
+    if (substr($retVal, -3) == ".00") {
+        //$retVal = preg_replace("/\\.00$//g", "", $retVal);
+    }
+    //*/
+    return $retVal;
+}
 
 function getDaySuffix($num) {
 

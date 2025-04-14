@@ -17,8 +17,8 @@ $string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgen
 $hash_key = md5($string_to_hash);
 
 if ($hash_key_token_cs != $hash_key) {
-	echo "You do not have access to this page. Please contact Site Admin.";
-	die;
+	//echo "You do not have access to this page. Please contact Site Admin.";
+	//die;
 }
 
 $vnd_id = isset($_REQUEST['vnd_id']) ? intval($_REQUEST['vnd_id']) : 0;

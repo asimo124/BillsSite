@@ -18,6 +18,8 @@ $frequencyArr = [
     "Once"
 ];
 
+$searchFiltersRequestArr = [];
+$searchFilersQueryStr = "";
 $vndBill = "";
 $sort1 = "bill";
 $sort1_dir = "ASC";
@@ -32,18 +34,19 @@ $frequencyShow = [
     "Every 3 Months" => 0,
     "Once" => 0
 ];
-if (isset($_POST['btnSearch'])) {
+$showAuditFields = 0;
+if (isset($_REQUEST['btnSearch'])) {
 
-    $vndBill = isset($_POST['vnd_bill']) ? $_POST['vnd_bill'] : "";
-    $vndBill2 = $vndBill;
+    $vndBill = isset($_REQUEST['vnd_bill2']) ? $_REQUEST['vnd_bill2'] : "";
+    $vndBill2 = str_replace("%", "", $vndBill);
     if ($vndBill) {
         $vndBill = '%' . $vndBill . '%';
     }
-    $sort1 = isset($_POST['sort1']) ? $_POST['sort1'] : "bill";
-    $sort1_dir = isset($_POST['sort1_dir']) ? $_POST['sort1_dir'] : "ASC";
-    $sort2 = isset($_POST['sort2']) ? $_POST['sort2'] : "";
-    $sort2_dir = isset($_POST['sort2_dir']) ? $_POST['sort2_dir'] : "";
-    $frequencyShow = isset($_POST['frequency']) ? $_POST['frequency'] : [
+    $sort1 = isset($_REQUEST['sort1']) ? $_REQUEST['sort1'] : "bill";
+    $sort1_dir = isset($_REQUEST['sort1_dir']) ? $_REQUEST['sort1_dir'] : "ASC";
+    $sort2 = isset($_REQUEST['sort2']) ? $_REQUEST['sort2'] : "";
+    $sort2_dir = isset($_REQUEST['sort2_dir']) ? $_REQUEST['sort2_dir'] : "";
+    $frequencyShow = isset($_REQUEST['frequency']) ? $_REQUEST['frequency'] : [
         "Every 1 Week" => 1,
         "Every 2 Weeks" => 1,
         "Every 4 Weeks" => 1,
@@ -52,6 +55,36 @@ if (isset($_POST['btnSearch'])) {
         "Every 3 Months" => 1,
         "Once" => 1
     ];
+    $showAuditFields = isset($_REQUEST['showAuditFields']) ? intval($_REQUEST['showAuditFields']) : 0;
+
+    $searchFiltersRequestArr = [
+        'vnd_bill2' => $vndBill,
+        'sort1' => $sort1,
+        'sort1_dir' => $sort1_dir,
+        'sort2' => $sort2,
+        'sort2_dir' => $sort2_dir,
+        'frequency' => $frequencyShow,
+        'btnSearch' => 1,
+        'showAuditFields' => $showAuditFields
+    ];
+    $i = 0;
+    foreach ($searchFiltersRequestArr as $key => $value) {
+        if ($key != "frequencyShow") {
+
+            if ($i == 0) {
+                $searchFilersQueryStr = "$key=" . urlencode($value);
+            } else {
+                $searchFilersQueryStr .= "&$key=" . urlencode($value);
+            }
+        } else {
+
+            foreach ($value as $getKey => $getValue) {
+
+                $searchFilersQueryStr .= "&frequency[$getKey]=" . urlencode($getValue);
+            }
+        }
+        $i++;
+    }
 }
 
 $orderBy = "";
@@ -66,6 +99,9 @@ if ($sort1) {
             break;
         case "amount":
             $orderBy .= "amount ";
+            break;
+        case "end_date":
+            $orderBy .= "end_date ";
             break;
     }
     $orderBy .= $sort1_dir;
@@ -85,12 +121,15 @@ if ($sort2) {
             break;
         case "amount":
             $orderBy .= "amount ";
+        case "end_date":
+            $orderBy .= "end_date ";
             break;
     }
     $orderBy .= $sort2_dir;
 }
 
-$sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value, is_heavy
+$sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value, 
+       vnd_frequency_value_original, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2
         FROM vnd_bills 
         WHERE 1 
         AND vnd_frequency = :frequency ";
@@ -102,7 +141,8 @@ $sql .= $orderBy;
 
 $stmt_sel_bills = $db_conn->prepare($sql);
 
-$sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value, is_heavy
+$sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value,
+       vnd_frequency_value_original, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2
         FROM vnd_bills 
         WHERE 1 
         AND vnd_frequency = :frequency
@@ -121,7 +161,8 @@ foreach ($frequencyArr as $getFrequency) {
 
         if (strpos($getFrequency, " - ") === false) {
 
-            $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value, is_heavy
+            $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value, 
+       vnd_frequency_value_original, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2
             FROM vnd_bills 
             WHERE 1 
             AND vnd_frequency = :frequency ";
@@ -151,7 +192,8 @@ foreach ($frequencyArr as $getFrequency) {
 
             $frequencyArr = explode(" - ", $getFrequency);
 
-            $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value, is_heavy
+            $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value_original, 
+       vnd_frequency_value, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2
                     FROM vnd_bills 
                     WHERE 1 
                     AND vnd_frequency = :frequency
@@ -215,7 +257,7 @@ foreach ($frequencyArr as $getFrequency) {
 
     <div class="row">
         <div class="col-md-12">
-            <a href="add.php" class="btn btn-primary">Create Bill</a>
+            <a href="add.php?<?= $searchFilersQueryStr ?>" class="btn btn-primary">Create Bill</a>
         </div>
     </div>
     <div style="clear: both; height: 12px"></div>
@@ -225,7 +267,7 @@ foreach ($frequencyArr as $getFrequency) {
     <form action="index.php" method="POST" >
         <div class="row">
             <div class="col-md-3 col-xs-6">
-                <input type="text" class="form-control" name="vnd_bill" value="<?php echo $vndBill2; ?>" placeholder="Bill Name" />
+                <input type="text" class="form-control" name="vnd_bill2" value="<?php echo $vndBill2; ?>" placeholder="Bill Name" />
             </div>
             <div class="col-md-2 col-xs-6">
                 <select name="sort1" class="form-control" width="100%">
@@ -233,6 +275,7 @@ foreach ($frequencyArr as $getFrequency) {
                     <option value="bill" <?php echo ($sort1 == "bill") ? "SELECTED" : ""; ?>>Bill Name</option>
                     <option value="frequency" <?php echo ($sort1 == "frequency") ? "SELECTED" : ""; ?>>Frequency</option>
                     <option value="amount" <?php echo ($sort1 == "amount") ? "SELECTED" : ""; ?>>Amount</option>
+                    <option value="end_date" <?php echo ($sort1 == "end_date") ? "SELECTED" : ""; ?>>End Date</option>
                 </select>
             </div>
             <div class="col-md-2 col-xs-6">
@@ -247,6 +290,7 @@ foreach ($frequencyArr as $getFrequency) {
                     <option value="bill" <?php echo ($sort2 == "bill") ? "SELECTED" : ""; ?>>Bill Name</option>
                     <option value="frequency" <?php echo ($sort2 == "frequency") ? "SELECTED" : ""; ?>>Frequency</option>
                     <option value="amount" <?php echo ($sort2 == "amount") ? "SELECTED" : ""; ?>>Amount</option>
+                    <option value="end_date" <?php echo ($sort2 == "end_date") ? "SELECTED" : ""; ?>>End Date</option>
                 </select>
             </div>
             <div class="col-md-2 col-xs-6">
@@ -254,6 +298,18 @@ foreach ($frequencyArr as $getFrequency) {
                     <option value="ASC" >ASC</option>
                     <option value="DESC" <?php echo ($sort2_dir == "DESC") ? "SELECTED" : ""; ?>>DESC</option>
                 </select>
+            </div>
+
+        </div>
+
+        <div style="clear: both; height: 15px;"></div>
+        <div class="row">
+            <div class="col-md-2 col-xs-6">
+                <input class="form-check-input" type="checkbox" value="1" name="showAuditFields"
+                       id="showAuditFields" <?php echo ($showAuditFields) ? "CHECKED" : ""; ?>>
+                <label class="form-check-label" for="checkDefault" >
+                Show Audit Fields
+                </label>
             </div>
         </div>
         <div style="clear: both; height: 15px;"></div>
@@ -332,51 +388,95 @@ foreach ($frequencyArr as $getFrequency) {
         <div style="clear: both; height: 7px;"></div>
     </form>
 
-    <div class="row">
-        <div class="col-md-12">
-            <?php foreach ($resultset as $frequency => $bills) : ?>
-                <h3><?php echo $frequency; ?></h3>
-                <table class="table table-striped table-bordered">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Bill</th>
-                    <th>Amount</th>
-                    <th>Frequency</th>
-                    <th>Frequency Info</th>
-                    <th colspan="3">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-
-                <?php foreach ($bills as $getBill) { ?>
-                    <tr>
-                        <td><?php echo $getBill['vnd_id']; ?></td>
-                        <td>
-                            <span style="<?php echo ($getBill['is_heavy']) ? "color: red; font-weight: bold;" : ""; ?>"><?php echo $getBill['vnd_bill']; ?></span>
-                        </td>
-                        <td><?php echo formatCurrency($getBill['amount']); ?></td>
-                        <td><?php echo $getBill['vnd_frequency']; ?></td>
-                        <td><?php echo $getBill['vnd_frequency_type']; ?>&nbsp(<?php echo $getBill['vnd_frequency_value']; ?>)</td>
-                        <td><a href="edit.php?id=<?php echo $getBill['vnd_id']; ?>" class="btn btn-primary">Edit</a></td>
-                        <td>
-                            <?php if (!$getBill['is_heavy']) : ?>
-                                <a href="mark_heavy.php?id=<?php echo $getBill['vnd_id']; ?>&action=mark" class="btn btn-primary">Mark Heavy</a>
-                            <?php else : ?>
-                                <a href="mark_heavy.php?id=<?php echo $getBill['vnd_id']; ?>&action=unmark" class="btn btn-primary">Un-Mark Heavy</a>
-                            <?php endif; ?>
-                        </td>
-                        <td><a class="btn btn-primary del_btn" data-id="<?php echo $getBill['vnd_id']; ?>" data-toggle="modal" data-target="#delBill">Delete</a></td>
-                    </tr>
-                <?php } ?>
-
-                </tbody>
-            </table>
-            <?php endforeach; ?>
+    <div style="clear: both; height: 16px;"></div>
+    <form action="proc_audit.php?<?= $searchFilersQueryStr ?>" method="POST" >
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary">Update Audit Fields</button>
+            </div>
         </div>
-    </div>
+        <div style="clear: both; height: 8px;"></div>
+        <div class="row">
+            <div class="col-md-12">
+                <?php foreach ($resultset as $frequency => $bills) : ?>
+                    <h3><?php echo $frequency; ?></h3>
+                    <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Bill</th>
+                        <?php if (!$showAuditFields) : ?>
+                            <th>Amount</th>
+                            <th>Frequency</th>
+                            <th colspan="2">Frequency Info</th>
+                            <th>End Date</th>
+                        <?php else: ?>
+                             <th>Audit Regex</th>
+                             <th>Audit Keyword1</th>
+                             <th>Audit Keyword2</th>
+                        <?php endif; ?>
+                        <th colspan="4">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-    <form action="delete.php" name="frmDel" id="frmDel" method="post">
+                    <?php foreach ($bills as $getBill) { ?>
+                        <tr>
+                            <td><?php echo $getBill['vnd_id']; ?></td>
+                            <td>
+                                <span style="font-weight: bold; <?php echo (($getBill['watch_flag']) ? "color: orange;" : (($getBill['is_heavy']) ? "color: red; " : "")); ?>"><?php echo $getBill['vnd_bill']; ?></span>
+                            </td>
+                            <?php if (!$showAuditFields): ?>
+                                <td><?php echo formatCurrency($getBill['amount']); ?></td>
+                                <td><?php echo $getBill['vnd_frequency']; ?></td>
+                                <?php if ($getBill['vnd_frequency_type'] != "Day of Month") : ?>
+                                    <td colspan="2"><?php echo $getBill['vnd_frequency_type']; ?>&nbsp(<?php echo $getBill['vnd_frequency_value']; ?>)</td>
+                                <?php else : ?>
+                                    <td><?php echo $getBill['vnd_frequency_value_original']; ?></td>
+                                    <td><?php echo $getBill['vnd_frequency_value']; ?></td>
+                                <?php endif; ?>
+                                <td><?php echo ($getBill['end_date'] != "0000-00-00" ? $getBill['end_date'] : ""); ?></td>
+                            <?php else: ?>
+                                <td>
+                                    <input type="text" class="form-control" name="audit_regex[<?php echo $getBill['vnd_id']; ?>]"
+                                           value="<?php echo $getBill['audit_regex']; ?>" placeholder="Regex" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="audit_keyword1[<?php echo $getBill['vnd_id']; ?>]"
+                                           value="<?php echo $getBill['audit_keyword1']; ?>" placeholder="Keyword1" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="audit_keyword2[<?php echo $getBill['vnd_id']; ?>]"
+                                           value="<?php echo $getBill['audit_keyword2']; ?>" placeholder="Keyword2" />
+                                </td>
+                            <?php endif; ?>
+                            <td><a href="edit.php?id=<?php echo $getBill['vnd_id']; ?>&<?= $searchFilersQueryStr ?>" class="btn btn-primary">Edit</a></td>
+                            <td>
+                                <?php if (!$getBill['is_heavy']) : ?>
+                                    <a href="mark_heavy.php?id=<?php echo $getBill['vnd_id']; ?>&action=mark&<?= $searchFilersQueryStr ?>" class="btn btn-primary">Mark Heavy</a>
+                                <?php else : ?>
+                                    <a href="mark_heavy.php?id=<?php echo $getBill['vnd_id']; ?>&action=unmark&<?= $searchFilersQueryStr ?>" class="btn btn-primary">Un-Mark Heavy</a>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if (!$getBill['watch_flag']) : ?>
+                                    <a href="mark_watch_flag.php?id=<?php echo $getBill['vnd_id']; ?>&action=mark&<?= $searchFilersQueryStr ?>" class="btn btn-primary">Mark Watched</a>
+                                <?php else : ?>
+                                    <a href="mark_watch_flag.php?id=<?php echo $getBill['vnd_id']; ?>&action=unmark&<?= $searchFilersQueryStr ?>" class="btn btn-primary">Un-Mark Watched</a>
+                                <?php endif; ?>
+                            </td>
+                            <td><a class="btn btn-primary del_btn" data-id="<?php echo $getBill['vnd_id']; ?>" data-toggle="modal" data-target="#delBill">Delete</a></td>
+                        </tr>
+                    <?php } ?>
+
+                    </tbody>
+                </table>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </form>
+
+    <form action="delete.php?<?= $searchFilersQueryStr ?>" name="frmDel" id="frmDel" method="post">
         <div class="modal fade" id="delBill">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
