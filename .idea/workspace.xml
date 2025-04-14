@@ -1,118 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="a2afb100-9492-4794-888f-87188d2c08b9" name="Default" comment="Finished http requests, and a few changes to API, completed entire Web App.">
-      <change afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/webServers.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/charges/stacked_chart_m.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/chart.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/jquery-1.11.1.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/jquery.3.3.1.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.htaccess" beforeDir="false" afterPath="$PROJECT_DIR$/.htaccess" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/get_charges_by_category.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/get_charges_by_category.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/asd/books.php" beforeDir="false" afterPath="$PROJECT_DIR$/asd/books.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bills/admin/add.php" beforeDir="false" afterPath="$PROJECT_DIR$/bills/admin/add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bills/admin/delete.php" beforeDir="false" afterPath="$PROJECT_DIR$/bills/admin/delete.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bills/admin/edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/bills/admin/edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bills/admin/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/bills/admin/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bills/admin/proc_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/bills/admin/proc_add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bills/admin/proc_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/bills/admin/proc_edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bills/track/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/bills/track/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/categorize.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/categorize.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/cats/add.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/cats/add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/cats/delete.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/cats/delete.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/cats/edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/cats/edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/cats/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/cats/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/cats/proc_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/cats/proc_add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/cats/proc_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/cats/proc_edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/delete_desc.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/delete_desc.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/manage_desc.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/manage_desc.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/proc_update_all.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/proc_update_all.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/proc_update_desc_cats.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/proc_update_desc_cats.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/proc_upload.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/proc_upload.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/stacked_chart.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/stacked_chart.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/truncate_charges.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/truncate_charges.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charges/upload.php" beforeDir="false" afterPath="$PROJECT_DIR$/charges/upload.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contacts.php" beforeDir="false" afterPath="$PROJECT_DIR$/contacts.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crons/p2p.php" beforeDir="false" afterPath="$PROJECT_DIR$/crons/p2p.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crons/sendp2p.php" beforeDir="false" afterPath="$PROJECT_DIR$/crons/sendp2p.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crons/setp2p.php" beforeDir="false" afterPath="$PROJECT_DIR$/crons/setp2p.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/good_indie_bands_tracks.txt" beforeDir="false" afterPath="$PROJECT_DIR$/good_indie_bands_tracks.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/good_rap_bands_tracks.txt" beforeDir="false" afterPath="$PROJECT_DIR$/good_rap_bands_tracks.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/bms/add.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/bms/add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/bms/delete.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/bms/delete.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/bms/edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/bms/edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/bms/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/bms/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/bms/proc_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/bms/proc_add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/bms/proc_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/bms/proc_edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/meals/add.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/meals/add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/meals/delete.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/meals/delete.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/meals/edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/meals/edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/meals/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/meals/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/meals/proc_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/meals/proc_add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/meals/proc_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/meals/proc_edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/pills/add.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/pills/add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/pills/delete.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/pills/delete.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/pills/edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/pills/edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/pills/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/pills/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/pills/proc_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/pills/proc_add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/pills/proc_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/pills/proc_edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/templates/header.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/templates/header.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/workouts/add.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/workouts/add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/workouts/delete.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/workouts/delete.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/workouts/edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/workouts/edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/workouts/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/workouts/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/workouts/proc_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/workouts/proc_add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/health/workouts/proc_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/health/workouts/proc_edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/includes.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/includes.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/indie.txt" beforeDir="false" afterPath="$PROJECT_DIR$/indie.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/bootstrap.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/bootstrap.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/canvasjs.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/canvasjs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/canvasjs.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/canvasjs.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/jquery.EqualHeights.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/jquery.EqualHeights.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/jquery.canvasjs.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/jquery.canvasjs.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/jquery.equalheights.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/jquery.equalheights.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/mobile-bootstrap-modal.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/mobile-bootstrap-modal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/nav.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/nav.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/login.php" beforeDir="false" afterPath="$PROJECT_DIR$/login.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/login_bk3.php" beforeDir="false" afterPath="$PROJECT_DIR$/login_bk3.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logout.php" beforeDir="false" afterPath="$PROJECT_DIR$/logout.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pill-history/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/pill-history/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pill-history/vendor-es2015.js" beforeDir="false" afterPath="$PROJECT_DIR$/pill-history/vendor-es2015.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pill-history/vendor-es5.js" beforeDir="false" afterPath="$PROJECT_DIR$/pill-history/vendor-es5.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pill_history.php" beforeDir="false" afterPath="$PROJECT_DIR$/pill_history.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pillhistory.html" beforeDir="false" afterPath="$PROJECT_DIR$/pillhistory.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/eat/add.php" beforeDir="false" afterPath="$PROJECT_DIR$/places/eat/add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/eat/delete.php" beforeDir="false" afterPath="$PROJECT_DIR$/places/eat/delete.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/eat/edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/places/eat/edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/eat/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/places/eat/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/eat/proc_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/places/eat/proc_add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/eat/proc_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/places/eat/proc_edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proc_login.php" beforeDir="false" afterPath="$PROJECT_DIR$/proc_login.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rap.txt" beforeDir="false" afterPath="$PROJECT_DIR$/rap.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rec_indie.php" beforeDir="false" afterPath="$PROJECT_DIR$/rec_indie.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rec_metal.php" beforeDir="false" afterPath="$PROJECT_DIR$/rec_metal.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rec_rap.php" beforeDir="false" afterPath="$PROJECT_DIR$/rec_rap.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sol/glucose/add.php" beforeDir="false" afterPath="$PROJECT_DIR$/sol/glucose/add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sol/glucose/chart.php" beforeDir="false" afterPath="$PROJECT_DIR$/sol/glucose/chart.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sol/glucose/delete.php" beforeDir="false" afterPath="$PROJECT_DIR$/sol/glucose/delete.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sol/glucose/delete_note.php" beforeDir="false" afterPath="$PROJECT_DIR$/sol/glucose/delete_note.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sol/glucose/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/sol/glucose/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sol/glucose/move_notes.php" beforeDir="false" afterPath="$PROJECT_DIR$/sol/glucose/move_notes.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sol/glucose/proc_add.php" beforeDir="false" afterPath="$PROJECT_DIR$/sol/glucose/proc_add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sol/glucose/proc_add_note.php" beforeDir="false" afterPath="$PROJECT_DIR$/sol/glucose/proc_add_note.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sol/glucose/proc_edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/sol/glucose/proc_edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sol/glucose/proc_edit_note.php" beforeDir="false" afterPath="$PROJECT_DIR$/sol/glucose/proc_edit_note.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sol/glucose/view.php" beforeDir="false" afterPath="$PROJECT_DIR$/sol/glucose/view.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/nav.php" beforeDir="false" afterPath="$PROJECT_DIR$/templates/nav.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sshConfigs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sshConfigs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/webServers.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webServers.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/expenses/save_expense.php" beforeDir="false" afterPath="$PROJECT_DIR$/expenses/save_expense.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/Bills.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/Bills.php" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -120,9 +20,7 @@
   </component>
   <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
-    <execution>
-      <executable />
-    </execution>
+    <execution />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="C:\Users\AHawley\Documents\Bills" />
@@ -140,9 +38,6 @@
     </option>
     <expand />
     <select />
-  </component>
-  <component name="FavoritesManager">
-    <favorites_list name="Bills" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -166,26 +61,18 @@
   <component name="ProjectLevelVcsManager">
     <OptionsSetting value="false" id="Update" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
-    <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
-    <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
-    <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
-    <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
-    <property name="js-jscs-nodeInterpreter" value="C:\Program Files\nodejs\node.exe" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/charges" />
-    <property name="list.type.of.created.stylesheet" value="CSS" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.detected.package.tslint" value="true" />
-    <property name="node.js.path.for.package.eslint" value="project" />
-    <property name="node.js.path.for.package.tslint" value="project" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="preferences.editor" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
+    "WebServerToolWindowPanel.toolwindow.show.date": "false",
+    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
+    "WebServerToolWindowPanel.toolwindow.show.size": "false",
+    "git-widget-placeholder": "master",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/charges" />
@@ -197,18 +84,6 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\AHawley\Documents\Bills\js" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager">
     <configuration default="true" type="js.build_tools.gulp">
@@ -481,17 +356,12 @@
     <option name="localTasksCounter" value="33" />
     <servers />
   </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
-  </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>

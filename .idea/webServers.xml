@@ -2,12 +2,11 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="99d306a3-9d7b-48c2-952c-2006c5e0f7af" name="PairServerAsimo124" url="http://alexhawley.info">
-        <fileTransfer host="asimo124.pairserver.com" port="22" rootFolder="/usr/home/asimo124/public_html" accessType="SFTP">
+      <webServer id="8812aecb-1af1-4589-881c-d9048ae5b9d0" name="DigOcean4" url="http://budget.hawleywebdesign.com">
+        <fileTransfer rootFolder="/var/www/budget.hawleywebdesign.com" accessType="SFTP" host="104.248.121.215" port="22" sshConfigId="505b196e-f1c0-499c-bac0-17f303025368" sshConfig="alex@104.248.121.215:22 password">
           <advancedOptions>
-            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
-          <option name="port" value="22" />
         </fileTransfer>
       </webServer>
     </option>

@@ -2,9 +2,7 @@
 <project version="4">
   <component name="SshConfigs">
     <configs>
-      <sshConfig authType="PASSWORD" connectionConfig="{&quot;serverAliveInterval&quot;:300}" host="asimo124.pairserver.com" id="8f6b3366-e871-4810-b414-c58cb1814d6c" port="22" customName="PairServerAsimo124" nameFormat="CUSTOM" useOpenSSHConfig="true">
-        <option name="customName" value="PairServerAsimo124" />
-      </sshConfig>
+      <sshConfig authType="PASSWORD" host="104.248.121.215" id="505b196e-f1c0-499c-bac0-17f303025368" port="22" nameFormat="DESCRIPTIVE" username="alex" useOpenSSHConfig="true" />
     </configs>
   </component>
 </project>
