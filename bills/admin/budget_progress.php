@@ -48,10 +48,13 @@ if (!isset($_SESSION['user'])) {
 
     <div style="clear: both; height: 16px;"></div>
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-xs-9">
             <label for="init_balance" class="control-label">Initial Balance:</label><br>
             <input type="text" class="form-control" placeholder="Initial Balance" id="init_balance" style="width: 200px; display: inline-block;" />
             &nbsp;<button type="button" class="btn btn-default" id="check_balance">Check</button>
+        </div>
+        <div class="col-xs-3">
+            <input type="checkbox" id="test_mode" value="1" /> Test
         </div>
     </div>
     <div style="clear: both; height: 16px;"></div>
@@ -119,7 +122,11 @@ if (!isset($_SESSION['user'])) {
 
         var defaultBalance = 3445;
 
+        var daysCount = 0;
+
         var sumItems = [];
+
+        var testMode = 0;
 
         var initBalance = localStorage.getItem('initBalance');
         if (!initBalance) {
@@ -145,6 +152,14 @@ if (!isset($_SESSION['user'])) {
         $('#check_balance').click(function() {
             loadPage('');
         })
+
+        $('#test_mode').change(function() {
+            if ($(this).is(':checked')) {
+                testMode = 1;
+            } else {
+                testMode = 0;
+            }
+        });
 
         $('.add_sum_item').click(function() {
             var day = $(this).data('day');
@@ -260,7 +275,7 @@ if (!isset($_SESSION['user'])) {
         }
 
         var calcDisposable = function(disposableDay) {
-            return balance - (disposableDay * 15);
+            return balance - (disposableDay * daysCount);
         }
 
         var getExpenseDays = function(payDateStr) {
@@ -268,19 +283,25 @@ if (!isset($_SESSION['user'])) {
             var curBalance = $('#init_balance').val();
 
             $.ajax({
-                url: "/api/loadBillDates2.php?user_id=1&pay_date=" + payDateStr + "&current_balance=" + curBalance,
+                url: "/api/loadBillDates2.php?user_id=1&pay_date=" + payDateStr + "&current_balance=" + curBalance + "&test_mode=" + testMode,
                 type: "GET",
                 dataType: "json",
                 success: function(response) {
                     console.log("Data received:", response);
                     if (response && response.results.length > 0) {
 
+                        daysCount = 0;
                         response.results.forEach(function(item) {
 
                             item.days.forEach(function (day) {
                                 balance = day.Balance
+                                if (day.Timestamp != 0) {
+                                    daysCount += 1;
+                                }
                             })
                         });
+
+                        console.log("daysCount: ", daysCount);
 
                         days = [30, 35, 40, 45, 50];
                         days.forEach(function(day) {
