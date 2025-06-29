@@ -56,6 +56,7 @@ $data['multiplier'] = 1;
 $data['is_future'] = 1;
 
 $sth = $db_conn->prepare($query);
+
 $sth->execute($data);
 
 $numReps = 25;

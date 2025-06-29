@@ -35,6 +35,9 @@ $sort1 = isset($_REQUEST['sort1']) ? $_REQUEST['sort1'] : "bill";
 $sort1_dir = isset($_REQUEST['sort1_dir']) ? $_REQUEST['sort1_dir'] : "ASC";
 $sort2 = isset($_REQUEST['sort2']) ? $_REQUEST['sort2'] : "";
 $sort2_dir = isset($_REQUEST['sort2_dir']) ? $_REQUEST['sort2_dir'] : "";
+
+
+
 $frequencyShow = isset($_REQUEST['frequency']) ? $_REQUEST['frequency'] : [
     "Every 1 Week" => 1,
     "Every 2 Weeks" => 1,
@@ -45,6 +48,9 @@ $frequencyShow = isset($_REQUEST['frequency']) ? $_REQUEST['frequency'] : [
     "Once" => 1
 ];
 $btnSearch = isset($_REQUEST['btnSearch']) ? $_REQUEST['btnSearch'] : "";
+
+echo "<Pre>";
+print_r($_REQUEST);
 
 $searchFiltersRequestArr = [
     'vnd_bill2' => $vndBill,
@@ -57,8 +63,9 @@ $searchFiltersRequestArr = [
 ];
 $i = 0;
 foreach ($searchFiltersRequestArr as $key => $value) {
-    if ($key != "frequencyShow") {
+    if ($key != "frequency") {
 
+        $value = (String)$value;
         if ($i == 0) {
             $searchFilersQueryStr = "$key=" . urlencode($value);
         } else {

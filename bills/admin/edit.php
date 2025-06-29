@@ -71,7 +71,8 @@ $searchFiltersRequestArr = [
 ];
 $i = 0;
 foreach ($searchFiltersRequestArr as $key => $value) {
-    if ($key != "frequencyShow") {
+    if ($key != "frequency") {
+        $value = (String)$value;
 
         if ($i == 0) {
             $searchFilersQueryStr = "$key=" . urlencode($value);

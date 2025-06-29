@@ -2,6 +2,7 @@
 	ini_set("display_errors", 1);
 	include "../inc/includes.php";
 	include "../inc/Bills.php";
+	include "../inc/Audit.php";
 
 if (!isset($_SESSION['user'])) {
     header("Location: /login.php");
@@ -13,40 +14,40 @@ if (!is_dir($target_dir)) {
     mkdir($target_dir, 0775, true);
 }
 
-print_r($_FILES);
-die();
-
-$target_file = $target_dir . basename($_FILES["chaseFile"]["name"]);
-$uploadOk = 1;
-$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-
-
 if(isset($_POST["submit"])) {
 
     $tempFileName = $_FILES["chaseFile"]["tmp_name"];
     $fh = fopen($tempFileName, 'r');
 
-    while (($line = fgets($fh)) !== false) {
-        $lineArr = explode("\t", $line);
-        print_r($lineArr);
+    $i = 0;
+    $items = [];
+    while (($lineArr = fgetcsv($fh)) !== false) {
+
+        if ($i == 0) {
+            $i++;
+            continue;
+        }
+
+        $eachItem = [];
+        $eachItem['date'] = Audit::cleanDate($lineArr[0]);
+        $eachItem['description'] = $lineArr[1];
+        $eachItem['type'] = $lineArr[2];
+        $eachItem['amount'] = Audit::cleanAmount($lineArr[3]);
+
+        if ($eachItem['amount']) {
+            $items[] = $eachItem;
+        }
+        $i++;
+
     }
-}
 
-$content = isset($_REQUEST['content']) ? $_REQUEST['content'] : '';
-$content = trim($content);
-if ($content) {
-
-    $contentLines = preg_split("/\r\n|\n|\r/", $content);
-    foreach ($contentLines as $line) {
-
-        $lineArr = explode("\t", $line);
-        print_r($lineArr);
-
+    $fh = fopen("spreadsheet/chase_data.csv", 'w');
+    foreach ($items as $item) {
+        $item = array_values($item);
+        fputcsv($fh, $item);
     }
+    fclose($fh);
 }
-//*/
-die();
-//*/
 
 header("Location: index.php?Message=" . urlencode("You have submitted the chase copied content."));
 exit;

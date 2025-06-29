@@ -27,9 +27,10 @@
     <a href="/expenses/index.php">Add Expense</a>
     <a href="/bills/admin/index.php">Bills Admin</a>
     <a href="/bills/admin/upcoming_expenses.php">Upcoming Expenses</a>
-    <a href="/audit/index.php">Audit</a>
+    <a href="/bills/admin/budget_progress.php">Budget Progress</a>
     <a href="/settings/index.php">Settings</a>
     <a href="/bills/admin/debt_progress.php">Debt Progress</a>
+    <a href="/audit/index.php">Audit</a>
     <a href="/eat/out/index.php">Eating Out</a>
     <a href="/charges/stacked_chart.php">Charges Chart</a>
     <a href="/charges/upload.php">Upload Charges</a>

@@ -15,8 +15,11 @@ $vnd_frequency = isset($_REQUEST['vnd_frequency']) ? ($_REQUEST['vnd_frequency']
 $vnd_frequency_type = isset($_REQUEST['vnd_frequency_type']) ? ($_REQUEST['vnd_frequency_type']) : "";
 $vnd_frequency_value = isset($_REQUEST['vnd_frequency_value']) ? trim($_REQUEST['vnd_frequency_value']) : "";
 $vnd_frequency_value_original = isset($_REQUEST['vnd_frequency_value_original']) ? trim($_REQUEST['vnd_frequency_value_original']) : null;
-$end_date = isset($_REQUEST['end_date']) ? trim($_REQUEST['end_date']) : "";
+$end_date = isset($_REQUEST['end_date']) ? trim($_REQUEST['end_date']) : null;
 
+if (!$end_date || $end_date == "0000-00-00 00:00:00") {
+    $end_date = null;
+}
 
 if ($vnd_bill == "" || $amount <= 0) {
     header("Location: add.php?Message=" . urlencode("You did not fill in all the required fields.") . "&error=1");
@@ -92,8 +95,8 @@ $searchFiltersRequestArr = [
 ];
 $i = 0;
 foreach ($searchFiltersRequestArr as $key => $value) {
-    if ($key != "frequencyShow") {
-
+    if ($key != "frequency") {
+        $value = (String)$value;
         if ($i == 0) {
             $searchFilersQueryStr = "$key=" . urlencode($value);
         } else {
