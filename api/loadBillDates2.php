@@ -4,6 +4,8 @@ include "../inc/Bills.php";
 include "../inc/includes.php";
 //ini_set("display_errors", 1);
 
+set_time_limit(300);
+
 $user_id 			= isset($_REQUEST['user_id']) ? intval($_REQUEST['user_id']) : 0;
 $current_balance 	= isset($_REQUEST['current_balance']) ? intval($_REQUEST['current_balance']) : 0;
 $pay_date 			= isset($_REQUEST['pay_date']) ? trim($_REQUEST['pay_date']) : "";
@@ -199,6 +201,7 @@ foreach ($billDates as $getDate) {
 $days_arr = array();
 $full_cur_amount = $current_balance;
 
+$getDayIndex5 = 0;
 $pastStartWeek = false;
 $timestamp = strtotime($start_date);
 while ($timestamp <= strtotime($end_date)) {
@@ -230,12 +233,14 @@ while ($timestamp <= strtotime($end_date)) {
     }
     $my_day .= ", " . getDaySuffix(intval(date("d", $timestamp)));
 
+    $getDayIndex6 = 9999;
 	if ($day > 0 && $pastStartWeek == false) {
 
 	    $lastIndex = 0;
         $pastStartWeek = true;
         for ($p = 0; $p < $day; $p++) {
             $get_day = array();
+            $get_day['index'] = $getDayIndex6;
             $get_day['showAsDay'] = false;
             $get_day['weekDayNum'] = $p;
             $get_day['Day'] = '';
@@ -244,6 +249,7 @@ while ($timestamp <= strtotime($end_date)) {
             $get_day['desc'] = [];
             $days_arr[] = $get_day;
             $lastIndex = $p;
+            $getDayIndex6++;
         }
     }
 
@@ -280,10 +286,14 @@ while ($timestamp <= strtotime($end_date)) {
 	}*/
 	$timestamp = strtotime('+1 days', $timestamp);
 
+    $get_day['index'] = $getDayIndex5;
+    $getDayIndex5++;
+
 	$days_arr[] = $get_day;
 }
 
 $i = 0;
+$weekIndex = 0;
 $daysWeeksArr = [];
 foreach ($days_arr as $index => $get_day) {
     if ($i == 0) {
@@ -292,9 +302,11 @@ foreach ($days_arr as $index => $get_day) {
     $eachWeek[] = $get_day;
     if ($i > 5 || $index == count($days_arr) - 1) {
         $daysWeeksArr[] = [
+            'index' => $weekIndex,
             'title' => 'Week',
             'days' => $eachWeek
         ];
+        $weekIndex += 1;
         $i = 0;
     } else {
         $i++;
