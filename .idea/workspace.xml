@@ -4,14 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a2afb100-9492-4794-888f-87188d2c08b9" name="Default" comment="Finished http requests, and a few changes to API, completed entire Web App.">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sshConfigs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sshConfigs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/webServers.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webServers.xml" afterDir="false" />
+    <list default="true" id="a2afb100-9492-4794-888f-87188d2c08b9" name="Default" comment="Added days count and test mode">
+      <change afterPath="$PROJECT_DIR$/audit/spreadsheet/backups/readme.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/audit/spreadsheet/readme.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/aws.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/aws.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/expenses/save_expense.php" beforeDir="false" afterPath="$PROJECT_DIR$/expenses/save_expense.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/Bills.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/Bills.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bills/admin/budget_progress.php" beforeDir="false" afterPath="$PROJECT_DIR$/bills/admin/budget_progress.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/charges/.proc_upload.php.swp" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,35 +51,50 @@
     <option name="UPDATE_TYPE" value="MERGE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration">
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/opt/homebrew/Cellar/php@8.1/8.1.33/bin/php">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/composer" />
       <path value="$PROJECT_DIR$/vendor/twilio/sdk" />
     </include_path>
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="1TOqTUVT53TEKWScYmV031olNVV" />
   <component name="ProjectLevelVcsManager">
     <OptionsSetting value="false" id="Update" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
-    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
-    "WebServerToolWindowPanel.toolwindow.show.date": "false",
-    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
-    "WebServerToolWindowPanel.toolwindow.show.size": "false",
-    "git-widget-placeholder": "master",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/alexhawley/Library/Mobile Documents/com~apple~CloudDocs/Documents/PHPSites/BillsSite&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/bills/admin" />
       <recent name="$PROJECT_DIR$/charges" />
       <recent name="C:\Users\asimo\Documents\billssite" />
       <recent name="C:\Users\AHawley\Documents\Bills" />
       <recent name="C:\Users\AHawley\Documents\Bills\charges" />
-      <recent name="C:\Users\asimo\Documents\billssite\sol\glucose" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\AHawley\Documents\Bills\js" />
@@ -96,6 +111,15 @@
       <method v="2" />
     </configuration>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-PS-251.26927.60" />
+        <option value="bundled-php-predefined-a98d8de5180a-e5747d4f5a45-com.jetbrains.php.sharedIndexes-PS-251.26927.60" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -128,6 +152,10 @@
       <workItem from="1563235920478" duration="2214000" />
       <workItem from="1573341498730" duration="131000" />
       <workItem from="1573341743125" duration="8153000" />
+      <workItem from="1744727390006" duration="1000" />
+      <workItem from="1751214262777" duration="11159000" />
+      <workItem from="1751651915886" duration="48000" />
+      <workItem from="1751651995845" duration="4395000" />
     </task>
     <task id="LOCAL-00001" summary="fixed color issue">
       <created>1495227677869</created>
@@ -353,8 +381,35 @@
       <option name="project" value="LOCAL" />
       <updated>1563040163283</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Small changes">
+      <option name="closed" value="true" />
+      <created>1744652834942</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1744652834942</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Added Budget Progress page">
+      <option name="closed" value="true" />
+      <created>1751222703760</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1751222703760</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Added days count and test mode">
+      <option name="closed" value="true" />
+      <created>1751230732452</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1751230732452</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -378,9 +433,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="secured website after hack, password protection, csrf protection, tag/script injection protection" />
-    <MESSAGE value="added more password protection" />
-    <MESSAGE value="added cron to send notifications about future appointments and their cost" />
     <MESSAGE value="fix for mobile with csrf token" />
     <MESSAGE value="changed back" />
     <MESSAGE value="made login use bootstrap" />
@@ -403,7 +455,10 @@
     <MESSAGE value="Completed Angular Pill History App, except for Http Requests to persist to db." />
     <MESSAGE value="Fixed a few things on the Angular side on the Pill History App." />
     <MESSAGE value="Finished http requests, and a few changes to API, completed entire Web App." />
-    <option name="LAST_COMMIT_MESSAGE" value="Finished http requests, and a few changes to API, completed entire Web App." />
+    <MESSAGE value="Small changes" />
+    <MESSAGE value="Added Budget Progress page" />
+    <MESSAGE value="Added days count and test mode" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added days count and test mode" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
 </project>
