@@ -15,6 +15,8 @@ $next_date          = isset($_REQUEST['next_date']) ? intval($_REQUEST['next_dat
 
 $vegas_trip          = isset($_REQUEST['vegas_trip']) ? intval($_REQUEST['vegas_trip']) : 0;
 
+$includeWeekends     = isset($_REQUEST['includeWeekends']) ? intval($_REQUEST['includeWeekends']) : 0;
+
 
 
 if ($pay_date == "") {
@@ -201,9 +203,10 @@ foreach ($billDates as $getDate) {
 $days_arr = array();
 $full_cur_amount = $current_balance;
 
-$getDayIndex5 = 0;
+$getDayIndex5 = 10000;
 $pastStartWeek = false;
 $timestamp = strtotime($start_date);
+$getDayIndex6 = 1000;
 while ($timestamp <= strtotime($end_date)) {
 
 	$cur_date = date("Y-m-d", $timestamp);
@@ -233,7 +236,7 @@ while ($timestamp <= strtotime($end_date)) {
     }
     $my_day .= ", " . getDaySuffix(intval(date("d", $timestamp)));
 
-    $getDayIndex6 = 9999;
+
 	if ($day > 0 && $pastStartWeek == false) {
 
 	    $lastIndex = 0;
@@ -241,6 +244,7 @@ while ($timestamp <= strtotime($end_date)) {
         for ($p = 0; $p < $day; $p++) {
             $get_day = array();
             $get_day['index'] = $getDayIndex6;
+            $get_day['index2'] = $getDayIndex6;
             $get_day['showAsDay'] = false;
             $get_day['weekDayNum'] = $p;
             $get_day['Day'] = '';
@@ -254,6 +258,8 @@ while ($timestamp <= strtotime($end_date)) {
     }
 
     $get_day = array();
+    $get_day['index'] = $getDayIndex5;
+    $get_day['index2'] = $getDayIndex5;
     $get_day['showAsDay'] = true;
     $get_day['weekDayNum'] = $day;
 	$get_day['Day'] = $my_day;
@@ -287,6 +293,7 @@ while ($timestamp <= strtotime($end_date)) {
 	$timestamp = strtotime('+1 days', $timestamp);
 
     $get_day['index'] = $getDayIndex5;
+    $get_day['index2'] = $getDayIndex5;
     $getDayIndex5++;
 
 	$days_arr[] = $get_day;
@@ -303,7 +310,8 @@ foreach ($days_arr as $index => $get_day) {
     if ($i > 5 || $index == count($days_arr) - 1) {
         $daysWeeksArr[] = [
             'index' => $weekIndex,
-            'title' => 'Week',
+            'index2' => $weekIndex,
+            'title' => 'Week' . $weekIndex,
             'days' => $eachWeek
         ];
         $weekIndex += 1;
@@ -313,14 +321,159 @@ foreach ($days_arr as $index => $get_day) {
     }
 }
 
-header("Content-type: text/json");
+header("Content-type: application/json");
 
 /**
  * TODO - Comment this
  */
 header('Access-Control-Allow-Origin: *');
 
+
+/*/
+print_r($daysWeeksArr);
+die();
+//*/
+
+$numDaysPayPeriod = 0;
+foreach ($daysWeeksArr as $index => $week) {
+
+    foreach ($week['days'] as $day) {
+
+        if ($day['showAsDay']) {
+            $numDaysPayPeriod += 1;
+        }
+    }
+}
+
+function isWeekendOrHoliday($timestamp) {
+    $date = new DateTime();
+    $date->setTimestamp($timestamp);
+
+    // Check if weekend (Saturday = 6, Sunday = 0)
+    $dayOfWeek = (int)$date->format('w');
+    if ($dayOfWeek === 0 || $dayOfWeek === 6) {
+        return true;
+    }
+
+    $year = (int)$date->format('Y');
+    $month = (int)$date->format('n');
+    $day = (int)$date->format('j');
+
+    // Labor Day: First Monday in September
+    if ($month === 9) {
+        $firstMonday = new DateTime("first monday of september $year");
+        if ($day === (int)$firstMonday->format('j')) {
+            return true;
+        }
+    }
+
+    // Memorial Day: Last Monday in May
+    if ($month === 5) {
+        $lastMonday = new DateTime("last monday of may $year");
+        if ($day === (int)$lastMonday->format('j')) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+$countDaysAdd = 0;
+if ($prev_date || $next_date) {
+
+    $dayOfMonthPay = date("d", strtotime($pay_date));
+    $dayOfMonthPay = intval($dayOfMonthPay);
+
+    $pay_date_time = strtotime($pay_date);
+
+    if ($next_date) {
+        if ($dayOfMonthPay < 15) {
+
+            $u = 0;
+            $countDaysAdd = 0;
+            $retVal = isWeekendOrHoliday($pay_date_time);
+            if ($retVal) {
+                while (true) {
+                    $pay_date_time = strtotime("-1 day", $pay_date_time);
+                    $countDaysAdd++;
+                    $retVal = isWeekendOrHoliday($pay_date_time);
+
+                    if (!$retVal) {
+                        break;
+                    }
+                    if ($u > 50) {
+                        break;
+                    }
+                    $u++;
+                }
+            }
+
+
+        } else {
+
+            $u = 0;
+            $countDaysAdd = -1;
+            while (true) {
+                $pay_date_time = strtotime("-1 day", $pay_date_time);
+                $retVal = isWeekendOrHoliday($pay_date_time);
+                $countDaysAdd++;
+
+                if (!$retVal) {
+                    break;
+                }
+                if ($u > 50) {
+                    break;
+                }
+                $u++;
+            }
+        }
+    } else {
+
+        if ($dayOfMonthPay >= 15) {
+
+            $countDaysAdd = 0;
+            $retVal = isWeekendOrHoliday($pay_date_time);
+            if ($retVal) {
+                $u = 0;
+                while (true) {
+                    $pay_date_time = strtotime("-1 day", $pay_date_time);
+                    $countDaysAdd++;
+                    $retVal = isWeekendOrHoliday($pay_date_time);
+
+                    if (!$retVal) {
+                        break;
+                    }
+                    if ($u > 50) {
+                        break;
+                    }
+                    $u++;
+                }
+            }
+
+
+        } else {
+
+            $u = 0;
+            $countDaysAdd = -1;
+            while (true) {
+                $pay_date_time = strtotime("-1 day", $pay_date_time);
+                $retVal = isWeekendOrHoliday($pay_date_time);
+                $countDaysAdd++;
+
+                if (!$retVal) {
+                    break;
+                }
+                if ($u > 50) {
+                    break;
+                }
+                $u++;
+            }
+        }
+    }
+}
+
 $results = [
+    "count_days_add" => $countDaysAdd,
     "results" => $daysWeeksArr,
     "hash_key" => $hash_key,
     "cur_balance" => formatFloat($current_balance),
@@ -392,7 +545,7 @@ function getDaySuffix($num) {
         case 31:
             return $num . "st";
             break;
-        default: 
+        default:
             return $num . "th";
     }
 }

@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2afb100-9492-4794-888f-87188d2c08b9" name="Default" comment="Added days count and test mode">
+      <change beforePath="$PROJECT_DIR$/.idea/aws.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/aws.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/loadBillDates2.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/loadBillDates2.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bills/admin/budget_progress.php" beforeDir="false" afterPath="$PROJECT_DIR$/bills/admin/budget_progress.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -283,7 +283,8 @@ if (!isset($_SESSION['user'])) {
             var curBalance = $('#init_balance').val();
 
             $.ajax({
-                url: "/api/loadBillDates2.php?user_id=1&pay_date=" + payDateStr + "&current_balance=" + curBalance + "&test_mode=" + testMode,
+                url: "/api/loadBillDates2.php?user_id=1&pay_date=" + payDateStr + "&current_balance=" + curBalance +
+                    "&test_mode=" + testMode + "&includeWeekends=1",
                 type: "GET",
                 dataType: "json",
                 success: function(response) {
