@@ -138,14 +138,12 @@ if (!isset($_SESSION['user'])) {
         $('#init_balance').change(function() {
             var initBalance = $(this).val();
             localStorage.setItem('initBalance', initBalance);
-            console.log('Initial Balance set to: ', initBalance);
         })
 
         $('#next_btn').click(function() {
             loadPage('next');
         })
         $('#prev_btn').click(function() {
-            console.log('prev');
             loadPage('prev');
         })
 
@@ -197,37 +195,59 @@ if (!isset($_SESSION['user'])) {
             $('.averages_content').html('<h5>Sums</h5>');
 
             var i = 0;
-            var t = 1;
+
+            firstVal = 0;
+            secondVal = 0;
+            firstSwitch = true;
             totalEach = 0;
+            console.log('sumItems: ', sumItems);
             sumItems.forEach(function(item) {
 
                 var avg2 = 0;
-                totalEach += item;
-                if (t > 1) {
-                    avg2 = Math.round(totalEach / 2, 2);
-                }
 
-                if (t == 1) {
+                if (firstSwitch) {
+
+                    firstVal = item;
 
                     $('.averages_content').append('<div class="avg-item-holder" data-index="' + i + '">' +
-                        '<input type="text" class="both_avg_item" data-index="' + t + '" ' +
+                        '<input type="text" class="both_avg_item" data-index="' + i + '" ' +
                         'value="" style="width: 150px; visibility: hidden;" class="form-control" />&nbsp;<button type="text" ' +
-                        'class="remove_avg_item" data-index="' + t + '" style="visibility: hidden">X</button>' +
+                        'class="remove_avg_item" data-index="' + i + '" style="visibility: hidden">X</button>' +
                         '<div style="clear: both; height: 8px;"></div></div>');
+
+                    firstSwitch = false;
+                    secondVal = 0;
+
                 } else {
-                    $('.averages_content').append('<div class="avg-item-holder" data-index="' + i + '">' +
-                        '<input type="text" class="both_avg_item" data-index="' + t + '" ' +
+
+                    secondVal = item;
+
+                    if (firstVal > 0 && secondVal > 0) {
+
+                        totalEach = firstVal + secondVal;
+                        avg2 = Math.round(totalEach / 2, 2);
+
+                        $('.averages_content').append('<div class="avg-item-holder" data-index="' + i + '">' +
+                        '<input type="text" class="both_avg_item" data-index="' + i + '" ' +
                         'value="' + avg2 + '" style="width: 150px;" class="form-control" />&nbsp;<button type="text" ' +
-                        'class="remove_avg_item" data-index="' + t + '" style="visibility: hidden;">X</button><div style="clear: ' +
+                        'class="remove_avg_item" data-index="' + i + '" style="visibility: hidden;">X</button><div style="clear: ' +
                         'both; height: 8px;"></div></div');
+
+                    } else {
+
+                        $('.averages_content').append('<div class="avg-item-holder" data-index="' + i + '">' +
+                        '<input type="text" class="both_avg_item" data-index="' + i + '" ' +
+                        'value="" style="width: 150px; visibility: hidden;" class="form-control" />&nbsp;<button type="text" ' +
+                        'class="remove_avg_item" data-index="' + i + '" style="visibility: hidden">X</button>' +
+                        '<div style="clear: both; height: 8px;"></div></div>');
+                    }
+
+                    firstSwitch = true;
+                    firstVal = 0;
+                    totalEach = 0;
+
                 }
 
-                if (t == 1) {
-                    t += 1;
-                } else {
-                    totalEach = 0;
-                    t = 1;
-                }
                 i += 1;
             })
         }
@@ -252,7 +272,6 @@ if (!isset($_SESSION['user'])) {
                     payDate.setDate(15);
                 }
             } else if (action == 'prev') {
-                console.log('date2: ', date2);
                 if (date2 == 15) {
                     payDate.setDate(1);
                 } else {
@@ -288,7 +307,6 @@ if (!isset($_SESSION['user'])) {
                 type: "GET",
                 dataType: "json",
                 success: function(response) {
-                    console.log("Data received:", response);
                     if (response && response.results.length > 0) {
 
                         daysCount = 0;
@@ -302,15 +320,10 @@ if (!isset($_SESSION['user'])) {
                             })
                         });
 
-                        console.log("daysCount: ", daysCount);
-
                         days = [30, 35, 40, 45, 50];
                         days.forEach(function(day) {
                             $('#day' + day).val(calcDisposable(day));
                         });
-
-                        console.log("Balance: ", balance);
-
                     } else {
 
                         balance = 0;
