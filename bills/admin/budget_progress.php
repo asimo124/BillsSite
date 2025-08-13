@@ -94,6 +94,12 @@ if (!isset($_SESSION['user'])) {
     </style>
 
     <div class="row">
+        <div class="col-xs-12">
+            <input type="text" class="form-control" placeholder="Extra Sum" style="width: 250px" id="extra_sum" value="0" />
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-xs-4 totals_content">
             <h5>Totals</h5>
 
@@ -120,7 +126,7 @@ if (!isset($_SESSION['user'])) {
 
     $(document).ready(function() {
 
-        var defaultBalance = 3445;
+        var defaultBalance = 3544;
 
         var daysCount = 0;
 
@@ -159,6 +165,27 @@ if (!isset($_SESSION['user'])) {
             }
         });
 
+        var calcFinalSums = function() {
+            var sumAmount = 0;
+            sumItems.forEach(function(item) {
+                sumAmount += item;
+            })
+
+            var extraSum = $('#extra_sum').val();
+            extraSum = parseFloat(extraSum);
+            if (isNaN(extraSum)) {
+                extraSum = 0;
+            }
+            sumAmount += extraSum;
+
+            $('#sum_total').val(sumAmount);
+            calcAverages();
+        }
+
+        $('#extra_sum').change(function() {
+            calcFinalSums();
+        });
+
         $('.add_sum_item').click(function() {
             var day = $(this).data('day');
             var amount = parseFloat($('#day' + day).val());
@@ -169,12 +196,8 @@ if (!isset($_SESSION['user'])) {
                 'style="width: 150px;" class="form-control" />&nbsp;<button type="text" ' +
                 'class="remove_sum_item" data-index="' + index + '">X</button><div style="clear: both; height: 8px;"></div></div>');
 
-            var sumAmount = 0;
-            sumItems.forEach(function(item) {
-                sumAmount += item;
-            })
-            $('#sum_total').val(sumAmount);
-            calcAverages();
+            
+            calcFinalSums();
         });
 
         $('.totals_content').on('click', '.remove_sum_item', function() {
@@ -201,6 +224,8 @@ if (!isset($_SESSION['user'])) {
             firstSwitch = true;
             totalEach = 0;
             console.log('sumItems: ', sumItems);
+
+            
             sumItems.forEach(function(item) {
 
                 var avg2 = 0;

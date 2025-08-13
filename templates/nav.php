@@ -23,7 +23,7 @@
 </nav>-->
 
 <div class="topnav" id="myTopnav">
-    <a href="/index.html">Bills</a>
+    <a href="https://budget2.hawleywebdesign.com/index.html">Bills</a>
     <a href="/expenses/index.php">Add Expense</a>
     <a href="/bills/admin/index.php">Bills Admin</a>
     <a href="/bills/admin/upcoming_expenses.php">Upcoming Expenses</a>
