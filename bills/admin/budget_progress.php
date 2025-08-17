@@ -130,9 +130,15 @@ if (!isset($_SESSION['user'])) {
 
         var daysCount = 0;
 
+        var count_days_add = 0
+
         var sumItems = [];
 
         var testMode = 0;
+
+        var nextDate = 0;
+
+        var prevDate = 0;
 
         var initBalance = localStorage.getItem('initBalance');
         if (!initBalance) {
@@ -281,6 +287,9 @@ if (!isset($_SESSION['user'])) {
 
         var loadPage = function(action) {
 
+            nextDate = 0;
+            prevDate = 0;
+
             var date2 = parseInt(payDate.getDate());
             if (date2 >= 15) {
                 payDate.setDate(15);
@@ -290,6 +299,8 @@ if (!isset($_SESSION['user'])) {
             var date2 = parseInt(payDate.getDate());
 
             if (action == 'next') {
+                nextDate = 1;
+                prevDate = 0;
                 if (date2 == 15) {
                     payDate.setDate(1);
                     payDate.setMonth(payDate.getMonth() + 1);
@@ -297,6 +308,8 @@ if (!isset($_SESSION['user'])) {
                     payDate.setDate(15);
                 }
             } else if (action == 'prev') {
+                nextDate = 0
+                prevDate = 1;
                 if (date2 == 15) {
                     payDate.setDate(1);
                 } else {
@@ -328,22 +341,38 @@ if (!isset($_SESSION['user'])) {
 
             $.ajax({
                 url: "/api/loadBillDates2.php?user_id=1&pay_date=" + payDateStr + "&current_balance=" + curBalance +
-                    "&test_mode=" + testMode + "&includeWeekends=1",
+                    "&test_mode=" + testMode + "&includeWeekends=1&next_date=" + nextDate + "&prev_date=" + prevDate,
                 type: "GET",
                 dataType: "json",
                 success: function(response) {
                     if (response && response.results.length > 0) {
 
-                        daysCount = 0;
-                        response.results.forEach(function(item) {
+                        var runningTotalBalance = response.curBalance ? response.curBalance : parseFloat($('#init_balance').val());
 
-                            item.days.forEach(function (day) {
-                                balance = day.Balance
-                                if (day.Timestamp != 0) {
+                        let i = 0;
+                        
+                        daysCount = 0;
+                        balance = runningTotalBalance;
+                        response.results.forEach(function getWeek(week) {
+                            let j = 0;
+
+                            week.days.forEach(function getDay(day) {
+
+                                day.desc.forEach(function getExpense(expense) {
+
+                                    balance -= expense.amount;
+                                    
+                                });
+                                if (day.showAsDay == 1) {
                                     daysCount += 1;
                                 }
-                            })
+                                j++;
+                            });
+                            i++;
                         });
+                        count_days_add = response.count_days_add;
+
+                        daysCount += count_days_add;
 
                         days = [30, 35, 40, 45, 50];
                         days.forEach(function(day) {
