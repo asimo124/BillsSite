@@ -65,22 +65,22 @@ if (!isset($_SESSION['user'])) {
             <input type="text" class="form-control" placeholder="" style="width: 50%; display: inline-block;" readonly id="day30" value="" />
             &nbsp;<button type="button" class="btn btn-default add_sum_item" data-day="30">+</button>
         </div>
-        <div class="col-xs-2">
+        <div class="col-xs-3">
             <label for="" class="control-label">$35 Day</label><br>
             <input type="text" class="form-control" placeholder="" style="width: 50%; display: inline-block;" readonly id="day35" value="" />
             &nbsp;<button type="button" class="btn btn-default add_sum_item" data-day="35">+</button>
         </div>
-        <div class="col-xs-2">
+        <div class="col-xs-3">
             <label for="" class="control-label">$40 Day</label><br>
             <input type="text" class="form-control" placeholder="" style="width: 50%; display: inline-block;" readonly id="day40" value="" />
             &nbsp;<button type="button" class="btn btn-default add_sum_item" data-day="40">+</button>
         </div>
-        <div class="col-xs-2">
+        <div class="col-xs-3">
             <label for="" class="control-label">$45 Day</label><br>
             <input type="text" class="form-control" placeholder="" style="width: 50%; display: inline-block;" readonly id="day45" value="" />
             &nbsp;<button type="button" class="btn btn-default add_sum_item" data-day="45">+</button>
         </div>
-        <div class="col-xs-2">
+        <div class="col-xs-1">
             <label for="" class="control-label">$50 Day</label><br>
             <input type="text" class="form-control" placeholder="" style="width: 50%; display: inline-block;" readonly id="day50" value="" />
             &nbsp;<button type="button" class="btn btn-default add_sum_item" data-day="50">+</button>
@@ -284,41 +284,41 @@ if (!isset($_SESSION['user'])) {
         }
 
         var payDate = new Date();
+        var payDateStr = payDate.toLocaleDateString();
 
         var loadPage = function(action) {
 
             nextDate = 0;
             prevDate = 0;
 
-            var date2 = parseInt(payDate.getDate());
-            if (date2 >= 15) {
-                payDate.setDate(15);
-            } else {
-                payDate.setDate(1);
-            }
+
             var date2 = parseInt(payDate.getDate());
 
             if (action == 'next') {
                 nextDate = 1;
                 prevDate = 0;
+                /*/
                 if (date2 == 15) {
                     payDate.setDate(1);
                     payDate.setMonth(payDate.getMonth() + 1);
                 } else {
                     payDate.setDate(15);
                 }
+                //*/
             } else if (action == 'prev') {
                 nextDate = 0
                 prevDate = 1;
+                /*/
                 if (date2 == 15) {
                     payDate.setDate(1);
                 } else {
                     payDate.setDate(15);
                     payDate.setMonth(payDate.getMonth() - 1);
                 }
+                //*/
             }
 
-            var payDateStr = payDate.toLocaleDateString();
+            //var payDateStr = payDate.toLocaleDateString();
 
             titleDateStr = payDate.toLocaleDateString('en-US', {
                 month: 'long',
@@ -328,14 +328,14 @@ if (!isset($_SESSION['user'])) {
 
             $("#title_date").text(titleDateStr);
 
-            getExpenseDays(payDateStr);
+            getExpenseDays();
         }
 
         var calcDisposable = function(disposableDay) {
             return balance - (disposableDay * daysCount);
         }
 
-        var getExpenseDays = function(payDateStr) {
+        var getExpenseDays = function() {
 
             var curBalance = $('#init_balance').val();
 
@@ -347,6 +347,19 @@ if (!isset($_SESSION['user'])) {
                 success: function(response) {
                     if (response && response.results.length > 0) {
 
+                        if (!response.pay_date) {
+                            const today = new Date();
+                            date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                            payDateStr = date;
+                            payDate = new Date();
+                        } else {
+                            date = response.pay_date.toLocaleString();
+                            payDateStr = date;
+                            payDate = new Date(date);
+                            nextDate = 0;
+                            prevDate = 0;
+                        }
+                        
                         var runningTotalBalance = response.curBalance ? response.curBalance : parseFloat($('#init_balance').val());
 
                         let i = 0;
