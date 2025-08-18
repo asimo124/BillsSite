@@ -359,6 +359,13 @@ if (!isset($_SESSION['user'])) {
                             nextDate = 0;
                             prevDate = 0;
                         }
+
+                        title_date = payDate.toLocaleDateString('en-US', {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric'
+                        });
+                        $('#title_date').text(title_date);  
                         
                         var runningTotalBalance = response.curBalance ? response.curBalance : parseFloat($('#init_balance').val());
 
