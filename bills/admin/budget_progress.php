@@ -104,14 +104,20 @@ if (!isset($_SESSION['user'])) {
             <h5>Totals</h5>
 
         </div>
+        <div class="col-xs-4 spa_totals_content">
+            <h5>Spa</h5>
+        </div>
         <div class="col-xs-4 averages_content">
             <h5>Sums</h5>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-xs-12">
-            <input type="text" value="" style="width: 200px;" class="form-control" id="sum_total" value="1000" placeholder="Total" />
+        <div class="col-xs-4">
+            <input type="text" value="" style="width: 200px;" class="form-control" id="sum_total" value="0" placeholder="Total" />
+        </div>
+        <div class="col-xs-4">
+            <input type="text" value="" style="width: 200px;" class="form-control" id="sum_spa" value="0" placeholder="Spa Total" />
         </div>
     </div>
 
@@ -134,11 +140,15 @@ if (!isset($_SESSION['user'])) {
 
         var sumItems = [];
 
+        var spaItems = []
+
         var testMode = 0;
 
         var nextDate = 0;
 
         var prevDate = 0;
+
+        var spaAmount = 57.50
 
         var initBalance = localStorage.getItem('initBalance');
         if (!initBalance) {
@@ -200,11 +210,114 @@ if (!isset($_SESSION['user'])) {
             $('.totals_content').append('<div class="sum-item-holder" data-index="' + index + '"><input type="text" ' +
                 'class="sum_item" data-index="' + index + '" value="' + amount + '" ' +
                 'style="width: 150px;" class="form-control" />&nbsp;<button type="text" ' +
-                'class="remove_sum_item" data-index="' + index + '">X</button><div style="clear: both; height: 8px;"></div></div>');
+                'class="remove_sum_item" data-index="' + index + '">X</button>&nbsp;<button type="text" ' +
+                'class="save_spa" data-index="' + index + '">></button><div style="clear: both; height: 8px;"></div></div>');
+
+            $('.spa_totals_content').append('<div class="spa-item-holder" data-index="' + index + '"><input type="text" ' +
+                'class="spa_item" data-index="' + index + '" value="" ' +
+                'style="width: 150px;" class="form-control" />&nbsp;<button type="text" ' +
+                'class="remove_spa_item" data-index="' + index + '"><</button><div style="clear: both; height: 8px;"></div></div>');    
 
             
             calcFinalSums();
         });
+
+        $('.totals_content').on('click', '.save_spa', function() {
+            var index = $(this).data('index');
+            var amount = parseFloat($(this).siblings('.sum_item').val());
+            amount -= spaAmount
+            
+            
+            spaItems = [];
+            spaTotal = 0;
+            var eachAmount = 0;
+            $('.spa_item').each(function(i, obj) {
+                var idx = $(this).data('index');
+                if (idx == index) {
+                    $(this).val(spaAmount);
+                    spaItems.push(spaAmount);
+
+                    curVal = $('.sum_item[data-index="' + index + '"]').val();
+                    if (isNaN(curVal)) {
+                        curVal = 0;
+                    } else {
+                        curVal = parseFloat(curVal);
+                    }
+                    curVal -= spaAmount;
+                    $('.sum_item[data-index="' + index + '"]').val(curVal);
+                    sumItems[index] = curVal;
+
+                    spaTotal += spaAmount;
+                } else {
+                    eachVal = $(this).val();
+                    if (isNaN(eachVal)) {
+                        eachVal = 0;
+                    } else {
+                        eachVal = parseFloat(eachVal);
+                    }
+                    spaItems.push(eachVal);
+                    spaTotal += eachVal;
+                }
+            });
+
+            
+            $('#sum_spa').val(spaTotal);
+
+            calcFinalSums()
+        });
+
+
+
+
+
+
+        $('.spa_totals_content').on('click', '.remove_spa_item', function() {
+            
+            var index = $(this).data('index');
+            var amount = parseFloat($(this).siblings('.sum_item').val());
+            amount -= spaAmount
+            
+            
+            spaItems = [];
+            spaTotal = 0;
+            var eachAmount = 0;
+            $('.spa_item').each(function(i, obj) {
+                var idx = $(this).data('index');
+                if (idx == index) {
+                    $(this).val(0);
+                    spaItems[index] = 0;
+
+                    curVal = $('.sum_item[data-index="' + index + '"]').val();
+                    if (isNaN(curVal)) {
+                        curVal = 0;
+                    } else {
+                        curVal = parseFloat(curVal);
+                    }
+                    curVal += spaAmount;
+                    $('.sum_item[data-index="' + index + '"]').val(curVal);
+                    sumItems[index] = curVal;
+
+                    spaTotal += 0;
+                } else {
+                    eachVal = $(this).val();
+                    if (isNaN(eachVal)) {
+                        eachVal = 0;
+                    } else {
+                        eachVal = parseFloat(eachVal);
+                    }
+                    spaItems.push(eachVal);
+                    spaTotal += eachVal;
+                }
+            });
+
+            
+            $('#sum_spa').val(spaTotal);
+
+            calcFinalSums()
+        });
+
+
+
 
         $('.totals_content').on('click', '.remove_sum_item', function() {
 
@@ -229,8 +342,6 @@ if (!isset($_SESSION['user'])) {
             secondVal = 0;
             firstSwitch = true;
             totalEach = 0;
-            console.log('sumItems: ', sumItems);
-
             
             sumItems.forEach(function(item) {
 
