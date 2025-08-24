@@ -353,7 +353,7 @@ if (!isset($_SESSION['user'])) {
 
                     $('.averages_content').append('<div class="avg-item-holder" data-index="' + i + '">' +
                         '<input type="text" class="both_avg_item" data-index="' + i + '" ' +
-                        'value="" style="width: 150px; visibility: hidden;" class="form-control" />' +
+                        'value="" style="width: 125px; visibility: hidden;" class="form-control" />' +
                         '<div style="clear: both; height: 8px;"></div></div>');
 
                     firstSwitch = false;
@@ -370,7 +370,7 @@ if (!isset($_SESSION['user'])) {
 
                         $('.averages_content').append('<div class="avg-item-holder" data-index="' + i + '">' +
                         '<input type="text" class="both_avg_item" data-index="' + i + '" ' +
-                        'value="' + avg2 + '" style="width: 150px;" class="form-control" />&nbsp;<button type="text" ' +
+                        'value="' + avg2 + '" style="width: 125px;" class="form-control" />&nbsp;<button type="text" ' +
                         'class="remove_avg_item" data-index="' + i + '" style="visibility: hidden;">X</button><div style="clear: ' +
                         'both; height: 8px;"></div></div');
 
