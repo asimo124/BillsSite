@@ -100,14 +100,14 @@ if (!isset($_SESSION['user'])) {
     </div>
 
     <div class="row">
-        <div class="col-xs-4 totals_content">
+        <div class="col-xs-5 totals_content">
             <h5>Totals</h5>
 
         </div>
         <div class="col-xs-4 spa_totals_content">
             <h5>Spa</h5>
         </div>
-        <div class="col-xs-4 averages_content">
+        <div class="col-xs-3 averages_content">
             <h5>Sums</h5>
         </div>
     </div>
@@ -353,8 +353,7 @@ if (!isset($_SESSION['user'])) {
 
                     $('.averages_content').append('<div class="avg-item-holder" data-index="' + i + '">' +
                         '<input type="text" class="both_avg_item" data-index="' + i + '" ' +
-                        'value="" style="width: 150px; visibility: hidden;" class="form-control" />&nbsp;<button type="text" ' +
-                        'class="remove_avg_item" data-index="' + i + '" style="visibility: hidden">X</button>' +
+                        'value="" style="width: 150px; visibility: hidden;" class="form-control" />' +
                         '<div style="clear: both; height: 8px;"></div></div>');
 
                     firstSwitch = false;
