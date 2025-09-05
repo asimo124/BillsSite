@@ -39,85 +39,51 @@ if (!isset($_SESSION['user'])) {
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2">
             <div class="row">
-                <div class="col-xs-4" style="text-align: right;"><button id="prev_btn" class="btn btn-default"><</button></div>
+                <div class="col-xs-4" style="text-align: right;">
+                    <input type="number" class="form-control" placeholder="Initial Balance" id="init_balance" 
+                    style="width: 50%; display: inline-block;" />
+                    &nbsp;<button type="button" class="btn btn-default" id="check_balance">+</button>
+                    <button id="prev_btn" class="btn btn-default"><</button>
+                </div>
                 <div class="col-xs-4" style="text-align: center;"><h4 id="title_date">June 15th, 2025</h4></div>
-                <div class="col-xs-4" style="text-align: left;"><button id="next_btn" class="btn btn-default">></button></div>
+                <div class="col-xs-4" style="text-align: left;">
+                    <button id="next_btn" class="btn btn-default">></button>
+                    <input type="number" class="form-control" placeholder="" style="width: 50%; display: inline-block;" readonly id="day40" value="" />
+                    &nbsp;<button type="button" class="btn btn-default add_sum_item" data-day="40">+</button>
+                </div>
             </div>
         </div>
     </div>
-
-    <div style="clear: both; height: 16px;"></div>
-    <div class="row">
-        <div class="col-xs-9">
-            <label for="init_balance" class="control-label">Initial Balance:</label><br>
-            <input type="text" class="form-control" placeholder="Initial Balance" id="init_balance" style="width: 200px; display: inline-block;" />
-            &nbsp;<button type="button" class="btn btn-default" id="check_balance">Check</button>
-        </div>
-        <div class="col-xs-3">
-            <input type="checkbox" id="test_mode" value="1" /> Test
-        </div>
-    </div>
-    <div style="clear: both; height: 16px;"></div>
-
-    <div class="row">
-        <div class="col-xs-2">
-            <label for="" class="control-label">$30 Day</label><br>
-            <input type="text" class="form-control" placeholder="" style="width: 50%; display: inline-block;" readonly id="day30" value="" />
-            &nbsp;<button type="button" class="btn btn-default add_sum_item" data-day="30">+</button>
-        </div>
-        <div class="col-xs-3">
-            <label for="" class="control-label">$35 Day</label><br>
-            <input type="text" class="form-control" placeholder="" style="width: 50%; display: inline-block;" readonly id="day35" value="" />
-            &nbsp;<button type="button" class="btn btn-default add_sum_item" data-day="35">+</button>
-        </div>
-        <div class="col-xs-3">
-            <label for="" class="control-label">$40 Day</label><br>
-            <input type="text" class="form-control" placeholder="" style="width: 50%; display: inline-block;" readonly id="day40" value="" />
-            &nbsp;<button type="button" class="btn btn-default add_sum_item" data-day="40">+</button>
-        </div>
-        <div class="col-xs-3">
-            <label for="" class="control-label">$45 Day</label><br>
-            <input type="text" class="form-control" placeholder="" style="width: 50%; display: inline-block;" readonly id="day45" value="" />
-            &nbsp;<button type="button" class="btn btn-default add_sum_item" data-day="45">+</button>
-        </div>
-        <div class="col-xs-1">
-            <label for="" class="control-label">$50 Day</label><br>
-            <input type="text" class="form-control" placeholder="" style="width: 50%; display: inline-block;" readonly id="day50" value="" />
-            &nbsp;<button type="button" class="btn btn-default add_sum_item" data-day="50">+</button>
-        </div>
-    </div>
-
     <div style="clear: both; height: 16px"></div>
 
-    <style type="text/css">
-
-    </style>
-
     <div class="row">
-        <div class="col-xs-12">
-            <input type="text" class="form-control" placeholder="Extra Sum" style="width: 250px" id="extra_sum" value="0" />
+        <div class="col-xs-6">
+            <input type="number" class="form-control" placeholder="Extra Sum" style="width: 250px" id="extra_sum" value="0" />
+        </div>
+        <div class="col-xs-6">
+            <input type="checkbox" id="test_mode" value="1" /> Test Mode
         </div>
     </div>
 
     <div class="row">
-        <div class="col-xs-5 totals_content">
+        <div class="col-xs-6 totals_content">
             <h5>Totals</h5>
 
         </div>
-        <div class="col-xs-4 spa_totals_content">
+        <div class="col-xs-4 spa_totals_content" style="display: none;">
             <h5>Spa</h5>
         </div>
-        <div class="col-xs-3 averages_content">
+        <div class="col-xs-6 averages_content">
             <h5>Sums</h5>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-xs-4">
-            <input type="text" value="" style="width: 200px;" class="form-control" id="sum_total" value="0" placeholder="Total" />
+        <div class="col-xs-6">
+            <input type="number" value="" style="width: 200px;" class="form-control" id="sum_total" value="0" placeholder="Total" />
         </div>
-        <div class="col-xs-4">
-            <input type="text" value="" style="width: 200px;" class="form-control" id="sum_spa" value="0" placeholder="Spa Total" />
+        <div class="col-xs-4" style="display: none;">
+            <input type="number" value="" style="width: 200px;" class="form-control" id="sum_spa" value="0" placeholder="Spa Total" />
         </div>
     </div>
 
@@ -158,7 +124,7 @@ if (!isset($_SESSION['user'])) {
         }
 
         $('#init_balance').change(function() {
-            var initBalance = $(this).val();
+            var initBalance = parseFloat($(this).val()) || 0
             localStorage.setItem('initBalance', initBalance);
         })
 
@@ -187,11 +153,7 @@ if (!isset($_SESSION['user'])) {
                 sumAmount += item;
             })
 
-            var extraSum = $('#extra_sum').val();
-            extraSum = parseFloat(extraSum);
-            if (isNaN(extraSum)) {
-                extraSum = 0;
-            }
+            var extraSum = parseFloat($('#extra_sum').val()) || 0;
             sumAmount += extraSum;
 
             $('#sum_total').val(sumAmount);
@@ -204,16 +166,16 @@ if (!isset($_SESSION['user'])) {
 
         $('.add_sum_item').click(function() {
             var day = $(this).data('day');
-            var amount = parseFloat($('#day' + day).val());
+            var amount = parseFloat($('#day' + day).val()) || 0;
             sumItems.push(amount);
             index = sumItems.length - 1;
-            $('.totals_content').append('<div class="sum-item-holder" data-index="' + index + '"><input type="text" ' +
+            $('.totals_content').append('<div class="sum-item-holder" data-index="' + index + '"><input type="number" ' +
                 'class="sum_item" data-index="' + index + '" value="' + amount + '" ' +
                 'style="width: 150px;" class="form-control" />&nbsp;<button type="text" ' +
                 'class="remove_sum_item" data-index="' + index + '">X</button>&nbsp;<button type="text" ' +
                 'class="save_spa" data-index="' + index + '">></button><div style="clear: both; height: 8px;"></div></div>');
 
-            $('.spa_totals_content').append('<div class="spa-item-holder" data-index="' + index + '"><input type="text" ' +
+            $('.spa_totals_content').append('<div class="spa-item-holder" data-index="' + index + '"><input type="number" ' +
                 'class="spa_item" data-index="' + index + '" value="" ' +
                 'style="width: 150px;" class="form-control" />&nbsp;<button type="text" ' +
                 'class="remove_spa_item" data-index="' + index + '"><</button><div style="clear: both; height: 8px;"></div></div>');    
@@ -224,7 +186,7 @@ if (!isset($_SESSION['user'])) {
 
         $('.totals_content').on('click', '.save_spa', function() {
             var index = $(this).data('index');
-            var amount = parseFloat($(this).siblings('.sum_item').val());
+            var amount = parseFloat($(this).siblings('.sum_item').val()) || 0;
             amount -= spaAmount
             
             
@@ -237,24 +199,14 @@ if (!isset($_SESSION['user'])) {
                     $(this).val(spaAmount);
                     spaItems.push(spaAmount);
 
-                    curVal = $('.sum_item[data-index="' + index + '"]').val();
-                    if (isNaN(curVal)) {
-                        curVal = 0;
-                    } else {
-                        curVal = parseFloat(curVal);
-                    }
+                    curVal = parseFloat($('.sum_item[data-index="' + index + '"]').val()) || 0;
                     curVal -= spaAmount;
                     $('.sum_item[data-index="' + index + '"]').val(curVal);
                     sumItems[index] = curVal;
 
                     spaTotal += spaAmount;
                 } else {
-                    eachVal = $(this).val();
-                    if (isNaN(eachVal)) {
-                        eachVal = 0;
-                    } else {
-                        eachVal = parseFloat(eachVal);
-                    }
+                    eachVal = parseFloat($(this).val()) || 0;
                     spaItems.push(eachVal);
                     spaTotal += eachVal;
                 }
@@ -274,7 +226,7 @@ if (!isset($_SESSION['user'])) {
         $('.spa_totals_content').on('click', '.remove_spa_item', function() {
             
             var index = $(this).data('index');
-            var amount = parseFloat($(this).siblings('.sum_item').val());
+            var amount = parseFloat($(this).siblings('.sum_item').val()) || 0;
             amount -= spaAmount
             
             
@@ -299,12 +251,7 @@ if (!isset($_SESSION['user'])) {
 
                     spaTotal += 0;
                 } else {
-                    eachVal = $(this).val();
-                    if (isNaN(eachVal)) {
-                        eachVal = 0;
-                    } else {
-                        eachVal = parseFloat(eachVal);
-                    }
+                    eachVal = parseFloat($(this).val()) || 0;
                     spaItems.push(eachVal);
                     spaTotal += eachVal;
                 }
@@ -352,7 +299,7 @@ if (!isset($_SESSION['user'])) {
                     firstVal = item;
 
                     $('.averages_content').append('<div class="avg-item-holder" data-index="' + i + '">' +
-                        '<input type="text" class="both_avg_item" data-index="' + i + '" ' +
+                        '<input type="number" class="both_avg_item" data-index="' + i + '" ' +
                         'value="" style="width: 125px; visibility: hidden;" class="form-control" />' +
                         '<div style="clear: both; height: 8px;"></div></div>');
 
@@ -363,13 +310,13 @@ if (!isset($_SESSION['user'])) {
 
                     secondVal = item;
 
-                    if (firstVal > 0 && secondVal > 0) {
+                    if (firstVal !== 0 && secondVal !== 0) {
 
                         totalEach = firstVal + secondVal;
                         avg2 = Math.round(totalEach / 2, 2);
 
                         $('.averages_content').append('<div class="avg-item-holder" data-index="' + i + '">' +
-                        '<input type="text" class="both_avg_item" data-index="' + i + '" ' +
+                        '<input type="number" class="both_avg_item" data-index="' + i + '" ' +
                         'value="' + avg2 + '" style="width: 125px;" class="form-control" />&nbsp;<button type="text" ' +
                         'class="remove_avg_item" data-index="' + i + '" style="visibility: hidden;">X</button><div style="clear: ' +
                         'both; height: 8px;"></div></div');
@@ -377,7 +324,7 @@ if (!isset($_SESSION['user'])) {
                     } else {
 
                         $('.averages_content').append('<div class="avg-item-holder" data-index="' + i + '">' +
-                        '<input type="text" class="both_avg_item" data-index="' + i + '" ' +
+                        '<input type="number" class="both_avg_item" data-index="' + i + '" ' +
                         'value="" style="width: 150px; visibility: hidden;" class="form-control" />&nbsp;<button type="text" ' +
                         'class="remove_avg_item" data-index="' + i + '" style="visibility: hidden">X</button>' +
                         '<div style="clear: both; height: 8px;"></div></div>');
@@ -447,7 +394,7 @@ if (!isset($_SESSION['user'])) {
 
         var getExpenseDays = function() {
 
-            var curBalance = $('#init_balance').val();
+            var curBalance = parseFloat($('#init_balance').val()) || 0;
 
             $.ajax({
                 url: "/api/loadBillDates2.php?user_id=1&pay_date=" + payDateStr + "&current_balance=" + curBalance +
@@ -476,8 +423,8 @@ if (!isset($_SESSION['user'])) {
                             year: 'numeric'
                         });
                         $('#title_date').text(title_date);  
-                        
-                        var runningTotalBalance = response.curBalance ? response.curBalance : parseFloat($('#init_balance').val());
+
+                        var runningTotalBalance = response.curBalance ? response.curBalance : parseFloat($('#init_balance').val()) || 0;
 
                         let i = 0;
                         
