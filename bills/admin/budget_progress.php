@@ -46,10 +46,11 @@ if (!isset($_SESSION['user'])) {
                     <button id="prev_btn" class="btn btn-default"><</button>
                 </div>
                 <div class="col-xs-4" style="text-align: center;"><h4 id="title_date">June 15th, 2025</h4></div>
+                <input type="hidden" id="date_value" value="06/15" />
                 <div class="col-xs-4" style="text-align: left;">
                     <button id="next_btn" class="btn btn-default">></button>
-                    <input type="number" class="form-control" placeholder="" style="width: 50%; display: inline-block;" readonly id="day40" value="" />
                     &nbsp;<button type="button" class="btn btn-default add_sum_item" data-day="40">+</button>
+                    <input type="number" class="form-control" placeholder="" style="width: 50%; display: inline-block;" readonly id="day40" value="" />
                 </div>
             </div>
         </div>
@@ -107,6 +108,8 @@ if (!isset($_SESSION['user'])) {
         var sumItems = [];
 
         var spaItems = []
+
+        var dateItems = [];
 
         var testMode = 0;
 
@@ -168,12 +171,16 @@ if (!isset($_SESSION['user'])) {
             var day = $(this).data('day');
             var amount = parseFloat($('#day' + day).val()) || 0;
             sumItems.push(amount);
+
+            eachDate = $('#date_value').val();
+            dateItems.push(eachDate);
+
             index = sumItems.length - 1;
             $('.totals_content').append('<div class="sum-item-holder" data-index="' + index + '"><input type="number" ' +
                 'class="sum_item" data-index="' + index + '" value="' + amount + '" ' +
                 'style="width: 150px;" class="form-control" />&nbsp;<button type="text" ' +
                 'class="remove_sum_item" data-index="' + index + '">X</button>&nbsp;<button type="text" ' +
-                'class="save_spa" data-index="' + index + '">></button><div style="clear: both; height: 8px;"></div></div>');
+                'class="save_spa" data-index="' + index + '">></button> ' + eachDate + '<div style="clear: both; height: 8px;"></div></div>');
 
             $('.spa_totals_content').append('<div class="spa-item-holder" data-index="' + index + '"><input type="number" ' +
                 'class="spa_item" data-index="' + index + '" value="" ' +
@@ -385,6 +392,8 @@ if (!isset($_SESSION['user'])) {
 
             $("#title_date").text(titleDateStr);
 
+            $('#date_value').val((payDate.getMonth() + 1) + '/' + payDate.getDate());
+
             getExpenseDays();
         }
 
@@ -423,6 +432,8 @@ if (!isset($_SESSION['user'])) {
                             year: 'numeric'
                         });
                         $('#title_date').text(title_date);  
+
+                        $('#date_value').val((payDate.getMonth() + 1) + '/' + payDate.getDate());
 
                         var runningTotalBalance = response.curBalance ? response.curBalance : parseFloat($('#init_balance').val()) || 0;
 
