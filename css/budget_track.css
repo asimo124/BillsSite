@@ -1,0 +1,18 @@
+.cal_month {
+  width: 100px;
+  height: 100px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 100px;
+  font-size: 24px;
+  font-weight: bold;
+  background-color: #f0f0f0;
+  margin: 5px auto;
+}
+.cal_month_title {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+  font-size: 32px;
+}

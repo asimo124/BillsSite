@@ -18,6 +18,7 @@ if (!isset($_SESSION['user'])) {
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/nav.css" />
     <link rel="stylesheet" href="/css/bills_admin.css" />
+    <link rel="stylesheet" href="/css/budget_track.css?version=3" />
     <!-- Vue.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 </head>
@@ -110,6 +111,13 @@ if (!isset($_SESSION['user'])) {
     </div>
     <div style="clear: both; height: 16px"></div>
 
+    <div class="row">
+        <div class="col-xs-4 col-sm-3 col-md-2" v-for="(month, index) in months_left_arr" :key="index">
+            <div class="cal_month">
+                <span class="cal_month_title">{{ month }}</span>
+            </div>
+        </div>
+    </div>
 
 </div>
 </body>
@@ -143,18 +151,15 @@ if (!isset($_SESSION['user'])) {
             mastercard_months_left: 0,
             credit_human_months_left: 0,
             total_months_left: 0,
+            months_left_arr: []
         },
         methods: {
             calcProgress: function() {
                 // Calculate total balance
                 this.total_balance = parseFloat(this.sofi_balance) + parseFloat(this.mastercard_balance) + parseFloat(this.credit_human_balance);
 
-                console.log('111');
-                
                 // Calculate total min payment
                 this.total_min_payment = parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_min_payment);
-
-                console.log('222');
 
                 this.sofi_amount_principal = parseFloat((this.sofi_min_payment * this.sofi_percentage_principal).toFixed(2));
                 this.sofi_total_principal_monthly = (this.disposable_per_month + this.sofi_amount_principal);
@@ -170,7 +175,34 @@ if (!isset($_SESSION['user'])) {
 
                 this.total_months_left = (parseFloat(this.sofi_months_left) + parseFloat(this.mastercard_months_left) + parseFloat(this.credit_human_months_left)).toFixed(1);
 
-                console.log('666');
+                var total_paychecks_left = Math.round(this.total_months_left * 2);
+                console.log('Total Paychecks Left: ' + total_paychecks_left);
+
+                var date2 = new Date();
+                var curDay = date2.getDate();
+                if (curDay > 15) {
+                    total_paychecks_left = total_paychecks_left + 1;
+                }
+                this.total_months_left_after = Math.round(total_paychecks_left / 2);
+
+                // Clear the months array and populate with month names
+                this.months_left_arr = [];
+                var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                
+                var currentDate = new Date();
+                var currentMonth = currentDate.getMonth(); // 0-11
+                var currentYear = currentDate.getFullYear();
+                
+                for (var i = 0; i < this.total_months_left_after; i++) {
+                    var monthIndex = (currentMonth + 1 + i) % 12; // Start from next month
+                    var yearOffset = Math.floor((currentMonth + 1 + i) / 12); // Calculate year offset
+                    var displayYear = (currentYear + yearOffset).toString().slice(-2); // Last 2 digits
+                    var monthYearString = monthNames[monthIndex] + ' ' + displayYear;
+                    this.months_left_arr.push(monthYearString);
+                }
+
+                console.log('Months array:', this.months_left_arr);
 
                 console.log({
                     "items": {
