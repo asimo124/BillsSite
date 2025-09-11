@@ -112,10 +112,14 @@ if (!isset($_SESSION['user'])) {
     <div style="clear: both; height: 16px"></div>
 
     <div class="row">
-        <div class="col-xs-4 col-sm-3 col-md-2" v-for="(month, index) in months_left_arr" :key="index">
-            <div class="cal_month">
-                <span class="cal_month_title">{{ month }}</span>
+        <div v-for="(yearGroup, yearIndex) in months_left_arr" :key="yearIndex">
+            <h4>{{ yearGroup.year_title }}</h4>
+            <div class="col-xs-4 col-sm-3 col-md-2" v-for="(month, monthIndex) in yearGroup.months" :key="monthIndex">
+                <div class="cal_month">
+                    <span class="cal_month_title">{{ month }}</span>
+                </div>
             </div>
+            <div style="clear: both;"></div>
         </div>
     </div>
 
@@ -185,7 +189,7 @@ if (!isset($_SESSION['user'])) {
                 }
                 this.total_months_left_after = Math.round(total_paychecks_left / 2);
 
-                // Clear the months array and populate with month names
+                // Clear the months array and populate with month names grouped by year
                 this.months_left_arr = [];
                 var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
                                  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -194,13 +198,27 @@ if (!isset($_SESSION['user'])) {
                 var currentMonth = currentDate.getMonth(); // 0-11
                 var currentYear = currentDate.getFullYear();
                 
+                var yearGroups = {};
+                
                 for (var i = 0; i < this.total_months_left_after; i++) {
                     var monthIndex = (currentMonth + 1 + i) % 12; // Start from next month
                     var yearOffset = Math.floor((currentMonth + 1 + i) / 12); // Calculate year offset
-                    var displayYear = (currentYear + yearOffset).toString().slice(-2); // Last 2 digits
-                    var monthYearString = monthNames[monthIndex] + ' ' + displayYear;
-                    this.months_left_arr.push(monthYearString);
+                    var displayYear = currentYear + yearOffset; // Full year
+                    var displayYearShort = displayYear.toString().slice(-2); // Last 2 digits
+                    var monthYearString = monthNames[monthIndex] + ' ' + displayYearShort;
+                    
+                    // Group by year
+                    if (!yearGroups[displayYear]) {
+                        yearGroups[displayYear] = {
+                            year_title: displayYear,
+                            months: []
+                        };
+                    }
+                    yearGroups[displayYear].months.push(monthYearString);
                 }
+                
+                // Convert to array
+                this.months_left_arr = Object.values(yearGroups);
 
                 console.log('Months array:', this.months_left_arr);
 
