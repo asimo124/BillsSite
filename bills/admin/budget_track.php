@@ -18,7 +18,7 @@ if (!isset($_SESSION['user'])) {
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/nav.css" />
     <link rel="stylesheet" href="/css/bills_admin.css" />
-    <link rel="stylesheet" href="/css/budget_track.css?version=3" />
+    <link rel="stylesheet" href="/css/budget_track.css?version=7" />
     <!-- Vue.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 </head>
@@ -115,13 +115,32 @@ if (!isset($_SESSION['user'])) {
         <div v-for="(yearGroup, yearIndex) in months_left_arr" :key="yearIndex">
             <h4>{{ yearGroup.year_title }}</h4>
             <div class="col-xs-4 col-sm-3 col-md-2" v-for="(month, monthIndex) in yearGroup.months" :key="monthIndex">
-                <div class="cal_month">
-                    <span class="cal_month_title">{{ month }}</span>
+                <div class="cal_month" :class="{'green_box': month.color === 'green', 'red_box': month.color === 'red', 'blue_box': month.color === 'blue'}">
+                    <span class="cal_month_title">{{ month.month_year }}</span>
                 </div>
             </div>
             <div style="clear: both;"></div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <h3>Principal Percentage</h3>
+            <label for="sofi_percentage_principal">Sofi</label>
+            <input type="number" id="sofi_percentage_principal" class="form-control" 
+                placeholder="Sofi Percentage Principal" v-model="sofi_percentage_principal" />
+            <div style="clear: both; height: 8px"></div>
+            <label for="mastercard_percentage_principal">Mastercard</label>
+            <input type="number" id="mastercard_percentage_principal" class="form-control" 
+                placeholder="Mastercard Percentage Principal" v-model="mastercard_percentage_principal" />
+            <div style="clear: both; height: 8px"></div>
+            <label for="credit_human_percentage_principal">Credit Human</label>
+            <input type="number" id="credit_human_percentage_principal" class="form-control" 
+                placeholder="Credit Human Percentage Principal" v-model="credit_human_percentage_principal" />
+            <div style="clear: both; height: 8px"></div>
+        </div>
+    </div>
+    <div style="clear: both; height: 16px"></div>
 
 </div>
 </body>
@@ -167,15 +186,15 @@ if (!isset($_SESSION['user'])) {
 
                 this.sofi_amount_principal = parseFloat((this.sofi_min_payment * this.sofi_percentage_principal).toFixed(2));
                 this.sofi_total_principal_monthly = (this.disposable_per_month + this.sofi_amount_principal);
-                this.sofi_months_left = (this.sofi_balance / this.sofi_total_principal_monthly).toFixed(1);
+                this.sofi_months_left = parseFloat((this.sofi_balance / this.sofi_total_principal_monthly).toFixed(1));
 
                 this.mastercard_amount_principal = parseFloat((this.mastercard_min_payment * this.mastercard_percentage_principal).toFixed(2));
                 this.mastercard_total_principal_monthly = (this.disposable_per_month + this.sofi_min_payment + this.mastercard_amount_principal);
-                this.mastercard_months_left = (this.mastercard_balance / this.mastercard_total_principal_monthly).toFixed(1);
+                this.mastercard_months_left = parseFloat((this.mastercard_balance / this.mastercard_total_principal_monthly).toFixed(1));
 
                 this.credit_human_amount_principal = parseFloat((this.credit_human_min_payment * this.credit_human_percentage_principal).toFixed(2));
                 this.credit_human_total_principal_monthly = (this.disposable_per_month + this.sofi_min_payment + this.mastercard_min_payment + this.credit_human_amount_principal);
-                this.credit_human_months_left = (this.credit_human_balance / this.credit_human_total_principal_monthly).toFixed(1);
+                this.credit_human_months_left = parseFloat((this.credit_human_balance / this.credit_human_total_principal_monthly).toFixed(1));
 
                 this.total_months_left = (parseFloat(this.sofi_months_left) + parseFloat(this.mastercard_months_left) + parseFloat(this.credit_human_months_left)).toFixed(1);
 
@@ -214,7 +233,29 @@ if (!isset($_SESSION['user'])) {
                             months: []
                         };
                     }
-                    yearGroups[displayYear].months.push(monthYearString);
+
+                    var sofi_threshold = this.sofi_months_left;
+                    var mastercard_threshold = sofi_threshold + this.mastercard_months_left;
+                    var credit_human_threshold = mastercard_threshold + this.credit_human_months_left;
+
+                    console.log('i: ' + i + ', sofi_threshold: ' + sofi_threshold + ', mastercard_threshold: ' + mastercard_threshold + ', credit_human_threshold: ' + credit_human_threshold);
+
+                    if (i < sofi_threshold) {
+                        yearGroups[displayYear].months.push({
+                            month_year: monthYearString,
+                            color: "red",
+                        });
+                    } else if (i < mastercard_threshold) {
+                        yearGroups[displayYear].months.push({
+                            month_year: monthYearString,
+                            color: "blue",
+                        });
+                    } else if (i < credit_human_threshold) {
+                        yearGroups[displayYear].months.push({
+                            month_year: monthYearString,
+                            color: "green",
+                        });
+                    }
                 }
                 
                 // Convert to array
@@ -262,7 +303,16 @@ if (!isset($_SESSION['user'])) {
             },
             disposable_per_month: function(newVal, oldVal) {
                 localStorage.setItem('disposable_per_month', newVal);
-            }
+            },
+            sofi_percentage_principal: function(newVal, oldVal) {
+                localStorage.setItem('sofi_percentage_principal', newVal);
+            },
+            mastercard_percentage_principal: function(newVal, oldVal) {
+                localStorage.setItem('mastercard_percentage_principal', newVal);
+            },
+            credit_human_percentage_principal: function(newVal, oldVal) {
+                localStorage.setItem('credit_human_percentage_principal', newVal);
+            },
         },
         mounted() {
 
@@ -281,6 +331,16 @@ if (!isset($_SESSION['user'])) {
             if (localStorage.getItem('disposable_per_month') && !isNaN(localStorage.getItem('disposable_per_month'))) {
                 this.disposable_per_month = parseFloat(localStorage.getItem('disposable_per_month'));
             }   
+
+            if (localStorage.getItem('sofi_percentage_principal') && !isNaN(localStorage.getItem('sofi_percentage_principal'))) {
+                this.sofi_percentage_principal = parseFloat(localStorage.getItem('sofi_percentage_principal'));
+            }
+            if (localStorage.getItem('mastercard_percentage_principal') && !isNaN(localStorage.getItem('mastercard_percentage_principal'))) {
+                this.mastercard_percentage_principal = parseFloat(localStorage.getItem('mastercard_percentage_principal'));
+            }
+            if (localStorage.getItem('credit_human_percentage_principal') && !isNaN(localStorage.getItem('credit_human_percentage_principal'))) {
+                this.credit_human_percentage_principal = parseFloat(localStorage.getItem('credit_human_percentage_principal'));
+            }
 
             this.total_balance = parseFloat(this.sofi_balance) + parseFloat(this.mastercard_balance) + parseFloat(this.credit_human_balance);
 

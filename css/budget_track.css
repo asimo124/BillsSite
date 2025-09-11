@@ -9,10 +9,23 @@
   font-weight: bold;
   background-color: #f0f0f0;
   margin: 5px auto;
+  color: white;
 }
 .cal_month_title {
   display: inline-block;
   vertical-align: middle;
   line-height: normal;
   font-size: 32px;
+}
+
+.green_box {
+  background-color: #169122;
+}
+
+.red_box {
+  background-color: #db605a;
+}
+
+.blue_box {
+  background-color: #147cde;
 }
