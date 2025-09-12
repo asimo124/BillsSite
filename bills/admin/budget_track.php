@@ -125,18 +125,18 @@ if (!isset($_SESSION['user'])) {
 
     <div class="row">
         <div class="col-xs-6">
-            <h3>Principal Percentage</h3>
-            <label for="sofi_percentage_principal">Sofi</label>
-            <input type="number" id="sofi_percentage_principal" class="form-control" 
-                placeholder="Sofi Percentage Principal" v-model="sofi_percentage_principal" />
+            <h3>Min Payment Principal</h3>
+            <label for="sofi_amount_principal">Sofi</label>
+            <input type="number" id="sofi_amount_principal" class="form-control" 
+                placeholder="Sofi Min Payment Principal" v-model="sofi_amount_principal" />
             <div style="clear: both; height: 8px"></div>
-            <label for="mastercard_percentage_principal">Mastercard</label>
-            <input type="number" id="mastercard_percentage_principal" class="form-control" 
-                placeholder="Mastercard Percentage Principal" v-model="mastercard_percentage_principal" />
+            <label for="mastercard_amount_principal">Mastercard</label>
+            <input type="number" id="mastercard_amount_principal" class="form-control" 
+                placeholder="Mastercard Min Payment Principal" v-model="mastercard_amount_principal" />
             <div style="clear: both; height: 8px"></div>
-            <label for="credit_human_percentage_principal">Credit Human</label>
-            <input type="number" id="credit_human_percentage_principal" class="form-control" 
-                placeholder="Credit Human Percentage Principal" v-model="credit_human_percentage_principal" />
+            <label for="credit_human_amount_principal">Credit Human</label>
+            <input type="number" id="credit_human_amount_principal" class="form-control" 
+                placeholder="Credit Human Min Payment Principal" v-model="credit_human_amount_principal" />
             <div style="clear: both; height: 8px"></div>
         </div>
     </div>
@@ -161,12 +161,9 @@ if (!isset($_SESSION['user'])) {
             mastercard_min_payment: 250,
             credit_human_min_payment: 293,
             total_min_payment: 0,
-            sofi_percentage_principal: 0,
-            mastercard_percentage_principal: 0,
-            credit_human_percentage_principal: 0,
-            sofi_amount_principal: 0,
-            mastercard_amount_principal: 0,
-            credit_human_amount_principal: 0,
+            sofi_amount_principal: 566, // from 512 on 9/12/2025
+            mastercard_amount_principal: 125,
+            credit_human_amount_principal: 200,
             sofi_total_principal_monthly: 0,
             mastercard_total_principal_monthly: 0,
             credit_human_total_principal_monthly: 0,
@@ -184,7 +181,7 @@ if (!isset($_SESSION['user'])) {
                 // Calculate total min payment
                 this.total_min_payment = parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_min_payment);
 
-                this.sofi_amount_principal = parseFloat((this.sofi_min_payment * this.sofi_percentage_principal).toFixed(2));
+                //this.sofi_amount_principal = parseFloat((this.sofi_min_payment * this.sofi_percentage_principal).toFixed(2));
                 this.sofi_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.sofi_amount_principal));
                 this.sofi_months_left = parseFloat((this.sofi_balance / this.sofi_total_principal_monthly).toFixed(1));
 
@@ -192,11 +189,11 @@ if (!isset($_SESSION['user'])) {
                 console.log('sofi_total_principal_monthly: ' + this.sofi_total_principal_monthly);
                 console.log('sofi_months_left: ' + this.sofi_months_left);  
 
-                this.mastercard_amount_principal = parseFloat((this.mastercard_min_payment * this.mastercard_percentage_principal).toFixed(2));
+                //this.mastercard_amount_principal = parseFloat((this.mastercard_min_payment * this.mastercard_percentage_principal).toFixed(2));
                 this.mastercard_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_amount_principal));
                 this.mastercard_months_left = parseFloat((this.mastercard_balance / this.mastercard_total_principal_monthly).toFixed(1));
 
-                this.credit_human_amount_principal = parseFloat((this.credit_human_min_payment * this.credit_human_percentage_principal).toFixed(2));
+                //this.credit_human_amount_principal = parseFloat((this.credit_human_min_payment * this.credit_human_percentage_principal).toFixed(2));
                 this.credit_human_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_amount_principal));
                 this.credit_human_months_left = parseFloat((this.credit_human_balance / this.credit_human_total_principal_monthly).toFixed(1));
 
@@ -311,14 +308,14 @@ if (!isset($_SESSION['user'])) {
             sofi_months_left: function(newVal, oldVal) {
                 localStorage.setItem('sofi_months_left', newVal);
             },
-            sofi_percentage_principal: function(newVal, oldVal) {
-                localStorage.setItem('sofi_percentage_principal', newVal);
+            sofi_amount_principal: function(newVal, oldVal) {
+                localStorage.setItem('sofi_amount_principal', newVal);
             },
-            mastercard_percentage_principal: function(newVal, oldVal) {
-                localStorage.setItem('mastercard_percentage_principal', newVal);
+            mastercard_amount_principal: function(newVal, oldVal) {
+                localStorage.setItem('mastercard_amount_principal', newVal);
             },
-            credit_human_percentage_principal: function(newVal, oldVal) {
-                localStorage.setItem('credit_human_percentage_principal', newVal);
+            credit_human_amount_principal: function(newVal, oldVal) {
+                localStorage.setItem('credit_human_amount_principal', newVal);
             },
         },
         mounted() {
@@ -339,14 +336,14 @@ if (!isset($_SESSION['user'])) {
                 this.disposable_per_month = parseFloat(localStorage.getItem('disposable_per_month'));
             }   
 
-            if (localStorage.getItem('sofi_percentage_principal') && !isNaN(localStorage.getItem('sofi_percentage_principal'))) {
-                this.sofi_percentage_principal = parseFloat(localStorage.getItem('sofi_percentage_principal'));
+            if (localStorage.getItem('sofi_amount_principal') && !isNaN(localStorage.getItem('sofi_amount_principal'))) {
+                this.sofi_amount_principal = parseFloat(localStorage.getItem('sofi_amount_principal'));
             }
-            if (localStorage.getItem('mastercard_percentage_principal') && !isNaN(localStorage.getItem('mastercard_percentage_principal'))) {
-                this.mastercard_percentage_principal = parseFloat(localStorage.getItem('mastercard_percentage_principal'));
+            if (localStorage.getItem('mastercard_amount_principal') && !isNaN(localStorage.getItem('mastercard_amount_principal'))) {
+                this.mastercard_amount_principal = parseFloat(localStorage.getItem('mastercard_amount_principal'));
             }
-            if (localStorage.getItem('credit_human_percentage_principal') && !isNaN(localStorage.getItem('credit_human_percentage_principal'))) {
-                this.credit_human_percentage_principal = parseFloat(localStorage.getItem('credit_human_percentage_principal'));
+            if (localStorage.getItem('credit_human_amount_principal') && !isNaN(localStorage.getItem('credit_human_amount_principal'))) {
+                this.credit_human_amount_principal = parseFloat(localStorage.getItem('credit_human_amount_principal'));
             }
 
             this.total_balance = parseFloat(this.sofi_balance) + parseFloat(this.mastercard_balance) + parseFloat(this.credit_human_balance);
