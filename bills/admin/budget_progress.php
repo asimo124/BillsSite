@@ -178,7 +178,7 @@ if (!isset($_SESSION['user'])) {
             index = sumItems.length - 1;
             $('.totals_content').append('<div class="sum-item-holder" data-index="' + index + '"><input type="number" ' +
                 'class="sum_item" data-index="' + index + '" value="' + amount + '" ' +
-                'style="width: 150px;" class="form-control" />&nbsp;<button type="text" ' +
+                'style="width: 50%;" class="form-control" />&nbsp;<button type="text" ' +
                 'class="remove_sum_item" data-index="' + index + '">X</button>&nbsp;<button type="text" ' +
                 'class="save_spa" data-index="' + index + '">></button> ' + eachDate + '<div style="clear: both; height: 8px;"></div></div>');
 
