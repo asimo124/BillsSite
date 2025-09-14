@@ -63,6 +63,8 @@ if (!isset($_SESSION['user'])) {
         </div>
         <div class="col-xs-6">
             <input type="checkbox" id="test_mode" value="1" /> Test Mode
+            &nbsp; <input type="number" id="disposable_per_day" value="40" style="width: 50px;"/> Disposable
+            &nbsp; <input type="checkbox" id="remove_15_days" value="1" /> 15 Days
         </div>
     </div>
 
@@ -398,7 +400,17 @@ if (!isset($_SESSION['user'])) {
         }
 
         var calcDisposable = function(disposableDay) {
-            return balance - (disposableDay * daysCount);
+
+            disposableDay = parseFloat($('#disposable_per_day').val());
+
+            subtractAmount = 0;
+            remove15Days = $('#remove_15_days').is(':checked') ? 1 : 0;
+            if (remove15Days) {
+                subtractAmount = 600;
+            }
+            
+
+            return balance - (disposableDay * daysCount) - subtractAmount;
         }
 
         var getExpenseDays = function() {
@@ -462,10 +474,16 @@ if (!isset($_SESSION['user'])) {
 
                         daysCount += count_days_add;
 
+                        /*/
                         days = [30, 35, 40, 45, 50];
                         days.forEach(function(day) {
                             $('#day' + day).val(calcDisposable(day));
                         });
+                        //*/
+
+                        $('#day40').val(calcDisposable(40));
+
+
                     } else {
 
                         balance = 0;
