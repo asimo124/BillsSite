@@ -51,6 +51,10 @@ if (isset($changeTestMode)) {
 	$testMode = $changeTestMode;
 }
 
+if ($test_mode) {
+	$testMode = 1;
+}
+
 $mysqlDatabase = $testMode == 1 ? MYSQL_DATABASE3 : MYSQL_DATABASE;
 
 try {

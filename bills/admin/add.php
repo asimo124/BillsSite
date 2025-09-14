@@ -154,6 +154,12 @@ foreach ($searchFiltersRequestArr as $key => $value) {
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Start Date</label>
+                <div class="col-md-4">
+                    <input id="start_date" name="start_date" type="text" placeholder="Start Date" class="form-control input-md" value="" />
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">End Date</label>
                 <div class="col-md-4">
                     <input id="end_date" name="end_date" type="text" placeholder="End Date" class="form-control input-md" value="" />
@@ -178,6 +184,7 @@ foreach ($searchFiltersRequestArr as $key => $value) {
 <script>
     $( function() {
         $( "#end_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
+        $( "#start_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
 
         $('#vnd_frequency').change(function() {
             if ($(this).val() == 'Once Per Month') {

@@ -1,8 +1,18 @@
 <?php
-	ini_set("display_errors", 1);
-	$path_file = dirname(__FILE__);
-	require_once($path_file . "/../inc/includes.php");
-	require_once($path_file . "/../inc/Bills.php");
+ini_set("display_errors", 1);
+$path_file = dirname(__FILE__);
+
+	// Check if running from CLI and get test_mode parameter
+$test_mode = 0; // Default value
+if (php_sapi_name() === 'cli') {
+	// Running from command line
+	if (isset($argv[1])) {
+		$test_mode = intval($argv[1]);
+	}
+}
+
+require_once($path_file . "/../inc/includes.php");
+require_once($path_file . "/../inc/Bills.php");
 
 $numReps = 42;
 $user_id = 1;

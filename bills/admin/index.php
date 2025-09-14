@@ -105,6 +105,9 @@ if ($sort1) {
         case "end_date":
             $orderBy .= "end_date ";
             break;
+        case "start_date":
+            $orderBy .= "start_date ";
+            break;
     }
     $orderBy .= $sort1_dir;
 }
@@ -126,12 +129,16 @@ if ($sort2) {
         case "end_date":
             $orderBy .= "end_date ";
             break;
+        case "start_date":
+            $orderBy .= "start_date ";
+            break;
     }
     $orderBy .= $sort2_dir;
 }
 
 $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value, 
-       vnd_frequency_value_original, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2
+       vnd_frequency_value_original, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2,
+       start_date
         FROM vnd_bills 
         WHERE 1 
         AND vnd_frequency = :frequency ";
@@ -144,7 +151,8 @@ $sql .= $orderBy;
 $stmt_sel_bills = $db_conn->prepare($sql);
 
 $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value,
-       vnd_frequency_value_original, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2
+       vnd_frequency_value_original, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2,
+       start_date
         FROM vnd_bills 
         WHERE 1 
         AND vnd_frequency = :frequency
@@ -164,7 +172,8 @@ foreach ($frequencyArr as $getFrequency) {
         if (strpos($getFrequency, " - ") === false) {
 
             $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value, 
-       vnd_frequency_value_original, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2
+       vnd_frequency_value_original, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2,
+       start_date
             FROM vnd_bills 
             WHERE 1 
             AND vnd_frequency = :frequency ";
@@ -195,7 +204,7 @@ foreach ($frequencyArr as $getFrequency) {
             $frequencyArr = explode(" - ", $getFrequency);
 
             $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value_original, 
-       vnd_frequency_value, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2
+       vnd_frequency_value, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2, start_date
                     FROM vnd_bills 
                     WHERE 1 
                     AND vnd_frequency = :frequency
@@ -277,7 +286,9 @@ foreach ($frequencyArr as $getFrequency) {
                     <option value="bill" <?php echo ($sort1 == "bill") ? "SELECTED" : ""; ?>>Bill Name</option>
                     <option value="frequency" <?php echo ($sort1 == "frequency") ? "SELECTED" : ""; ?>>Frequency</option>
                     <option value="amount" <?php echo ($sort1 == "amount") ? "SELECTED" : ""; ?>>Amount</option>
+                    <option value="start_date" <?php echo ($sort1 == "start_date") ? "SELECTED" : ""; ?>>Start Date</option>
                     <option value="end_date" <?php echo ($sort1 == "end_date") ? "SELECTED" : ""; ?>>End Date</option>
+                    
                 </select>
             </div>
             <div class="col-md-2 col-xs-6">
@@ -292,7 +303,9 @@ foreach ($frequencyArr as $getFrequency) {
                     <option value="bill" <?php echo ($sort2 == "bill") ? "SELECTED" : ""; ?>>Bill Name</option>
                     <option value="frequency" <?php echo ($sort2 == "frequency") ? "SELECTED" : ""; ?>>Frequency</option>
                     <option value="amount" <?php echo ($sort2 == "amount") ? "SELECTED" : ""; ?>>Amount</option>
+                    <option value="start_date" <?php echo ($sort2 == "start_date") ? "SELECTED" : ""; ?>>Start Date</option>
                     <option value="end_date" <?php echo ($sort2 == "end_date") ? "SELECTED" : ""; ?>>End Date</option>
+                    
                 </select>
             </div>
             <div class="col-md-2 col-xs-6">
@@ -410,7 +423,9 @@ foreach ($frequencyArr as $getFrequency) {
                         <?php if (!$showAuditFields) : ?>
                             <th>Amount</th>
                             <th>Frequency</th>
-                            <th colspan="2">Frequency Info</th>
+                            <!-- <th colspan="2">Frequency Info</th> -->
+                            <th>Frequency Info</th>
+                            <th>Start Date</th>
                             <th>End Date</th>
                         <?php else: ?>
                              <th>Audit Regex</th>
@@ -432,11 +447,13 @@ foreach ($frequencyArr as $getFrequency) {
                                 <td><?php echo formatCurrency($getBill['amount']); ?></td>
                                 <td><?php echo $getBill['vnd_frequency']; ?></td>
                                 <?php if ($getBill['vnd_frequency_type'] != "Day of Month") : ?>
-                                    <td colspan="2"><?php echo $getBill['vnd_frequency_type']; ?>&nbsp(<?php echo $getBill['vnd_frequency_value']; ?>)</td>
+                                    <!-- <td colspan="2"><?php echo $getBill['vnd_frequency_type']; ?>&nbsp(<?php echo $getBill['vnd_frequency_value']; ?>)</td> -->
+                                    <td><?php echo $getBill['vnd_frequency_type']; ?>&nbsp(<?php echo $getBill['vnd_frequency_value']; ?>)</td>
                                 <?php else : ?>
-                                    <td><?php echo $getBill['vnd_frequency_value_original']; ?></td>
+                                    <!-- <td><?php echo $getBill['vnd_frequency_value_original']; ?></td> -->
                                     <td><?php echo $getBill['vnd_frequency_value']; ?></td>
                                 <?php endif; ?>
+                                <td><?php echo ($getBill['start_date'] != "0000-00-00" ? $getBill['start_date'] : ""); ?></td>
                                 <td><?php echo ($getBill['end_date'] != "0000-00-00" ? $getBill['end_date'] : ""); ?></td>
                             <?php else: ?>
                                 <td>

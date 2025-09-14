@@ -16,9 +16,14 @@ $vnd_frequency_type = isset($_REQUEST['vnd_frequency_type']) ? ($_REQUEST['vnd_f
 $vnd_frequency_value = isset($_REQUEST['vnd_frequency_value']) ? trim($_REQUEST['vnd_frequency_value']) : "";
 $vnd_frequency_value_original = isset($_REQUEST['vnd_frequency_value_original']) ? trim($_REQUEST['vnd_frequency_value_original']) : null;
 $end_date = isset($_REQUEST['end_date']) ? trim($_REQUEST['end_date']) : null;
+$start_date = isset($_REQUEST['start_date']) ? trim($_REQUEST['start_date']) : null;
 
-if (!$end_date || $end_date == "0000-00-00 00:00:00") {
+if (!$end_date || $end_date == "0000-00-00") {
     $end_date = null;
+}
+
+if (!$start_date || $start_date == "0000-00-00") {
+    $start_date = null;
 }
 
 if ($vnd_bill == "" || $amount <= 0) {
@@ -27,8 +32,8 @@ if ($vnd_bill == "" || $amount <= 0) {
 }
 
 $sql = "INSERT INTO vnd_bills
-        ( vnd_user_id,  vnd_bill,  amount,  vnd_is_auto,  vnd_frequency_notes,  vnd_frequency,  vnd_frequency_type,  vnd_frequency_value,  vnd_frequency_value_original,  end_date) VALUES
-        (:vnd_user_id, :vnd_bill, :amount, :vnd_is_auto, :vnd_frequency_notes, :vnd_frequency, :vnd_frequency_type, :vnd_frequency_value, :vnd_frequency_value_original, :end_date) ";
+        ( vnd_user_id,  vnd_bill,  amount,  vnd_is_auto,  vnd_frequency_notes,  vnd_frequency,  vnd_frequency_type,  vnd_frequency_value,  vnd_frequency_value_original,  end_date,  start_date) VALUES
+        (:vnd_user_id, :vnd_bill, :amount, :vnd_is_auto, :vnd_frequency_notes, :vnd_frequency, :vnd_frequency_type, :vnd_frequency_value, :vnd_frequency_value_original, :end_date, :start_date) ";
 
 execQuery($sql, [
     "vnd_user_id" => 1,
@@ -40,7 +45,8 @@ execQuery($sql, [
     "vnd_frequency_type" => $vnd_frequency_type,
     "vnd_frequency_value"  => $vnd_frequency_value,
     "vnd_frequency_value_original"  => $vnd_frequency_value_original,
-    "end_date" => $end_date
+    "end_date" => $end_date,
+    "start_date" => $start_date
 ]);
 
 $lastId = $db_conn->lastInsertId();
@@ -112,8 +118,11 @@ foreach ($searchFiltersRequestArr as $key => $value) {
     $i++;
 }
 
-execQuery3("UPDATE vnd_bills SET end_date = null WHERE end_date = '0000-00-00 00:00:00';");
-execQuery("UPDATE vnd_bills SET end_date = null WHERE end_date = '0000-00-00 00:00:00';");
+execQuery3("UPDATE vnd_bills SET end_date = null WHERE end_date = '0000-00-00';");
+execQuery("UPDATE vnd_bills SET end_date = null WHERE end_date = '0000-00-00';");
+
+execQuery3("UPDATE vnd_bills SET start_date = null WHERE start_date = '0000-00-00';");
+execQuery("UPDATE vnd_bills SET start_date = null WHERE start_date = '0000-00-00';");
 
 header("Location: index.php?Message=" . urlencode("Bill has been created.") . "&" . $searchFilersQueryStr);
 exit;

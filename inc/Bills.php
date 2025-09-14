@@ -113,7 +113,8 @@ class Bills {
 						$this->loadOnce($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future'], $getItem['is_heavy'], $getItem['vnd_frequency'], $getItem['vnd_frequency_type']);
 					break;
 				case "Once Per Month":
-					$this->loadOncePerMonth($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], $getItem['is_future'], $getItem['is_heavy'], $getItem['vnd_frequency'], $getItem['vnd_frequency_type'], $getItem['end_date']);
+					$this->loadOncePerMonth($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'],
+						$getItem['is_future'], $getItem['is_heavy'], $getItem['vnd_frequency'], $getItem['vnd_frequency_type'], $getItem['end_date'], $getItem['start_date']);
 					break;
 				case "Every 3 Months":
 					$this->loadEveryXMonths($getItem['vnd_frequency_value'], $getItem['vnd_bill'], $getItem['amount'], $getItem['vnd_frequency_type'], 3, $getItem['is_future'], $getItem['is_heavy'], $getItem['vnd_frequency'], $getItem['vnd_frequency_type']);
@@ -137,7 +138,7 @@ class Bills {
 		}
 	}
 	public function loadOncePerMonth($freq_value, $bill_desc, $amount, $freq_type="Day of Month", $is_future=0,
-									 $is_heavy=0, $vnd_frequency, $vnd_frequency_type, $end_date=null) {
+									 $is_heavy=0, $vnd_frequency, $vnd_frequency_type, $end_date=null, $start_date=null) {
 		
 		global $db_conn;
 		
@@ -172,7 +173,18 @@ class Bills {
 						}
 					}
 
-					if ($passesFutureValidation) {
+					//*/
+					$passesPrevValidation = false;
+					if (!$start_date || $start_date == "0000-00-00") {
+						$passesPrevValidation = true;
+					} else {
+						if (strtotime($year . "-" . $month . "-" . $freq_value) >= strtotime($start_date)) {
+							$passesPrevValidation = true;
+						}
+					}
+					//*/
+
+					if ($passesFutureValidation && $passesPrevValidation) {
 						$data = array();
 						$data['vnd_bill_desc'] = $bill_desc;
 						$data['user_id'] = $this->user_id;

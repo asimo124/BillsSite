@@ -9,7 +9,7 @@ if (!isset($_SESSION['user'])) {
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 $sql = "SELECT vnd_bill, amount, vnd_is_auto, vnd_frequency_notes,
-        vnd_frequency, vnd_frequency_type, vnd_frequency_value, vnd_frequency_value_original, end_date
+        vnd_frequency, vnd_frequency_type, vnd_frequency_value, vnd_frequency_value_original, end_date, start_date
         FROM vnd_bills
         WHERE vnd_id = :id ";
 $Bills = getQuery($sql, [
@@ -170,6 +170,12 @@ foreach ($searchFiltersRequestArr as $key => $value) {
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Start Date</label>
+                <div class="col-md-4">
+                    <input id="start_date" name="start_date" type="text" placeholder="Start Date" class="form-control input-md" value="<?php echo ($Bill['start_date'] != "0000-00-00" ? $Bill['start_date'] : ""); ?>" />
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">End Date</label>
                 <div class="col-md-4">
                     <input id="end_date" name="end_date" type="text" placeholder="End Date" class="form-control input-md" value="<?php echo ($Bill['end_date'] != "0000-00-00" ? $Bill['end_date'] : ""); ?>" />
@@ -194,6 +200,7 @@ foreach ($searchFiltersRequestArr as $key => $value) {
 <script>
     $( function() {
         $( "#end_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
+        $( "#start_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
 
         $('#vnd_frequency').change(function() {
             if ($(this).val() == 'Once Per Month') {

@@ -17,6 +17,15 @@ $vnd_frequency_type = isset($_REQUEST['vnd_frequency_type']) ? ($_REQUEST['vnd_f
 $vnd_frequency_value = isset($_REQUEST['vnd_frequency_value']) ? trim($_REQUEST['vnd_frequency_value']) : "";
 $vnd_frequency_value_original = isset($_REQUEST['vnd_frequency_value_original']) ? trim($_REQUEST['vnd_frequency_value_original']) : null;
 $end_date = isset($_REQUEST['end_date']) ? trim($_REQUEST['end_date']) : "";
+$start_date = isset($_REQUEST['start_date']) ? trim($_REQUEST['start_date']) : "";
+
+if (!$end_date || $end_date == "0000-00-00") {
+    $end_date = null;
+}
+
+if (!$start_date || $start_date == "0000-00-00") {
+    $start_date = null;
+}
 
 if ($vnd_bill == "" || $amount <= 0) {
     header("Location: edit.php?id=" . $id . "&Message=" . urlencode("You did not fill in all the required fields.") . "&error=1");
@@ -32,7 +41,8 @@ $sql = "UPDATE vnd_bills
         vnd_frequency_type = :vnd_frequency_type,
         vnd_frequency_value = :vnd_frequency_value,
         vnd_frequency_value_original = :vnd_frequency_value_original,
-        end_date = :end_date
+        end_date = :end_date,
+        start_date = :start_date
         WHERE vnd_id = :id ";
 
 execQuery($sql, [
@@ -45,6 +55,7 @@ execQuery($sql, [
     "vnd_frequency_value"  => $vnd_frequency_value,
     "vnd_frequency_value_original"  => $vnd_frequency_value_original,
     "end_date"  => $end_date,
+    "start_date"  => $start_date,
     "id" => $id
 ]);
 
@@ -119,8 +130,11 @@ foreach ($searchFiltersRequestArr as $key => $value) {
     $i++;
 }
 
-execQuery3("UPDATE vnd_bills SET end_date = null WHERE end_date = '0000-00-00 00:00:00';");
-execQuery("UPDATE vnd_bills SET end_date = null WHERE end_date = '0000-00-00 00:00:00';");
+execQuery3("UPDATE vnd_bills SET end_date = null WHERE end_date = '0000-00-00';");
+execQuery("UPDATE vnd_bills SET end_date = null WHERE end_date = '0000-00-00';");
+
+execQuery3("UPDATE vnd_bills SET start_date = null WHERE start_date = '0000-00-00';");
+execQuery("UPDATE vnd_bills SET start_date = null WHERE start_date = '0000-00-00';");
 
 header("Location: index.php?Message=" . urlencode("Bill has been updated.") . "&" . $searchFilersQueryStr);
 exit;

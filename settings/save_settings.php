@@ -39,10 +39,10 @@ if ($resetDb) {
     $sql = "INSERT INTO vnd_bills 
     (vnd_user_id,  vnd_bill,  amount,  vnd_is_auto,  vnd_frequency_notes,  vnd_frequency,  vnd_frequency_type,  
         vnd_frequency_value,   vnd_entrydate,  vnd_entryip,  multiplier,  is_future,  is_heavy,  watch_flag,  end_date,  
-     vnd_frequency_value_original,   audit_regex,  audit_keyword1,  audit_keyword2) VALUES 
+     vnd_frequency_value_original,   audit_regex,  audit_keyword1,  audit_keyword2,  start_date) VALUES 
     (:vnd_user_id, :vnd_bill, :amount, :vnd_is_auto, :vnd_frequency_notes, :vnd_frequency, :vnd_frequency_type, 
         :vnd_frequency_value, :vnd_entrydate, :vnd_entryip, :multiplier, :is_future, :is_heavy, :watch_flag, :end_date, 
-     :vnd_frequency_value_original, :audit_regex, :audit_keyword1, :audit_keyword2) ";
+     :vnd_frequency_value_original, :audit_regex, :audit_keyword1, :audit_keyword2, :start_date) ";
     $stmt_insert_bills = $db_conn3->prepare($sql);
 
     $sql = "SELECT * FROM vnd_bills ORDER BY vnd_id ";
@@ -52,10 +52,10 @@ if ($resetDb) {
         $sql = "INSERT INTO vnd_bills 
     (vnd_user_id,  vnd_bill,  amount,  vnd_is_auto,  vnd_frequency_notes,  vnd_frequency,  vnd_frequency_type,  
         vnd_frequency_value,   vnd_entrydate,  vnd_entryip,  multiplier,  is_future,  is_heavy,  watch_flag,  end_date,  
-     vnd_frequency_value_original,   audit_regex,  audit_keyword1,  audit_keyword2) VALUES 
+     vnd_frequency_value_original,   audit_regex,  audit_keyword1,  audit_keyword2,  start_date) VALUES 
     (:vnd_user_id, :vnd_bill, :amount, :vnd_is_auto, :vnd_frequency_notes, :vnd_frequency, :vnd_frequency_type, 
         :vnd_frequency_value, :vnd_entrydate, :vnd_entryip, :multiplier, :is_future, :is_heavy, :watch_flag, :end_date, 
-     :vnd_frequency_value_original, :audit_regex, :audit_keyword1, :audit_keyword2) ";
+     :vnd_frequency_value_original, :audit_regex, :audit_keyword1, :audit_keyword2, :start_date) ";
 
         $stmt_insert_bills->execute([
             'vnd_user_id' => $getItem['vnd_user_id'],
@@ -77,11 +77,13 @@ if ($resetDb) {
             'vnd_frequency_value_original' => $getItem['vnd_frequency_value_original'],
             'audit_regex' => $getItem['audit_regex'],
             'audit_keyword1' => $getItem['audit_keyword1'],
-            'audit_keyword2' => $getItem['audit_keyword2']
+            'audit_keyword2' => $getItem['audit_keyword2'],
+            'start_date' => $getItem['start_date'],
         ]);
     }
 
-    execQuery3("UPDATE vnd_bills SET end_date = null WHERE end_date = '0000-00-00 00:00:00';");
+    execQuery3("UPDATE vnd_bills SET end_date = null WHERE end_date = '0000-00-00';");
+    execQuery3("UPDATE vnd_bills SET start_date = null WHERE start_date = '0000-00-00';");
 }
 
 header("Location: index.php?Message=" . urlencode("You have added updated your settings."));
