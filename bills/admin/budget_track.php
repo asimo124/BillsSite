@@ -16,6 +16,8 @@ if (!isset($_SESSION['user'])) {
     <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <!-- Font Awesome for hamburger icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/nav.css" />
     <link rel="stylesheet" href="/css/bills_admin.css" />
     <link rel="stylesheet" href="/css/budget_track.css?version=7" />
@@ -349,6 +351,8 @@ if (!isset($_SESSION['user'])) {
             this.total_balance = parseFloat(this.sofi_balance) + parseFloat(this.mastercard_balance) + parseFloat(this.credit_human_balance);
 
             this.total_min_payment = parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_min_payment);
+        
+            this.calcProgress();
         }
     });
 </script>

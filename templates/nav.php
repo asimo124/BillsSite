@@ -41,5 +41,8 @@
     <a href="/charges/manage_desc.php">Manage Desc</a>
     <a href="/cards/index.php">Cards Info</a>
     <a href="/logout.php">Logout</a>
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <i class="fa fa-bars"></i>
+    </a>
 </div>
 

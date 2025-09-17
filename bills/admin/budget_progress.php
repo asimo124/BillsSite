@@ -16,6 +16,10 @@ if (!isset($_SESSION['user'])) {
     <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <!-- Font Awesome for hamburger icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Font Awesome for hamburger icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/nav.css" />
     <link rel="stylesheet" href="/css/bills_admin.css" />
 </head>
@@ -39,18 +43,18 @@ if (!isset($_SESSION['user'])) {
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2">
             <div class="row">
-                <div class="col-xs-4" style="text-align: right;">
+                <div class="col-xs-5" style="text-align: right;">
                     <input type="number" class="form-control" placeholder="Initial Balance" id="init_balance" 
-                    style="width: 50%; display: inline-block;" />
+                    style="width: 35%; display: inline-block;" />
                     &nbsp;<button type="button" class="btn btn-default" id="check_balance">+</button>
                     <button id="prev_btn" class="btn btn-default"><</button>
                 </div>
-                <div class="col-xs-4" style="text-align: center;"><h4 id="title_date">June 15th, 2025</h4></div>
+                <div class="col-xs-2" style="text-align: center;"><h4 id="title_date">June 15th, 2025</h4></div>
                 <input type="hidden" id="date_value" value="06/15" />
-                <div class="col-xs-4" style="text-align: left;">
+                <div class="col-xs-5" style="text-align: left;">
                     <button id="next_btn" class="btn btn-default">></button>
                     &nbsp;<button type="button" class="btn btn-default add_sum_item" data-day="40">+</button>
-                    <input type="number" class="form-control" placeholder="" style="width: 50%; display: inline-block;" readonly id="day40" value="" />
+                    <input type="number" class="form-control" placeholder="" style="width: 35%; display: inline-block;" readonly id="day40" value="" />
                 </div>
             </div>
         </div>
@@ -59,7 +63,7 @@ if (!isset($_SESSION['user'])) {
 
     <div class="row">
         <div class="col-xs-6">
-            <input type="number" class="form-control" placeholder="Extra Sum" style="width: 250px" id="extra_sum" value="0" />
+            <input type="number" class="form-control" placeholder="Extra Sum" style="width: 100%" id="extra_sum" value="0" />
         </div>
         <div class="col-xs-6">
             <input type="checkbox" id="test_mode" value="1" /> Test Mode
@@ -439,7 +443,7 @@ if (!isset($_SESSION['user'])) {
                         }
 
                         title_date = payDate.toLocaleDateString('en-US', {
-                            month: 'long',
+                            month: 'short',
                             day: 'numeric',
                             year: 'numeric'
                         });
