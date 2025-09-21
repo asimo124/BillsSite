@@ -29,6 +29,7 @@
     <a href="/bills/admin/upcoming_expenses.php">Upcoming Expenses</a>
     <a href="/bills/admin/budget_progress.php">Budget Progress</a>
     <a href="/bills/admin/budget_track.php">Track Progress</a>
+    <a href="/bills/admin/queue_date_job.php">Queue Date Job</a>
     <a href="/bills/admin/pending_transactions.php">Pending Transactions</a>
     <a href="/settings/index.php">Settings</a>
     <a href="/bills/admin/debt_progress.php">Debt Progress</a>
