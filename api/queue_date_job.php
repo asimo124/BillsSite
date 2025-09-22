@@ -9,11 +9,17 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 
-$sql = "DELETE FROM date_job WHERE status_name IN ('pending', 'completed') ";
-execQuery($sql, []);
 
-$sql = "INSERT INTO date_job (status_name, created_at, updated_at) VALUES ('pending', NOW(), NOW())";
-execQuery($sql, []);
+
+$sql = "DELETE FROM date_job WHERE `status` IN ('pending', 'done') ";
+execQuery1($sql, []);
+
+
+
+$sql = "INSERT INTO date_job 
+(`status`,  `command`,                 created_at, updated_at, test_mode) VALUES 
+('pending', 'generate_bill_dates:{}', NOW(),      NOW(),       $changeTestMode)";
+execQuery1($sql, []);
 
 header("Content-type: text/json");
 echo json_encode([

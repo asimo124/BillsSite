@@ -39,7 +39,8 @@ if (!isset($_SESSION['user'])) {
 
     <div class="row">
         <div class="col-xs-4" >
-            <button class="btn btn-primary" @click="queueDateJob">Run Dates Job</button>
+            <button class="btn btn-primary" @click="queueDateJob(0)">Run Dates Job</button>&nbsp;
+            <button class="btn btn-danger" @click="queueDateJob(1)">Run Dates Job Test</button>&nbsp;
         </div>
         <div class="col-xs-4 col-xs-offset-4" style="display: flex; text-align: right; justify-content: flex-end;">
             <div v-if="isRunning" style="background-color: #28a745; color: white; padding: 6px 12px; border-radius: 20px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
@@ -114,9 +115,9 @@ createApp({
         
     },
     methods: {
-        async queueDateJob() {
+        async queueDateJob(testMode) {
            try {
-                const response = await axios.get(`/api/queue_date_job.php`);
+                const response = await axios.get(`/api/queue_date_job.php?test_mode=${testMode}`);
                 
                 if (response.data && response.data.return_status && response.data.return_status == "success") {
                     console.log("Date job queued successfully.");
