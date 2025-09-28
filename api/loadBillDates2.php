@@ -207,58 +207,60 @@ $getDayIndex5 = 10000;
 $pastStartWeek = false;
 $timestamp = strtotime($start_date);
 $getDayIndex6 = 1000;
+
+$cur_date = date("Y-m-d", $timestamp);
+$day = date("w", $timestamp);
+switch ($day) {
+    case 0:
+        $my_day = "Sunday";
+        break;
+    case 1:
+        $my_day = "Monday";
+        break;
+    case 2:
+        $my_day = "Tuesday";
+        break;
+    case 3:
+        $my_day = "Wednesday";
+        break;
+    case 4:
+        $my_day = "Thursday";
+        break;
+    case 5:
+        $my_day = "Friday";
+        break;
+    case 6:
+        $my_day = "Saturday";
+        break;
+}
+$my_day .= ", " . getDaySuffix(intval(date("d", $timestamp)));
+
+
+//*/
+if ($day > 0 ) {
+
+    $lastIndex = 0;
+    $pastStartWeek = true;
+    for ($p = 0; $p < $day; $p++) {
+        $get_day = array();
+        $get_day['index'] = $getDayIndex6;
+        $get_day['index2'] = $getDayIndex6;
+        $get_day['showAsDay'] = false;
+        $get_day['weekDayNum'] = $p;
+        $get_day['Day'] = '';
+        $get_day['Timestamp'] = 0;
+        $get_day['Date'] = '';
+        $get_day['desc'] = [];
+        $days_arr[] = $get_day;
+        $lastIndex = $p;
+        $getDayIndex6++;
+    }
+}
+//*/
+
 while ($timestamp <= strtotime($end_date)) {
 
-	$cur_date = date("Y-m-d", $timestamp);
-	$day = date("w", $timestamp);
-	switch ($day) {
-		case 0:
-			$my_day = "Sunday";
-			break;
-		case 1:
-			$my_day = "Monday";
-			break;
-		case 2:
-			$my_day = "Tuesday";
-			break;
-		case 3:
-			$my_day = "Wednesday";
-			break;
-		case 4:
-			$my_day = "Thursday";
-			break;
-		case 5:
-			$my_day = "Friday";
-			break;
-		case 6:
-			$my_day = "Saturday";
-			break;
-    }
-    $my_day .= ", " . getDaySuffix(intval(date("d", $timestamp)));
-
-    $get_day['Day'] = $my_day;
-
-    /*/
-	if ($day > 0 && $pastStartWeek == false) {
-
-	    $lastIndex = 0;
-        $pastStartWeek = true;
-        for ($p = 0; $p < $day; $p++) {
-            $get_day = array();
-            $get_day['index'] = $getDayIndex6;
-            $get_day['index2'] = $getDayIndex6;
-            $get_day['showAsDay'] = false;
-            $get_day['weekDayNum'] = $p;
-            $get_day['Day'] = '';
-            $get_day['Timestamp'] = 0;
-            $get_day['Date'] = '';
-            $get_day['desc'] = [];
-            $days_arr[] = $get_day;
-            $lastIndex = $p;
-            $getDayIndex6++;
-        }
-    }
-    //*/
+	
 
     $get_day = array();
     $get_day['index'] = $getDayIndex5;
