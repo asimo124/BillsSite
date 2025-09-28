@@ -405,16 +405,18 @@ if (!isset($_SESSION['user'])) {
 
         var calcDisposable = function(disposableDay) {
 
-            disposableDay = parseFloat($('#disposable_per_day').val());
+            disposableDay = parseFloat($('#disposable_per_day').val()) || 0;
 
-            subtractAmount = 0;
             remove15Days = $('#remove_15_days').is(':checked') ? 1 : 0;
             if (remove15Days) {
-                subtractAmount = 600;
+                daysCount = 15
             }
+            console.log('daysCount: ', daysCount);
+            console.log('disposableDay: ', disposableDay);
+            console.log('totalDisposable: ', disposableDay * daysCount);
             
 
-            return balance - (disposableDay * daysCount) - subtractAmount;
+            return balance - (disposableDay * daysCount);
         }
 
         var getExpenseDays = function() {

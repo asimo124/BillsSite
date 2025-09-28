@@ -236,7 +236,9 @@ while ($timestamp <= strtotime($end_date)) {
     }
     $my_day .= ", " . getDaySuffix(intval(date("d", $timestamp)));
 
+    $get_day['Day'] = $my_day;
 
+    /*/
 	if ($day > 0 && $pastStartWeek == false) {
 
 	    $lastIndex = 0;
@@ -256,6 +258,7 @@ while ($timestamp <= strtotime($end_date)) {
             $getDayIndex6++;
         }
     }
+    //*/
 
     $get_day = array();
     $get_day['index'] = $getDayIndex5;
