@@ -258,9 +258,36 @@ if ($day > 0 ) {
 }
 //*/
 
+$timestamp = strtotime($start_date);
 while ($timestamp <= strtotime($end_date)) {
 
-	
+    
+	$day = date("w", $timestamp);
+
+    switch ($day) {
+    case 0:
+        $my_day = "Sunday";
+        break;
+    case 1:
+        $my_day = "Monday";
+        break;
+    case 2:
+        $my_day = "Tuesday";
+        break;
+    case 3:
+        $my_day = "Wednesday";
+        break;
+    case 4:
+        $my_day = "Thursday";
+        break;
+    case 5:
+        $my_day = "Friday";
+        break;
+    case 6:
+        $my_day = "Saturday";
+        break;
+}
+$my_day .= ", " . getDaySuffix(intval(date("d", $timestamp)));
 
     $get_day = array();
     $get_day['index'] = $getDayIndex5;
@@ -300,7 +327,7 @@ while ($timestamp <= strtotime($end_date)) {
     $get_day['index'] = $getDayIndex5;
     $get_day['index2'] = $getDayIndex5;
     $getDayIndex5++;
-
+    
 	$days_arr[] = $get_day;
 }
 
