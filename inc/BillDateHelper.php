@@ -2,13 +2,24 @@
 
 class BillDateHelper {
     
+    private $current_balance = 3544;
+
+    private $results = [];
+    private $disposablePerDay = 40;
+    private $days15 = false;
+
     public function __construct() {
         
     }
 
-    public function loadBillDates($user_id, $current_balance, $pay_date, $prev_date, $next_date, $vegas_trip, $includeWeekends) 
+    public function loadBillDates($user_id, $current_balance, $pay_date, $prev_date, $next_date, $vegas_trip, 
+        $includeWeekends, $disposablePerDay=40, $days15=false, $insertPayPeriodItem=false) 
     {
         global $db_conn, $test_mode;
+
+        $this->current_balance = $current_balance;
+        $this->disposablePerDay = $disposablePerDay;
+        $this->days15 = $days15;
 
         if ($pay_date == "") {
             $pay_date = date("Y-m-d");
@@ -462,12 +473,46 @@ class BillDateHelper {
             "remaining_balance" => $full_cur_amount
         ];
 
-        return $results;
+        $this->results = $results;
 
-        
+        $totalDisposable = $this->calculateDisposable($this->disposablePerDay, $this->days15);
+
+        $totalDisposable = $this->formatFloat($totalDisposable);
+        $results['total_disposable'] = $totalDisposable;
+
+        if ($insertPayPeriodItem) {
+            $IpPayPeriodItem = new IpPayPeriodItem();
+            $IpPayPeriodItem->insertPayPeriodItem($end_date, $totalDisposable);
+        }
+
+        return $results;
     }
 
-    function isWeekendOrHoliday($timestamp) {
+    private function calculateDisposable()
+    {
+        $startingBalance = $this->current_balance;
+
+        $daysCount = 0;
+        if (!$this->days15) {
+
+            foreach ($this->results['results'] as $week) {
+                foreach ($week['days'] as $day) {
+                    foreach ($day['desc'] as $expense) {
+                        $startingBalance -= $expense['amount'];
+                    }
+                    if ($day['showAsDay'] == 1) {
+                        $daysCount += 1;
+                    }
+                }
+            }
+        } else {
+            $daysCount = 15;
+        }
+
+        return $startingBalance - ($this->disposablePerDay * $daysCount);
+    }
+
+    private function isWeekendOrHoliday($timestamp) {
         $date = new DateTime();
         $date->setTimestamp($timestamp);
 
@@ -500,7 +545,7 @@ class BillDateHelper {
         return false;
     }
 
-    function formatFloat($num) {
+    private function formatFloat($num) {
         $retVal = round(floatval($num), 2);
         /*/
         if (substr($retVal, -3) == ".00") {
@@ -510,7 +555,7 @@ class BillDateHelper {
         return $retVal;
     }
 
-    function getDaySuffix($num) {
+    private function getDaySuffix($num) {
 
         switch ($num) {
             case 1:

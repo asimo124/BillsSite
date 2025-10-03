@@ -16,7 +16,7 @@ class IpPayPeriod {
         $month = intval(date('m', strtotime($date2)));
         $year = intval(date('Y', strtotime($date2)));
 
-        if ($day < 15) {
+        if $day < 15) {
             $day = 15;
         } else {
             if ($month < 12) {

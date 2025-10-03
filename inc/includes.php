@@ -139,6 +139,14 @@ function getQuery($sql, $data=array()) {
 	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function getQuerySingle($sql, $data=array()) {
+	global $db_conn;
+
+	$stmt = $db_conn->prepare($sql);
+	$stmt->execute($data);
+	return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
 function getQuery2($sql, $data=array()) {
 	global $db_conn2;
 
