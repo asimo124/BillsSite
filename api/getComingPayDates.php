@@ -21,7 +21,7 @@ $payCheckMonth = $month;
 $payCheckYear = $year;
 
 $neededPayPeriods = [];
-for ($i = 0; $i < 24; $i++) {
+for ($i = 0; $i < 16; $i++) {
 
     $payPeriodDate = date('Y-m-d', strtotime("$payCheckYear-$payCheckMonth-$payCheckDay"));
 
