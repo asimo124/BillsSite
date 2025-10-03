@@ -23,7 +23,7 @@ class BillDateHelper {
 
         if ($pay_date == "") {
             $pay_date = date("Y-m-d");
-            $pay_date = "2023-05-31";
+            //$pay_date = "2023-05-31";
         }
 
         $numDays9 = 1;
@@ -464,7 +464,7 @@ class BillDateHelper {
 
         if ($insertPayPeriodItem) {
             $IpPayPeriodItem = new IpPayPeriodItem();
-            $IpPayPeriodItem->insertPayPeriodItem($end_date, $totalDisposable);
+            $IpPayPeriodItem->insertPayPeriodItem($pay_date, $totalDisposable);
         }
 
         return $results;

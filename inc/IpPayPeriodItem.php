@@ -8,9 +8,12 @@ class IpPayPeriodItem {
 
     public function insertPayPeriodItem($payPeriodDate, $disposableAmount)
     {
+        global $db_conn;
+
         $sql = "SELECT id
                 FROM ip_pay_period 
                 WHERE pay_period_date = :pay_period_date ";
+
         $payPeriod = getQuerySingle($sql, [':pay_period_date' => $payPeriodDate]);
 
         if (!$payPeriod) {
@@ -24,13 +27,13 @@ class IpPayPeriodItem {
 
         $result = getQuerySingle($sql, [':pay_period_id' => $payPeriod['id']]);
 
-        if ($result) {
+        if (!$result) {
             $sql = "INSERT INTO ip_pay_period_item 
             ( pay_period_id,  disposable_amount,  remaining_amount) VALUES 
             (:pay_period_id, :disposable_amount, :remaining_amount) ";
 
             execQuery($sql, [
-                ':pay_period_id' => $result['id'],
+                ':pay_period_id' => $payPeriod['id'],
                 ':disposable_amount' => $disposableAmount,
                 ':remaining_amount' => $disposableAmount
             ]);

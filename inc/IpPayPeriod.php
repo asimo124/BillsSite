@@ -10,6 +10,8 @@ class IpPayPeriod {
 
     public function updatePayPeriods() {
 
+        global $db_conn;
+
         $date2 = date('Y-m-d');
 
         $day = intval(date('d', strtotime($date2)));
@@ -17,15 +19,9 @@ class IpPayPeriod {
         $year = intval(date('Y', strtotime($date2)));
 
         if ($day < 15) {
-            $day = 15;
-        } else {
-            if ($month < 12) {
-                $month += 1;
-            } else {
-                $month = 1;
-                $year += 1;
-            }
             $day = 1;
+        } else {
+            $day = 15;
         }
 
         $payCheckDay = $day;
@@ -60,6 +56,10 @@ class IpPayPeriod {
                 }
             }
         }
+
+        $payCheckDay = $day;
+        $payCheckMonth = $month;
+        $payCheckYear = $year;
 
         $sql = "SELECT * FROM ip_pay_period ORDER BY pay_period_date ";
         $existingPayPeriods = getQuery($sql);

@@ -1,6 +1,7 @@
 <?php
 $changeTestMode            = isset($_REQUEST['test_mode']) ? intval($_REQUEST['test_mode']) : 0;
 include "../inc/Bills.php";
+include "../inc/IpPayPeriod.php";
 include "../inc/IpPayPeriodItem.php";
 include "../inc/BillDateHelper.php";
 include "../inc/includes.php";
@@ -9,13 +10,16 @@ include "../inc/includes.php";
 set_time_limit(300);
 
 $user_id 			= isset($_REQUEST['user_id']) ? intval($_REQUEST['user_id']) : 0;
-$current_balance 	= isset($_REQUEST['current_balance']) ? intval($_REQUEST['current_balance']) : 0;
+$current_balance 	= isset($_REQUEST['current_balance']) ? intval($_REQUEST['current_balance']) : 3544;
+$end_pay_period = isset($_REQUEST['end_pay_period']) ? trim($_REQUEST['end_pay_period']) : "";
+
+if ($current_balance <= 0) {
+    $current_balance = 3544;
+}
 
 $pay_date = "";
 $prev_date = 0;
 $next_date = 0;
-
-$start_pay_period = 
 
 $date2 = date('Y-m-d');
 
@@ -35,9 +39,15 @@ if ($day < 15) {
     $day = 1;
 }
 
-$start_pay_period = date('Y-m-d', strtotime("$year-$month-$day"));
+$start_pay_period = date('Y-m-d');
 
-$end_pay_period = isset($_REQUEST['end_pay_period']) ? trim($_REQUEST['end_pay_period']) : "";
+if (intval(date("d", strtotime($start_pay_period))) < 15) {
+    $start_pay_period = date("Y-m-01", strtotime($start_pay_period));
+} else {
+    $start_pay_period = date("Y-m-15", strtotime($start_pay_period));
+}
+
+
 if ($end_pay_period == "") {
 
     $day = intval(date('d', strtotime($date2)));
@@ -72,8 +82,16 @@ $startMonth = intval(date("m", strtotime($start_pay_period)));
 $startDay = intval(date("d", strtotime($start_pay_period)));
 $startYear = intval(date("Y", strtotime($start_pay_period)));
 
+$ipPayPeriod = new IpPayPeriod();
+$ipPayPeriod->updatePayPeriods();
+
+$sql = "TRUNCATE TABLE ip_pay_period_item";
+execQuery($sql);
+
 $resultsArr = [];
 while (true) {
+
+    $pay_date = date('Y-m-d', strtotime("$startYear-$startMonth-$startDay"));
 
     $billDateHelper = new BillDateHelper();
     $results = $billDateHelper->loadBillDates($user_id, $current_balance, $pay_date, $prev_date, $next_date,
@@ -81,21 +99,20 @@ while (true) {
 
     $resultsArr[] = $results;
 
-    $eachDate = date('Y-m-d', strtotime("$startYear-$startMonth-$startDay"));
-    if (strtotime($eachDate) >= strtotime($end_pay_period)) {
+    if (strtotime($pay_date) >= strtotime($end_pay_period)) {
         break;
     }
 
-    if ($startMonth < 12) {
-        $startMonth += 1;
-    } else {
-        $startMonth = 1;
-        $startYear += 1;
-    }
-    if ($startDay == 1) {
-        $startDay = 15;
-    } else {
+    if ($startDay == 15) {
+        if ($startMonth < 12) {
+            $startMonth += 1;
+        } else {
+            $startMonth = 1;
+            $startYear += 1;
+        }
         $startDay = 1;
+    } else {
+        $startDay = 15;
     }
 }
 
