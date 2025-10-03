@@ -1,6 +1,7 @@
 <?php
 $changeTestMode            = isset($_REQUEST['test_mode']) ? intval($_REQUEST['test_mode']) : 0;
 include "../inc/Bills.php";
+include "../inc/BillDateHelper.php";
 include "../inc/includes.php";
 //ini_set("display_errors", 1);
 
@@ -18,6 +19,15 @@ $vegas_trip          = isset($_REQUEST['vegas_trip']) ? intval($_REQUEST['vegas_
 $includeWeekends     = isset($_REQUEST['includeWeekends']) ? intval($_REQUEST['includeWeekends']) : 0;
 
 
+//*/
+$billDateHelper = new BillDateHelper();
+$results = $billDateHelper->loadBillDates($user_id, $current_balance, $pay_date, $prev_date, $next_date, $vegas_trip, $includeWeekends);
+
+header("Content-type: application/json");
+header('Access-Control-Allow-Origin: *');
+echo json_encode($results, JSON_PRETTY_PRINT);
+die();
+//*/
 
 if ($pay_date == "") {
 	$pay_date = date("Y-m-d");

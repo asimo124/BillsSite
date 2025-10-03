@@ -84,6 +84,77 @@ if ($resetDb) {
 
     execQuery3("UPDATE vnd_bills SET end_date = null WHERE end_date = '0000-00-00';");
     execQuery3("UPDATE vnd_bills SET start_date = null WHERE start_date = '0000-00-00';");
+
+
+    // ip_pay_period
+    execQuery3("TRUNCATE ip_pay_period");
+
+    $sql = "INSERT INTO ip_pay_period 
+    (pay_period, pay_period_date) VALUES 
+    (:pay_period, :pay_period_date) ";
+    $stmt_insert_bills = $db_conn3->prepare($sql);
+
+    $sql = "SELECT * FROM ip_pay_period ORDER BY vnd_id ";
+    $results = getQuery1($sql);
+    foreach ($results as $getItem) {
+
+       $sql = "INSERT INTO ip_pay_period 
+        (pay_period, pay_period_date) VALUES 
+        (:pay_period, :pay_period_date) ";
+
+        $stmt_insert_bills->execute([
+            'pay_period' => $getItem['pay_period'],
+            'pay_period_date' => $getItem['pay_period_date'],
+        ]);
+    }
+
+    //ip_pay_period_item
+    execQuery3("TRUNCATE ip_pay_period_item");
+
+    $sql = "INSERT INTO ip_pay_period_item 
+    ( pay_period_id,  disposable_amount,  remaining_amount) VALUES 
+    (:pay_period_id, :disposable_amount, :remaining_amount) ";
+    $stmt_insert_bills = $db_conn3->prepare($sql);
+
+    $sql = "SELECT * FROM ip_pay_period_item ORDER BY vnd_id ";
+    $results = getQuery1($sql);
+    foreach ($results as $getItem) {
+
+        $sql = "INSERT INTO ip_pay_period_item 
+        ( pay_period_id,  disposable_amount,  remaining_amount) VALUES 
+        (:pay_period_id, :disposable_amount, :remaining_amount) ";
+
+        $stmt_insert_bills->execute([
+            'pay_period_id' => $getItem['pay_period_id'],
+            'disposable_amount' => $getItem['disposable_amount'],
+            'remaining_amount' => $getItem['remaining_amount'],
+        ]);
+    }
+
+    //ip_upcoming_purchase
+    execQuery3("TRUNCATE ip_upcoming_purchase");
+
+    $sql = "INSERT INTO ip_upcoming_purchase 
+    ( pay_period_item_id,  title, `description`, cost,  amount_to_save) VALUES 
+    (:pay_period_item_id, :title, :description, :cost, :amount_to_save) ";
+    $stmt_insert_bills = $db_conn3->prepare($sql);
+
+    $sql = "SELECT * FROM ip_upcoming_purchase ORDER BY vnd_id ";
+    $results = getQuery1($sql);
+    foreach ($results as $getItem) {
+
+       $sql = "INSERT INTO ip_upcoming_purchase 
+        ( pay_period_item_id,  title, `description`, cost,  amount_to_save) VALUES 
+        (:pay_period_item_id, :title, :description, :cost, :amount_to_save) ";
+
+        $stmt_insert_bills->execute([
+            'pay_period_item_id' => $getItem['pay_period_item_id'],
+            'title' => $getItem['title'],
+            'description' => $getItem['description'],
+            'cost' => $getItem['cost'],
+            'amount_to_save' => $getItem['amount_to_save'],
+        ]);
+    }
 }
 
 header("Location: index.php?Message=" . urlencode("You have added updated your settings."));

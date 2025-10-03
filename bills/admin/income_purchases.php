@@ -40,17 +40,20 @@ if (!isset($_SESSION['user'])) {
 
 
     <div class="row">
-        <div class="col-xs-6" style="top: 6px;" >
-            <label >End Pay Period</label><br>
+        <div class="col-xs-6" >
+            <button class="btn btn-default">Reset</button>&nbsp;
+            <button class="btn btn-primary">Transfer</button>
         </div>
         <div class="col-xs-6" style="text-align: right;">
             <button class="btn btn-danger">Sync & Queue</button>
         </div>
     </div>
-    <div style="clear: both; height: 4px;"></div>
+    <div style="clear: both; height: 8px;"></div>
+
+    
     <div class="row">
         <div class="col-xs-12">
-            
+            <label >End Pay Period</label><br>
             <select class="form-control" style="width: 175px; display: inline-block;">
                 <option value="2025-10-01">Oct 1st, 2025</option>
                 <option value="2025-10-15">Oct 15th, 2025</option>
@@ -81,21 +84,21 @@ if (!isset($_SESSION['user'])) {
                 </thead>
                 <tbody>
                     <tr v-for="(item, index) in 5" :key="index">
-                        <td>10/1<br><button class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button></td>
-                        <td><input type="number" class="form-control" value="400" style="width: 50px;" /></td>
+                        <td>10/1</td>
+                        <td><input type="number" class="form-control" value="400" style="width: 60px;" /></td>
                         <td>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th >Purchase</th>
-                                        <th >Amt</th>
+                                        <th style="padding-bottom: 14px;">Purchase</th>
+                                        <th >Amt &nbsp;<button class="btn btn-primary btn-sm add-purchase" style="display: inline-block;" @click="openAddPurchaseModal">+</button></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(item, index) in 3" :key="index">
                                         <td><a href="#">Big Maint</a></td>
                                         <td>
-                                            <input type="number" class="form-control" value="300" style="width: 50px; display: inline-block;" />
+                                            <input type="number" class="form-control" value="300" style="width: 60px; display: inline-block;" />
                                             <button class="btn btn-danger btn-sm small_padding" style="display: inline-block;">X</button>
                                         </td>
                                     </tr>
@@ -103,8 +106,8 @@ if (!isset($_SESSION['user'])) {
                             </table>
                         </td>
                         <td>
-                            <input type="number" class="form-control" value="200" style="width: 50px;" />
-                            <button class="btn btn-default btn-sm">></button>
+                            <input type="number" class="form-control" value="200" style="width: 60px;" />
+                            
                         </td>
                     </tr>
                 </tbody>
@@ -202,8 +205,48 @@ if (!isset($_SESSION['user'])) {
 
 </div>
 
+<!-- Add Purchase Modal -->
+<div class="modal fade" id="addPurchaseModal" tabindex="-1" role="dialog" aria-labelledby="addPurchaseModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="addPurchaseModalLabel">Add Upcoming Purchase</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="purchaseTitle">Title</label>
+                        <input type="text" class="form-control" id="purchaseTitle" v-model="newPurchase.title" placeholder="Enter title">
+                    </div>
+                    <div class="form-group">
+                        <label for="purchaseDescription">Description</label>
+                        <input type="text" class="form-control" id="purchaseDescription" v-model="newPurchase.description" placeholder="Enter description">
+                    </div>
+                    <div class="form-group">
+                        <label for="purchaseCost">Cost</label>
+                        <input type="number" class="form-control" id="purchaseCost" v-model="newPurchase.cost" placeholder="Enter cost" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="purchaseAmountToSave">Amount to Save</label>
+                        <input type="number" class="form-control" id="purchaseAmountToSave" v-model="newPurchase.amount_to_save" placeholder="Enter amount to save" step="0.01">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" @click="addPurchase">Add Purchase</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script src="/js/nav.js"></script>
 <script>
 const { createApp } = Vue;
@@ -232,7 +275,13 @@ createApp({
             balance: 0,
             sumTotal: 0,
             sumSpa: 0,
-            averages: []
+            averages: [],
+            newPurchase: {
+                title: '',
+                description: '',
+                cost: '',
+                amount_to_save: ''
+            }
         }
     },
     mounted() {
@@ -323,6 +372,27 @@ createApp({
         //         }
         //     }
         // },
+        openAddPurchaseModal() {
+            // Reset form
+            this.newPurchase = {
+                title: '',
+                description: '',
+                cost: '',
+                amount_to_save: ''
+            };
+            // Open modal using jQuery (Bootstrap 3 requirement)
+            $('#addPurchaseModal').modal('show');
+        },
+        addPurchase() {
+            // Handle adding the purchase here
+            console.log('Adding purchase:', this.newPurchase);
+            
+            // Close modal
+            $('#addPurchaseModal').modal('hide');
+            
+            // Here you would typically send the data to your API
+            // For now, just log it
+        },
         loadPage(action) {
             this.nextDate = 0;
             this.prevDate = 0;
