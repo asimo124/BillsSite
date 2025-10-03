@@ -12,8 +12,8 @@ class BillDateHelper {
         
     }
 
-    public function loadBillDates($user_id, $current_balance, $pay_date, $prev_date, $next_date, $vegas_trip, 
-        $includeWeekends, $disposablePerDay=40, $days15=false, $insertPayPeriodItem=false) 
+    public function loadBillDates($user_id, $current_balance, $pay_date, $prev_date, $next_date,
+        $disposablePerDay=40, $days15=false, $insertPayPeriodItem=false) 
     {
         global $db_conn, $test_mode;
 
@@ -24,10 +24,6 @@ class BillDateHelper {
         if ($pay_date == "") {
             $pay_date = date("Y-m-d");
             $pay_date = "2023-05-31";
-        }
-
-        if (strtotime($pay_date) < strtotime("2021-06-20 23:59:59") && strtotime($pay_date) >= strtotime("2021-06-17 00:00:00")) {
-            $vegas_trip = 1;
         }
 
         $numDays9 = 1;
@@ -169,20 +165,6 @@ class BillDateHelper {
 
         $Bill->setPayPeriod($end_date, $start_date);
         $billDates = $Bill->loadBillDatesByUserID($user_id);
-
-        if ($vegas_trip) {
-            $billDates2 = $billDates;
-            $billDates = [];
-            foreach ($billDates2 as $index => $getItem) {
-                if ($getItem['vnd_bill_desc'] != "Cay Payment" && $getItem['vnd_bill_desc'] != "Pay Rest of Mastercard"
-                    && $getItem['vnd_bill_desc'] != "SSFCU Personal Loan"
-                    && $getItem['vnd_bill_desc'] != "Vegas Plane Ticket Credit Card"
-                    && $getItem['vnd_bill_desc'] != "Rent 16th")
-                {
-                    $billDates[] = $getItem;
-                }
-            }
-        }
 
         foreach ($billDates as $getDate) {
             $newDate = array();

@@ -15,10 +15,6 @@ $pay_date 			= isset($_REQUEST['pay_date']) ? trim($_REQUEST['pay_date']) : "";
 $prev_date          = isset($_REQUEST['prev_date']) ? intval($_REQUEST['prev_date']) : 0;
 $next_date          = isset($_REQUEST['next_date']) ? intval($_REQUEST['next_date']) : 0;
 
-$vegas_trip          = isset($_REQUEST['vegas_trip']) ? intval($_REQUEST['vegas_trip']) : 0;
-
-$includeWeekends     = isset($_REQUEST['includeWeekends']) ? intval($_REQUEST['includeWeekends']) : 0;
-
 $disposablePerDay          = isset($_REQUEST['disposable_per_day']) ? floatval($_REQUEST['disposable_per_day']) : 40;
 if ($disposablePerDay <= 0) {
     $disposablePerDay = 40;
@@ -32,7 +28,7 @@ $insertPayPeriodItem = $_REQUEST['insert_pay_period_item'] ? isset($_REQUEST['in
 //*/
 $billDateHelper = new BillDateHelper();
 $results = $billDateHelper->loadBillDates($user_id, $current_balance, $pay_date, $prev_date, $next_date,
-    $vegas_trip, $includeWeekends, $disposablePerDay, $days15, $insertPayPeriodItem);
+    $disposablePerDay, $days15, $insertPayPeriodItem);
 
 header("Content-type: application/json");
 header('Access-Control-Allow-Origin: *');

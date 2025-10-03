@@ -50,6 +50,16 @@ if (!isset($_SESSION['user'])) {
     </div>
     <div style="clear: both; height: 8px;"></div>
 
+    <div class="row">
+        <div class="col-xs-6" >
+            <input type="number" class="form-control" value="3544" placeholder="Starting Balance" />
+        </div>
+        <div class="col-xs-6" style="text-align: right;">
+            
+        </div>
+    </div>
+    <div style="clear: both; height: 8px;"></div>
+
     
     <div class="row">
         <div class="col-xs-12">
