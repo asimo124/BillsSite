@@ -98,9 +98,9 @@ if (!isset($_SESSION['user'])) {
                                 </thead>
                                 <tbody>
                                     <tr v-for="(purchase, purchaseIndex) in item.upcoming_purchases" :key="purchaseIndex">
-                                        <td><a href="#" data-toggle="tooltip" data-placement="top" :title="purchase.description">{{ purchase.title }}</a></td>
+                                        <td><a href="#" data-toggle="tooltip" data-placement="top" :title="purchase.description + ' (Cost: $' + purchase.cost + ')'" @mousedown="startLongClick(purchase, index, purchaseIndex)" @mouseup="cancelLongClick" @mouseleave="cancelLongClick">{{ purchase.title }}</a></td>
                                         <td>
-                                            <input type="number" class="form-control" v-model="purchase.cost" style="width: 60px; display: inline-block;" />
+                                            <input type="number" class="form-control" v-model="purchase.amount_to_save" style="width: 60px; display: inline-block;" />
                                             <button class="btn btn-danger btn-sm small_padding" style="display: inline-block;" @click="removePurchase(purchase.id, index, purchaseIndex)">X</button>
                                         </td>
                                     </tr>
@@ -183,7 +183,9 @@ createApp({
                 cost: 0,
                 amount_to_save: 0
             },
-            add_purchase_error: ''
+            add_purchase_error: '',
+            longClickTimer: null,
+            longClickData: null
         }
     },
     mounted() {
@@ -197,7 +199,7 @@ createApp({
         
         // Initialize Bootstrap tooltips after a delay
         setTimeout(() => {
-            $('[data-toggle="tooltip"]').tooltip();
+            this.initializeTooltips();
         }, 100);
     },
     methods: {
@@ -231,7 +233,7 @@ createApp({
                     
                     // Initialize tooltips after data loads
                     setTimeout(() => {
-                        $('[data-toggle="tooltip"]').tooltip();
+                        this.initializeTooltips();
                     }, 100);
                 }
             } catch (error) {
@@ -261,8 +263,7 @@ createApp({
                     
                     // Reinitialize tooltips after adding new content
                     setTimeout(() => {
-                        $('[data-toggle="tooltip"]').tooltip('destroy');
-                        $('[data-toggle="tooltip"]').tooltip();
+                        this.initializeTooltips();
                     }, 100);
                 } else {
                     console.error('Error adding purchase:', response.data.error);
@@ -271,6 +272,15 @@ createApp({
             } catch (error) {
                 console.error('Error adding purchase:', error);
             }
+        },
+        initializeTooltips() {
+            // Destroy existing tooltips first
+            $('[data-toggle="tooltip"]').tooltip('destroy');
+            // Reinitialize tooltips with click trigger
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: 'click',
+                placement: 'top'
+            });
         },
         async removePurchase(purchaseId, payPeriodIndex, purchaseIndex) {
             // Handle removing the purchase here
@@ -305,6 +315,51 @@ createApp({
             console.log('Form reset, opening modal');
             // Open modal using jQuery (Bootstrap 3 requirement)
             $('#addPurchaseModal').modal('show');
+        },
+        editPurchase(purchase, payPeriodIndex, purchaseIndex) {
+            console.log('Double-clicked purchase:', purchase.title);
+            // You can add functionality here, such as:
+            // - Opening an edit modal
+            // - Making the title editable inline
+            // - Showing additional purchase details
+            // For now, we'll just show an alert with the purchase info
+            //alert(`Purchase Details:\nTitle: ${purchase.title}\nDescription: ${purchase.description}\nCost: $${purchase.cost}\nAmount to Save: $${purchase.amount_to_save}`);
+        },
+        startLongClick(purchase, payPeriodIndex, purchaseIndex) {
+            // Clear any existing timer
+            this.cancelLongClick();
+            
+            // Store the data for the long click
+            this.longClickData = { purchase, payPeriodIndex, purchaseIndex };
+            
+            // Start a timer for 800ms (0.8 seconds)
+            this.longClickTimer = setTimeout(() => {
+                this.handleLongClick();
+            }, 800);
+        },
+        cancelLongClick() {
+            if (this.longClickTimer) {
+                clearTimeout(this.longClickTimer);
+                this.longClickTimer = null;
+                this.longClickData = null;
+            }
+        },
+        handleLongClick() {
+            if (this.longClickData) {
+                const { purchase, payPeriodIndex, purchaseIndex } = this.longClickData;
+                console.log('Long-clicked purchase:', purchase.title);
+                
+                // You can add functionality here, such as:
+                // - Showing a context menu
+                // - Opening advanced options
+                // - Copying purchase details to clipboard
+                // For now, we'll show a confirmation dialog for deletion
+                // if (confirm(`Long click detected!\n\nDo you want to delete "${purchase.title}"?`)) {
+                //     this.removePurchase(purchase.id, payPeriodIndex, purchaseIndex);
+                // }
+                
+                this.cancelLongClick();
+            }
         },
         
     }
