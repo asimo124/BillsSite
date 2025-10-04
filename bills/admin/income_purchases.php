@@ -67,7 +67,7 @@ if (!isset($_SESSION['user'])) {
             <select v-model="selectedPayDate" class="form-control" style="width: 175px; display: inline-block;">
                 <option v-for="date in upcomingPayDates" :key="date.value" :value="date.value">{{ date.label }}</option>   
             </select>&nbsp; 
-            <button class="btn btn-primary" @click="loadPayPeriodItems">Load Pay Periods</button>&nbsp;
+            <button class="btn btn-primary" @click="loadPayPeriods">Load Pay Periods</button>&nbsp;
             <input type="checkbox" value="1"/>&nbsp; Test
         </div> 
     </div>
@@ -151,7 +151,7 @@ if (!isset($_SESSION['user'])) {
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" @click="addPurchase">Add Purchase</button>
+                <button type="button" class="btn btn-primary" @click="addPurchase">Create</button>
             </div>
         </div>
     </div>
@@ -172,10 +172,17 @@ createApp({
             startingBalance: 3544,
             upcomingPayDates: [],
             selectedPayDate: '',
+            newPurchase: {
+                title: '',
+                description: '',
+                cost: 0,
+                amount_to_save: 0
+            }
         }
     },
     mounted() {
-        
+
+        this.loadPayPeriodItems();
         this.loadUpcomingPayDates().then(() => {
             if (this.upcomingPayDates.length > 0) {
                 this.selectedPayDate = this.upcomingPayDates[0].value;
@@ -193,7 +200,7 @@ createApp({
                 console.error('Error loading upcoming pay dates:', error);
             }
         },
-        async loadPayPeriodItems() {
+        async loadPayPeriods() {
             try {
                 url = `/api/loadPayPeriods.php?user_id=1&current_balance=${this.startingBalance}&end_pay_period=${this.selectedPayDate}`;
                 const response = await axios.get(url);
@@ -203,6 +210,27 @@ createApp({
             } catch (error) {
                 console.error('Error loading pay period items:', error);
             }
+        },
+        async loadPayPeriodItems() {
+            try {
+                url = `/api/loadPayPeriodItems.php`;
+                const response = await axios.get(url);
+                if (response.data && response.data.items) {
+                    this.payPeriodItems = response.data.items;
+                }
+            } catch (error) {
+                console.error('Error loading pay period items:', error);
+            }
+        },
+        addPurchase() {
+            // Handle adding the purchase here
+            console.log('Adding purchase:', this.newPurchase);
+            
+            // Close modal
+            $('#addPurchaseModal').modal('hide');
+            
+            // Here you would typically send the data to your API
+            // For now, just log it
         },
         openAddPurchaseModal() {
             // Reset form
@@ -215,16 +243,7 @@ createApp({
             // Open modal using jQuery (Bootstrap 3 requirement)
             $('#addPurchaseModal').modal('show');
         },
-        addPurchase() {
-            // Handle adding the purchase here
-            console.log('Adding purchase:', this.newPurchase);
-            
-            // Close modal
-            $('#addPurchaseModal').modal('hide');
-            
-            // Here you would typically send the data to your API
-            // For now, just log it
-        },
+        
     }
 }).mount('#app');
 </script>

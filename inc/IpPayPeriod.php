@@ -8,6 +8,11 @@ class IpPayPeriod {
         $this->numPaychecks = $numPaychecks;
     }
 
+    public function index()
+    {
+        $sql = "";
+    }
+
     public function updatePayPeriods() {
 
         global $db_conn;
