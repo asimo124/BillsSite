@@ -85,9 +85,9 @@ if (!isset($_SESSION['user'])) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(item, index) in 5" :key="index">
-                        <td>10/1</td>
-                        <td><input type="number" class="form-control" value="400" style="width: 60px;" /></td>
+                    <tr v-for="(item, index) in payPeriodItems" :key="index">
+                        <td>{{ item.pay_period }}</td>
+                        <td><input type="number" class="form-control" v-model="item.disposable_amount" readonly style="width: 60px;" /></td>
                         <td>
                             <table class="table table-bordered">
                                 <thead>
@@ -97,10 +97,10 @@ if (!isset($_SESSION['user'])) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(item, index) in 3" :key="index">
-                                        <td><a href="#">Big Maint</a></td>
+                                    <tr v-for="(purchase, index) in item.upcoming_purchases" :key="index">
+                                        <td><a href="#">{{ purchase.title }}</a></td>
                                         <td>
-                                            <input type="number" class="form-control" value="300" style="width: 60px; display: inline-block;" />
+                                            <input type="number" class="form-control" v-model="purchase.cost" style="width: 60px; display: inline-block;" />
                                             <button class="btn btn-danger btn-sm small_padding" style="display: inline-block;">X</button>
                                         </td>
                                     </tr>
@@ -108,8 +108,8 @@ if (!isset($_SESSION['user'])) {
                             </table>
                         </td>
                         <td>
-                            <input type="number" class="form-control" value="200" style="width: 60px;" />
-                            
+                            <input type="number" class="form-control" v-model="item.remaining_amount" style="width: 60px;" />
+
                         </td>
                     </tr>
                 </tbody>
@@ -168,6 +168,7 @@ const { createApp } = Vue;
 createApp({
     data() {
         return {
+            payPeriodItems: [],
             startingBalance: 3544,
             upcomingPayDates: [],
             selectedPayDate: '',
@@ -196,8 +197,8 @@ createApp({
             try {
                 url = `/api/loadPayPeriods.php?user_id=1&current_balance=${this.startingBalance}&end_pay_period=${this.selectedPayDate}`;
                 const response = await axios.get(url);
-                if (response.data) {
-                    this.payPeriodItems = response.data;
+                if (response.data && response.data.items) {
+                    this.payPeriodItems = response.data.items;
                 }
             } catch (error) {
                 console.error('Error loading pay period items:', error);
