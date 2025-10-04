@@ -35,6 +35,9 @@ if (!isset($_SESSION['user'])) {
     <div class="alert alert-danger" role="alert" v-if="main_error">
         {{ main_error }}    
     </div>
+    <div class="alert alert-success" role="alert" v-if="main_msg">
+        {{ main_msg }}    
+    </div>
 
     <div style="clear: both; height: 12px"></div>
 
@@ -48,7 +51,8 @@ if (!isset($_SESSION['user'])) {
             <button class="btn btn-primary" @click="transferItems">Transfer</button>
         </div>
         <div class="col-xs-6" style="text-align: right;">
-            <button class="btn btn-danger">Sync & Queue</button>
+            <button class="btn btn-default" @click="syncExpenses">Sync</button>&nbsp;
+            <button class="btn btn-danger" @click="queueJob">Queue</button>
         </div>
     </div>
     <div style="clear: both; height: 8px;"></div>
@@ -71,63 +75,72 @@ if (!isset($_SESSION['user'])) {
                 <option v-for="date in upcomingPayDates" :key="date.value" :value="date.value">{{ date.label }}</option>   
             </select>&nbsp; 
             <button class="btn btn-primary" @click="loadPayPeriods">Load Pay Periods</button>&nbsp;
-            <input type="checkbox" value="1"/>&nbsp; Test
+            <input type="checkbox" value="1" v-model="test_mode"/>&nbsp; Test
         </div> 
     </div>
     <div style="clear: both; height: 16px"></div>
 
     <div class="row">
         <div class="col-xs-12">
-            <table class="table table-bordered">
+            <table class="table table-bordered" style="border: 1px solid #666666;">
                 <thead>
                     <tr>
-                        <th >Prd</th>
-                        <th >Disp</th>
-                        <th >Purchases</th>
-                        <th >Left</th>
+                        <th style="border: 1px solid #666666;">Prd</th>
+                        <th style="border: 1px solid #666666;">Disp</th>
+                        <th style="border: 1px solid #666666;">Purchases</th>
+                        <th style="border: 1px solid #666666;">Left</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item, index) in payPeriodItems" :key="index">
-                        <td>{{ item.pay_period }}</td>
-                        <td><input type="number" class="form-control input_num" v-model="item.disposable_amount" readonly style="width: 60px;" /></td>
-                        <td>
-                            <h4>Upcoming</h4>
-                            <table class="table table-bordered">
+                        <td style="border: 1px solid #666666;">{{ item.pay_period }}</td>
+                        <td style="border: 1px solid #666666;"><input type="number" class="form-control input_num" v-model="item.disposable_amount" readonly style="width: 60px;" /></td>
+                        <td style="border: 1px solid #666666;">
+                            <h4 style="color: #428bca;">Upcoming</h4>
+                            <table class="table table-bordered" style="border: 1px solid #428bca;">
                                 <thead>
-                                    <tr>
-                                        <th style="padding-bottom: 14px;">Purchase</th>
-                                        <th >Amt &nbsp;<button class="btn btn-primary btn-sm add-purchase" style="display: inline-block;" @click="openAddPurchaseModal(item.id, index)">+</button></th>
+                                    <tr style="background-color: #428bca; color: white; font-weight: bold;">
+                                        <th style="border: 1px solid #428bca;">Purchase <button class="btn btn-default btn-sm add-purchase" style="display: inline-block;" @click="openAddPurchaseModal(item.id, index)">+</button></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(purchase, purchaseIndex) in item.upcoming_purchases" :key="purchaseIndex">
-                                        <td><a href="#" data-toggle="tooltip" data-placement="top" :title="purchase.description + ' (Cost: $' + purchase.cost + ')'" @mousedown="startLongClick(purchase, index, purchaseIndex)" @mouseup="cancelLongClick" @mouseleave="cancelLongClick">{{ purchase.title }}</a></td>
-                                        <td>
-                                            <input type="number" class="form-control input_num"v-model="purchase.amount_to_save" style="width: 60px; display: inline-block;" />
-                                            <button class="btn btn-danger btn-sm small_padding" style="display: inline-block;" @click="removePurchase(purchase.id, index, purchaseIndex)">X</button>
+                                        <td style="border: 1px solid #428bca;">
+                                            <a href="#" data-toggle="tooltip" data-placement="top" 
+                                                :title="purchase.description + ' (Cost: $' + purchase.cost + ')'"
+                                                @mousedown="startLongClick(purchase, index, purchaseIndex)" @mouseup="cancelLongClick" 
+                                                @mouseleave="cancelLongClick"
+                                            >{{ purchase.title }}</a>&nbsp;
+                                            <input type="number" class="form-control input_num" v-model="purchase.amount_to_save" 
+                                                style="width: 60px; display: inline-block;" />&nbsp;
+                                            <button class="btn btn-danger btn-sm small_padding" style="display: inline-block;" 
+                                                @click="removePurchase(purchase.id, index, purchaseIndex)">X</button>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-
-                            
-                            
+                    
                             <h4 v-if="item.one_time_expenses.length > 0">Expenses</h4>
-                            <table class="table table-bordered" v-if="item.one_time_expenses.length > 0">
+                            <table class="table table-bordered" style="border: 1px solid #666666;">
                                 <thead>
-                                    <tr>
-                                        <th style="padding-bottom: 14px;">Expense</th>
+                                    <tr style="background-color: #666666; color: white; font-weight: bold;">
+                                        <th style="border: 1px solid #666666;">Expense</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(expense, expenseIndex) in item.one_time_expenses" :key="expenseIndex">
-                                        <td><a href="#" data-toggle="tooltip" data-placement="top" :title="expense.vnd_bill">{{ expense.vnd_bill_short }}</a> - ${{ expense.amount }}</td>
+                                        <td style="border: 1px solid #666666;">
+                                            <a href="#" data-toggle="tooltip" data-placement="top" 
+                                                :title="expense.vnd_bill"
+                                            >{{ expense.vnd_bill_short }}</a> - ${{ expense.amount }}&nbsp;
+                                            <button class="btn btn-danger btn-sm small_padding" style="display: inline-block;" 
+                                                @click="removeExpense(expense.vnd_id, index, expenseIndex)">X</button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </td>
-                        <td>
+                        <td style="border: 1px solid #666666;">
                             <input type="number" class="form-control input_num" v-model="item.remaining_amount" style="width: 60px;" />
                             <button class="btn btn-danger btn-sm" @click="removePayPeriodItem(index)">X</button>
                         </td>
@@ -206,7 +219,9 @@ createApp({
             },
             add_purchase_error: '',
             longClickTimer: null,
-            longClickData: null
+            longClickData: null,
+            test_mode: false,
+            main_msg: '',
         }
     },
     mounted() {
@@ -238,7 +253,9 @@ createApp({
         },
         async loadPayPeriods() {
             try {
-                const url = `/api/loadPayPeriods.php?user_id=1&current_balance=${this.startingBalance}&end_pay_period=${this.selectedPayDate}`;
+                const test_mode = this.test_mode ? 1 : 0;
+
+                const url = `/api/loadPayPeriods.php?user_id=1&current_balance=${this.startingBalance}&end_pay_period=${this.selectedPayDate}&test_mode=${test_mode}`;
                 const response = await axios.get(url);
                 if (response.data && response.data.items) {
                     this.payPeriodItems = response.data.items;
@@ -250,7 +267,10 @@ createApp({
         },
         async loadPayPeriodItems() {
             try {
-                const url = `/api/loadPayPeriodItems.php`;
+
+                const test_mode = this.test_mode ? 1 : 0;
+
+                const url = `/api/loadPayPeriodItems.php?test_mode=${test_mode}`;
                 const response = await axios.get(url);
                 if (response.data && response.data.items) {
                     this.payPeriodItems = response.data.items;
@@ -266,6 +286,110 @@ createApp({
                 console.error('Error loading pay period items:', error);
             }
         },
+        async syncExpenses() {
+            try {
+                const response = await axios.get('/api/syncExpenses.php');
+                if (response.data && response.data.success) {
+                    console.log('Expenses synced successfully.');
+                    this.main_error = '';
+                    this.loadPayPeriodItems();
+                } else {
+                    console.error('Error syncing expenses:', response.data.error);
+                    this.main_error = response.data.error || 'Error syncing expenses.';
+                }
+            } catch (error) {
+                console.error('Error syncing expenses:', error);
+                this.main_error = 'Error syncing expenses.';
+            }
+        },
+        async queueJob() {
+            this.main_msg = '';
+            this.main_error = '';
+            try {
+
+                const test_mode = this.test_mode ? 1 : 0;
+
+                const response = await axios.get(`/api/queue_date_job.php?test_mode=${test_mode}`);
+                if (response.data && response.data.return_status && response.data.return_status == "success") {
+                    console.log("Date job queued successfully.");
+                    this.main_msg = 'Date job queued successfully.';
+                } else {
+                    console.error('Error queueing job:', response.data.error);
+                    this.main_error = response.data.error || 'Error queueing job.';
+                }
+            } catch (error) {
+                console.error('Error queueing job:', error);
+                this.main_error = 'Error queueing job.';
+            }
+        },
+        async addPurchase() {
+            // Handle adding the purchase here
+            try {
+                const response = await axios.post(`/api/addUpcomingPurchase.php?pay_period_id=${this.currentPayPeriodId}&title=${this.newPurchase.title}&description=${this.newPurchase.description}&cost=${this.newPurchase.cost}&amount_to_save=${this.newPurchase.amount_to_save}`);
+                
+                if (response.data && response.data.error) {
+                    console.error('Error adding purchase:', response.data.error);
+                    this.add_purchase_error = response.data.error;
+                    return;
+                }
+                if (response.data && response.data.item) {
+                    console.log('response: ', response.data);
+                    // Successfully added purchase
+
+                    console.log('currentPayPeriodItemIndex: ', this.currentPayPeriodItemIndex);
+                    console.log('payPeriodItems before push: ', this.payPeriodItems);
+
+                    this.payPeriodItems[this.currentPayPeriodItemIndex].upcoming_purchases.push(response.data.item);
+                    this.add_purchase_error = '';
+                    this.loadPayPeriodItems();
+                    $('#addPurchaseModal').modal('hide');
+                    
+                    // Reinitialize tooltips after adding new content
+                    setTimeout(() => {
+                        this.initializeTooltips();
+                    }, 100);
+                } else {
+                    console.error('Error adding purchase:', response.data.error);
+                    this.add_purchase_error = response.data.error;
+                }
+            } catch (error) {
+                console.error('Error adding purchase:', error);
+            }
+        },
+        async removePurchase(purchaseId, payPeriodIndex, purchaseIndex) {
+            // Handle removing the purchase here
+            console.log('Removing purchase:', purchaseId);
+
+            try {
+                const response = await axios.post(`/api/removeUpcomingPurchase.php?purchase_id=${purchaseId}`);
+                if (response.data && response.data.success) {
+                    this.payPeriodItems[payPeriodIndex].upcoming_purchases.splice(purchaseIndex, 1);
+                    this.loadPayPeriodItems();
+                } else {
+                    console.error('Error removing purchase:', response.data.error);
+                }
+            } catch (error) {
+                console.error('Error removing purchase:', error);
+            }
+        },   
+        async removeExpense(expenseId, payPeriodIndex, expenseIndex) {
+            // Handle removing the purchase here
+            console.log('Removing purchase:', expenseId);
+
+            try {
+                const response = await axios.post(`/api/removeExpense.php?expense_id=${expenseId}`);
+                if (response.data && response.data.success) {
+                    console.log('payPeriodItems before splice: ', this.payPeriodItems);
+                    console.log('Removing expense at index:', expenseIndex, ' from payPeriodIndex:', payPeriodIndex);
+                    this.payPeriodItems[payPeriodIndex].one_time_expenses.splice(expenseIndex, 1);
+                    this.loadPayPeriodItems();
+                } else {
+                    console.error('Error removing purchase:', response.data.error);
+                }
+            } catch (error) {
+                console.error('Error removing purchase:', error);
+            }
+        },    
         checkNegativeRemainingAmountsValid() {
             this.main_error = '';
             for (let index = 0; index < this.payPeriodItems.length; index++) {
@@ -308,40 +432,7 @@ createApp({
             }
             return true;
         },
-        async addPurchase() {
-            // Handle adding the purchase here
-            try {
-                const response = await axios.post(`/api/addUpcomingPurchase.php?pay_period_id=${this.currentPayPeriodId}&title=${this.newPurchase.title}&description=${this.newPurchase.description}&cost=${this.newPurchase.cost}&amount_to_save=${this.newPurchase.amount_to_save}`);
-                
-                if (response.data && response.data.error) {
-                    console.error('Error adding purchase:', response.data.error);
-                    this.add_purchase_error = response.data.error;
-                    return;
-                }
-                if (response.data && response.data.item) {
-                    console.log('response: ', response.data);
-                    // Successfully added purchase
-
-                    console.log('currentPayPeriodItemIndex: ', this.currentPayPeriodItemIndex);
-                    console.log('payPeriodItems before push: ', this.payPeriodItems);
-
-                    this.payPeriodItems[this.currentPayPeriodItemIndex].upcoming_purchases.push(response.data.item);
-                    this.add_purchase_error = '';
-                    this.loadPayPeriodItems();
-                    $('#addPurchaseModal').modal('hide');
-                    
-                    // Reinitialize tooltips after adding new content
-                    setTimeout(() => {
-                        this.initializeTooltips();
-                    }, 100);
-                } else {
-                    console.error('Error adding purchase:', response.data.error);
-                    this.add_purchase_error = response.data.error;
-                }
-            } catch (error) {
-                console.error('Error adding purchase:', error);
-            }
-        },
+        
         initializeTooltips() {
             // Destroy existing tooltips first
             $('[data-toggle="tooltip"]').tooltip('destroy');
@@ -353,23 +444,7 @@ createApp({
         },
         removePayPeriodItem(index) {
             this.payPeriodItems.splice(index, 1);
-        },
-        async removePurchase(purchaseId, payPeriodIndex, purchaseIndex) {
-            // Handle removing the purchase here
-            console.log('Removing purchase:', purchaseId);
-
-            try {
-                const response = await axios.post(`/api/removeUpcomingPurchase.php?purchase_id=${purchaseId}`);
-                if (response.data && response.data.success) {
-                    this.payPeriodItems[payPeriodIndex].upcoming_purchases.splice(purchaseIndex, 1);
-                    this.loadPayPeriodItems();
-                } else {
-                    console.error('Error removing purchase:', response.data.error);
-                }
-            } catch (error) {
-                console.error('Error removing purchase:', error);
-            }
-        },      
+        },     
         openAddPurchaseModal(payPeriodId, index) {
             console.log('openAddPurchaseModal called with ID:', payPeriodId);
             

@@ -17,8 +17,8 @@ execQuery1($sql, []);
 
 
 $sql = "INSERT INTO date_job 
-(`status`,  `command`,                 created_at, updated_at, test_mode) VALUES 
-('pending', 'generate_bill_dates:{}', NOW(),      NOW(),       $changeTestMode)";
+(`status`,  `command`,                 created_at,           updated_at,            test_mode) VALUES 
+('pending', 'generate_bill_dates:{}', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), $changeTestMode)";
 execQuery1($sql, []);
 
 header("Content-type: text/json");

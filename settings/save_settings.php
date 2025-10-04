@@ -135,8 +135,8 @@ if ($resetDb) {
     execQuery3("TRUNCATE ip_upcoming_purchase");
 
     $sql = "INSERT INTO ip_upcoming_purchase 
-    ( pay_period_item_id,  title, `description`, cost,  amount_to_save) VALUES 
-    (:pay_period_item_id, :title, :description, :cost, :amount_to_save) ";
+    ( pay_period_item_id,  title, `description`, cost,  amount_to_save,  moved) VALUES 
+    (:pay_period_item_id, :title, :description, :cost, :amount_to_save, :moved) ";
     $stmt_insert_bills = $db_conn3->prepare($sql);
 
     $sql = "SELECT * FROM ip_upcoming_purchase ORDER BY vnd_id ";
@@ -153,6 +153,7 @@ if ($resetDb) {
             'description' => $getItem['description'],
             'cost' => $getItem['cost'],
             'amount_to_save' => $getItem['amount_to_save'],
+            'moved' => $getItem['moved'],
         ]);
     }
 }
