@@ -90,7 +90,7 @@ if (!isset($_SESSION['user'])) {
                 <tbody>
                     <tr v-for="(item, index) in payPeriodItems" :key="index">
                         <td>{{ item.pay_period }}</td>
-                        <td><input type="number" class="form-control" v-model="item.disposable_amount" readonly style="width: 60px;" /></td>
+                        <td><input type="number" class="form-control input_num" v-model="item.disposable_amount" readonly style="width: 60px;" /></td>
                         <td>
                             <table class="table table-bordered">
                                 <thead>
@@ -103,7 +103,7 @@ if (!isset($_SESSION['user'])) {
                                     <tr v-for="(purchase, purchaseIndex) in item.upcoming_purchases" :key="purchaseIndex">
                                         <td><a href="#" data-toggle="tooltip" data-placement="top" :title="purchase.description + ' (Cost: $' + purchase.cost + ')'" @mousedown="startLongClick(purchase, index, purchaseIndex)" @mouseup="cancelLongClick" @mouseleave="cancelLongClick">{{ purchase.title }}</a></td>
                                         <td>
-                                            <input type="number" class="form-control" v-model="purchase.amount_to_save" style="width: 60px; display: inline-block;" />
+                                            <input type="number" class="form-control input_num"v-model="purchase.amount_to_save" style="width: 60px; display: inline-block;" />
                                             <button class="btn btn-danger btn-sm small_padding" style="display: inline-block;" @click="removePurchase(purchase.id, index, purchaseIndex)">X</button>
                                         </td>
                                     </tr>
@@ -111,8 +111,8 @@ if (!isset($_SESSION['user'])) {
                             </table>
                         </td>
                         <td>
-                            <input type="number" class="form-control" v-model="item.remaining_amount" style="width: 60px;" />
-
+                            <input type="number" class="form-control input_num" v-model="item.remaining_amount" style="width: 60px;" />
+                            <button class="btn btn-danger btn-sm" @click="removePayPeriodItem(index)">X</button>
                         </td>
                     </tr>
                 </tbody>
@@ -201,6 +201,8 @@ createApp({
             }
         });
         
+        // Check screen width and adjust input widths if needed
+        
         // Initialize Bootstrap tooltips after a delay
         setTimeout(() => {
             this.initializeTooltips();
@@ -223,6 +225,7 @@ createApp({
                 const response = await axios.get(url);
                 if (response.data && response.data.items) {
                     this.payPeriodItems = response.data.items;
+                    this.checkScreenWidth();
                 }
             } catch (error) {
                 console.error('Error loading pay period items:', error);
@@ -235,7 +238,8 @@ createApp({
                 if (response.data && response.data.items) {
                     this.payPeriodItems = response.data.items;
                     
-                    this.checkNegativeRemainingAmountsValid
+                    this.checkNegativeRemainingAmountsValid();
+                    this.checkScreenWidth();
                     // Initialize tooltips after data loads
                     setTimeout(() => {
                         this.initializeTooltips();
@@ -247,45 +251,42 @@ createApp({
         },
         checkNegativeRemainingAmountsValid() {
             this.main_error = '';
-            for (const [item, index] of this.payPeriodItems) {
-                if (item.remaining_amount < 0) {
+            for (let index = 0; index < this.payPeriodItems.length; index++) {
+                if (this.payPeriodItems[index].remaining_amount < 0) {
                     this.payPeriodItems[index].remaining_amount = 0;
-                    //this.main_error = 'One or more pay periods have a negative remaining amount.';
-                    //return false;
-                    break;
                 }
             }
             return true;
         },
-        transferItems() {
-
-            const ret_val = this.checkNegativeRemainingAmountsValid();
-            if (!ret_val) {
-                return;
+        checkScreenWidth() {
+            // iPhone 15 landscape width is 852px
+            console.log('test 123');
+            if (window.innerWidth > 852) {
+                console.log('234');
+                // Set all input_num elements to 70px width
+                setTimeout(() => {
+                    const inputElements = document.querySelectorAll('.input_num');
+                    console.log('345');
+                    inputElements.forEach(input => {
+                        console.log('456');
+                        input.style.width = '80px';
+                    });
+                }, 100);
             }
-
-            for (const [item, index] of this.payPeriodItems.entries()) {
-                if (item.remaining_amount > 0) {
-                    const remainingAmount = item.remaining_amount;
+        },
+        transferItems() {
+            // First check for negative amounts and fix them
+            this.checkNegativeRemainingAmountsValid();
+            
+            // Transfer positive remaining amounts to next period
+            for (let index = 0; index < this.payPeriodItems.length; index++) {
+                if (this.payPeriodItems[index].remaining_amount > 0) {
+                    const remainingAmount = this.payPeriodItems[index].remaining_amount;
                     this.payPeriodItems[index].remaining_amount = 0;
                     if (index + 1 < this.payPeriodItems.length) {
                         this.payPeriodItems[index + 1].disposable_amount += remainingAmount;
                         this.payPeriodItems[index + 1].remaining_amount += remainingAmount;
                     }
-                }
-            }
-        },
-        transferItems() {
-
-            const ret_val = this.checkNegativeRemainingAmountsValid();
-            if (!ret_val) {
-                return;
-            }
-
-            for (const [item, index] of this.payPeriodItems.entries()) {
-                if (item.remaining_amount < 0) {
-                    this.main_error = 'One or more pay periods have a negative remaining amount.';
-                    return false;
                 }
             }
             return true;
@@ -332,6 +333,9 @@ createApp({
                 trigger: 'click',
                 placement: 'top'
             });
+        },
+        removePayPeriodItem(index) {
+            this.payPeriodItems.splice(index, 1);
         },
         async removePurchase(purchaseId, payPeriodIndex, purchaseIndex) {
             // Handle removing the purchase here

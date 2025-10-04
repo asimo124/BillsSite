@@ -88,6 +88,9 @@ $ipPayPeriod->updatePayPeriods();
 $sql = "TRUNCATE TABLE ip_pay_period_item";
 execQuery($sql);
 
+$sql = "TRUNCATE TABLE ip_upcoming_purchase";
+execQuery($sql);
+
 $resultsArr = [];
 while (true) {
 
