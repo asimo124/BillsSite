@@ -93,7 +93,7 @@ if (!isset($_SESSION['user'])) {
                                 <thead>
                                     <tr>
                                         <th style="padding-bottom: 14px;">Purchase</th>
-                                        <th >Amt &nbsp;<button class="btn btn-primary btn-sm add-purchase" style="display: inline-block;" @click="openAddPurchaseModal">+</button></th>
+                                        <th >Amt &nbsp;<button class="btn btn-primary btn-sm add-purchase" style="display: inline-block;" @click="openAddPurchaseModal(item.id, index)">+</button></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -126,6 +126,9 @@ if (!isset($_SESSION['user'])) {
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h4 class="modal-title" id="addPurchaseModalLabel">Add Upcoming Purchase</h4>
+                    <div class="alert alert-danger" role="alert" v-if="add_purchase_error">
+                        {{ add_purchase_error }}    
+                    </div>
                 </div>
                 <div class="modal-body">
                     <form>
@@ -172,12 +175,15 @@ createApp({
             startingBalance: 3544,
             upcomingPayDates: [],
             selectedPayDate: '',
+            currentPayPeriodId: null,
+            currentPayPeriodItemIndex: null,
             newPurchase: {
                 title: '',
                 description: '',
                 cost: 0,
                 amount_to_save: 0
-            }
+            },
+            add_purchase_error: ''
         }
     },
     mounted() {
@@ -222,19 +228,39 @@ createApp({
                 console.error('Error loading pay period items:', error);
             }
         },
-        addPurchase() {
+        async addPurchase() {
             // Handle adding the purchase here
-            console.log('addPurchase method called');
-            console.log('Adding purchase:', this.newPurchase);
-            
+            try {
+                const response = await axios.post('/api/addUpcomingPurchase.php', {
+                    item: this.newPurchase,
+                    pay_period_id: this.currentPayPeriodId
+                });
+                if (response.data && response.data.item) {
+                    // Successfully added purchase
+                    this.payPeriodItems[this.currentPayPeriodItemIndex].upcomingPurchases.push(response.data.item);
+                    this.add_purchase_error = '';
+                    $('#addPurchaseModal').modal('hide');
+                } else {
+                    console.error('Error adding purchase:', response.data.error);
+                    this.add_purchase_error = response.data.error;
+                }
+            } catch (error) {
+                console.error('Error adding purchase:', error);
+            }
+
             // Close modal
-            $('#addPurchaseModal').modal('hide');
+            
             
             // Here you would typically send the data to your API
             // For now, just log it
         },
-        openAddPurchaseModal() {
-            console.log('openAddPurchaseModal called');
+        openAddPurchaseModal(payPeriodId, index) {
+            console.log('openAddPurchaseModal called with ID:', payPeriodId);
+            
+            // Store the pay period ID
+            this.currentPayPeriodId = payPeriodId;
+            this.currentPayPeriodItemIndex = index;
+            
             // Reset form
             this.newPurchase = {
                 title: '',
@@ -242,6 +268,7 @@ createApp({
                 cost: 0,
                 amount_to_save: 0
             };
+            this.add_purchase_error = '';
             console.log('Form reset, opening modal');
             // Open modal using jQuery (Bootstrap 3 requirement)
             $('#addPurchaseModal').modal('show');
