@@ -10,6 +10,15 @@ class IpPayPeriodItem {
     {
         global $db_conn;
 
+        $sql = "SELECT vnd_id, vnd_bill, LEFT(vnd_bill, 10) as vnd_bill_short, amount, vnd_frequency_value 
+                FROM vnd_bills 
+                WHERE 1 
+                AND vnd_frequency = 'Once'
+                AND vnd_frequency_type = 'Once'
+                AND STR_TO_DATE(vnd_frequency_value, '%Y-%m-%d') BETWEEN :start_date AND :end_date
+                ORDER BY vnd_frequency_value ";
+        $stmt_sel_expenses = $db_conn->prepare($sql);
+
         $sql = "SELECT 
                 ppi.id as pay_period_item_id 
                 , ppi.pay_period_id 
@@ -40,9 +49,11 @@ class IpPayPeriodItem {
             $payPeriodsArr[$getItem['pay_period_id']][] = $getItem;
         }
         
+        
         $payPeriodResults = [];
         foreach ($payPeriodsArr as $ppId => $items) {
             
+            $payPeriodDate = "";
             $eachPayPeriod = [
                 "id" => $items[0]['pay_period_item_id'],
                 "pay_period_id" => $items[0]['pay_period_id'],
@@ -50,11 +61,41 @@ class IpPayPeriodItem {
                 "pay_period" => $items[0]['pay_period'],
                 "disposable_amount" => $items[0]['disposable_amount'],
                 "remaining_amount" => $items[0]['remaining_amount'],
-                "upcoming_purchases" => []
+                "upcoming_purchases" => [],
+                "one_time_expenses" => []
             ];
             
+            $expenseResults = [];
+
+            $payPeriodDate = $items[0]['pay_period_date'];
+
+            if (intval(date('d', strtotime($payPeriodDate))) >= 15) {
+                $startDate = date('Y-m-15', strtotime($payPeriodDate));
+                $endDate = date('Y-m-t', strtotime($payPeriodDate));
+            } else {
+                $startDate = date('Y-m-01', strtotime($payPeriodDate));
+                $endDate = date('Y-m-14', strtotime($payPeriodDate));
+            }
+
+            $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency_value 
+            FROM vnd_bills 
+            WHERE 1 
+            AND vnd_frequency = 'Once'
+            AND vnd_frequency_type = 'Once'
+            AND STR_TO_DATE(vnd_frequency_value, '%Y-%m-%d') BETWEEN :start_date AND :end_date
+            ORDER BY vnd_frequency_value ";
+
+            $stmt_sel_expenses->execute([
+                ':start_date' => $startDate,
+                ':end_date' => $endDate
+            ]);
+
+            $expenseResults = $stmt_sel_expenses->fetchAll(PDO::FETCH_ASSOC);
+            $eachPayPeriod['one_time_expenses'] = $expenseResults;
+
             $upcomingPurchases = [];
             foreach ($items as $item) {
+
 
                 if ($item['upcoming_purchase_id'] === null) {
                     continue;
@@ -68,10 +109,12 @@ class IpPayPeriodItem {
                 ];
             }
             $eachPayPeriod['upcoming_purchases'] = $upcomingPurchases;
+
             $payPeriodResults[] = $eachPayPeriod;
             
         }
 
+    
         $sql = "UPDATE ip_pay_period_item 
                 SET remaining_amount = :remaining_amount
                 WHERE id = :id";

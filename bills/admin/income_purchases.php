@@ -92,6 +92,7 @@ if (!isset($_SESSION['user'])) {
                         <td>{{ item.pay_period }}</td>
                         <td><input type="number" class="form-control input_num" v-model="item.disposable_amount" readonly style="width: 60px;" /></td>
                         <td>
+                            <h4>Upcoming</h4>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -106,6 +107,22 @@ if (!isset($_SESSION['user'])) {
                                             <input type="number" class="form-control input_num"v-model="purchase.amount_to_save" style="width: 60px; display: inline-block;" />
                                             <button class="btn btn-danger btn-sm small_padding" style="display: inline-block;" @click="removePurchase(purchase.id, index, purchaseIndex)">X</button>
                                         </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            
+                            
+                            <h4 v-if="item.one_time_expenses.length > 0">Expenses</h4>
+                            <table class="table table-bordered" v-if="item.one_time_expenses.length > 0">
+                                <thead>
+                                    <tr>
+                                        <th style="padding-bottom: 14px;">Expense</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(expense, expenseIndex) in item.one_time_expenses" :key="expenseIndex">
+                                        <td><a href="#" data-toggle="tooltip" data-placement="top" :title="expense.vnd_bill">{{ expense.vnd_bill_short }}</a> - ${{ expense.amount }}</td>
                                     </tr>
                                 </tbody>
                             </table>
