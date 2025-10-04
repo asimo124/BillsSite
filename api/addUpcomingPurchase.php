@@ -10,22 +10,30 @@ include "../inc/includes.php";
 $payPeriodId = isset($_REQUEST['pay_period_id']) ? intval($_REQUEST['pay_period_id']) : 0;
 
 if ($payPeriodId <= 0) {
-    return [
+
+    header("Content-type: application/json");
+    header('Access-Control-Allow-Origin: *');
+    echo json_encode([
         'item' => null,
-        'error' => 'Invalid pay_period_id provided.'
-    ]; 
+         'error' => 'Invalid pay_period_id provided.'
+    ], JSON_PRETTY_PRINT);
+    die();
 }
 
-$title = isset($_REQUEST['item']['title']) ? $_REQUEST['item']['title'] : '';
-$description = isset($_REQUEST['item']['description']) ? $_REQUEST['item']['description'] : '';
-$cost = isset($_REQUEST['item']['cost']) ? floatval($_REQUEST['item']['cost']) : 0;
-$amount_to_save = isset($_REQUEST['item']['amount_to_save']) ? floatval($_REQUEST['item']['amount_to_save']) : 0;
+$title = isset($_REQUEST['title']) ? $_REQUEST['title'] : '';
+$description = isset($_REQUEST['description']) ? $_REQUEST['description'] : '';
+$cost = isset($_REQUEST['cost']) ? floatval($_REQUEST['cost']) : 0;
+$amount_to_save = isset($_REQUEST['amount_to_save']) ? floatval($_REQUEST['amount_to_save']) : 0;
 
 if (!$title || $cost <= 0 || $amount_to_save <= 0) {
-    return [
+
+    header("Content-type: application/json");
+    header('Access-Control-Allow-Origin: *');
+    echo json_encode([
         'item' => null,
         'error' => 'Missing or invalid required fields (title, cost, amount_to_save).'
-    ]; 
+    ], JSON_PRETTY_PRINT);
+    die();
 }
 
 $sql = "INSERT INTO ip_upcoming_purchase 

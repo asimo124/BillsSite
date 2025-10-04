@@ -126,11 +126,11 @@ if (!isset($_SESSION['user'])) {
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h4 class="modal-title" id="addPurchaseModalLabel">Add Upcoming Purchase</h4>
+                </div>
+                <div class="modal-body">
                     <div class="alert alert-danger" role="alert" v-if="add_purchase_error">
                         {{ add_purchase_error }}    
                     </div>
-                </div>
-                <div class="modal-body">
                     <form>
                         <div class="form-group">
                             <label for="purchaseTitle">Title</label>
@@ -231,13 +231,21 @@ createApp({
         async addPurchase() {
             // Handle adding the purchase here
             try {
-                const response = await axios.post('/api/addUpcomingPurchase.php', {
-                    item: this.newPurchase,
-                    pay_period_id: this.currentPayPeriodId
-                });
+                const response = await axios.post(`/api/addUpcomingPurchase.php?pay_period_id=${this.currentPayPeriodId}&title=${this.newPurchase.title}&description=${this.newPurchase.description}&cost=${this.newPurchase.cost}&amount_to_save=${this.newPurchase.amount_to_save}`);
+                
+                if (response.data && response.data.error) {
+                    console.error('Error adding purchase:', response.data.error);
+                    this.add_purchase_error = response.data.error;
+                    return;
+                }
                 if (response.data && response.data.item) {
+                    console.log('response: ', response.data);
                     // Successfully added purchase
-                    this.payPeriodItems[this.currentPayPeriodItemIndex].upcomingPurchases.push(response.data.item);
+
+                    console.log('currentPayPeriodItemIndex: ', this.currentPayPeriodItemIndex);
+                    console.log('payPeriodItems before push: ', this.payPeriodItems);
+
+                    this.payPeriodItems[this.currentPayPeriodItemIndex].upcoming_purchases.push(response.data.item);
                     this.add_purchase_error = '';
                     $('#addPurchaseModal').modal('hide');
                 } else {
