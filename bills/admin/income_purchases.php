@@ -97,11 +97,11 @@ if (!isset($_SESSION['user'])) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(purchase, index) in item.upcoming_purchases" :key="index">
-                                        <td><a href="#">{{ purchase.title }}</a></td>
+                                    <tr v-for="(purchase, purchaseIndex) in item.upcoming_purchases" :key="purchaseIndex">
+                                        <td><a href="#" data-toggle="tooltip" data-placement="top" :title="purchase.description">{{ purchase.title }}</a></td>
                                         <td>
                                             <input type="number" class="form-control" v-model="purchase.cost" style="width: 60px; display: inline-block;" />
-                                            <button class="btn btn-danger btn-sm small_padding" style="display: inline-block;">X</button>
+                                            <button class="btn btn-danger btn-sm small_padding" style="display: inline-block;" @click="removePurchase(purchase.id, index, purchaseIndex)">X</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -194,6 +194,11 @@ createApp({
                 this.selectedPayDate = this.upcomingPayDates[0].value;
             }
         });
+        
+        // Initialize Bootstrap tooltips after a delay
+        setTimeout(() => {
+            $('[data-toggle="tooltip"]').tooltip();
+        }, 100);
     },
     methods: {
         async loadUpcomingPayDates() {
@@ -223,6 +228,11 @@ createApp({
                 const response = await axios.get(url);
                 if (response.data && response.data.items) {
                     this.payPeriodItems = response.data.items;
+                    
+                    // Initialize tooltips after data loads
+                    setTimeout(() => {
+                        $('[data-toggle="tooltip"]').tooltip();
+                    }, 100);
                 }
             } catch (error) {
                 console.error('Error loading pay period items:', error);
@@ -248,6 +258,12 @@ createApp({
                     this.payPeriodItems[this.currentPayPeriodItemIndex].upcoming_purchases.push(response.data.item);
                     this.add_purchase_error = '';
                     $('#addPurchaseModal').modal('hide');
+                    
+                    // Reinitialize tooltips after adding new content
+                    setTimeout(() => {
+                        $('[data-toggle="tooltip"]').tooltip('destroy');
+                        $('[data-toggle="tooltip"]').tooltip();
+                    }, 100);
                 } else {
                     console.error('Error adding purchase:', response.data.error);
                     this.add_purchase_error = response.data.error;
@@ -255,13 +271,22 @@ createApp({
             } catch (error) {
                 console.error('Error adding purchase:', error);
             }
-
-            // Close modal
-            
-            
-            // Here you would typically send the data to your API
-            // For now, just log it
         },
+        async removePurchase(purchaseId, payPeriodIndex, purchaseIndex) {
+            // Handle removing the purchase here
+            console.log('Removing purchase:', purchaseId);
+
+            try {
+                const response = await axios.post(`/api/removeUpcomingPurchase.php?purchase_id=${purchaseId}`);
+                if (response.data && response.data.success) {
+                    this.payPeriodItems[payPeriodIndex].upcoming_purchases.splice(purchaseIndex, 1);
+                } else {
+                    console.error('Error removing purchase:', response.data.error);
+                }
+            } catch (error) {
+                console.error('Error removing purchase:', error);
+            }
+        },      
         openAddPurchaseModal(payPeriodId, index) {
             console.log('openAddPurchaseModal called with ID:', payPeriodId);
             
