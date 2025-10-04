@@ -72,6 +72,29 @@ class IpPayPeriodItem {
             
         }
 
+        $sql = "UPDATE ip_pay_period_item 
+                SET remaining_amount = :remaining_amount
+                WHERE id = :id";
+        $stmt_update_pay_period_item = $db_conn->prepare($sql);
+            
+        foreach ($payPeriodResults as $ppIndex => $pp) {
+            $totalAmountToSave = 0;
+            if (count($pp['upcoming_purchases']) > 0) {
+                foreach ($pp['upcoming_purchases'] as $purchaseIndex => $purchase) {
+                    $totalAmountToSave += $purchase['amount_to_save'];
+                }
+            }
+            $remainingAmount = $pp['disposable_amount'] - $totalAmountToSave;
+            $sql = "UPDATE ip_pay_period_item 
+                SET remaining_amount = :remaining_amount
+                WHERE id = :id";
+            $stmt_update_pay_period_item->execute([
+                ':remaining_amount' => $remainingAmount,
+                ':id' => $pp['id']
+            ]);
+            $payPeriodResults[$ppIndex]['remaining_amount'] = $remainingAmount;
+        }
+
         return $payPeriodResults;
     }
 

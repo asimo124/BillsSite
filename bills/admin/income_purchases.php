@@ -32,6 +32,9 @@ if (!isset($_SESSION['user'])) {
     <?php } ?>
 
     <h2>Income Purchases</h2>
+    <div class="alert alert-danger" role="alert" v-if="main_error">
+        {{ main_error }}    
+    </div>
 
     <div style="clear: both; height: 12px"></div>
 
@@ -41,8 +44,8 @@ if (!isset($_SESSION['user'])) {
 
     <div class="row">
         <div class="col-xs-6" >
-            <button class="btn btn-default">Reset</button>&nbsp;
-            <button class="btn btn-primary">Transfer</button>
+            <button class="btn btn-default" @click="loadPayPeriodItems">Reset</button>&nbsp;
+            <button class="btn btn-primary" @click="transferItems">Transfer</button>
         </div>
         <div class="col-xs-6" style="text-align: right;">
             <button class="btn btn-danger">Sync & Queue</button>
@@ -171,6 +174,7 @@ const { createApp } = Vue;
 createApp({
     data() {
         return {
+            main_error: '',
             payPeriodItems: [],
             startingBalance: 3544,
             upcomingPayDates: [],
@@ -231,6 +235,7 @@ createApp({
                 if (response.data && response.data.items) {
                     this.payPeriodItems = response.data.items;
                     
+                    this.checkNegativeRemainingAmountsValid
                     // Initialize tooltips after data loads
                     setTimeout(() => {
                         this.initializeTooltips();
@@ -239,6 +244,51 @@ createApp({
             } catch (error) {
                 console.error('Error loading pay period items:', error);
             }
+        },
+        checkNegativeRemainingAmountsValid() {
+            this.main_error = '';
+            for (const [item, index] of this.payPeriodItems) {
+                if (item.remaining_amount < 0) {
+                    this.payPeriodItems[index].remaining_amount = 0;
+                    //this.main_error = 'One or more pay periods have a negative remaining amount.';
+                    //return false;
+                    break;
+                }
+            }
+            return true;
+        },
+        transferItems() {
+
+            const ret_val = this.checkNegativeRemainingAmountsValid();
+            if (!ret_val) {
+                return;
+            }
+
+            for (const [item, index] of this.payPeriodItems.entries()) {
+                if (item.remaining_amount > 0) {
+                    const remainingAmount = item.remaining_amount;
+                    this.payPeriodItems[index].remaining_amount = 0;
+                    if (index + 1 < this.payPeriodItems.length) {
+                        this.payPeriodItems[index + 1].disposable_amount += remainingAmount;
+                        this.payPeriodItems[index + 1].remaining_amount += remainingAmount;
+                    }
+                }
+            }
+        },
+        transferItems() {
+
+            const ret_val = this.checkNegativeRemainingAmountsValid();
+            if (!ret_val) {
+                return;
+            }
+
+            for (const [item, index] of this.payPeriodItems.entries()) {
+                if (item.remaining_amount < 0) {
+                    this.main_error = 'One or more pay periods have a negative remaining amount.';
+                    return false;
+                }
+            }
+            return true;
         },
         async addPurchase() {
             // Handle adding the purchase here
@@ -259,6 +309,7 @@ createApp({
 
                     this.payPeriodItems[this.currentPayPeriodItemIndex].upcoming_purchases.push(response.data.item);
                     this.add_purchase_error = '';
+                    this.loadPayPeriodItems();
                     $('#addPurchaseModal').modal('hide');
                     
                     // Reinitialize tooltips after adding new content
@@ -290,6 +341,7 @@ createApp({
                 const response = await axios.post(`/api/removeUpcomingPurchase.php?purchase_id=${purchaseId}`);
                 if (response.data && response.data.success) {
                     this.payPeriodItems[payPeriodIndex].upcoming_purchases.splice(purchaseIndex, 1);
+                    this.loadPayPeriodItems();
                 } else {
                     console.error('Error removing purchase:', response.data.error);
                 }
