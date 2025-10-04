@@ -116,9 +116,14 @@ while (true) {
     }
 }
 
+$ipPayPeriodItem = new IpPayPeriodItem();
+$payPeriodResults = $ipPayPeriodItem->index();
+
 header("Content-type: application/json");
 header('Access-Control-Allow-Origin: *');
-echo json_encode($resultsArr, JSON_PRETTY_PRINT);
+echo json_encode([
+    'items' => $payPeriodResults
+], JSON_PRETTY_PRINT);
 die();
 
 ?>
