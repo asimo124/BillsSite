@@ -117,44 +117,44 @@ if (!isset($_SESSION['user'])) {
         </div>
     </div>
 
-</div>
-
-<!-- Add Purchase Modal -->
-<div class="modal fade" id="addPurchaseModal" tabindex="-1" role="dialog" aria-labelledby="addPurchaseModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="addPurchaseModalLabel">Add Upcoming Purchase</h4>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="purchaseTitle">Title</label>
-                        <input type="text" class="form-control" id="purchaseTitle" v-model="newPurchase.title" placeholder="Enter title">
-                    </div>
-                    <div class="form-group">
-                        <label for="purchaseDescription">Description</label>
-                        <input type="text" class="form-control" id="purchaseDescription" v-model="newPurchase.description" placeholder="Enter description">
-                    </div>
-                    <div class="form-group">
-                        <label for="purchaseCost">Cost</label>
-                        <input type="number" class="form-control" id="purchaseCost" v-model="newPurchase.cost" placeholder="Enter cost" step="0.01">
-                    </div>
-                    <div class="form-group">
-                        <label for="purchaseAmountToSave">Amount to Save</label>
-                        <input type="number" class="form-control" id="purchaseAmountToSave" v-model="newPurchase.amount_to_save" placeholder="Enter amount to save" step="0.01">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" @click="addPurchase">Create</button>
+    <!-- Add Purchase Modal -->
+    <div class="modal fade" id="addPurchaseModal" tabindex="-1" role="dialog" aria-labelledby="addPurchaseModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="addPurchaseModalLabel">Add Upcoming Purchase</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="purchaseTitle">Title</label>
+                            <input type="text" class="form-control" id="purchaseTitle" v-model="newPurchase.title" placeholder="Enter title">
+                        </div>
+                        <div class="form-group">
+                            <label for="purchaseDescription">Description</label>
+                            <input type="text" class="form-control" id="purchaseDescription" v-model="newPurchase.description" placeholder="Enter description">
+                        </div>
+                        <div class="form-group">
+                            <label for="purchaseCost">Cost</label>
+                            <input type="number" class="form-control" id="purchaseCost" v-model="newPurchase.cost" placeholder="Enter cost" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="purchaseAmountToSave">Amount to Save</label>
+                            <input type="number" class="form-control" id="purchaseAmountToSave" v-model="newPurchase.amount_to_save" placeholder="Enter amount to save" step="0.01">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" @click="addPurchase">Create</button>
+                </div>
             </div>
         </div>
     </div>
+
 </div>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -202,7 +202,7 @@ createApp({
         },
         async loadPayPeriods() {
             try {
-                url = `/api/loadPayPeriods.php?user_id=1&current_balance=${this.startingBalance}&end_pay_period=${this.selectedPayDate}`;
+                const url = `/api/loadPayPeriods.php?user_id=1&current_balance=${this.startingBalance}&end_pay_period=${this.selectedPayDate}`;
                 const response = await axios.get(url);
                 if (response.data && response.data.items) {
                     this.payPeriodItems = response.data.items;
@@ -213,7 +213,7 @@ createApp({
         },
         async loadPayPeriodItems() {
             try {
-                url = `/api/loadPayPeriodItems.php`;
+                const url = `/api/loadPayPeriodItems.php`;
                 const response = await axios.get(url);
                 if (response.data && response.data.items) {
                     this.payPeriodItems = response.data.items;
@@ -224,6 +224,7 @@ createApp({
         },
         addPurchase() {
             // Handle adding the purchase here
+            console.log('addPurchase method called');
             console.log('Adding purchase:', this.newPurchase);
             
             // Close modal
@@ -233,13 +234,15 @@ createApp({
             // For now, just log it
         },
         openAddPurchaseModal() {
+            console.log('openAddPurchaseModal called');
             // Reset form
             this.newPurchase = {
                 title: '',
                 description: '',
-                cost: '',
-                amount_to_save: ''
+                cost: 0,
+                amount_to_save: 0
             };
+            console.log('Form reset, opening modal');
             // Open modal using jQuery (Bootstrap 3 requirement)
             $('#addPurchaseModal').modal('show');
         },
