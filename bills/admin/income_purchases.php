@@ -38,6 +38,9 @@ if (!isset($_SESSION['user'])) {
     <div class="alert alert-success" role="alert" v-if="main_msg">
         {{ main_msg }}    
     </div>
+    <div class="alert alert-info" role="alert" v-if="temp_msg">
+        {{ temp_msg }}    
+    </div>
 
     <div style="clear: both; height: 12px"></div>
 
@@ -222,6 +225,9 @@ createApp({
             longClickData: null,
             test_mode: false,
             main_msg: '',
+            temp_msg: '',
+            did_queue: false,
+            times_run: 0
         }
     },
     mounted() {
@@ -302,9 +308,47 @@ createApp({
                 this.main_error = 'Error syncing expenses.';
             }
         },
+        async checkJobsDone() {
+            if (!this.did_queue) {
+                return;
+            }
+            try {
+                const response = await axios.get('/api/check_date_job_done.php');
+                if (response.data && response.data.return_status && response.data.return_status == "done") {
+                    this.isRunning = false;
+                    this.temp_msg = '';
+                    this.main_msg = 'All jobs completed.';
+                    this.main_error = '';
+                    this.did_queue = false;
+                    this.loadPayPeriodItems();
+                } else {
+                    // Still running, check again after a delay
+                    setTimeout(() => {
+                        this.checkJobsDone();
+                    }, 5000); // Check every 5 seconds
+                }
+            } catch (error) {
+
+                if (this.times_run > 12) { // Stop after 1 minute of retries
+                    this.main_error = 'Error checking job status. Please try again later.';
+                    this.temp_msg = '';
+                    this.did_queue = false;
+                    return;
+                }
+
+                this.times_run += 1;
+                // Retry after a delay
+                setTimeout(() => {
+                    this.checkJobsDone();
+                }, 5000);
+            }
+        },
         async queueJob() {
             this.main_msg = '';
             this.main_error = '';
+            this.temp_msg = 'Queueing job...';
+            this.did_queue = true;
+            this.times_run = 0;
             try {
 
                 const test_mode = this.test_mode ? 1 : 0;
@@ -312,7 +356,7 @@ createApp({
                 const response = await axios.get(`/api/queue_date_job.php?test_mode=${test_mode}`);
                 if (response.data && response.data.return_status && response.data.return_status == "success") {
                     console.log("Date job queued successfully.");
-                    this.main_msg = 'Date job queued successfully.';
+                    this.checkJobsDone();
                 } else {
                     console.error('Error queueing job:', response.data.error);
                     this.main_error = response.data.error || 'Error queueing job.';
