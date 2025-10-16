@@ -460,14 +460,14 @@ class BillDateHelper {
         $totalDisposable = $this->calculateDisposable($this->disposablePerDay, $this->days15);
 
         $totalDisposable = $this->formatFloat($totalDisposable);
-        $results['total_disposable'] = $totalDisposable;
+        $this->results['total_disposable'] = $totalDisposable;
 
         if ($insertPayPeriodItem) {
             $IpPayPeriodItem = new IpPayPeriodItem();
             $IpPayPeriodItem->insertPayPeriodItem($pay_date, $totalDisposable);
         }
 
-        return $results;
+        return $this->results;
     }
 
     private function calculateDisposable()
@@ -475,13 +475,18 @@ class BillDateHelper {
         $startingBalance = $this->current_balance;
 
         $daysCount = 0;
-        if (!$this->days15) {
 
+        foreach ($this->results['results'] as $week) {
+            foreach ($week['days'] as $day) {
+                foreach ($day['desc'] as $expense) {
+                    $startingBalance -= $expense['amount'];
+                }
+            }
+        }
+
+        if (!$this->days15) {
             foreach ($this->results['results'] as $week) {
                 foreach ($week['days'] as $day) {
-                    foreach ($day['desc'] as $expense) {
-                        $startingBalance -= $expense['amount'];
-                    }
                     if ($day['showAsDay'] == 1) {
                         $daysCount += 1;
                     }

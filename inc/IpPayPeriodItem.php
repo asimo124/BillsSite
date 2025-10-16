@@ -61,6 +61,7 @@ class IpPayPeriodItem {
                 "pay_period_date" => $items[0]['pay_period_date'],
                 "pay_period" => $items[0]['pay_period'],
                 "disposable_amount" => $items[0]['disposable_amount'],
+                "total_disposable" => $items[0]['total_disposable'] ?? 0,
                 "remaining_amount" => $items[0]['remaining_amount'],
                 "upcoming_purchases" => [],
                 "one_time_expenses" => []

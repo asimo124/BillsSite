@@ -264,12 +264,18 @@ createApp({
             this.getExpenseDays();
         },
         calcDisposable(disposableDay) {
+
+            remove15Days = this.remove15Days;
+            if (remove15Days) {
+                daysCount = 15
+            } else {
+                daysCount = this.daysCount;
+            }
+
             const disposablePerDay = parseFloat(this.disposablePerDay);
             let subtractAmount = 0;
             
-            if (this.remove15Days) {
-                subtractAmount = 600;
-            }
+            
             
             return this.balance - (disposablePerDay * this.daysCount) - subtractAmount;
         },
@@ -316,8 +322,8 @@ createApp({
                         });
                     });
                     
-                    this.countDaysAdd = response.data.count_days_add;
-                    this.daysCount += this.countDaysAdd;
+                    //this.countDaysAdd = response.data.count_days_add;
+                    //this.daysCount += this.countDaysAdd;
                     
                     this.day40 = this.calcDisposable(40);
                 } else {
