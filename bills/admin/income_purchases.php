@@ -50,7 +50,7 @@ if (!isset($_SESSION['user'])) {
 
     <div class="row">
         <div class="col-xs-6" >
-            <button class="btn btn-default" @click="loadPayPeriodItems">Reset</button>&nbsp;
+            <button class="btn btn-default" @click="loadPayPeriods">Reset</button>&nbsp;
             <button class="btn btn-primary" @click="transferItems">Transfer</button>
         </div>
         <div class="col-xs-6" style="text-align: right;">
@@ -235,7 +235,7 @@ createApp({
         this.loadPayPeriodItems();
         this.loadUpcomingPayDates().then(() => {
             if (this.upcomingPayDates.length > 0) {
-                this.selectedPayDate = this.upcomingPayDates[0].value;
+                this.selectedPayDate = this.upcomingPayDates[8].value;
             }
         });
         
