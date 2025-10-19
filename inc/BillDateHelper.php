@@ -160,14 +160,35 @@ class BillDateHelper {
             $end_date = date("Y-m-d", strtotime($end_date2) - 86400);
         }
 
+        $pay_period_id = null;
+        $use_pay_period_date = "";
+        if (intval(date("d", strtotime($end_date))) == 14) {
+            $use_pay_period_date = date("Y-m-01", strtotime($end_date));
+        } else {
+            $use_pay_period_date = date("Y-m-15", strtotime($end_date));     
+        }
+
+        $sql = "SELECT id FROM ip_pay_period 
+                WHERE pay_period_date = :pay_period_date 
+                LIMIT 1";
+       
+        $payPeriodResult = getQuerySingle($sql, [
+            'pay_period_date' => $use_pay_period_date
+        ]);
+        if ($payPeriodResult) {
+            $pay_period_id = $payPeriodResult['id'];
+        }
+
         $MyBills = array();
         $Bill = new Bills();
 
         $Bill->setPayPeriod($end_date, $start_date);
-        $billDates = $Bill->loadBillDatesByUserID($user_id);
+        $billDates = $Bill->loadBillDatesByUserID($user_id, $pay_period_id);
 
         foreach ($billDates as $getDate) {
             $newDate = array();
+            $newDate['bill_date_id'] = $getDate['vnd_id'];
+            $newDate['is_enabled'] = intval($getDate['is_enabled']);
             $newDate['desc'] = $getDate['vnd_bill_desc'];
             $amount = $this->formatFloat($getDate['vnd_amount']);
 
@@ -290,10 +311,12 @@ class BillDateHelper {
 
                 $hasBills = true;
                 $billsDescArr[] = [
+                    "bill_date_id" => $getBill['bill_date_id'],
+                    "pay_period_id" => $pay_period_id,
                     "title" => $getBill['desc'] . " - $" . $getBill["amount"],
                     "amount" => $getBill['amount'],
                     "savedAmount" => $getBill['amount'],
-                    "isEnabled" => 1,
+                    "isEnabled" => $getBill['is_enabled'],
                     "is_heavy" => intval($getBill['is_heavy']),
                     "vnd_frequency" => ($getBill['vnd_frequency']),
                     "vnd_frequency_type" => ($getBill['vnd_frequency_type'])

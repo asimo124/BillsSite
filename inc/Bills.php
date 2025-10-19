@@ -64,14 +64,26 @@ class Bills {
 		return $resultset;	
 	}
 	
-	public function loadBillDatesByUserID($user_id) {
+	public function loadBillDatesByUserID($user_id, $pay_period_id = 0) {
 		global $db_conn;
 		
+		$join1 = "";
+		$fields1 = ", 1 as is_enabled";
+		if ($pay_period_id) {
+			$join1 = "LEFT JOIN vnd_pay_period_bill_date_passed ppbdp 
+						ON ppbdp.bill_date_id = bd.vnd_id 
+						AND ppbdp.pay_period_id = {$pay_period_id} ";
+			$fields1 = ", CASE WHEN IFNULL(ppbdp.is_enabled, -1) > -1 THEN ppbdp.is_enabled ELSE 1 END as is_enabled";
+		}
+
 		$query = "
-		SELECT * FROM vnd_bill_dates 
-		WHERE vnd_user_id = :user_id
-		and vnd_date between :start_date and :end_date
-		ORDER BY vnd_date, vnd_bill_desc ";
+		SELECT *$fields1
+		FROM vnd_bill_dates bd
+		$join1
+		WHERE 1
+		AND bd.vnd_user_id = :user_id
+		and bd.vnd_date between :start_date and :end_date
+		ORDER BY bd.vnd_date, bd.vnd_bill_desc ";
 		
 		$data = array();
 		$data['user_id'] = $user_id;
