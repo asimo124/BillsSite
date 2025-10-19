@@ -11,7 +11,7 @@ set_time_limit(300);
 
 $billDateId = isset($_REQUEST['bill_date_id']) ? intval($_REQUEST['bill_date_id']) : 0;
 $payPeriodId = isset($_REQUEST['pay_period_id']) ? intval($_REQUEST['pay_period_id']) : 0;
-$isEnabled    = isset($_REQUEST['is_enabled']) ? intval($_REQUEST['enabled']) : 0;
+$isEnabled    = isset($_REQUEST['is_enabled']) ? intval($_REQUEST['is_enabled']) : 0;
 
 $sql = "SELECT * FROM vnd_pay_period_bill_date_passed WHERE bill_date_id = {$billDateId} AND pay_period_id = {$payPeriodId} LIMIT 1;";
 $existingRecord = getQuerySingle($sql);
