@@ -385,7 +385,7 @@ createApp({
 
                     this.payPeriodItems[this.currentPayPeriodItemIndex].upcoming_purchases.push(response.data.item);
                     this.add_purchase_error = '';
-                    this.loadPayPeriodItems();
+                    //this.loadPayPeriodItems();
                     $('#addPurchaseModal').modal('hide');
                     
                     // Reinitialize tooltips after adding new content
@@ -491,6 +491,7 @@ createApp({
         },     
         openAddPurchaseModal(payPeriodId, index) {
             console.log('openAddPurchaseModal called with ID:', payPeriodId);
+            console.log('Index at 2:', index);
             
             // Store the pay period ID
             this.currentPayPeriodId = payPeriodId;
