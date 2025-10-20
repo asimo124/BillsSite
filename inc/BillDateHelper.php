@@ -314,7 +314,7 @@ class BillDateHelper {
                     "bill_date_id" => $getBill['bill_date_id'],
                     "pay_period_id" => $pay_period_id,
                     "title" => $getBill['desc'] . " - $" . $getBill["amount"],
-                    "amount" => $getBill['amount'],
+                    "amount" => ($getBill['is_enabled']) ? $getBill['amount'] : 0,
                     "savedAmount" => $getBill['amount'],
                     "isEnabled" => $getBill['is_enabled'],
                     "is_heavy" => intval($getBill['is_heavy']),

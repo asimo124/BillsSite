@@ -73,10 +73,10 @@ class IpPayPeriodItem {
 
             if (intval(date('d', strtotime($payPeriodDate))) >= 15) {
                 $startDate = date('Y-m-15', strtotime($payPeriodDate));
-                $endDate = date('Y-m-t', strtotime($payPeriodDate));
+                $endDate = date('Y-m-t 23:59:59', strtotime($payPeriodDate) - 86400);
             } else {
                 $startDate = date('Y-m-01', strtotime($payPeriodDate));
-                $endDate = date('Y-m-14', strtotime($payPeriodDate));
+                $endDate = date('Y-m-14 23:59:59', strtotime($payPeriodDate));
             }
 
             $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency_value 

@@ -84,7 +84,7 @@ foreach ($results as $index => $getItem) {
         if (intval(date("d", strtotime($payPeriodDate))) < 15) {
             $frequencyTypeValue = date("Y-m-14", strtotime($payPeriodDate));
         } else {
-            $frequencyTypeValue = date("Y-m-28", strtotime($payPeriodDate));
+            $frequencyTypeValue = date("Y-m-27", strtotime($payPeriodDate));
         }
        
 
