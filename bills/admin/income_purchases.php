@@ -103,7 +103,7 @@ if (!isset($_SESSION['user'])) {
                             <table class="table table-bordered" style="border: 1px solid #428bca;">
                                 <thead>
                                     <tr style="background-color: #428bca; color: white; font-weight: bold;">
-                                        <th style="border: 1px solid #428bca;">Purchase <button class="btn btn-default btn-sm add-purchase" style="display: inline-block;" @click="openAddPurchaseModal(item.pay_period_id, index)">+</button></th>
+                                        <th style="border: 1px solid #428bca;">Purchase <button class="btn btn-default btn-sm add-purchase" style="display: inline-block;" @click="openAddPurchaseModal(item.id, index)">+</button></th>
                                     </tr>
                                 </thead>
                                 <tbody>
