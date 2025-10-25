@@ -161,7 +161,7 @@ if (isset($_REQUEST['file'])) {
     </form>
 
     <div class="row">
-        <div class="col-xs-6" >
+        <div class="col-xs-6" style="overflow-y: auto; max-height: 650px;">
             <label for="rocket_money_data">Rocket Money Titles</label>
             <table class="table table-bordered">
                 <thead>
@@ -185,7 +185,7 @@ if (isset($_REQUEST['file'])) {
                 </tbody>
             </table>
         </div>
-        <div class="col-xs-6" >
+        <div class="col-xs-6" style="overflow-y: auto; max-height: 650px;">
             <label for="rocket_money_data">Expenses App Titles</label>
             <table class="table table-bordered">
                 <thead>
@@ -210,7 +210,7 @@ if (isset($_REQUEST['file'])) {
             </table>
         </div>
     </div>
-    <div style="clear: both; height: 8px;"></div>
+    <div style="clear: both; height: 32px;"></div>
     <?php endif; ?>
 
     <!-- Add Purchase Modal -->
@@ -280,6 +280,16 @@ if (isset($_REQUEST['file'])) {
             var title = $('.rocket_money_title_input[data-index="' + index + '"]').val();
             
             current_rocket_money_title_lookup = title;
+
+            for (i = 0; i < current_rocket_money_index + 1; i++) {
+                var rocketRowIndex = $('.rocket_row').eq(i).data('index');
+                $('.rocket_row').each(function() {
+                    var currentIndex = $(this).data('index');
+                    if (i == currentIndex) {
+                        $(this).remove();
+                    }
+                })
+            }
         }); 
 
         $('.expenses_app_title_button').on('click', function() {
@@ -299,16 +309,7 @@ if (isset($_REQUEST['file'])) {
                 current_rocket_money_title_lookup = null;
                 current_expenses_app_title_lookup = null;
 
-                for (i = 0; i < current_rocket_money_index + 1; i++) {
-                    console.log('i at 2: ', i);
-                    var rocketRowIndex = $('.rocket_row').eq(i).data('index');
-                    $('.rocket_row').each(function() {
-                        var currentIndex = $(this).data('index');
-                        if (i == currentIndex) {
-                            $(this).remove();
-                        }
-                    })
-                }
+                
 
                 $('.expenses_row').each(function() {
                     var currentIndex = $(this).data('index');
@@ -324,6 +325,17 @@ if (isset($_REQUEST['file'])) {
             }
         });
 
+        $(document).on('click', '.remove_title_lookup_button', function() {
+            var index = $(this).data('index');
+
+            title_lookups.splice(index, 1);
+
+            $('tr.title_lookup_row[data-index="' + index + '"]').remove();
+
+            // Reload the title lookups display
+            loadTitleLookups();
+        });
+
         var loadTitleLookups = function() {
             var content = '';
             
@@ -336,12 +348,13 @@ if (isset($_REQUEST['file'])) {
                             '<th>Expenses App Title</th>' + 
                         '</tr>';
             for (var i = 0; i < title_lookups.length; i++) {
-                content += '<tr>' + 
+                content += '<tr data-index="' + i + '" class="title_lookup_row">' + 
                         '<td>' + title_lookups[i].rocket_money_title + '</td>' + 
                         '<td>' +
                             title_lookups[i].expenses_app_title + 
                             '<input type="hidden" name="title_lookup_rocket_money_titles[]" value="' + title_lookups[i].rocket_money_title + '" />' +
                             '<input type="hidden" name="title_lookup_expenses_app_titles[]" value="' + title_lookups[i].expenses_app_title + '" />' +
+                            '&nbsp; <button type="button" class="btn btn-sm btn-danger remove_title_lookup_button" data-index="' + i + '">X</button>' +
                         '</td>' + 
                     '</tr>';
             }
