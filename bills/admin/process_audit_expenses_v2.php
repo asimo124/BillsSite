@@ -18,10 +18,8 @@ if (!$file) {
 }
 
 //*/
-$rangeAmountLow = 2;
-$rangeAmountHigh = 3;
-$rangeDateLow = 1;
-$rangeDateHigh = 3;
+$amountMaxDiff = 2;
+$daysMaxDiff = 4;
 /*/
 $rangeAmountLow = 0.01;
 $rangeAmountHigh = 0.01;
@@ -112,31 +110,24 @@ foreach ($rocketMoneyResultsArr as $rocketTitle => $rocketRow) {
 }
 
 function validateRow($row) {
-    
-    global $rangeAmountLow, $rangeAmountHigh, $rangeDateLow, $rangeDateHigh;
+
+    global $amountMaxDiff, $daysMaxDiff;
 
     $rocketMoneyAmount = floatval(str_replace(['$', ','], '', $row['Rocket Money Amount']));
     $expensesAppAmount = floatval(str_replace(['$', ','], '', $row['Expenses App Amount']));
 
-    $rocketMoneyRangeLow = $rocketMoneyAmount - $rangeAmountLow;
-    $rocketMoneyRangeHigh = $rocketMoneyAmount + $rangeAmountHigh;
+    
 
-    $expensesAmountRangeLow = $expensesAppAmount - $rangeAmountLow;
-    $expensesAmountRangeHigh = $expensesAppAmount + $rangeAmountHigh;
-
-    if ($rocketMoneyAmount < $expensesAmountRangeLow || $rocketMoneyAmount > $expensesAmountRangeHigh) {
+    if (abs($rocketMoneyAmount - $expensesAppAmount) > $amountMaxDiff) {
         return false;
     }
-    if ($expensesAppAmount < $rocketMoneyRangeLow || $expensesAppAmount > $rocketMoneyRangeHigh) {
-        return false;
-    }
+    
 
     $rocketMoneyDate = intval($row['Rocket Money Date']);
     $expensesAppDate = intval($row['Expenses App Day of Month']);
-    $rocketMoneyRangeHighDate = $rocketMoneyDate + $rangeDateHigh;
-    $rocketMoneyRangeLowDate = $rocketMoneyDate - $rangeDateLow;
+    
 
-    if ($expensesAppDate < $rocketMoneyRangeLowDate || $expensesAppDate > $rocketMoneyRangeHighDate) {
+    if (abs($rocketMoneyDate - $expensesAppDate) > $daysMaxDiff) {
         return false;
     }
 
