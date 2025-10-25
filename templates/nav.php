@@ -31,6 +31,8 @@
     <a href="/bills/admin/budget_track.php">Track Progress</a>
     <a href="/bills/admin/income_purchases.php">Income Purchases</a>
     <a href="/bills/admin/queue_date_job.php">Queue Date Job</a>
+    <a href="/bills/admin/audit_expenses_v2.php">Audit Expenses V2</a>
+    <a href="/bills/admin/weight_ratio.php">Weight Ratio</a>
     <a href="/bills/admin/pending_transactions.php">Pending Transactions</a>
     <a href="/settings/index.php">Settings</a>
     <a href="/bills/admin/debt_progress.php">Debt Progress</a>
