@@ -149,6 +149,30 @@ class Bills {
 			}
 		}
 	}
+
+	public function loadExpensesAppData() 
+	{
+		global $db_conn;
+
+		$sql = "SELECT b.vnd_id 
+        , b.vnd_bill as title 
+        , b.vnd_frequency_value as day_of_month
+        , b.amount
+        FROM vnd_bills b
+        WHERE 1 
+        AND b.vnd_frequency = 'Once Per Month'
+        AND b.vnd_frequency_type = 'Day of Month'
+        AND IFNULL(vnd_frequency_value, '') <> ''
+        ORDER BY b.vnd_frequency_value ASC ";
+
+		$results = getQuery($sql);
+
+		$titles = array_column($results, 'title');
+		array_multisort($titles, SORT_ASC, SORT_FLAG_CASE | SORT_NATURAL, $results);
+
+		return $results;
+	}
+
 	public function loadOncePerMonth($freq_value, $bill_desc, $amount, $freq_type="Day of Month", $is_future=0,
 									 $is_heavy=0, $vnd_frequency, $vnd_frequency_type, $end_date=null, $start_date=null) {
 		
