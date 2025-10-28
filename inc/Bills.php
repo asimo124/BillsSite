@@ -170,7 +170,7 @@ class Bills {
 		foreach ($results as $index => $item) {
 			$results[$index]['amount'] = number_format($item['amount'], 2, '.', '');
 			$longName = $item['title'];
-			$shortName = substr($longName, 0, 18);
+			$shortName = substr($longName, 0, 15);
 			$mediumName = substr($longName, 0, 21);
 			$results[$index]['medium_title'] = $mediumName;
 			$results[$index]['title'] = $shortName;

@@ -251,7 +251,6 @@ if ($uploadedFilePath) {
         </div>
     </form>
 
-    <?php //if (count($results) > 0) : ?>
     <div class="grid grid-cols-1 gap-6 mb-6">
         <div>
             <label for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Rocket Money Data</label>
@@ -309,6 +308,28 @@ if ($uploadedFilePath) {
         </div>
     </form>
 
+    <div class="grid grid-cols-1 gap-6 mb-6" v-if="matchedTitlesData && matchedTitlesData.length > 0">
+        <div>
+            <label for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Matched Titles</label>
+            <div class="overflow-x-auto overflow-y-auto max-h-[300px] shadow-sm rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200 bg-white">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rocket Money</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expenses App</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200"> 
+                        <tr class="expenses_row hover:bg-gray-50" v-for="(item, index) in matchedTitlesData" >
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.rocketTitle }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.expensesTitle }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <label for="title_lookups" class="block text-sm font-medium text-gray-700 mb-2">Title Matching <span class="text-xs text-gray-500">(tap titles to see details)</span></label>
     <div class="grid grid-cols-2 gap-1 mb-8">
        
@@ -332,7 +353,7 @@ if ($uploadedFilePath) {
                                     class="cursor-help hover:text-blue-600 transition-colors popover-trigger"
                                     :class="{ 'text-xs opacity-30': collapsedRocketItems[index] }"
                                 >
-                                    {{ item.Name }}
+                                    {{ item.Name }}: ${{item.Amount}}
                                 </span>
                                 <button @click="toggleRocketItemCollapse(index)"
                                         class="font-bold rounded-full text-xs flex items-center justify-center ml-2 transition-all duration-300"
@@ -384,7 +405,7 @@ if ($uploadedFilePath) {
                                         class="cursor-help hover:text-blue-600 transition-colors popover-trigger"
                                         :class="{ 'text-xs opacity-30': collapsedExpensesItems[index] }"
                                     >
-                                        {{ item.title }}
+                                        {{ item.title }}: ${{ item.amount}}
                                     </span>
                                     <button @click="toggleExpensesItemCollapse(index)"
                                             class="font-bold rounded-full text-xs flex items-center justify-center ml-2 transition-all duration-300"
@@ -432,7 +453,8 @@ if ($uploadedFilePath) {
                 mobileChargesOpen: false,
                 mobileAdminOpen: false,
                 fileExists: <?= $uploadedFilePath ? 'true' : 'false'; ?>,
-                
+
+                delimiter: '  ====>  ',
                 
                 // Existing data properties
                 titleLookups: [],
@@ -454,7 +476,13 @@ if ($uploadedFilePath) {
                 
                 // Collapsed state for matching tables
                 collapsedRocketItems: {},
-                collapsedExpensesItems: {}
+                collapsedExpensesItems: {},
+
+                matchedTitles: [],
+                matchedTitlesData: [],
+                rocketTitle: '',
+                rocketIndex: -1,
+                expensesTitle: ''
             }
         },
         mounted() {
@@ -526,6 +554,17 @@ if ($uploadedFilePath) {
                     ];
                 }
             },
+
+            generateTitlesData() {
+                this.matchedTitlesData = this.matchedTitles.map(pair => {
+                    const [rocketTitle, expensesTitle] = pair.split(this.delimiter);
+                    return {
+                        'rocketTitle': rocketTitle,
+                        'expensesTitle': expensesTitle
+                    };
+                });
+                console.log('Generated matched titles data:', this.matchedTitlesData);
+            },
             
             // Popover methods
             showPopover(index) {
@@ -563,6 +602,7 @@ if ($uploadedFilePath) {
             toggleRocketMatchPopover(index) {
                 console.log('toggleRocketMatchPopover called with index:', index);
                 if (this.rocketMatchPopoverVisible && this.rocketMatchHoveredIndex === index) {
+
                     this.hideRocketMatchPopover();
                 } else {
                     this.showRocketMatchPopover(index);
@@ -584,6 +624,7 @@ if ($uploadedFilePath) {
             toggleExpensesMatchPopover(index) {
                 console.log('toggleExpensesMatchPopover called with index:', index);
                 if (this.expensesMatchPopoverVisible && this.expensesMatchHoveredIndex === index) {
+
                     this.hideExpensesMatchPopover();
                 } else {
                     this.showExpensesMatchPopover(index);
@@ -606,6 +647,10 @@ if ($uploadedFilePath) {
                 if (this.collapsedRocketItems[index]) {
                     delete this.collapsedRocketItems[index];
                 } else {
+
+                    this.rocketTitle = this.rocketMoneyData[index].Name + ': $' + this.rocketMoneyData[index].Amount;
+                    this.rocketIndex = index;
+
                     this.collapsedRocketItems[index] = true;
                 }
             },
@@ -615,6 +660,22 @@ if ($uploadedFilePath) {
                 if (this.collapsedExpensesItems[index]) {
                     delete this.collapsedExpensesItems[index];
                 } else {
+
+                    if (!this.rocketTitle) {
+                        alert('Please select a Rocket Money title first.');
+                        return;
+                    }
+
+                    this.expensesTitle = this.expensesAppData[index].title + ': $' + this.expensesAppData[index].amount;
+                    this.matchedTitles.push(this.rocketTitle + this.delimiter + this.expensesTitle);
+                    this.generateTitlesData();
+
+                    for (i = 0; i < this.rocketIndex; i++) {
+                        this.collapsedRocketItems[i] = true;
+                    }
+                    this.rocketTitle = '';
+                    this.rocketIndex = -1;
+
                     this.collapsedExpensesItems[index] = true;
                 }
             },

@@ -37,7 +37,7 @@ if ($uploadedFilePath) {
     foreach ($results as $index => $item) {
         
         $longName = $item['Name'];
-        $shortName = substr($longName, 0, 18);
+        $shortName = substr($longName, 0, 15);
         $results[$index]['Date'] = intval(date("d", strtotime($item['Date'])));
         $results[$index]['Name'] = $shortName;
         $mediumName = substr($longName, 0, 21);
