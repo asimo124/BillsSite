@@ -33,17 +33,10 @@
     <a href="/bills/admin/queue_date_job.php">Queue Date Job</a>
     <a href="/bills/admin/audit_expenses_v2.php">Audit Expenses V2</a>
     <a href="/bills/admin/weight_ratio.php">Weight Ratio</a>
+    <a href="/bills/admin/last_time_i.php">Last Time I</a>
     <a href="/bills/admin/pending_transactions.php">Pending Transactions</a>
     <a href="/settings/index.php">Settings</a>
     <a href="/bills/admin/debt_progress.php">Debt Progress</a>
-    <a href="/audit/index.php">Audit</a>
-    <a href="/eat/out/index.php">Eating Out</a>
-    <a href="/charges/stacked_chart.php">Charges Chart</a>
-    <a href="/charges/upload.php">Upload Charges</a>
-    <a href="/charges/categorize.php">Categorize Charges</a>
-    <a href="/charges/cats/index.php">Charge Categories</a>
-    <a href="/charges/manage_desc.php">Manage Desc</a>
-    <a href="/cards/index.php">Cards Info</a>
     <a href="/logout.php">Logout</a>
     <a href="javascript:void(0);" class="icon" onclick="myFunction()">
         <i class="fa fa-bars"></i>
