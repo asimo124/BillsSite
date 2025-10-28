@@ -320,18 +320,25 @@ if ($uploadedFilePath) {
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200"> 
-                    <tr class="expenses_row hover:bg-gray-50" data-index="<?php echo $index; ?>" v-for="(item, index) in rocketMoneyData">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
+                    <tr class="expenses_row transition-all duration-300" data-index="<?php echo $index; ?>" v-for="(item, index) in rocketMoneyData"
+                        :class="{ 'h-4 overflow-hidden': collapsedRocketItems[index], 'hover:bg-gray-50': !collapsedRocketItems[index] }">
+                        <td class="px-6 text-sm text-gray-900 relative transition-all duration-300"
+                            :class="collapsedRocketItems[index] ? 'py-0' : 'py-4'">
                             <div class="flex items-center">
                                 <span 
                                     @click="toggleRocketMatchPopover(index)" 
                                     @mouseenter="showRocketMatchPopover(index)" 
                                     @mouseleave="hideRocketMatchPopover()"
                                     class="cursor-help hover:text-blue-600 transition-colors popover-trigger"
+                                    :class="{ 'text-xs opacity-30': collapsedRocketItems[index] }"
                                 >
                                     {{ item.Name }}
                                 </span>
-                                <button class="bg-green-500 hover:bg-green-700 text-white font-bold w-4 h-4 rounded-full text-xs flex items-center justify-center ml-2">
+                                <button @click="toggleRocketItemCollapse(index)"
+                                        class="font-bold rounded-full text-xs flex items-center justify-center ml-2 transition-all duration-300"
+                                        :class="collapsedRocketItems[index] 
+                                            ? 'bg-yellow-500 hover:bg-yellow-600 text-black w-3 h-3' 
+                                            : 'bg-green-500 hover:bg-green-700 text-white w-4 h-4'">
                                     +
                                 </button>
                             </div>
@@ -365,25 +372,32 @@ if ($uploadedFilePath) {
                         <tr v-if="!expensesAppData || expensesAppData.length === 0">
                             <td class="px-6 py-4 text-center text-gray-500 italic">No expenses app data available</td>
                         </tr>
-                        <tr class="expenses_row hover:bg-gray-50" data-index="<?php echo $index; ?>" v-for="(item, index) in expensesAppData" v-else>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
+                        <tr class="expenses_row transition-all duration-300" data-index="<?php echo $index; ?>" v-for="(item, index) in expensesAppData" v-else
+                            :class="{ 'h-4 overflow-hidden': collapsedExpensesItems[index], 'hover:bg-gray-50': !collapsedExpensesItems[index] }">
+                            <td class="px-6 text-sm text-gray-900 relative transition-all duration-300"
+                                :class="collapsedExpensesItems[index] ? 'py-0' : 'py-4'">
                                 <div class="flex items-center">
                                     <span 
                                         @click="toggleExpensesMatchPopover(index)"
                                         @mouseenter="showExpensesMatchPopover(index)" 
                                         @mouseleave="hideExpensesMatchPopover()"
                                         class="cursor-help hover:text-blue-600 transition-colors popover-trigger"
+                                        :class="{ 'text-xs opacity-30': collapsedExpensesItems[index] }"
                                     >
                                         {{ item.title }}
                                     </span>
-                                    <button class="bg-green-500 hover:bg-green-700 text-white font-bold w-4 h-4 rounded-full text-xs flex items-center justify-center ml-2">
+                                    <button @click="toggleExpensesItemCollapse(index)"
+                                            class="font-bold rounded-full text-xs flex items-center justify-center ml-2 transition-all duration-300"
+                                            :class="collapsedExpensesItems[index] 
+                                                ? 'bg-yellow-500 hover:bg-yellow-600 text-black w-3 h-3' 
+                                                : 'bg-green-500 hover:bg-green-700 text-white w-4 h-4'">
                                         +
                                     </button>
                                 </div>
                                 
                                 <!-- Popover -->
                                 <div 
-                                    v-show="expensesMatchPopoverVisible && expensesMatchHoveredIndex === index"
+                                    v-show="expensesMatchPopoverVisible && expensesMatchHoveredIndex === index && !collapsedExpensesItems[index]"
                                     class="absolute z-50 bg-gray-800 text-white text-sm rounded-lg py-2 px-3 max-w-xs shadow-lg -top-12 left-0 sm:-top-2 sm:left-full sm:ml-2"
                                     style="white-space: normal; word-wrap: break-word;"
                                 >
@@ -436,7 +450,11 @@ if ($uploadedFilePath) {
                 rocketMatchHoveredIndex: null,
                 rocketMatchPopoverVisible: false,
                 expensesMatchHoveredIndex: null,
-                expensesMatchPopoverVisible: false
+                expensesMatchPopoverVisible: false,
+                
+                // Collapsed state for matching tables
+                collapsedRocketItems: {},
+                collapsedExpensesItems: {}
             }
         },
         mounted() {
@@ -579,6 +597,25 @@ if ($uploadedFilePath) {
                     this.hidePopover();
                     this.hideRocketMatchPopover();
                     this.hideExpensesMatchPopover();
+                }
+            },
+            
+            // Collapse/expand methods
+            toggleRocketItemCollapse(index) {
+                console.log('toggleRocketItemCollapse called with index:', index);
+                if (this.collapsedRocketItems[index]) {
+                    delete this.collapsedRocketItems[index];
+                } else {
+                    this.collapsedRocketItems[index] = true;
+                }
+            },
+            
+            toggleExpensesItemCollapse(index) {
+                console.log('toggleExpensesItemCollapse called with index:', index);
+                if (this.collapsedExpensesItems[index]) {
+                    delete this.collapsedExpensesItems[index];
+                } else {
+                    this.collapsedExpensesItems[index] = true;
                 }
             },
             
