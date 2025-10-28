@@ -163,6 +163,7 @@ if ($uploadedFilePath) {
                         <a href="/bills/admin/queue_date_job.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Queue Date Job</a>
                         <a href="/bills/admin/audit_expenses_v2.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Audit Expenses V2</a>
                         <a href="/bills/admin/weight_ratio.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Weight Ratio</a>
+                        <a href="/bills/admin/last_time_i.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Last Time I</a>
                         <a href="/bills/admin/pending_transactions.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Pending Transactions</a>
                         <a href="/bills/admin/debt_progress.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Debt Progress</a>
                     </div>
@@ -194,6 +195,7 @@ if ($uploadedFilePath) {
         </div>
     </nav>
 
+    <!-- Expenses App Data Table -->
     <div class="grid grid-cols-1 gap-6 mb-6">
         <div>
             <label for="expenses_app_data" class="block text-sm font-medium text-gray-700 mb-2">Expenses App Data</label>
@@ -239,6 +241,7 @@ if ($uploadedFilePath) {
         </div>
     </div>
 
+    <!-- Rocket Money Upload Form -->
     <form action="process_rocket_money_upload3.php" method="POST" enctype="multipart/form-data" class="mb-6">
         <div class="grid grid-cols-1 gap-4">
             <div>
@@ -251,6 +254,7 @@ if ($uploadedFilePath) {
         </div>
     </form>
 
+    <!-- Rocket Money Data Table -->
     <div class="grid grid-cols-1 gap-6 mb-6">
         <div>
             <label for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Rocket Money Data</label>
@@ -300,14 +304,7 @@ if ($uploadedFilePath) {
         </div>
     </div>
 
-    <form action="process_audit_expenses_v2.php" method="POST" class="mb-8">
-        <div class="title_lookup_content hidden">
-            <div class="grid grid-cols-1 gap-4">
-                <!-- Content will be populated by Vue.js -->
-            </div>
-        </div>
-    </form>
-
+    <!-- Matched Titles Table -->
     <div class="grid grid-cols-1 gap-6 mb-6" v-if="matchedTitlesData && matchedTitlesData.length > 0">
         <div>
             <label for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Matched Titles</label>
@@ -321,8 +318,14 @@ if ($uploadedFilePath) {
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200"> 
                         <tr class="expenses_row hover:bg-gray-50" v-for="(item, index) in matchedTitlesData" >
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.rocketTitle }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.expensesTitle }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.rocket_money_title }}: ${{ item.rocket_money_amount }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.expenses_app_title }}: ${{ item.expenses_app_amount }}
+                                <button 
+                                    class="bg-red-500 hover:bg-red-700 text-white font-bold w-4 h-4 rounded-full text-xs flex items-center justify-center ml-2" 
+                                    @click="removeMatchedTitle(index)">
+                                    X
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -330,9 +333,11 @@ if ($uploadedFilePath) {
         </div>
     </div>
 
+    <!-- Title Matching Section -->
     <label for="title_lookups" class="block text-sm font-medium text-gray-700 mb-2">Title Matching <span class="text-xs text-gray-500">(tap titles to see details)</span></label>
     <div class="grid grid-cols-2 gap-1 mb-8">
        
+        <!-- Rocket Money Titles -->
         <div class="overflow-y-auto max-h-96 lg:max-h-[650px] border border-gray-200 rounded-lg py-2 px-[2px]">
             <table class="min-w-full divide-y divide-gray-200 bg-white">
                 <thead class="bg-gray-50">
@@ -380,8 +385,9 @@ if ($uploadedFilePath) {
                 </tbody>
             </table>
         </div>
+
+        <!-- Expenses App Titles -->
         <div class="overflow-y-auto max-h-96 lg:max-h-[650px] border border-gray-200 rounded-lg py-2 px-[2px]">
-           
             <div class="overflow-x-auto shadow-sm rounded-lg">
                 <table class="min-w-full divide-y divide-gray-200 bg-white">
                     <thead class="bg-gray-50">
@@ -434,8 +440,6 @@ if ($uploadedFilePath) {
             </div>
         </div>
     </div>
-    <?php //endif; ?>
-
 </div>
 
 <script>
@@ -478,9 +482,8 @@ if ($uploadedFilePath) {
                 collapsedRocketItems: {},
                 collapsedExpensesItems: {},
 
-                matchedTitles: [],
                 matchedTitlesData: [],
-                rocketTitle: '',
+                rocketItem: null,
                 rocketIndex: -1,
                 expensesTitle: ''
             }
@@ -507,28 +510,15 @@ if ($uploadedFilePath) {
                     console.log('No file exists, skipping rocket money data load');
                 }
             },
-
             async loadExpensesAppData() {
                 try {   
                     const response = await axios.get('/api/loadExpensesAppData.php');
                     if (response.data && response.data.items) {
                         console.log('Expenses App Data:', response.data);
                         this.expensesAppData = response.data.items;
-                    } else {
-                        console.log('No expenses app data received, using test data');
-                        // Add test data if no real data
-                        this.expensesAppData = [
-                            { title: 'Test Expense 1', long_title: 'This is a longer test expense title with more details', amount: '25.99', day_of_month: '15' },
-                            { title: 'Test Expense 2', long_title: 'Another longer test expense title with detailed information', amount: '45.50', day_of_month: '20' }
-                        ];
                     }
                 } catch (error) {
                     console.error('Error loading expenses app data:', error);
-                    // Add fallback test data
-                    this.expensesAppData = [
-                        { title: 'Test Expense 1', long_title: 'This is a longer test expense title with more details', amount: '25.99', day_of_month: '15' },
-                        { title: 'Test Expense 2', long_title: 'Another longer test expense title with detailed information', amount: '45.50', day_of_month: '20' }
-                    ];
                 }
             },
             async loadRocketMoneyData() {
@@ -537,46 +527,20 @@ if ($uploadedFilePath) {
                     if (response.data && response.data.items) {
                         console.log('Rocket Money Data:', response.data);
                         this.rocketMoneyData = response.data.items;
-                    } else {
-                        console.log('No rocket money data received, using test data');
-                        // Add test data if no real data
-                        this.rocketMoneyData = [
-                            { Name: 'Test Rocket 1', LongName: 'This is a longer test rocket money title with more details', Amount: '35.99', Date: '18' },
-                            { Name: 'Test Rocket 2', LongName: 'Another longer test rocket money title with detailed information', Amount: '55.25', Date: '25' }
-                        ];
                     }
                 } catch (error) {
                     console.error('Error loading rocket money data:', error);
-                    // Add fallback test data
-                    this.rocketMoneyData = [
-                        { Name: 'Test Rocket 1', LongName: 'This is a longer test rocket money title with more details', Amount: '35.99', Date: '18' },
-                        { Name: 'Test Rocket 2', LongName: 'Another longer test rocket money title with detailed information', Amount: '55.25', Date: '25' }
-                    ];
                 }
             },
-
-            generateTitlesData() {
-                this.matchedTitlesData = this.matchedTitles.map(pair => {
-                    const [rocketTitle, expensesTitle] = pair.split(this.delimiter);
-                    return {
-                        'rocketTitle': rocketTitle,
-                        'expensesTitle': expensesTitle
-                    };
-                });
-                console.log('Generated matched titles data:', this.matchedTitlesData);
-            },
-            
-            // Popover methods
             showPopover(index) {
+                // Popover methods
                 this.hoveredItemIndex = index;
                 this.popoverVisible = true;
             },
-            
             hidePopover() {
                 this.hoveredItemIndex = null;
                 this.popoverVisible = false;
             },
-            
             togglePopover(index) {
                 console.log('togglePopover called with index:', index);
                 if (this.popoverVisible && this.hoveredItemIndex === index) {
@@ -585,22 +549,17 @@ if ($uploadedFilePath) {
                     this.showPopover(index);
                 }
             },
-            
-            // Popover methods for matching tables
             showRocketMatchPopover(index) {
-                console.log('showRocketMatchPopover called with index:', index);
+                // Popover methods for matching tables
                 this.rocketMatchHoveredIndex = index;
                 this.rocketMatchPopoverVisible = true;
             },
-            
             hideRocketMatchPopover() {
-                console.log('hideRocketMatchPopover called');
+                // Popover methods for matching tables
                 this.rocketMatchHoveredIndex = null;
                 this.rocketMatchPopoverVisible = false;
             },
-            
             toggleRocketMatchPopover(index) {
-                console.log('toggleRocketMatchPopover called with index:', index);
                 if (this.rocketMatchPopoverVisible && this.rocketMatchHoveredIndex === index) {
 
                     this.hideRocketMatchPopover();
@@ -608,21 +567,15 @@ if ($uploadedFilePath) {
                     this.showRocketMatchPopover(index);
                 }
             },
-            
             showExpensesMatchPopover(index) {
-                console.log('showExpensesMatchPopover called with index:', index);
                 this.expensesMatchHoveredIndex = index;
                 this.expensesMatchPopoverVisible = true;
             },
-            
             hideExpensesMatchPopover() {
-                console.log('hideExpensesMatchPopover called');
                 this.expensesMatchHoveredIndex = null;
                 this.expensesMatchPopoverVisible = false;
             },
-            
             toggleExpensesMatchPopover(index) {
-                console.log('toggleExpensesMatchPopover called with index:', index);
                 if (this.expensesMatchPopoverVisible && this.expensesMatchHoveredIndex === index) {
 
                     this.hideExpensesMatchPopover();
@@ -630,7 +583,6 @@ if ($uploadedFilePath) {
                     this.showExpensesMatchPopover(index);
                 }
             },
-            
             handleClickOutside(event) {
                 // Close all popovers if clicking outside
                 const isPopoverClick = event.target.closest('.popover-trigger') || event.target.closest('[class*="popover"]');
@@ -640,131 +592,76 @@ if ($uploadedFilePath) {
                     this.hideExpensesMatchPopover();
                 }
             },
-            
-            // Collapse/expand methods
-            toggleRocketItemCollapse(index) {
-                console.log('toggleRocketItemCollapse called with index:', index);
+            toggleRocketItemCollapse(index) { 
+                // Collapse/expand methods
                 if (this.collapsedRocketItems[index]) {
                     delete this.collapsedRocketItems[index];
                 } else {
-
-                    this.rocketTitle = this.rocketMoneyData[index].Name + ': $' + this.rocketMoneyData[index].Amount;
+                    this.rocketItem = this.rocketMoneyData[index];
                     this.rocketIndex = index;
 
                     this.collapsedRocketItems[index] = true;
                 }
             },
-            
+            removeMatchedTitle(index) {
+                const matchedItem = this.matchedTitlesData[index];
+                console.log('Removing matched title:', matchedItem);
+
+                for (i = 0; i < this.expensesAppData.length; i++) {
+                    if (this.expensesAppData[i].title === matchedItem.expenses_app_title &&
+                        this.expensesAppData[i].amount == matchedItem.expenses_app_amount) {
+                        delete this.collapsedExpensesItems[i];
+                        break;
+                    }
+                }
+                let foundIndex = -1;
+                for (i = 0; i < this.rocketMoneyData.length; i++) {
+                    if (this.rocketMoneyData[i].Name === matchedItem.rocket_money_title &&
+                        this.rocketMoneyData[i].Amount == matchedItem.rocket_money_amount) {
+                        foundIndex = i;
+                        delete this.collapsedRocketItems[i];
+                        break;
+                    }
+                }
+
+                for (i = 0; i < foundIndex; i++) {
+                    delete this.collapsedRocketItems[i];
+                }
+
+                this.matchedTitlesData.splice(index, 1);
+            },
             toggleExpensesItemCollapse(index) {
-                console.log('toggleExpensesItemCollapse called with index:', index);
+                
                 if (this.collapsedExpensesItems[index]) {
                     delete this.collapsedExpensesItems[index];
                 } else {
-
-                    if (!this.rocketTitle) {
+                    if (!this.rocketItem) {
                         alert('Please select a Rocket Money title first.');
                         return;
                     }
 
                     this.expensesTitle = this.expensesAppData[index].title + ': $' + this.expensesAppData[index].amount;
-                    this.matchedTitles.push(this.rocketTitle + this.delimiter + this.expensesTitle);
-                    this.generateTitlesData();
+                    this.matchedTitlesData.push({
+                        rocket_money_title: this.rocketItem.Name,
+                        rocket_money_amount: this.rocketItem.Amount,
+                        rocket_money_date: this.rocketItem.Date,
+                        rocket_money_medium_title: this.rocketItem.MediumName,
+                        rocket_money_long_title: this.rocketItem.LongName,
+                        expenses_app_title: this.expensesAppData[index].title,
+                        expenses_app_amount: this.expensesAppData[index].amount,
+                        expenses_app_date: this.expensesAppData[index].day_of_month,
+                        expenses_app_medium_title: this.expensesAppData[index].medium_title,
+                        expenses_app_long_title: this.expensesAppData[index].long_title
+                    });
 
                     for (i = 0; i < this.rocketIndex; i++) {
                         this.collapsedRocketItems[i] = true;
                     }
-                    this.rocketTitle = '';
+                    this.rocketItem = null;
                     this.rocketIndex = -1;
-
                     this.collapsedExpensesItems[index] = true;
                 }
             },
-            
-            // selectRocketMoneyTitle(index, title) {
-            //     this.currentRocketMoneyTitleLookup = null;
-            //     this.currentExpensesAppTitleLookup = null;
-            //     this.currentRocketMoneyIndex = index;
-            //     this.currentRocketMoneyTitleLookup = title;
-                
-            //     // Remove rocket money rows up to current index
-            //     for (let i = 0; i < this.currentRocketMoneyIndex + 1; i++) {
-            //         const rocketRow = document.querySelector(`.rocket_row[data-index="${i}"]`);
-            //         if (rocketRow) {
-            //             rocketRow.remove();
-            //         }
-            //     }
-            // },
-            
-            // selectExpensesAppTitle(index, title) {
-            //     this.currentExpensesAppTitleLookup = title;
-                
-            //     if (this.currentRocketMoneyTitleLookup != null) {
-            //         this.titleLookups.push({
-            //             rocket_money_title: this.currentRocketMoneyTitleLookup,
-            //             expenses_app_title: this.currentExpensesAppTitleLookup
-            //         });
-                    
-            //         // Reset current selections
-            //         this.currentRocketMoneyTitleLookup = null;
-            //         this.currentExpensesAppTitleLookup = null;
-                    
-            //         // Remove the expenses row
-            //         const expensesRow = document.querySelector(`.expenses_row[data-index="${index}"]`);
-            //         if (expensesRow) {
-            //             expensesRow.remove();
-            //         }
-                    
-            //         this.loadTitleLookups();
-            //     } else {
-            //         alert('Please select a Rocket Money title first.');
-            //     }
-            // },
-            
-            // removeTitleLookup(index) {
-            //     this.titleLookups.splice(index, 1);
-            //     this.loadTitleLookups();
-            // },
-            
-            // loadTitleLookups() {
-            //     let content = '';
-                
-            //     const titleLookupContent = document.querySelector('.title_lookup_content');
-            //     if (titleLookupContent) {
-            //         titleLookupContent.style.display = 'block';
-            //     }
-                
-            //     content = '<h3 class="text-lg font-bold mb-4">Title Lookups</h3>' + 
-            //             '<div class="overflow-x-auto shadow-sm rounded-lg">' +
-            //             '<table class="min-w-full divide-y divide-gray-200 bg-white">' + 
-            //                 '<thead class="bg-gray-50">' +
-            //                 '<tr>' + 
-            //                     '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rocket Money Title</th>' + 
-            //                     '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expenses App Title</th>' + 
-            //                 '</tr>' +
-            //                 '</thead>' +
-            //                 '<tbody class="bg-white divide-y divide-gray-200">';
-                            
-            //     for (let i = 0; i < this.titleLookups.length; i++) {
-            //         content += '<tr data-index="' + i + '" class="title_lookup_row hover:bg-gray-50">' + 
-            //                 '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + this.titleLookups[i].rocket_money_title + '</td>' + 
-            //                 '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' +
-            //                     this.titleLookups[i].expenses_app_title + 
-            //                     '<input type="hidden" name="title_lookup_rocket_money_titles[]" value="' + this.titleLookups[i].rocket_money_title + '" />' +
-            //                     '<input type="hidden" name="title_lookup_expenses_app_titles[]" value="' + this.titleLookups[i].expenses_app_title + '" />' +
-            //                     '&nbsp; <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs" @click="removeTitleLookup(' + i + ')">X</button>' +
-            //                 '</td>' + 
-            //             '</tr>';
-            //     }
-            //     content += '</tbody></table></div>' + 
-            //         '<div class="mt-4"></div>' + 
-            //         '<input type="hidden" name="file" value="<?= htmlspecialchars($uploadedFilePath); ?>" />' +
-            //         '<button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>';
-                
-            //     const titleLookupContentCol = document.querySelector('.title_lookup_content .col-xs-12');
-            //     if (titleLookupContentCol) {
-            //         titleLookupContentCol.innerHTML = content;
-            //     }
-            // }
         }
     }).mount('#app');
 </script>
