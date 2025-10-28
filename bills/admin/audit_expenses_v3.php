@@ -6,10 +6,25 @@ if (!isset($_SESSION['user'])) {
     header("Location: /login.php");
     exit;
 }
+
+$uploadedFilePath = isset($_REQUEST['file']) ? $_REQUEST['file'] : '';
+if ($uploadedFilePath) {
+    $uploadedFilePath = dirname(__FILE__) . '/../../data/audit_v2/' . $uploadedFilePath;
+}
+
 ?>
 <!DOCTYPE html>
-<html>
-<head>
+<                                <!-- Popover -->
+                                <div 
+                                    v-show="rocketMatchPopoverVisible && rocketMatchHoveredIndex === index"
+                                    class="absolute z-50 bg-gray-800 text-white text-sm rounded-lg py-2 px-3 max-w-xs shadow-lg -top-12 left-0 sm:-top-2 sm:left-full sm:ml-2"
+                                    style="white-space: normal; word-wrap: break-word;"
+                                >
+                                    {{ item.LongName || 'No detailed name available' }}
+                                    <!-- Arrow pointing down on mobile, left on desktop -->
+                                    <div class="absolute top-full left-4 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800 sm:hidden"></div>
+                                    <div class="hidden sm:block absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-gray-800"></div>
+                                </div>d>
     <title>Income Purchases</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Tailwind CSS -->
@@ -25,15 +40,15 @@ if (!isset($_SESSION['user'])) {
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
-<div class="container" id="app">
-    <div style="clear: both; height: 20px;" ></div>
+<div class="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-12 xl:px-16" id="app">
+    <div class="py-5"></div>
     <?php if (isset($_REQUEST['Message'])) { ?>
-        <div class="alert alert-success" role="alert">
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
             <?php echo $_REQUEST['Message']; ?>
         </div>
     <?php } ?>
     <?php if (isset($_REQUEST['error'])) { ?>
-        <div class="alert alert-danger" role="alert">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
             <?php echo $_REQUEST['error']; ?>
         </div>
     <?php } ?>
@@ -95,29 +110,8 @@ if (!isset($_SESSION['user'])) {
                             </div>
                         </div>
                         
-                        <!-- Charges Dropdown -->
-                        <div class="relative" @mouseenter="chargesDropdown = true" @mouseleave="chargesDropdown = false">
-                            <button class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
-                                Charges
-                                <svg class="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                                </svg>
-                            </button>
-                            <div v-show="chargesDropdown" class="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                                <div class="py-1">
-                                    <a href="/charges/stacked_chart.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Charges Chart</a>
-                                    <a href="/charges/upload.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Upload Charges</a>
-                                    <a href="/charges/categorize.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Categorize Charges</a>
-                                    <a href="/charges/cats/index.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Charge Categories</a>
-                                    <a href="/charges/manage_desc.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manage Desc</a>
-                                </div>
-                            </div>
-                        </div>
-                        
                         <a href="/settings/index.php" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Settings</a>
                         <a href="/audit/index.php" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Audit</a>
-                        <a href="/eat/out/index.php" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Eating Out</a>
-                        <a href="/cards/index.php" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Cards Info</a>
                         <a href="/logout.php" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Logout</a>
                     </div>
                 </div>
@@ -200,93 +194,211 @@ if (!isset($_SESSION['user'])) {
         </div>
     </nav>
 
-    <div class="row">
-        <div class="col-xs-12" >
-            <label for="expenses_app_data">Expenses App Data</label>
-            <textarea id="expenses_app_data" class="form-control" rows="15"><?= $expenses_app_content_str; ?></textarea>
+    <div class="grid grid-cols-1 gap-6 mb-6">
+        <div>
+            <label for="expenses_app_data" class="block text-sm font-medium text-gray-700 mb-2">Expenses App Data</label>
+            <div class="overflow-x-auto overflow-y-auto max-h-[300px] shadow-sm rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200 bg-white">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200"> 
+                        <tr class="expenses_row hover:bg-gray-50" data-index="<?php echo $index; ?>" v-for="(item, index) in expensesAppData">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
+                                <span 
+                                    @click="togglePopover(index)"
+                                    @mouseenter="showPopover(index)" 
+                                    @mouseleave="hidePopover()"
+                                    class="cursor-help hover:text-blue-600 transition-colors popover-trigger"
+                                >
+                                    {{ item.title }}
+                                </span>
+                                
+                                <!-- Popover -->
+                                <div 
+                                    v-show="popoverVisible && hoveredItemIndex === index"
+                                    class="absolute z-50 bg-gray-800 text-white text-sm rounded-lg py-2 px-3 max-w-xs shadow-lg -top-12 left-0 sm:-top-2 sm:left-full sm:ml-2"
+                                    style="white-space: normal; word-wrap: break-word;"
+                                >
+                                    {{ item.long_title || 'No detailed title available' }}
+                                    <!-- Arrow pointing down on mobile, left on desktop -->
+                                    <div class="absolute top-full left-4 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800 sm:hidden"></div>
+                                    <div class="hidden sm:block absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-gray-800"></div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ item.amount }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.day_of_month }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    <div style="clear: both; height: 8px;"></div>
 
-    <form action="process_rocket_money_upload.php" method="POST" enctype="multipart/form-data">
-        <div class="row">
-            <div class="col-xs-12" >
-                <label for="rocket_money_data">Upload Rocket Money Data</label>
-                <input type="file" id="rocket_money_file" name="rocket_money_file" class="form-control" accept=".csv" />
-                <br>
-                <button type="submit" class="btn btn-primary">Upload File</button>
+    <form action="process_rocket_money_upload3.php" method="POST" enctype="multipart/form-data" class="mb-6">
+        <div class="grid grid-cols-1 gap-4">
+            <div>
+                <label for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Upload Rocket Money Data</label>
+                <input type="file" id="rocket_money_file" name="rocket_money_file" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" accept=".csv" />
+                <div class="mt-4">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload File</button>
+                </div>
             </div>
         </div>
     </form>
-    <div style="clear: both; height: 8px;"></div>
 
     <?php //if (count($results) > 0) : ?>
-    <div class="row">
-        <div class="col-xs-12" >
-            <label for="rocket_money_data">Rocket Money Data</label>
-            <textarea id="rocket_money_data" class="form-control" rows="15"><?= $rocket_money_content_str; ?></textarea>
-        </div>
-    </div>
-    <div style="clear: both; height: 16px;"></div>
-
-    <form action="process_audit_expenses_v2.php" method="POST">
-        <div class="row title_lookup_content" style="display: none;">
-            <div class="col-xs-12" >
-
+    <div class="grid grid-cols-1 gap-6 mb-6">
+        <div>
+            <label for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Rocket Money Data</label>
+            <div class="overflow-x-auto overflow-y-auto max-h-[300px] shadow-sm rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200 bg-white">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200"> 
+                        <tr v-if="!rocketMoneyData || rocketMoneyData.length === 0">
+                            <td class="px-6 py-4 text-center text-gray-500 italic">No rocket money data available</td>
+                        </tr>
+                        <tr class="expenses_row hover:bg-gray-50" data-index="<?php echo $index; ?>" v-for="(item, index) in rocketMoneyData" v-else>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
+                                
+                                <span 
+                                    @click="togglePopover(index)"
+                                    @mouseenter="showPopover(index)" 
+                                    @mouseleave="hidePopover()"
+                                    class="cursor-help hover:text-blue-600 transition-colors popover-trigger"
+                                >
+                                    {{ item.Name }}
+                                </span>
+                                
+                                <!-- Popover -->
+                                <div 
+                                    v-show="popoverVisible && hoveredItemIndex === index"
+                                    class="absolute z-50 bg-gray-800 text-white text-sm rounded-lg py-2 px-3 max-w-xs shadow-lg -top-12 left-0 sm:-top-2 sm:left-full sm:ml-2"
+                                    style="white-space: normal; word-wrap: break-word;"
+                                >
+                                    {{ item.LongName || 'No detailed name available' }}
+                                    <!-- Arrow pointing down on mobile, left on desktop -->
+                                    <div class="absolute top-full left-4 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800 sm:hidden"></div>
+                                    <div class="hidden sm:block absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-gray-800"></div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ item.Amount }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.Date }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div style="clear: both; height: 16px;"></div>
+    </div>
+
+    <form action="process_audit_expenses_v2.php" method="POST" class="mb-8">
+        <div class="title_lookup_content hidden">
+            <div class="grid grid-cols-1 gap-4">
+                <!-- Content will be populated by Vue.js -->
+            </div>
+        </div>
     </form>
 
-    <div class="row">
-        <div class="col-xs-6" style="overflow-y: auto; max-height: 650px;">
-            <label for="rocket_money_data">Rocket Money Titles</label>
-            <!-- <table class="table table-bordered">
-                <thead>
+    <label for="title_lookups" class="block text-sm font-medium text-gray-700 mb-2">Title Matching <span class="text-xs text-gray-500">(tap titles to see details)</span></label>
+    <div class="grid grid-cols-2 gap-1 mb-8">
+       
+        <div class="overflow-y-auto max-h-96 lg:max-h-[650px] border border-gray-200 rounded-lg py-2 px-[2px]">
+            <table class="min-w-full divide-y divide-gray-200 bg-white">
+                <thead class="bg-gray-50">
                     <tr>
-                        <th>Title</th>
-                        <th>Amount</th>
-                        <th>Action</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php //foreach ($rocket_money_titles as $index => $item) : ?>
-                        <tr class="rocket_row" data-index="<?php echo $index; ?>">
-                            <td>{{ item.title }}</td>
-                            <td>{{ item.amount }}</td>
-                            <td>
-                                <button class="btn btn-sm btn-primary" @click="selectRocketMoneyTitle(index, item.title)">Select</button>
-                            </td>
-                        </tr>
-                    <?php //endforeach; ?>
+                <tbody class="bg-white divide-y divide-gray-200"> 
+                    <tr class="expenses_row hover:bg-gray-50" data-index="<?php echo $index; ?>" v-for="(item, index) in rocketMoneyData">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
+                            <div class="flex items-center">
+                                <span 
+                                    @click="toggleRocketMatchPopover(index)" 
+                                    @mouseenter="showRocketMatchPopover(index)" 
+                                    @mouseleave="hideRocketMatchPopover()"
+                                    class="cursor-help hover:text-blue-600 transition-colors popover-trigger"
+                                >
+                                    {{ item.Name }}
+                                </span>
+                                <button class="bg-green-500 hover:bg-green-700 text-white font-bold w-4 h-4 rounded-full text-xs flex items-center justify-center ml-2">
+                                    +
+                                </button>
+                            </div>
+                            
+                            <!-- Popover -->
+                            <div 
+                                v-show="rocketMatchPopoverVisible && rocketMatchHoveredIndex === index"
+                                class="absolute z-50 bg-gray-800 text-white text-sm rounded-lg py-2 px-3 max-w-xs shadow-lg -top-12 left-0 sm:-top-2 sm:left-full sm:ml-2"
+                                style="white-space: normal; word-wrap: break-word;"
+                            >
+                                {{ item.LongName || 'No detailed name available' }}
+                                <!-- Arrow pointing down on mobile, left on desktop -->
+                                <div class="absolute top-full left-4 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800 sm:hidden"></div>
+                                <div class="hidden sm:block absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-gray-800"></div>
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
-            </table> -->
+            </table>
         </div>
-        <div class="col-xs-6" style="overflow-y: auto; max-height: 650px;">
-            <label for="rocket_money_data">Expenses App Titles</label>
-            <!-- <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Amount</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php //foreach ($expenses_app_titles as $index => $item) : ?>
-                        <tr class="expenses_row" data-index="<?php echo $index; ?>">
-                            <td>{{ item.title }}</td>
-                            <td>{{ item.amount }}</td>
-                            <td>
-                                <button class="btn btn-sm btn-primary" @click="selectExpensesAppTitle(index, item.title)">Select</button>
+        <div class="overflow-y-auto max-h-96 lg:max-h-[650px] border border-gray-200 rounded-lg py-2 px-[2px]">
+           
+            <div class="overflow-x-auto shadow-sm rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200 bg-white">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200"> 
+                        <tr v-if="!expensesAppData || expensesAppData.length === 0">
+                            <td class="px-6 py-4 text-center text-gray-500 italic">No expenses app data available</td>
+                        </tr>
+                        <tr class="expenses_row hover:bg-gray-50" data-index="<?php echo $index; ?>" v-for="(item, index) in expensesAppData" v-else>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
+                                <div class="flex items-center">
+                                    <span 
+                                        @click="toggleExpensesMatchPopover(index)"
+                                        @mouseenter="showExpensesMatchPopover(index)" 
+                                        @mouseleave="hideExpensesMatchPopover()"
+                                        class="cursor-help hover:text-blue-600 transition-colors popover-trigger"
+                                    >
+                                        {{ item.title }}
+                                    </span>
+                                    <button class="bg-green-500 hover:bg-green-700 text-white font-bold w-4 h-4 rounded-full text-xs flex items-center justify-center ml-2">
+                                        +
+                                    </button>
+                                </div>
+                                
+                                <!-- Popover -->
+                                <div 
+                                    v-show="expensesMatchPopoverVisible && expensesMatchHoveredIndex === index"
+                                    class="absolute z-50 bg-gray-800 text-white text-sm rounded-lg py-2 px-3 max-w-xs shadow-lg -top-12 left-0 sm:-top-2 sm:left-full sm:ml-2"
+                                    style="white-space: normal; word-wrap: break-word;"
+                                >
+                                    {{ item.long_title || 'No detailed title available' }}
+                                    <!-- Arrow pointing down on mobile, left on desktop -->
+                                    <div class="absolute top-full left-4 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800 sm:hidden"></div>
+                                    <div class="hidden sm:block absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-gray-800"></div>
+                                </div>
                             </td>
                         </tr>
-                    <?php //endforeach; ?>
-                </tbody>
-            </table> -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    <div style="clear: both; height: 32px;"></div>
     <?php //endif; ?>
 
 </div>
@@ -303,35 +415,170 @@ if (!isset($_SESSION['user'])) {
                 adminDropdown: false,
                 chargesDropdown: false,
                 mobileBudgetOpen: false,
-                mobileAdminOpen: false,
                 mobileChargesOpen: false,
+                mobileAdminOpen: false,
+                fileExists: <?= $uploadedFilePath ? 'true' : 'false'; ?>,
+                
                 
                 // Existing data properties
                 titleLookups: [],
                 currentRocketMoneyTitleLookup: null,
                 currentExpensesAppTitleLookup: null,
                 currentRocketMoneyIndex: 0,
-                expensesAppData: '',
-                rocketMoneyData: ''
+                expensesAppData: null,
+                rocketMoneyData: null,
+                
+                // Popover state
+                hoveredItemIndex: null,
+                popoverVisible: false,
+                
+                // Popover state for matching tables
+                rocketMatchHoveredIndex: null,
+                rocketMatchPopoverVisible: false,
+                expensesMatchHoveredIndex: null,
+                expensesMatchPopoverVisible: false
             }
         },
         mounted() {
+            console.log('Vue app mounted successfully');
             this.loadPage();
+            
+            // Add click outside handler for mobile popover closing
+            document.addEventListener('click', this.handleClickOutside);
+        },
+        
+        beforeUnmount() {
+            document.removeEventListener('click', this.handleClickOutside);
         },
         methods: {
             loadPage() {
+                console.log('Loading page data...');
                 this.loadExpensesAppData();
+                if (this.fileExists) {
+                    console.log('File exists, loading rocket money data...');
+                    this.loadRocketMoneyData();
+                } else {
+                    console.log('No file exists, skipping rocket money data load');
+                }
             },
 
             async loadExpensesAppData() {
                 try {   
                     const response = await axios.get('/api/loadExpensesAppData.php');
-                    if (response.data) {
+                    if (response.data && response.data.items) {
                         console.log('Expenses App Data:', response.data);
-                        //this.test = response.data;
+                        this.expensesAppData = response.data.items;
+                    } else {
+                        console.log('No expenses app data received, using test data');
+                        // Add test data if no real data
+                        this.expensesAppData = [
+                            { title: 'Test Expense 1', long_title: 'This is a longer test expense title with more details', amount: '25.99', day_of_month: '15' },
+                            { title: 'Test Expense 2', long_title: 'Another longer test expense title with detailed information', amount: '45.50', day_of_month: '20' }
+                        ];
                     }
                 } catch (error) {
-                    console.error('Error loading test data:', error);
+                    console.error('Error loading expenses app data:', error);
+                    // Add fallback test data
+                    this.expensesAppData = [
+                        { title: 'Test Expense 1', long_title: 'This is a longer test expense title with more details', amount: '25.99', day_of_month: '15' },
+                        { title: 'Test Expense 2', long_title: 'Another longer test expense title with detailed information', amount: '45.50', day_of_month: '20' }
+                    ];
+                }
+            },
+            async loadRocketMoneyData() {
+                try {   
+                    const response = await axios.get('/api/loadRocketMoneyData.php');
+                    if (response.data && response.data.items) {
+                        console.log('Rocket Money Data:', response.data);
+                        this.rocketMoneyData = response.data.items;
+                    } else {
+                        console.log('No rocket money data received, using test data');
+                        // Add test data if no real data
+                        this.rocketMoneyData = [
+                            { Name: 'Test Rocket 1', LongName: 'This is a longer test rocket money title with more details', Amount: '35.99', Date: '18' },
+                            { Name: 'Test Rocket 2', LongName: 'Another longer test rocket money title with detailed information', Amount: '55.25', Date: '25' }
+                        ];
+                    }
+                } catch (error) {
+                    console.error('Error loading rocket money data:', error);
+                    // Add fallback test data
+                    this.rocketMoneyData = [
+                        { Name: 'Test Rocket 1', LongName: 'This is a longer test rocket money title with more details', Amount: '35.99', Date: '18' },
+                        { Name: 'Test Rocket 2', LongName: 'Another longer test rocket money title with detailed information', Amount: '55.25', Date: '25' }
+                    ];
+                }
+            },
+            
+            // Popover methods
+            showPopover(index) {
+                this.hoveredItemIndex = index;
+                this.popoverVisible = true;
+            },
+            
+            hidePopover() {
+                this.hoveredItemIndex = null;
+                this.popoverVisible = false;
+            },
+            
+            togglePopover(index) {
+                console.log('togglePopover called with index:', index);
+                if (this.popoverVisible && this.hoveredItemIndex === index) {
+                    this.hidePopover();
+                } else {
+                    this.showPopover(index);
+                }
+            },
+            
+            // Popover methods for matching tables
+            showRocketMatchPopover(index) {
+                console.log('showRocketMatchPopover called with index:', index);
+                this.rocketMatchHoveredIndex = index;
+                this.rocketMatchPopoverVisible = true;
+            },
+            
+            hideRocketMatchPopover() {
+                console.log('hideRocketMatchPopover called');
+                this.rocketMatchHoveredIndex = null;
+                this.rocketMatchPopoverVisible = false;
+            },
+            
+            toggleRocketMatchPopover(index) {
+                console.log('toggleRocketMatchPopover called with index:', index);
+                if (this.rocketMatchPopoverVisible && this.rocketMatchHoveredIndex === index) {
+                    this.hideRocketMatchPopover();
+                } else {
+                    this.showRocketMatchPopover(index);
+                }
+            },
+            
+            showExpensesMatchPopover(index) {
+                console.log('showExpensesMatchPopover called with index:', index);
+                this.expensesMatchHoveredIndex = index;
+                this.expensesMatchPopoverVisible = true;
+            },
+            
+            hideExpensesMatchPopover() {
+                console.log('hideExpensesMatchPopover called');
+                this.expensesMatchHoveredIndex = null;
+                this.expensesMatchPopoverVisible = false;
+            },
+            
+            toggleExpensesMatchPopover(index) {
+                console.log('toggleExpensesMatchPopover called with index:', index);
+                if (this.expensesMatchPopoverVisible && this.expensesMatchHoveredIndex === index) {
+                    this.hideExpensesMatchPopover();
+                } else {
+                    this.showExpensesMatchPopover(index);
+                }
+            },
+            
+            handleClickOutside(event) {
+                // Close all popovers if clicking outside
+                const isPopoverClick = event.target.closest('.popover-trigger') || event.target.closest('[class*="popover"]');
+                if (!isPopoverClick) {
+                    this.hidePopover();
+                    this.hideRocketMatchPopover();
+                    this.hideExpensesMatchPopover();
                 }
             },
             
@@ -388,28 +635,32 @@ if (!isset($_SESSION['user'])) {
             //         titleLookupContent.style.display = 'block';
             //     }
                 
-            //     content = '<h3>Title Lookups</h3>' + 
-            //             '<table class="table table-bordered">' + 
+            //     content = '<h3 class="text-lg font-bold mb-4">Title Lookups</h3>' + 
+            //             '<div class="overflow-x-auto shadow-sm rounded-lg">' +
+            //             '<table class="min-w-full divide-y divide-gray-200 bg-white">' + 
+            //                 '<thead class="bg-gray-50">' +
             //                 '<tr>' + 
-            //                     '<th>Rocket Money Title</th>' + 
-            //                     '<th>Expenses App Title</th>' + 
-            //                 '</tr>';
+            //                     '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rocket Money Title</th>' + 
+            //                     '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expenses App Title</th>' + 
+            //                 '</tr>' +
+            //                 '</thead>' +
+            //                 '<tbody class="bg-white divide-y divide-gray-200">';
                             
             //     for (let i = 0; i < this.titleLookups.length; i++) {
-            //         content += '<tr data-index="' + i + '" class="title_lookup_row">' + 
-            //                 '<td>' + this.titleLookups[i].rocket_money_title + '</td>' + 
-            //                 '<td>' +
+            //         content += '<tr data-index="' + i + '" class="title_lookup_row hover:bg-gray-50">' + 
+            //                 '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + this.titleLookups[i].rocket_money_title + '</td>' + 
+            //                 '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' +
             //                     this.titleLookups[i].expenses_app_title + 
             //                     '<input type="hidden" name="title_lookup_rocket_money_titles[]" value="' + this.titleLookups[i].rocket_money_title + '" />' +
             //                     '<input type="hidden" name="title_lookup_expenses_app_titles[]" value="' + this.titleLookups[i].expenses_app_title + '" />' +
-            //                     '&nbsp; <button type="button" class="btn btn-sm btn-danger" @click="removeTitleLookup(' + i + ')">X</button>' +
+            //                     '&nbsp; <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs" @click="removeTitleLookup(' + i + ')">X</button>' +
             //                 '</td>' + 
             //             '</tr>';
             //     }
-            //     content += '</table>' + 
-            //         '<div style="clear: both; height: 4px;"></div>' + 
+            //     content += '</tbody></table></div>' + 
+            //         '<div class="mt-4"></div>' + 
             //         '<input type="hidden" name="file" value="<?= htmlspecialchars($uploadedFilePath); ?>" />' +
-            //         '<button type="submit" class="btn btn-primary">Submit</button>';
+            //         '<button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>';
                 
             //     const titleLookupContentCol = document.querySelector('.title_lookup_content .col-xs-12');
             //     if (titleLookupContentCol) {

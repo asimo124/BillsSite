@@ -1,14 +1,12 @@
 <?php
 $changeTestMode            = isset($_REQUEST['test_mode']) ? intval($_REQUEST['test_mode']) : 0;
+include "../inc/includes.php";
 include "../inc/Bills.php";
 include "../inc/IpPayPeriod.php";
 include "../inc/IpPayPeriodItem.php";
 include "../inc/BillDateHelper.php";
-include "../inc/includes.php";
+
 //ini_set("display_errors", 1);
-
-
-
 
 $uploadedFilePath = isset($_SESSION['rocket_money_uploaded_file']) ? $_SESSION['rocket_money_uploaded_file'] : '';
 if ($uploadedFilePath) {
@@ -36,10 +34,19 @@ if ($uploadedFilePath) {
     }
     fclose($fh);
 
-    
+    foreach ($results as $index => $item) {
+        
+        $longName = $item['Name'];
+        $shortName = substr($longName, 0, 18);
+        $results[$index]['Date'] = intval(date("d", strtotime($item['Date'])));
+        $results[$index]['Name'] = $shortName;
+        $mediumName = substr($longName, 0, 21);
+        $results[$index]['MediumName'] = $mediumName;
+        $results[$index]['LongName'] = $longName;
+    }
 
     // Sort rocket_money_titles array by 'title' key
-    $titles = array_column($results, 'title');
+    $titles = array_column($results, 'Name');
     array_multisort($titles, SORT_ASC, SORT_FLAG_CASE | SORT_NATURAL, $results); 
 
     header("Content-type: application/json");
