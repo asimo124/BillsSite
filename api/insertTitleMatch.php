@@ -21,6 +21,7 @@ $rocketMoneyItem = getQuerySingle($sql);
 $rocket_money_title = $rocketMoneyItem['Name'];
 $rocket_money_amount = $rocketMoneyItem['Amount'];
 $rocket_money_date = intval(date("d", strtotime($rocketMoneyItem['Date'])));
+$rocket_money_index = $rocketMoneyItem['Index'];
 
 $sql = "SELECT * FROM vnd_bills WHERE vnd_id = $expenses_app_id";
 $expensesAppItem = getQuerySingle($sql);
@@ -28,16 +29,19 @@ $expensesAppItem = getQuerySingle($sql);
 $expenses_app_title = $expensesAppItem['vnd_bill'];
 $expenses_app_amount = $expensesAppItem['amount'];
 $expenses_app_date = $expensesAppItem['vnd_frequency_value'];
+$expenses_app_index = $expensesAppItem['index'];
 
 $rocket_money_short_title = substr($rocket_money_title, 0, 14);
 $expenses_app_short_title = substr($expenses_app_title, 0, 14);
 
 $sql = "INSERT INTO ae_title_match 
         (rocket_money_id, rocket_money_title, rocket_money_short_title, rocket_money_amount, rocket_money_date, 
-         expenses_app_id, expenses_app_title, expenses_app_short_title, expenses_app_amount, expenses_app_date) 
+         expenses_app_id, expenses_app_title, expenses_app_short_title, expenses_app_amount, expenses_app_date,
+         rocket_money_index, expenses_app_index) 
         VALUES 
         ($rocket_money_id, '" . escapeSql($rocket_money_title) . "', '" . escapeSql($rocket_money_short_title) . "', $rocket_money_amount, '" . escapeSql($rocket_money_date) . "',
-         $expenses_app_id, '" . escapeSql($expenses_app_title) . "', '" . escapeSql($expenses_app_short_title) . "', $expenses_app_amount, '" . escapeSql($expenses_app_date) . "')";
+         $expenses_app_id, '" . escapeSql($expenses_app_title) . "', '" . escapeSql($expenses_app_short_title) . "', $expenses_app_amount, '" . escapeSql($expenses_app_date) . "',
+         $rocket_money_index, $expenses_app_index)";
 $result = execQuery($sql);
 
 header("Content-type: application/json");

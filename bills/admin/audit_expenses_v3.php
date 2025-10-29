@@ -17,13 +17,17 @@ if ($uploadedFilePath) {
 <html lang="en">
     <title>Audit Expenses V3</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="cache-bust" content="<?php echo time() . '_' . rand(1000, 9999); ?>">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome for hamburger icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/nav.css" />
-    <link rel="stylesheet" href="/css/bills_admin.css" />
-    <link rel="stylesheet" href="/css/income_purchases.css?version=1" />
+    <link rel="stylesheet" href="/css/nav.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="/css/bills_admin.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="/css/income_purchases.css?version=<?php echo time(); ?>" />
     
     <!-- Vue.js CDN -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -32,6 +36,7 @@ if ($uploadedFilePath) {
 <body>
 <div class="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-12 xl:px-16" id="app">
     <div class="py-5"></div>
+    
     <?php if (isset($_REQUEST['Message'])) { ?>
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
             <?php echo $_REQUEST['Message']; ?>
@@ -43,7 +48,7 @@ if ($uploadedFilePath) {
         </div>
     <?php } ?>
     
-    <h2 class="text-2xl font-bold mb-4">Audit Expenses V3</h2>
+    <h2 class="text-2xl font-bold mb-4">Audit Expenses V3 - Vue Test: {{ mobileMenuOpen ? 'Working!' : 'Working!' }}</h2>
 
     <div class="mb-3"></div>
 
@@ -297,7 +302,7 @@ if ($uploadedFilePath) {
     <!-- Matched Titles Table -->
     <div class="grid grid-cols-1 gap-6 mb-6">
         <div>
-            <label id="matched-titles-label" for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Matched Titles</label>
+            <label id="matched-titles-label" for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Matched Titles&nbsp;<button class="text-blue-500 hover:text-blue-700" @click="openExpenseDiscrepanciesModal">Generate</button></label>
             <div class="overflow-x-auto overflow-y-auto max-h-[300px] shadow-sm rounded-lg" v-if="matchedTitlesData && matchedTitlesData.length > 0">
                 <table class="min-w-full divide-y divide-gray-200 bg-white">
                     <thead class="bg-gray-50">
@@ -430,319 +435,406 @@ if ($uploadedFilePath) {
             </div>
         </div>
     </div>
+
+    <!-- Simple Test Modal -->
+    <div v-show="expenseDiscrepanciesModalVisible" class="fixed inset-0 bg-black bg-opacity-50 z-50" @click="closeExpenseDiscrepanciesModal">
+        <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-full max-w-none relative" @click.stop>
+            <button @click="closeExpenseDiscrepanciesModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h3 class="text-xl font-bold mb-4">Budget Discrepancies</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 bg-white">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expected</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actual</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Difference</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr v-for="(item, index) in testDiscrepanciesData" :key="index">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.expected }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.actual }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.difference }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button @click="closeExpenseDiscrepanciesModal" class="mt-6 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                Close
+            </button>
+        </div>
+    </div>
 </div>
 
+
+
 <script>
-    const { createApp } = Vue;
+    // Cache buster: <?php echo time() . '_' . rand(10000, 99999) . '_' . microtime(true); ?>
+    // Force refresh timestamp: <?php echo date('Y-m-d H:i:s'); ?>
+
+    console.log('Script loading with cache bust:', '<?php echo time() . "_" . rand(1000, 9999); ?>');
+    console.log('Vue available:', typeof Vue);
+    console.log('Vue version:', Vue ? Vue.version : 'Vue not found');
     
-    createApp({
-        data() {
-            return {
-                // Navigation state
-                mobileMenuOpen: false,
-                budgetDropdown: false,
-                adminDropdown: false,
-                chargesDropdown: false,
-                mobileBudgetOpen: false,
-                mobileChargesOpen: false,
-                mobileAdminOpen: false,
+    // Clear any cached Vue instances
+    if (window.vueApp) {
+        try {
+            window.vueApp.unmount();
+        } catch (e) {
+            console.log('No app to unmount');
+        }
+        delete window.vueApp;
+    }
 
-                delimiter: '  ====>  ',
-                
-                // Existing data properties
-                titleLookups: [],
-                currentRocketMoneyTitleLookup: null,
-                currentExpensesAppTitleLookup: null,
-                currentRocketMoneyIndex: 0,
-                expensesAppData: null,
-                rocketMoneyData: null,
-                
-                // Popover state
-                hoveredItemIndex: null,
-                popoverVisible: false,
-                
-                // Popover state for matching tables
-                rocketMatchHoveredIndex: null,
-                rocketMatchPopoverVisible: false,
-                expensesMatchHoveredIndex: null,
-                expensesMatchPopoverVisible: false,
-                
-                // Collapsed state for matching tables
-                collapsedRocketItems: {},
-                collapsedExpensesItems: {},
+    console.log('Attempting to create Vue app...');
+    const { createApp } = Vue;
+    console.log('createApp function:', typeof createApp);
+    
+    const app = createApp({
+            data() {
+                return {
+                    // Navigation state
+                    mobileMenuOpen: false,
+                    budgetDropdown: false,
+                    adminDropdown: false,
+                    chargesDropdown: false,
+                    mobileBudgetOpen: false,
+                    mobileChargesOpen: false,
+                    mobileAdminOpen: false,
 
-                matchedTitlesData: [],
-                rocketItem: null,
-                rocketIndex: -1,
-                expensesTitle: ''
-            }
-        },
-        mounted() {
-            console.log('Vue app mounted successfully');
-            this.loadPage();
-            
-            // Add click outside handler for mobile popover closing
-            document.addEventListener('click', this.handleClickOutside);
-            
-            // Scroll to Matched Titles section after page loads
-            setTimeout(() => {
-                const element = document.getElementById('matched-titles-label');
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }, 2000);
-        },
-        
-        beforeUnmount() {
-            document.removeEventListener('click', this.handleClickOutside);
-        },
-        methods: {
-            loadPage() {
-                console.log('Loading page data...');
-                this.loadExpensesAppData();
-                this.loadRocketMoneyData();
-                this.loadTitleMatches();
-            },
-            async loadExpensesAppData() {
-                try {   
-                    const response = await axios.get('/api/loadExpensesAppData.php');
-                    if (response.data && response.data.items) {
-                        console.log('Expenses App Data:', response.data);
-                        this.expensesAppData = response.data.items;
-                    }
-                } catch (error) {
-                    console.error('Error loading expenses app data:', error);
-                }
-            },
-            async loadRocketMoneyData() {
-                try {   
-                    const response = await axios.get('/api/loadRocketMoneyData.php');
-                    if (response.data && response.data.items) {
-                        console.log('Rocket Money Data:', response.data);
-                        this.rocketMoneyData = response.data.items;
-                    }
-                } catch (error) {
-                    console.error('Error loading rocket money data:', error);
-                }
-            },
-            showPopover(index) {
-                // Popover methods
-                this.hoveredItemIndex = index;
-                this.popoverVisible = true;
-            },
-            hidePopover() {
-                this.hoveredItemIndex = null;
-                this.popoverVisible = false;
-            },
-            togglePopover(index) {
-                console.log('togglePopover called with index:', index);
-                if (this.popoverVisible && this.hoveredItemIndex === index) {
-                    this.hidePopover();
-                } else {
-                    this.showPopover(index);
-                }
-            },
-            showRocketMatchPopover(index) {
-                // Popover methods for matching tables
-                this.rocketMatchHoveredIndex = index;
-                this.rocketMatchPopoverVisible = true;
-            },
-            hideRocketMatchPopover() {
-                // Popover methods for matching tables
-                this.rocketMatchHoveredIndex = null;
-                this.rocketMatchPopoverVisible = false;
-            },
-            toggleRocketMatchPopover(index) {
-                if (this.rocketMatchPopoverVisible && this.rocketMatchHoveredIndex === index) {
-
-                    this.hideRocketMatchPopover();
-                } else {
-                    this.showRocketMatchPopover(index);
-                }
-            },
-            showExpensesMatchPopover(index) {
-                this.expensesMatchHoveredIndex = index;
-                this.expensesMatchPopoverVisible = true;
-            },
-            hideExpensesMatchPopover() {
-                this.expensesMatchHoveredIndex = null;
-                this.expensesMatchPopoverVisible = false;
-            },
-            toggleExpensesMatchPopover(index) {
-                if (this.expensesMatchPopoverVisible && this.expensesMatchHoveredIndex === index) {
-
-                    this.hideExpensesMatchPopover();
-                } else {
-                    this.showExpensesMatchPopover(index);
-                }
-            },
-            handleClickOutside(event) {
-                // Close all popovers if clicking outside
-                const isPopoverClick = event.target.closest('.popover-trigger') || event.target.closest('[class*="popover"]');
-                if (!isPopoverClick) {
-                    this.hidePopover();
-                    this.hideRocketMatchPopover();
-                    this.hideExpensesMatchPopover();
-                }
-            },
-            toggleRocketItemCollapse(index) { 
-                // Collapse/expand methods
-                if (this.rocketMoneyData[index].Collapsed) {
-                    this.rocketMoneyData[index].Collapsed = false;
-                } else {
-
-                    this.rocketItem = this.rocketMoneyData[index];
-                    this.rocketIndex = index;
-
-                    this.rocketMoneyData[index].Collapsed = true;
+                    delimiter: '  ====>  ',
                     
+                    // Existing data properties
+                    titleLookups: [],
+                    currentRocketMoneyTitleLookup: null,
+                    currentExpensesAppTitleLookup: null,
+                    currentRocketMoneyIndex: 0,
+                    expensesAppData: null,
+                    rocketMoneyData: null,
+                    
+                    // Popover state
+                    hoveredItemIndex: null,
+                    popoverVisible: false,
+                    
+                    // Popover state for matching tables
+                    rocketMatchHoveredIndex: null,
+                    rocketMatchPopoverVisible: false,
+                    expensesMatchHoveredIndex: null,
+                    expensesMatchPopoverVisible: false,
+                    
+                    // Collapsed state for matching tables
+                    collapsedRocketItems: {},
+                    collapsedExpensesItems: {},
+
+                    matchedTitlesData: [],
+                    rocketItem: null,
+                    rocketIndex: -1,
+                    expensesTitle: '',
+                    
+                    // Modal state
+                    expenseDiscrepanciesModalVisible: false,
+                    testDiscrepanciesData: [
+                        { name: 'Netflix Subscription', expected: 15.99, actual: 17.99, difference: -2.00 },
+                        { name: 'Grocery Store', expected: 120.00, actual: 115.50, difference: 4.50 },
+                        { name: 'Electric Bill', expected: 89.45, actual: 92.30, difference: -2.85 },
+                        { name: 'Gas Station', expected: 45.00, actual: 48.75, difference: -3.75 },
+                        { name: 'Coffee Shop', expected: 25.00, actual: 22.40, difference: 2.60 }
+                    ]
                 }
             },
-            async updateRocketItemCollapsed() {
-                // Update collapse state in DB if needed   
+            mounted() {
+                console.log('Vue app mounted successfully');
+                console.log('Initial modal state:', this.expenseDiscrepanciesModalVisible);
+                this.loadPage();
                 
-                const collapsed = this.rocketItem.Collapsed ? 1 : 0;
-
-                const ids_list = [];
-                for (i = 0; i < this.rocketIndex + 1; i++) {
-                    ids_list.push(this.rocketMoneyData[i].id);
-                }
-
-                const response = await fetch(`/api/updateRocketMoneyCollapsed.php`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        ids_list: ids_list,
-                        collapsed: collapsed
-                    })
-                });
-
-                if (!response.ok) {
-                    console.error('Failed to update rocket item collapse state');
-                }
-
-            },
-            removeMatchedTitle(index) {
-                // const matchedItem = this.matchedTitlesData[index];
-                // console.log('Removing matched title:', matchedItem);
-
-                // for (i = 0; i < this.expensesAppData.length; i++) {
-                //     if (this.expensesAppData[i].title === matchedItem.expenses_app_title &&
-                //         this.expensesAppData[i].amount == matchedItem.expenses_app_amount) {
-                //         this.expensesAppData[i].collapsed = false;
-                //         break;
-                //     }
-                // }
-                // let foundIndex = -1;
-                // for (i = 0; i < this.rocketMoneyData.length; i++) {
-                //     if (this.rocketMoneyData[i].Name === matchedItem.rocket_money_title &&
-                //         this.rocketMoneyData[i].Amount == matchedItem.rocket_money_amount) {
-                //         foundIndex = i;
-                //         this.rocketMoneyData[i].Collapsed = false;
-                //         break;
-                //     }
-                // }
-
-                // for (i = 0; i < foundIndex; i++) {
-                //     this.rocketMoneyData[i].Collapsed = false;
-                // }
-
-                this.matchedTitlesData.splice(index, 1);
-            },
-            toggleExpensesItemCollapse(index) {
+                // Add click outside handler for mobile popover closing
+                document.addEventListener('click', this.handleClickOutside);
                 
-                if (this.expensesAppData[index].collapsed) {
-                    this.expensesAppData[index].collapsed = false;
-                } else {
-
-                    if (!this.rocketItem) {
-                        alert('Please select a Rocket Money title first.');
-                        return;
+                // Scroll to Matched Titles section after page loads
+                setTimeout(() => {
+                    const element = document.getElementById('matched-titles-label');
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
+                }, 2000);
+                
+            },
+            
+            beforeUnmount() {
+                document.removeEventListener('click', this.handleClickOutside);
+            },
+            methods: {
+                loadPage() {
+                    console.log('Loading page data...');
+                    this.loadExpensesAppData();
+                    this.loadRocketMoneyData();
+                    this.loadTitleMatches();
+                },
+                async loadExpensesAppData() {
+                    try {   
+                        const response = await axios.get('/api/loadExpensesAppData.php');
+                        if (response.data && response.data.items) {
+                            console.log('Expenses App Data:', response.data);
+                            this.expensesAppData = response.data.items;
+                        }
+                    } catch (error) {
+                        console.error('Error loading expenses app data:', error);
+                    }
+                },
+                async loadRocketMoneyData() {
+                    try {   
+                        const response = await axios.get('/api/loadRocketMoneyData.php');
+                        if (response.data && response.data.items) {
+                            console.log('Rocket Money Data:', response.data);
+                            this.rocketMoneyData = response.data.items;
+                        }
+                    } catch (error) {
+                        console.error('Error loading rocket money data:', error);
+                    }
+                },
+                showPopover(index) {
+                    // Popover methods
+                    this.hoveredItemIndex = index;
+                    this.popoverVisible = true;
+                },
+                hidePopover() {
+                    this.hoveredItemIndex = null;
+                    this.popoverVisible = false;
+                },
+                togglePopover(index) {
+                    console.log('togglePopover called with index:', index);
+                    if (this.popoverVisible && this.hoveredItemIndex === index) {
+                        this.hidePopover();
+                    } else {
+                        this.showPopover(index);
+                    }
+                },
+                showRocketMatchPopover(index) {
+                    // Popover methods for matching tables
+                    this.rocketMatchHoveredIndex = index;
+                    this.rocketMatchPopoverVisible = true;
+                },
+                hideRocketMatchPopover() {
+                    // Popover methods for matching tables
+                    this.rocketMatchHoveredIndex = null;
+                    this.rocketMatchPopoverVisible = false;
+                },
+                toggleRocketMatchPopover(index) {
+                    if (this.rocketMatchPopoverVisible && this.rocketMatchHoveredIndex === index) {
 
-                    this.expensesTitle = this.expensesAppData[index].title + ': $' + this.expensesAppData[index].amount;
-                    this.matchedTitlesData.push({
-                        rocket_money_index: this.rocketItem.Index,
-                        rocket_money_id: this.rocketItem['id'],
-                        expenses_app_id: this.expensesAppData[index]['vnd_id'],
-                        rocket_money_title: this.rocketItem.Name,
-                        rocket_money_amount: this.rocketItem.Amount,
-                        rocket_money_date: this.rocketItem.Date,
-                        rocket_money_medium_title: this.rocketItem.MediumName,
-                        rocket_money_long_title: this.rocketItem.LongName,
-                        expenses_app_index: this.expensesAppData[index].index,
-                        expenses_app_title: this.expensesAppData[index].title,
-                        expenses_app_amount: this.expensesAppData[index].amount,
-                        expenses_app_date: this.expensesAppData[index].day_of_month,
-                        expenses_app_medium_title: this.expensesAppData[index].medium_title,
-                        expenses_app_long_title: this.expensesAppData[index].long_title
+                        this.hideRocketMatchPopover();
+                    } else {
+                        this.showRocketMatchPopover(index);
+                    }
+                },
+                showExpensesMatchPopover(index) {
+                    this.expensesMatchHoveredIndex = index;
+                    this.expensesMatchPopoverVisible = true;
+                },
+                hideExpensesMatchPopover() {
+                    this.expensesMatchHoveredIndex = null;
+                    this.expensesMatchPopoverVisible = false;
+                },
+                toggleExpensesMatchPopover(index) {
+                    if (this.expensesMatchPopoverVisible && this.expensesMatchHoveredIndex === index) {
+
+                        this.hideExpensesMatchPopover();
+                    } else {
+                        this.showExpensesMatchPopover(index);
+                    }
+                },
+                handleClickOutside(event) {
+                    // Close all popovers if clicking outside
+                    const isPopoverClick = event.target.closest('.popover-trigger') || event.target.closest('[class*="popover"]');
+                    if (!isPopoverClick) {
+                        this.hidePopover();
+                        this.hideRocketMatchPopover();
+                        this.hideExpensesMatchPopover();
+                    }
+                },
+                toggleRocketItemCollapse(index) { 
+                    // Collapse/expand methods
+                    if (this.rocketMoneyData[index].Collapsed) {
+                        this.rocketMoneyData[index].Collapsed = false;
+                    } else {
+
+                        this.rocketItem = this.rocketMoneyData[index];
+                        this.rocketIndex = index;
+
+                        this.rocketMoneyData[index].Collapsed = true;
+                        
+                    }
+                },
+                async updateRocketItemCollapsed() {
+                    // Update collapse state in DB if needed   
+                    
+                    const collapsed = this.rocketItem.Collapsed ? 1 : 0;
+                    console.log('this.rocketIndex:', this.rocketIndex, 'collapsed:', collapsed);
+
+                    try {
+                        const response = await axios.get('/api/updateRocketMoneyCollapsed.php', { params: { index: this.rocketIndex, collapsed: collapsed } });
+                        if (response.data && response.data.success) {
+                            console.log('Title match inserted successfully:', response.data);
+                        } else {
+                            console.error('Failed to insert title match:', response.data);
+                        }
+                    } catch (error) {
+                        console.error('Error inserting title match:', error);
+                    }
+                },
+                removeMatchedTitle(index) {
+                    const matchedItem = this.matchedTitlesData[index];
+
+                    console.log('matchedItem: ', matchedItem);
+
+                    this.rocketIndex = matchedItem.rocket_money_index;
+                    this.rocketItem = this.rocketMoneyData[this.rocketIndex];
+                    const expensesIndex = matchedItem.expenses_app_index;
+
+                    console.log('this.rocketIndex: ', this.rocketIndex);
+                    console.log('expensesIndex: ', expensesIndex);
+                    console.log('this.rocketMoneyData: ', this.rocketMoneyData);
+
+                    this.rocketMoneyData[this.rocketIndex]['Collapsed'] = false;
+
+                    
+
+                    for (i = 0; i < this.rocketIndex + 1; i++) {
+                        this.rocketMoneyData[i]['Collapsed'] = false;
+                    }
+                    this.expensesAppData[expensesIndex]['collapsed'] = false;
+
+                    this.matchedTitlesData.splice(index, 1);
+
+                    this.updateRocketItemCollapsed();
+                    this.updateExpensesItemCollapsed(expensesIndex);
+                    this.removeTitleMatchFromDB(matchedItem);
+                },
+                async removeTitleMatchFromDB(matchedItem) {
+                    try {
+                        const response = await axios.get('/api/removeTitleMatch.php', { params: matchedItem });
+                        if (response.data && response.data.success) {
+                            console.log('Title match removed successfully:', response.data);
+                        } else {
+                            console.error('Failed to remove title match:', response.data);
+                        }
+                    } catch (error) {
+                        console.error('Error removing title match:', error);
+                    }
+                },
+                toggleExpensesItemCollapse(index) {
+                    
+                    if (this.expensesAppData[index].collapsed) {
+                        this.expensesAppData[index].collapsed = false;
+                    } else {
+
+                        if (!this.rocketItem) {
+                            alert('Please select a Rocket Money title first.');
+                            return;
+                        }
+
+                        this.expensesTitle = this.expensesAppData[index].title + ': $' + this.expensesAppData[index].amount;
+                        this.matchedTitlesData.push({
+                            rocket_money_index: this.rocketItem.Index,
+                            rocket_money_id: this.rocketItem['id'],
+                            expenses_app_id: this.expensesAppData[index]['vnd_id'],
+                            rocket_money_title: this.rocketItem.Name,
+                            rocket_money_amount: this.rocketItem.Amount,
+                            rocket_money_date: this.rocketItem.Date,
+                            rocket_money_medium_title: this.rocketItem.MediumName,
+                            rocket_money_long_title: this.rocketItem.LongName,
+                            expenses_app_index: this.expensesAppData[index].index,
+                            expenses_app_title: this.expensesAppData[index].title,
+                            expenses_app_amount: this.expensesAppData[index].amount,
+                            expenses_app_date: this.expensesAppData[index].day_of_month,
+                            expenses_app_medium_title: this.expensesAppData[index].medium_title,
+                            expenses_app_long_title: this.expensesAppData[index].long_title
+                        });
+
+                        for (i = 0; i < this.rocketIndex; i++) {
+                            this.rocketMoneyData[i].Collapsed = true;
+                        }
+                        
+                        this.expensesAppData[index].collapsed = true;
+
+                        
+                        this.insertTitleMatch(this.matchedTitlesData[this.matchedTitlesData.length - 1]);
+                    }
+                    this.updateExpensesItemCollapsed(index);
+                    this.updateRocketItemCollapsed();
+
+                    this.rocketItem = null;
+                    this.rocketIndex = -1;
+                },
+                async insertTitleMatch(matchedItem) {
+                    try {
+                        const response = await axios.get('/api/insertTitleMatch.php', { params: matchedItem });
+                        if (response.data && response.data.success) {
+                            console.log('Title match inserted successfully:', response.data);
+                        } else {
+                            console.error('Failed to insert title match:', response.data);
+                        }
+                    } catch (error) {
+                        console.error('Error inserting title match:', error);
+                    }
+                },
+                async loadTitleMatches() {
+                    console.log('aaa');
+                    try {
+                        const response = await axios.get('/api/loadTitleMatches.php');
+                        if (response.data && response.data.items) {
+                            console.log('Loaded title matches:', response.data);
+                            this.matchedTitlesData = response.data.items;
+                        }
+                    } catch (error) {
+                        console.error('Error loading title matches:', error);
+                    }
+                },
+                async updateExpensesItemCollapsed(index) {
+                    // Update collapse state in DB if needed
+                    const item = this.expensesAppData[index];
+
+                    const collapsed = item.collapsed ? 1 : 0;
+
+                    const response = await fetch('/api/updateExpensesAppCollapsed.php?vnd_id=' + item.vnd_id + '&collapsed=' + collapsed, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            id: item.id,
+                            collapsed: item.Collapsed
+                        })
                     });
 
-                    for (i = 0; i < this.rocketIndex; i++) {
-                        this.rocketMoneyData[i].Collapsed = true;
+                    if (!response.ok) {
+                        console.error('Failed to update rocket item collapse state');
                     }
-                    
-                    this.expensesAppData[index].collapsed = true;
 
-                    
-                    this.insertTitleMatch(this.matchedTitlesData[this.matchedTitlesData.length - 1]);
+                },
+                
+                // Modal methods
+                openExpenseDiscrepanciesModal() {
+                    console.log('Opening expense discrepancies modal');
+                    this.expenseDiscrepanciesModalVisible = true;
+                },
+                
+                closeExpenseDiscrepanciesModal() {
+                    console.log('Closing expense discrepancies modal');
+                    this.expenseDiscrepanciesModalVisible = false;
                 }
-                this.updateExpensesItemCollapsed(index);
-                this.updateRocketItemCollapsed();
-
-                this.rocketItem = null;
-                this.rocketIndex = -1;
-            },
-            async insertTitleMatch(matchedItem) {
-                try {
-                    const response = await axios.get('/api/insertTitleMatch.php', { params: matchedItem });
-                    if (response.data && response.data.success) {
-                        console.log('Title match inserted successfully:', response.data);
-                    } else {
-                        console.error('Failed to insert title match:', response.data);
-                    }
-                } catch (error) {
-                    console.error('Error inserting title match:', error);
-                }
-            },
-            async loadTitleMatches() {
-                console.log('aaa');
-                try {
-                    const response = await axios.get('/api/loadTitleMatches.php');
-                    if (response.data && response.data.items) {
-                        console.log('Loaded title matches:', response.data);
-                        this.matchedTitlesData = response.data.items;
-                    }
-                } catch (error) {
-                    console.error('Error loading title matches:', error);
-                }
-            },
-            async updateExpensesItemCollapsed(index) {
-                // Update collapse state in DB if needed
-                const item = this.expensesAppData[index];
-
-                const collapsed = item.collapsed ? 1 : 0;
-
-                const response = await fetch(`/api/updateExpensesAppCollapsed.php?vnd_id=${item.vnd_id}&collapsed=${collapsed}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id: item.id,
-                        collapsed: item.Collapsed
-                    })
-                });
-
-                if (!response.ok) {
-                    console.error('Failed to update rocket item collapse state');
-                }
-
-            },
-        }
-    }).mount('#app');
-</script>
+            }
+    });
+    
+    console.log('Mounting Vue app...');
+    window.vueApp = app.mount('#app');
+    console.log('Vue app mounted successfully');
+</script></div> <!-- End of Vue app -->
 </body>
 </html>
