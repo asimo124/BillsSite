@@ -158,6 +158,7 @@ class Bills {
         , b.vnd_bill as title 
         , b.vnd_frequency_value as day_of_month
         , b.amount
+		, b.collapsed
         FROM vnd_bills b
         WHERE 1 
         AND b.vnd_frequency = 'Once Per Month'

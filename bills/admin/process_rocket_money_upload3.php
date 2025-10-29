@@ -31,15 +31,65 @@ if (isset($_FILES['rocket_money_file']) && $_FILES['rocket_money_file']['error']
     // Generate unique filename with timestamp to avoid conflicts
     $timestamp = date('Y-m-d_H-i-s');
     $safeFileName = "rocket_money_expenses";
-    $newFileName = $safeFileName . '_' . $timestamp . '.' . $fileExtension;
+    $newFileName = $safeFileName . "." . $fileExtension;
     $destinationPath = $destinationDir . '/' . $newFileName;
     
     // Move uploaded file to destination
     if (move_uploaded_file($tempPath, $destinationPath)) {
 
-        $_SESSION['rocket_money_uploaded_file'] = $destinationPath;
+        execQuery("TRUNCATE ae_rocket_money_item");
 
-        header("Location: audit_expenses_v3.php?Message=" . urlencode("File uploaded successfully: " . $newFileName) . "&file=" . urlencode($newFileName));
+        $keys = [];
+        $i = 0;
+        $fh = fopen($destinationPath, 'r');;
+        while ($row = fgetcsv($fh)) {
+
+            if ($i == 0) {
+                $keys = $row;
+                $i++;
+                continue;
+            }
+
+            $allowedKeys = [
+                "Date",
+                "Original_Date",
+                "Account_Type",
+                "Account_Name",
+                "Account_Number",
+                "Institution_Name",
+                "Name",
+                "Custom_Name",
+                "Amount",
+                "Description",
+                "Category",
+                "Note",
+                "Ignored_From",
+                "Tax_Deductible",
+            ];
+
+            $eachItem = [];
+            foreach ($row as $index => $value) {
+                $field = trim($keys[$index]);
+                $field = str_replace(" ", "_", $field);
+                if (!in_array($field, $allowedKeys)) {
+                    continue;
+                }
+                $eachItem[$field] = $value;
+            }
+
+            $sql = "INSERT INTO ae_rocket_money_item (";
+            $sql .= implode(", ", array_keys($eachItem));
+            $sql .= ") VALUES (";
+            $placeholders = array_fill(0, count($eachItem), '?');
+            $sql .= implode(", ", $placeholders);
+            $sql .= ")";
+            execQuery($sql, array_values($eachItem));
+
+            $i++;
+        }
+        fclose($fh);
+
+        header("Location: audit_expenses_v3.php?Message=" . urlencode("File uploaded successfully: " . $newFileName));
         exit;
     } else {
         header("Location: audit_expenses_v3.php?error=" . urlencode("Failed to save uploaded file."));

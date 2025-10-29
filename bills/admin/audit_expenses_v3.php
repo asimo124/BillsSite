@@ -14,18 +14,8 @@ if ($uploadedFilePath) {
 
 ?>
 <!DOCTYPE html>
-<                                <!-- Popover -->
-                                <div 
-                                    v-show="rocketMatchPopoverVisible && rocketMatchHoveredIndex === index"
-                                    class="absolute z-50 bg-gray-800 text-white text-sm rounded-lg py-2 px-3 max-w-xs shadow-lg -top-12 left-0 sm:-top-2 sm:left-full sm:ml-2"
-                                    style="white-space: normal; word-wrap: break-word;"
-                                >
-                                    {{ item.LongName || 'No detailed name available' }}
-                                    <!-- Arrow pointing down on mobile, left on desktop -->
-                                    <div class="absolute top-full left-4 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800 sm:hidden"></div>
-                                    <div class="hidden sm:block absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-gray-800"></div>
-                                </div>d>
-    <title>Income Purchases</title>
+<html lang="en">
+    <title>Audit Expenses V3</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -53,7 +43,7 @@ if ($uploadedFilePath) {
         </div>
     <?php } ?>
     
-    <h2 class="text-2xl font-bold mb-4">Audit Expenses V2</h2>
+    <h2 class="text-2xl font-bold mb-4">Audit Expenses V3</h2>
 
     <div class="mb-3"></div>
 
@@ -347,22 +337,22 @@ if ($uploadedFilePath) {
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200"> 
                     <tr class="expenses_row transition-all duration-300" data-index="<?php echo $index; ?>" v-for="(item, index) in rocketMoneyData"
-                        :class="{ 'h-4 overflow-hidden': collapsedRocketItems[index], 'hover:bg-gray-50': !collapsedRocketItems[index] }">
+                        :class="{ 'h-4 overflow-hidden': item.Collapsed, 'hover:bg-gray-50': !item.Collapsed }">
                         <td class="px-6 text-sm text-gray-900 relative transition-all duration-300"
-                            :class="collapsedRocketItems[index] ? 'py-0' : 'py-4'">
+                            :class="item.Collapsed ? 'py-0' : 'py-4'">
                             <div class="flex items-center">
                                 <span 
                                     @click="toggleRocketMatchPopover(index)" 
                                     @mouseenter="showRocketMatchPopover(index)" 
                                     @mouseleave="hideRocketMatchPopover()"
                                     class="cursor-help hover:text-blue-600 transition-colors popover-trigger"
-                                    :class="{ 'text-xs opacity-30': collapsedRocketItems[index] }"
+                                    :class="{ 'text-xs opacity-30': item.Collapsed }"
                                 >
                                     {{ item.Name }}: ${{item.Amount}}
                                 </span>
                                 <button @click="toggleRocketItemCollapse(index)"
                                         class="font-bold rounded-full text-xs flex items-center justify-center ml-2 transition-all duration-300"
-                                        :class="collapsedRocketItems[index] 
+                                        :class="item.Collapsed 
                                             ? 'bg-yellow-500 hover:bg-yellow-600 text-black w-3 h-3' 
                                             : 'bg-green-500 hover:bg-green-700 text-white w-4 h-4'">
                                     +
@@ -400,22 +390,22 @@ if ($uploadedFilePath) {
                             <td class="px-6 py-4 text-center text-gray-500 italic">No expenses app data available</td>
                         </tr>
                         <tr class="expenses_row transition-all duration-300" data-index="<?php echo $index; ?>" v-for="(item, index) in expensesAppData" v-else
-                            :class="{ 'h-4 overflow-hidden': collapsedExpensesItems[index], 'hover:bg-gray-50': !collapsedExpensesItems[index] }">
+                            :class="{ 'h-4 overflow-hidden': item.collapsed, 'hover:bg-gray-50': !item.collapsed }">
                             <td class="px-6 text-sm text-gray-900 relative transition-all duration-300"
-                                :class="collapsedExpensesItems[index] ? 'py-0' : 'py-4'">
+                                :class="item.collapsed ? 'py-0' : 'py-4'">
                                 <div class="flex items-center">
                                     <span 
                                         @click="toggleExpensesMatchPopover(index)"
                                         @mouseenter="showExpensesMatchPopover(index)" 
                                         @mouseleave="hideExpensesMatchPopover()"
                                         class="cursor-help hover:text-blue-600 transition-colors popover-trigger"
-                                        :class="{ 'text-xs opacity-30': collapsedExpensesItems[index] }"
+                                        :class="{ 'text-xs opacity-30': item.collapsed }"
                                     >
                                         {{ item.title }}: ${{ item.amount}}
                                     </span>
                                     <button @click="toggleExpensesItemCollapse(index)"
                                             class="font-bold rounded-full text-xs flex items-center justify-center ml-2 transition-all duration-300"
-                                            :class="collapsedExpensesItems[index] 
+                                            :class="item.collapsed 
                                                 ? 'bg-yellow-500 hover:bg-yellow-600 text-black w-3 h-3' 
                                                 : 'bg-green-500 hover:bg-green-700 text-white w-4 h-4'">
                                         +
@@ -424,7 +414,7 @@ if ($uploadedFilePath) {
                                 
                                 <!-- Popover -->
                                 <div 
-                                    v-show="expensesMatchPopoverVisible && expensesMatchHoveredIndex === index && !collapsedExpensesItems[index]"
+                                    v-show="expensesMatchPopoverVisible && expensesMatchHoveredIndex === index && !item.collapsed"
                                     class="absolute z-50 bg-gray-800 text-white text-sm rounded-lg py-2 px-3 max-w-xs shadow-lg -top-12 left-0 sm:-top-2 sm:left-full sm:ml-2"
                                     style="white-space: normal; word-wrap: break-word;"
                                 >
@@ -456,7 +446,6 @@ if ($uploadedFilePath) {
                 mobileBudgetOpen: false,
                 mobileChargesOpen: false,
                 mobileAdminOpen: false,
-                fileExists: <?= $uploadedFilePath ? 'true' : 'false'; ?>,
 
                 delimiter: '  ====>  ',
                 
@@ -503,12 +492,7 @@ if ($uploadedFilePath) {
             loadPage() {
                 console.log('Loading page data...');
                 this.loadExpensesAppData();
-                if (this.fileExists) {
-                    console.log('File exists, loading rocket money data...');
-                    this.loadRocketMoneyData();
-                } else {
-                    console.log('No file exists, skipping rocket money data load');
-                }
+                this.loadRocketMoneyData();
             },
             async loadExpensesAppData() {
                 try {   
@@ -594,14 +578,38 @@ if ($uploadedFilePath) {
             },
             toggleRocketItemCollapse(index) { 
                 // Collapse/expand methods
-                if (this.collapsedRocketItems[index]) {
-                    delete this.collapsedRocketItems[index];
+                if (this.rocketMoneyData[index].Collapsed) {
+                    this.rocketMoneyData[index].Collapsed = false;
                 } else {
+
                     this.rocketItem = this.rocketMoneyData[index];
                     this.rocketIndex = index;
 
-                    this.collapsedRocketItems[index] = true;
+                    this.rocketMoneyData[index].Collapsed = true;
+                    this.updateRocketItemCollapsed(index);
                 }
+            },
+            async updateRocketItemCollapsed(index) {
+                // Update collapse state in DB if needed
+                const item = this.rocketMoneyData[index];
+
+                collapsed = item.Collapsed ? 1 : 0;
+
+                const response = await fetch(`/api/updateRocketMoneyCollapsed.php?id=${item.id}&Collapsed=${collapsed}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: item.id,
+                        collapsed: item.Collapsed
+                    })
+                });
+
+                if (!response.ok) {
+                    console.error('Failed to update rocket item collapse state');
+                }
+
             },
             removeMatchedTitle(index) {
                 const matchedItem = this.matchedTitlesData[index];
@@ -610,7 +618,7 @@ if ($uploadedFilePath) {
                 for (i = 0; i < this.expensesAppData.length; i++) {
                     if (this.expensesAppData[i].title === matchedItem.expenses_app_title &&
                         this.expensesAppData[i].amount == matchedItem.expenses_app_amount) {
-                        delete this.collapsedExpensesItems[i];
+                        this.expensesAppData[i].collapsed = false;
                         break;
                     }
                 }
@@ -619,21 +627,21 @@ if ($uploadedFilePath) {
                     if (this.rocketMoneyData[i].Name === matchedItem.rocket_money_title &&
                         this.rocketMoneyData[i].Amount == matchedItem.rocket_money_amount) {
                         foundIndex = i;
-                        delete this.collapsedRocketItems[i];
+                        this.rocketMoneyData[i].Collapsed = false;
                         break;
                     }
                 }
 
                 for (i = 0; i < foundIndex; i++) {
-                    delete this.collapsedRocketItems[i];
+                    this.rocketMoneyData[i].Collapsed = false;
                 }
 
                 this.matchedTitlesData.splice(index, 1);
             },
             toggleExpensesItemCollapse(index) {
                 
-                if (this.collapsedExpensesItems[index]) {
-                    delete this.collapsedExpensesItems[index];
+                if (this.expensesAppData[index].collapsed) {
+                    this.expensesAppData[index].collapsed = false;
                 } else {
                     if (!this.rocketItem) {
                         alert('Please select a Rocket Money title first.');
@@ -642,6 +650,8 @@ if ($uploadedFilePath) {
 
                     this.expensesTitle = this.expensesAppData[index].title + ': $' + this.expensesAppData[index].amount;
                     this.matchedTitlesData.push({
+                        rocket_money_id: this.rocketItem['id'],
+                        expenses_app_id: this.expensesAppData[index]['vnd_id'],
                         rocket_money_title: this.rocketItem.Name,
                         rocket_money_amount: this.rocketItem.Amount,
                         rocket_money_date: this.rocketItem.Date,
@@ -655,12 +665,49 @@ if ($uploadedFilePath) {
                     });
 
                     for (i = 0; i < this.rocketIndex; i++) {
-                        this.collapsedRocketItems[i] = true;
+                        this.rocketMoneyData[i].Collapsed = true;
                     }
                     this.rocketItem = null;
                     this.rocketIndex = -1;
-                    this.collapsedExpensesItems[index] = true;
+                    this.expensesAppData[index].collapsed = true;
+
+                    this.updateExpensesItemCollapsed(index);
+                    this.insertTitleMatch(this.matchedTitlesData[this.matchedTitlesData.length - 1]);
                 }
+            },
+            async insertTitleMatch(matchedItem) {
+                try {
+                    const response = await axios.get('/api/insertTitleMatch.php', { params: matchedItem });
+                    if (response.data && response.data.success) {
+                        console.log('Title match inserted successfully:', response.data);
+                    } else {
+                        console.error('Failed to insert title match:', response.data);
+                    }
+                } catch (error) {
+                    console.error('Error inserting title match:', error);
+                }
+            },
+            async updateExpensesItemCollapsed(index) {
+                // Update collapse state in DB if needed
+                const item = this.expensesAppData[index];
+
+                const collapsed = item.collapsed ? 1 : 0;
+
+                const response = await fetch(`/api/updateExpensesAppCollapsed.php?vnd_id=${item.vnd_id}&collapsed=${collapsed}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: item.id,
+                        collapsed: item.Collapsed
+                    })
+                });
+
+                if (!response.ok) {
+                    console.error('Failed to update rocket item collapse state');
+                }
+
             },
         }
     }).mount('#app');

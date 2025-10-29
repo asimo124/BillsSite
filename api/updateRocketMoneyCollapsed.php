@@ -8,21 +8,18 @@ include "../inc/BillDateHelper.php";
 
 //ini_set("display_errors", 1);
 
-$sql = "SELECT * FROM ae_rocket_money_item ORDER BY Name";
-$results = getQuery($sql);
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$collapsed = isset($_REQUEST['Collapsed']) ? intval($_REQUEST['Collapsed']) : 0;
 
-foreach ($results as &$item) {
-    $item['Date'] = intval(date("d", strtotime($item['Date'])));
-    $name = $item['Name'];
-    $item['Name'] = substr($name, 0, 14);
-    $item['MediumName'] = substr($name, 0, 18);
-    $item['LongName'] = $name;
+if ($id > 0) {
+    $sql = "UPDATE ae_rocket_money_item SET Collapsed = $collapsed WHERE id = $id";
+    $result = execQuery($sql);
 }
 
 header("Content-type: application/json");
 header('Access-Control-Allow-Origin: *');
 echo json_encode([
-    'items' => $results
+    'success' => true
 ], JSON_PRETTY_PRINT);
 die();
 ?>

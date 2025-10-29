@@ -94,7 +94,7 @@ if ($resetDb) {
     (:pay_period, :pay_period_date) ";
     $stmt_insert_bills = $db_conn3->prepare($sql);
 
-    $sql = "SELECT * FROM ip_pay_period ORDER BY vnd_id ";
+    $sql = "SELECT * FROM ip_pay_period ORDER BY id ";
     $results = getQuery1($sql);
     foreach ($results as $getItem) {
 
@@ -116,7 +116,7 @@ if ($resetDb) {
     (:pay_period_id, :disposable_amount, :remaining_amount) ";
     $stmt_insert_bills = $db_conn3->prepare($sql);
 
-    $sql = "SELECT * FROM ip_pay_period_item ORDER BY vnd_id ";
+    $sql = "SELECT * FROM ip_pay_period_item ORDER BY id ";
     $results = getQuery1($sql);
     foreach ($results as $getItem) {
 
@@ -139,7 +139,7 @@ if ($resetDb) {
     (:pay_period_item_id, :title, :description, :cost, :amount_to_save, :moved) ";
     $stmt_insert_bills = $db_conn3->prepare($sql);
 
-    $sql = "SELECT * FROM ip_upcoming_purchase ORDER BY vnd_id ";
+    $sql = "SELECT * FROM ip_upcoming_purchase ORDER BY id ";
     $results = getQuery1($sql);
     foreach ($results as $getItem) {
 
