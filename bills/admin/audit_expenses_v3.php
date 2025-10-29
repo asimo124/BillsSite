@@ -48,7 +48,7 @@ if ($uploadedFilePath) {
         </div>
     <?php } ?>
     
-    <h2 class="text-2xl font-bold mb-4">Audit Expenses V3 - Vue Test: {{ mobileMenuOpen ? 'Working!' : 'Working!' }}</h2>
+    <h2 class="text-2xl font-bold mb-4">Audit Expenses</h2>
 
     <div class="mb-3"></div>
 
@@ -82,6 +82,9 @@ if ($uploadedFilePath) {
                                     <a href="/bills/admin/budget_progress2.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Budget Progress</a>
                                     <a href="/bills/admin/budget_track.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Track Progress</a>
                                     <a href="/bills/admin/income_purchases.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Income Purchases</a>
+                                    <a href="/bills/admin/queue_date_job.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Queue Date Job</a>
+                                    <a href="/bills/admin/audit_expenses_v3.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Audit Expenses</a>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -96,8 +99,6 @@ if ($uploadedFilePath) {
                             </button>
                             <div v-show="adminDropdown" class="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                                 <div class="py-1">
-                                    <a href="/bills/admin/queue_date_job.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Queue Date Job</a>
-                                    <a href="/bills/admin/audit_expenses_v2.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Audit Expenses V2</a>
                                     <a href="/bills/admin/weight_ratio.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Weight Ratio</a>
                                     <a href="/bills/admin/pending_transactions.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Pending Transactions</a>
                                     <a href="/bills/admin/debt_progress.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Debt Progress</a>
@@ -143,6 +144,9 @@ if ($uploadedFilePath) {
                         <a href="/bills/admin/budget_progress2.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Budget Progress</a>
                         <a href="/bills/admin/budget_track.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Track Progress</a>
                         <a href="/bills/admin/income_purchases.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Income Purchases</a>
+                        <a href="/bills/admin/queue_date_job.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Queue Date Job</a>
+                        <a href="/bills/admin/audit_expenses_v3.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Audit Expenses</a>
+                        
                     </div>
                 </div>
                 
@@ -155,8 +159,6 @@ if ($uploadedFilePath) {
                         </svg>
                     </button>
                     <div v-show="mobileAdminOpen" class="pl-6 space-y-1">
-                        <a href="/bills/admin/queue_date_job.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Queue Date Job</a>
-                        <a href="/bills/admin/audit_expenses_v2.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Audit Expenses V2</a>
                         <a href="/bills/admin/weight_ratio.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Weight Ratio</a>
                         <a href="/bills/admin/last_time_i.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Last Time I</a>
                         <a href="/bills/admin/pending_transactions.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Pending Transactions</a>
