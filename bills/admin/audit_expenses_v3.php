@@ -295,10 +295,10 @@ if ($uploadedFilePath) {
     </div>
 
     <!-- Matched Titles Table -->
-    <div class="grid grid-cols-1 gap-6 mb-6" v-if="matchedTitlesData && matchedTitlesData.length > 0">
+    <div class="grid grid-cols-1 gap-6 mb-6">
         <div>
-            <label for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Matched Titles</label>
-            <div class="overflow-x-auto overflow-y-auto max-h-[300px] shadow-sm rounded-lg">
+            <label id="matched-titles-label" for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Matched Titles</label>
+            <div class="overflow-x-auto overflow-y-auto max-h-[300px] shadow-sm rounded-lg" v-if="matchedTitlesData && matchedTitlesData.length > 0">
                 <table class="min-w-full divide-y divide-gray-200 bg-white">
                     <thead class="bg-gray-50">
                         <tr>
@@ -308,8 +308,8 @@ if ($uploadedFilePath) {
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200"> 
                         <tr class="expenses_row hover:bg-gray-50" v-for="(item, index) in matchedTitlesData" >
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.rocket_money_title }}: ${{ item.rocket_money_amount }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.expenses_app_title }}: ${{ item.expenses_app_amount }}
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.rocket_money_title.substring(0, 14) }}: ${{ item.rocket_money_amount }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.expenses_app_title.substring(0, 14) }}: ${{ item.expenses_app_amount }}
                                 <button 
                                     class="bg-red-500 hover:bg-red-700 text-white font-bold w-4 h-4 rounded-full text-xs flex items-center justify-center ml-2" 
                                     @click="removeMatchedTitle(index)">
@@ -483,6 +483,14 @@ if ($uploadedFilePath) {
             
             // Add click outside handler for mobile popover closing
             document.addEventListener('click', this.handleClickOutside);
+            
+            // Scroll to Matched Titles section after page loads
+            setTimeout(() => {
+                const element = document.getElementById('matched-titles-label');
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 2000);
         },
         
         beforeUnmount() {
@@ -493,6 +501,7 @@ if ($uploadedFilePath) {
                 console.log('Loading page data...');
                 this.loadExpensesAppData();
                 this.loadRocketMoneyData();
+                this.loadTitleMatches();
             },
             async loadExpensesAppData() {
                 try {   
@@ -586,23 +595,27 @@ if ($uploadedFilePath) {
                     this.rocketIndex = index;
 
                     this.rocketMoneyData[index].Collapsed = true;
-                    this.updateRocketItemCollapsed(index);
+                    
                 }
             },
-            async updateRocketItemCollapsed(index) {
-                // Update collapse state in DB if needed
-                const item = this.rocketMoneyData[index];
+            async updateRocketItemCollapsed() {
+                // Update collapse state in DB if needed   
+                
+                const collapsed = this.rocketItem.Collapsed ? 1 : 0;
 
-                collapsed = item.Collapsed ? 1 : 0;
+                const ids_list = [];
+                for (i = 0; i < this.rocketIndex + 1; i++) {
+                    ids_list.push(this.rocketMoneyData[i].id);
+                }
 
-                const response = await fetch(`/api/updateRocketMoneyCollapsed.php?id=${item.id}&Collapsed=${collapsed}`, {
+                const response = await fetch(`/api/updateRocketMoneyCollapsed.php`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        id: item.id,
-                        collapsed: item.Collapsed
+                        ids_list: ids_list,
+                        collapsed: collapsed
                     })
                 });
 
@@ -643,6 +656,7 @@ if ($uploadedFilePath) {
                 if (this.expensesAppData[index].collapsed) {
                     this.expensesAppData[index].collapsed = false;
                 } else {
+
                     if (!this.rocketItem) {
                         alert('Please select a Rocket Money title first.');
                         return;
@@ -667,13 +681,17 @@ if ($uploadedFilePath) {
                     for (i = 0; i < this.rocketIndex; i++) {
                         this.rocketMoneyData[i].Collapsed = true;
                     }
-                    this.rocketItem = null;
-                    this.rocketIndex = -1;
+                    
                     this.expensesAppData[index].collapsed = true;
 
-                    this.updateExpensesItemCollapsed(index);
+                    
                     this.insertTitleMatch(this.matchedTitlesData[this.matchedTitlesData.length - 1]);
                 }
+                this.updateExpensesItemCollapsed(index);
+                this.updateRocketItemCollapsed();
+
+                this.rocketItem = null;
+                this.rocketIndex = -1;
             },
             async insertTitleMatch(matchedItem) {
                 try {
@@ -685,6 +703,18 @@ if ($uploadedFilePath) {
                     }
                 } catch (error) {
                     console.error('Error inserting title match:', error);
+                }
+            },
+            async loadTitleMatches() {
+                console.log('aaa');
+                try {
+                    const response = await axios.get('/api/loadTitleMatches.php');
+                    if (response.data && response.data.items) {
+                        console.log('Loaded title matches:', response.data);
+                        this.matchedTitlesData = response.data.items;
+                    }
+                } catch (error) {
+                    console.error('Error loading title matches:', error);
                 }
             },
             async updateExpensesItemCollapsed(index) {
