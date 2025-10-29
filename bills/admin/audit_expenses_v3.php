@@ -446,24 +446,30 @@ if ($uploadedFilePath) {
             </button>
             <h3 class="text-xl font-bold mb-4">Budget Discrepancies</h3>
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 bg-white">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expected</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actual</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Difference</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-for="(item, index) in testDiscrepanciesData" :key="index">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.expected }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.actual }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.difference }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="overflow-y-auto max-h-[calc(100vh-200px)]">
+                    <table class="min-w-full divide-y divide-gray-200 bg-white">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rocket Money Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rocket Money Amount</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rocket Money Day</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expenses App Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expenses App Amount</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expenses App Day</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr v-for="(item, index) in budgetDiscrepancies" :key="index" :class="{'bg-red-100': item.is_discrepancy}">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.rocket_money_title }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ item.rocket_money_amount }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.rocket_money_date }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.expenses_app_title }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ item.expenses_app_amount }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.expenses_app_date }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <button @click="closeExpenseDiscrepanciesModal" class="mt-6 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
                 Close
@@ -539,6 +545,7 @@ if ($uploadedFilePath) {
                     
                     // Modal state
                     expenseDiscrepanciesModalVisible: false,
+                    budgetDiscrepancies: [],
                     testDiscrepanciesData: [
                         { name: 'Netflix Subscription', expected: 15.99, actual: 17.99, difference: -2.00 },
                         { name: 'Grocery Store', expected: 120.00, actual: 115.50, difference: 4.50 },
@@ -796,6 +803,18 @@ if ($uploadedFilePath) {
                         console.error('Error loading title matches:', error);
                     }
                 },
+                async loadBudgetDiscrepancies() {
+                    console.log('aaa');
+                    try {
+                        const response = await axios.get('/api/loadBudgetDiscrepancies.php');
+                        if (response.data && response.data.items) {
+                            console.log('Loaded Budget Discrepancies:', response.data.items);
+                            this.budgetDiscrepancies = response.data.items;
+                        }
+                    } catch (error) {
+                        console.error('Error loading title matches:', error);
+                    }
+                },
                 async updateExpensesItemCollapsed(index) {
                     // Update collapse state in DB if needed
                     const item = this.expensesAppData[index];
@@ -823,6 +842,7 @@ if ($uploadedFilePath) {
                 openExpenseDiscrepanciesModal() {
                     console.log('Opening expense discrepancies modal');
                     this.expenseDiscrepanciesModalVisible = true;
+                    this.loadBudgetDiscrepancies();
                 },
                 
                 closeExpenseDiscrepanciesModal() {

@@ -38,6 +38,9 @@ if (isset($_FILES['rocket_money_file']) && $_FILES['rocket_money_file']['error']
     if (move_uploaded_file($tempPath, $destinationPath)) {
 
         execQuery("TRUNCATE ae_rocket_money_item");
+        execQuery("TRUNCATE ae_title_match");
+        execQuery("UPDATE vnd_bills SET collapsed = 0");
+        execQuery("UPDATE ae_rocket_money_item SET collapsed = 0");
 
         $keys = [];
         $i = 0;
