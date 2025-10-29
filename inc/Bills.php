@@ -159,12 +159,40 @@ class Bills {
         , b.vnd_frequency_value as day_of_month
         , b.amount
 		, b.collapsed
+		, b.index
         FROM vnd_bills b
         WHERE 1 
         AND b.vnd_frequency = 'Once Per Month'
         AND b.vnd_frequency_type = 'Day of Month'
         AND IFNULL(vnd_frequency_value, '') <> ''
-        ORDER BY b.vnd_frequency_value ASC ";
+        ORDER BY b.vnd_bill ASC ";
+
+		$results = getQuery($sql);
+
+		$sql = "UPDATE vnd_bills SET `index` = :index WHERE vnd_id = :id";
+		$stmt_update_bill = $db_conn->prepare($sql);
+
+		foreach ($results as $index => $item) {
+			$id = $item['vnd_id'];
+			
+			$stmt_update_bill->execute([
+				'index' => $index, 
+				'id' => $id
+			]);
+		}
+
+		$sql = "SELECT b.vnd_id 
+        , b.vnd_bill as title 
+        , b.vnd_frequency_value as day_of_month
+        , b.amount
+		, b.collapsed
+		, b.index
+        FROM vnd_bills b
+        WHERE 1 
+        AND b.vnd_frequency = 'Once Per Month'
+        AND b.vnd_frequency_type = 'Day of Month'
+        AND IFNULL(vnd_frequency_value, '') <> ''
+        ORDER BY b.vnd_bill ASC ";
 
 		$results = getQuery($sql);
 
@@ -177,9 +205,6 @@ class Bills {
 			$results[$index]['title'] = $shortName;
 			$results[$index]['long_title'] = $longName;
 		}
-
-		$titles = array_column($results, 'title');
-		array_multisort($titles, SORT_ASC, SORT_FLAG_CASE | SORT_NATURAL, $results);
 
 		return $results;
 	}

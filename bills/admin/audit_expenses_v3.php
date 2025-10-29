@@ -625,29 +625,29 @@ if ($uploadedFilePath) {
 
             },
             removeMatchedTitle(index) {
-                const matchedItem = this.matchedTitlesData[index];
-                console.log('Removing matched title:', matchedItem);
+                // const matchedItem = this.matchedTitlesData[index];
+                // console.log('Removing matched title:', matchedItem);
 
-                for (i = 0; i < this.expensesAppData.length; i++) {
-                    if (this.expensesAppData[i].title === matchedItem.expenses_app_title &&
-                        this.expensesAppData[i].amount == matchedItem.expenses_app_amount) {
-                        this.expensesAppData[i].collapsed = false;
-                        break;
-                    }
-                }
-                let foundIndex = -1;
-                for (i = 0; i < this.rocketMoneyData.length; i++) {
-                    if (this.rocketMoneyData[i].Name === matchedItem.rocket_money_title &&
-                        this.rocketMoneyData[i].Amount == matchedItem.rocket_money_amount) {
-                        foundIndex = i;
-                        this.rocketMoneyData[i].Collapsed = false;
-                        break;
-                    }
-                }
+                // for (i = 0; i < this.expensesAppData.length; i++) {
+                //     if (this.expensesAppData[i].title === matchedItem.expenses_app_title &&
+                //         this.expensesAppData[i].amount == matchedItem.expenses_app_amount) {
+                //         this.expensesAppData[i].collapsed = false;
+                //         break;
+                //     }
+                // }
+                // let foundIndex = -1;
+                // for (i = 0; i < this.rocketMoneyData.length; i++) {
+                //     if (this.rocketMoneyData[i].Name === matchedItem.rocket_money_title &&
+                //         this.rocketMoneyData[i].Amount == matchedItem.rocket_money_amount) {
+                //         foundIndex = i;
+                //         this.rocketMoneyData[i].Collapsed = false;
+                //         break;
+                //     }
+                // }
 
-                for (i = 0; i < foundIndex; i++) {
-                    this.rocketMoneyData[i].Collapsed = false;
-                }
+                // for (i = 0; i < foundIndex; i++) {
+                //     this.rocketMoneyData[i].Collapsed = false;
+                // }
 
                 this.matchedTitlesData.splice(index, 1);
             },
@@ -664,6 +664,7 @@ if ($uploadedFilePath) {
 
                     this.expensesTitle = this.expensesAppData[index].title + ': $' + this.expensesAppData[index].amount;
                     this.matchedTitlesData.push({
+                        rocket_money_index: this.rocketItem.Index,
                         rocket_money_id: this.rocketItem['id'],
                         expenses_app_id: this.expensesAppData[index]['vnd_id'],
                         rocket_money_title: this.rocketItem.Name,
@@ -671,6 +672,7 @@ if ($uploadedFilePath) {
                         rocket_money_date: this.rocketItem.Date,
                         rocket_money_medium_title: this.rocketItem.MediumName,
                         rocket_money_long_title: this.rocketItem.LongName,
+                        expenses_app_index: this.expensesAppData[index].index,
                         expenses_app_title: this.expensesAppData[index].title,
                         expenses_app_amount: this.expensesAppData[index].amount,
                         expenses_app_date: this.expensesAppData[index].day_of_month,
