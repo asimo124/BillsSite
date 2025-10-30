@@ -31,8 +31,8 @@ $expenses_app_amount = $expensesAppItem['amount'];
 $expenses_app_date = $expensesAppItem['vnd_frequency_value'];
 $expenses_app_index = $expensesAppItem['index'];
 
-$rocket_money_short_title = substr($rocket_money_title, 0, 14);
-$expenses_app_short_title = substr($expenses_app_title, 0, 14);
+$rocket_money_short_title = substr($rocket_money_title, 0, $_SESSION['ae_max_chars']);
+$expenses_app_short_title = substr($expenses_app_title, 0, $_SESSION['ae_max_chars']);
 
 $sql = "INSERT INTO ae_title_match 
         (rocket_money_id, rocket_money_title, rocket_money_short_title, rocket_money_amount, rocket_money_date, 

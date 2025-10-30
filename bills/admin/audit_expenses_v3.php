@@ -12,6 +12,8 @@ if ($uploadedFilePath) {
     $uploadedFilePath = dirname(__FILE__) . '/../../data/audit_v2/' . $uploadedFilePath;
 }
 
+$_SESSION['ae_max_chars'] = 33;
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -315,8 +317,8 @@ if ($uploadedFilePath) {
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200"> 
                         <tr class="expenses_row hover:bg-gray-50" v-for="(item, index) in matchedTitlesData" >
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.rocket_money_title.substring(0, 14) }}: ${{ item.rocket_money_amount }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.expenses_app_title.substring(0, 14) }}: ${{ item.expenses_app_amount }}
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.rocket_money_title.substring(0, '<?php echo $_SESSION['ae_max_chars']; ?>') }}: ${{ item.rocket_money_amount }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.expenses_app_title.substring(0, '<?php echo $_SESSION['ae_max_chars']; ?>') }}: ${{ item.expenses_app_amount }}
                                 <button 
                                     class="bg-red-500 hover:bg-red-700 text-white font-bold w-4 h-4 rounded-full text-xs flex items-center justify-center ml-2" 
                                     @click="removeMatchedTitle(index)">

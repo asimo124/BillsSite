@@ -29,7 +29,7 @@ $results = getQuery($sql);
 foreach ($results as &$item) {
     $item['Date'] = intval(date("d", strtotime($item['Date'])));
     $name = $item['Name'];
-    $item['Name'] = substr($name, 0, 14);
+    $item['Name'] = substr($name, 0, $_SESSION['ae_max_chars']);
     $item['MediumName'] = substr($name, 0, 18);
     $item['LongName'] = $name;
 }
