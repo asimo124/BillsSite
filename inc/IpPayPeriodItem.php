@@ -35,7 +35,7 @@ class IpPayPeriodItem {
                 INNER JOIN ip_pay_period pp 
                     ON ppi.pay_period_id = pp.id 
                 LEFT JOIN ip_upcoming_purchase up 
-                    oN pp.id = up.pay_period_item_id
+                    oN ppi.id = up.pay_period_item_id
                     AND up.moved = 0
                 WHERE 1 
                 ORDER BY pp.pay_period_date, ppi.id, up.id ";

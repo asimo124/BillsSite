@@ -1,4 +1,6 @@
 <?php
+ini_set('session.gc_maxlifetime', 31536000);
+ini_set('session.cookie_lifetime', 31536000);
 session_start();
 date_default_timezone_set("America/Chicago");
 

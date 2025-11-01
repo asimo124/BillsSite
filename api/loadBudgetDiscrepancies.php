@@ -24,7 +24,7 @@ $maxChars = 21;
 
 foreach ($results as &$item) {
     $item['rocket_money_title'] = substr($item['rocket_money_title'], 0, $maxChars);
-    $item['expenses_app_title'] = substr($item['rocket_money_title'], 0, $maxChars);
+    $item['expenses_app_title'] = substr($item['expenses_app_title'], 0, $maxChars);
     $item['rocket_money_amount'] = number_format($item['rocket_money_amount'], 2);
     $item['expenses_app_amount'] = number_format($item['expenses_app_amount'], 2);
     $rocketMoneyAmount = $item['rocket_money_amount'];

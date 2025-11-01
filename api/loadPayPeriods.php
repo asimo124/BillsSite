@@ -85,11 +85,11 @@ $startYear = intval(date("Y", strtotime($start_pay_period)));
 $ipPayPeriod = new IpPayPeriod();
 $ipPayPeriod->updatePayPeriods();
 
-$sql = "TRUNCATE TABLE ip_pay_period_item";
-execQuery($sql);
+// $sql = "TRUNCATE TABLE ip_pay_period_item";
+// execQuery($sql);
 
-$sql = "TRUNCATE TABLE ip_upcoming_purchase";
-execQuery($sql);
+// $sql = "TRUNCATE TABLE ip_upcoming_purchase";
+// execQuery($sql);
 
 $resultsArr = [];
 while (true) {
