@@ -795,16 +795,17 @@
                         >
                           <div class="mb-1">
                             <span
-                              v-if="day.Month"
+                              v-if="day.Month && day.showAsDay"
                               class="month-name text-muted small"
                               >{{ day.Month }} -
                             </span>
-                            <span class="fw-bold grey-text">{{ abbreviateDayOfWeek(day.Day) }}</span>
+                            <span class="fw-bold grey-text" v-if="day.showAsDay">{{ abbreviateDayOfWeek(day.Day) }}</span>
                           </div>
                           <div
                             v-for="expense in day.desc"
                             :key="expense.id"
                             class="mt-1"
+                            v-if="day.showAsDay"
                           >
                             <span
                               class="badge cal-day-item d-block mb-1"
@@ -892,7 +893,7 @@
     <script>
       const { createApp } = Vue;
 
-      createApp({
+      vueApp = createApp({
         data() {
           return {
             appName: "When Did I Last?",
@@ -909,6 +910,7 @@
             itemsList: [],
             billsDays: [],
             searchItemsUsedList: [],
+            mode: '',
           };
         },
         methods: {
@@ -930,15 +932,19 @@
 
           // Convert date to YYYY-MM-DD format for HTML date input
           formatDateForInput(dateString) {
-            try {
-              const date = new Date(dateString);
-              if (isNaN(date.getTime())) {
+            if (dateString) { 
+              try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) {
+                  return new Date().toISOString().split("T")[0];
+                }
+                return date.toISOString().split("T")[0];
+              } catch (err) {
+                console.error("Error formatting date:", err);
                 return new Date().toISOString().split("T")[0];
               }
-              return date.toISOString().split("T")[0];
-            } catch (err) {
-              console.error("Error formatting date:", err);
-              return new Date().toISOString().split("T")[0];
+            } else {
+              return "";
             }
           },
 
@@ -985,8 +991,10 @@
             // Check if any of the billsDays match this element
             for (let week of this.billsDays) {
               for (let day of week.days) {
-                if (this.formatDateForInput(day.Date) === todayString) {
+                if (day.Date && this.formatDateForInput(day.Date) !== "" && this.formatDateForInput(day.Date) === todayString) {
                   return todayString;
+                } else {
+                  return "";
                 }
               }
             }
@@ -1011,6 +1019,10 @@
                 this.billsDays = data.results; // Update the calendar data
               }
               console.log("Items used loaded successfully");
+
+              if (this.mode === 'portrait') {
+                this.goToPortrait();
+              }
               
               // Scroll to today if requested
               if (scrollToToday) {
@@ -1191,14 +1203,92 @@
               this.searchItemsUsedList = [];
             }
           },
+          goToPortrait() {
+
+            let t = 0;
+            let i = 0;
+            let s = 0;
+            this.billsDays.forEach(week => {
+              
+              let p = 0;
+              week.days.forEach(day => {
+                
+                if (i > 6) {
+                  const item = {
+                    Date: "",
+                    Day: "",
+                    Month: "",
+                    Timestamp: 0,
+                    desc: [],
+                    showAsDay: false,
+                    weekDayNum: "",
+                  };
+                  
+                  this.billsDays[s].days.splice(p, 0, item);
+                  i = 0;
+                }
+
+                i++;
+                p++;
+                t++;
+              });
+              s++;
+            });
+            
+
+          },
+          goToLandscape() {
+            let t = 0;
+            let s = 0;
+            this.billsDays.forEach(week => {
+              
+              let p = 0;
+              week.days.forEach(day => {
+                
+                if (day.showAsDay === false) {
+                  this.billsDays[s].days.splice(p, 1);
+                }
+
+                p++;
+                t++;
+              });
+              s++;
+            });
+          },
         },
         async mounted() {
           console.log("Vue app mounted successfully!");
           // Load initial data
           await this.loadItems(); // Load items for dropdown
           await this.loadItemsUsed(0, true); // Load initial calendar data and scroll to today
+         
         },
       }).mount("#app");
+
+      window.vueApp = vueApp; 
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const vueApp = window.vueApp;
+      const handleOrientationChange = () => {
+          const isPortrait = window.matchMedia('(orientation: portrait)').matches;
+          if (window.vueApp) {
+            window.vueApp.mode = isPortrait ? 'portrait' : 'landscape'; // Set vueApp.mode
+          }
+          if (isPortrait) {
+              vueApp.goToPortrait();
+          } else {
+              vueApp.goToLandscape();
+          }
+      };
+
+      // Initial check
+      handleOrientationChange();
+
+      // Add event listener for orientation changes
+      window.matchMedia('(orientation: portrait)').addEventListener('change', handleOrientationChange);
+    });
     </script>
   </body>
 </html>
