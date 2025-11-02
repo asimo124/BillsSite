@@ -792,6 +792,15 @@
                           class="calendar-day-content"
                           :data-date="formatDateForInput(day.Date)"
                           @click="dayClicked(day.Date)"
+                          :style="{
+                              backgroundColor: mode === 'portrait' && day.showAsDay 
+                                  ? (['Sunday', 'Monday', 'Tuesday', 'Wednesday'].some(d => day.Day.startsWith(d)) 
+                                      ? '#FFE4B5' // Light orange
+                                      : (['Thursday', 'Friday', 'Saturday'].some(d => day.Day.startsWith(d)) 
+                                          ? '#FFFFE0' // Light yellow
+                                          : '')) 
+                                  : ''
+                          }"
                         >
                           <div class="mb-1">
                             <span
