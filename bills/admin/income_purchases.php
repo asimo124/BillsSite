@@ -232,7 +232,7 @@ createApp({
     },
     mounted() {
 
-        this.loadPayPeriodItems();
+        this.loadPayPeriods();
         this.loadUpcomingPayDates().then(() => {
             if (this.upcomingPayDates.length > 0) {
                 this.selectedPayDate = this.upcomingPayDates[8].value;
@@ -298,7 +298,7 @@ createApp({
                 if (response.data && response.data.success) {
                     console.log('Expenses synced successfully.');
                     this.main_error = '';
-                    this.loadPayPeriodItems();
+                    this.loadPayPeriods();
                 } else {
                     console.error('Error syncing expenses:', response.data.error);
                     this.main_error = response.data.error || 'Error syncing expenses.';
@@ -320,7 +320,7 @@ createApp({
                     this.main_msg = 'All jobs completed.';
                     this.main_error = '';
                     this.did_queue = false;
-                    this.loadPayPeriodItems();
+                    this.loadPayPeriods();
                 } else {
                     // Still running, check again after a delay
                     setTimeout(() => {
@@ -408,7 +408,7 @@ createApp({
                 const response = await axios.post(`/api/removeUpcomingPurchase.php?purchase_id=${purchaseId}`);
                 if (response.data && response.data.success) {
                     this.payPeriodItems[payPeriodIndex].upcoming_purchases.splice(purchaseIndex, 1);
-                    this.loadPayPeriodItems();
+                    this.loadPayPeriods();
                 } else {
                     console.error('Error removing purchase:', response.data.error);
                 }
@@ -426,7 +426,7 @@ createApp({
                     console.log('payPeriodItems before splice: ', this.payPeriodItems);
                     console.log('Removing expense at index:', expenseIndex, ' from payPeriodIndex:', payPeriodIndex);
                     this.payPeriodItems[payPeriodIndex].one_time_expenses.splice(expenseIndex, 1);
-                    this.loadPayPeriodItems();
+                    this.loadPayPeriods();
                 } else {
                     console.error('Error removing purchase:', response.data.error);
                 }
