@@ -46,10 +46,10 @@ $sql = "SELECT pp.id as pay_period_id
 $results = getQuery($sql);
 
 $query = "INSERT INTO vnd_bills 
-( vnd_user_id,  vnd_bill,  vnd_frequency_value,  amount,  vnd_is_auto,  
-     vnd_frequency,  vnd_frequency_type,  vnd_entrydate,  multiplier,  is_future,  upcoming_purchase_id,  pay_period_id) VALUES 
-(:vnd_user_id, :vnd_bill, :vnd_frequency_value, :amount, :vnd_is_auto, 
-    :vnd_frequency, :vnd_frequency_type, :vnd_entrydate, :multiplier, :is_future, :upcoming_purchase_id, :pay_period_id) ";
+    ( vnd_user_id,  vnd_bill,  vnd_frequency_value,  amount,  vnd_is_auto,  
+        vnd_frequency,  vnd_frequency_type,  vnd_entrydate,  multiplier,  is_future,  pay_period_id,  watch_flag) VALUES 
+    (:vnd_user_id, :vnd_bill, :vnd_frequency_value, :amount, :vnd_is_auto, 
+        :vnd_frequency, :vnd_frequency_type, :vnd_entrydate, :multiplier, :is_future, :pay_period_id, :watch_flag) ";
 $stmt_ins_expense = $db_conn->prepare($query);
 
 $sql = "SELECT vnd_id
@@ -70,9 +70,9 @@ foreach ($results as $index => $getItem) {
 
     $query = "INSERT INTO vnd_bills 
     ( vnd_user_id,  vnd_bill,  vnd_frequency_value,  amount,  vnd_is_auto,  
-        vnd_frequency,  vnd_frequency_type,  vnd_entrydate,  multiplier,  is_future,  pay_period_id) VALUES 
+        vnd_frequency,  vnd_frequency_type,  vnd_entrydate,  multiplier,  is_future,  pay_period_id,  watch_flag) VALUES 
     (:vnd_user_id, :vnd_bill, :vnd_frequency_value, :amount, :vnd_is_auto, 
-        :vnd_frequency, :vnd_frequency_type, :vnd_entrydate, :multiplier, :is_future, :pay_period_id) ";
+        :vnd_frequency, :vnd_frequency_type, :vnd_entrydate, :multiplier, :is_future, :pay_period_id, :watch_flag) ";
 
     $data = array();
     $data['vnd_user_id'] = 1;
@@ -86,6 +86,7 @@ foreach ($results as $index => $getItem) {
     $data['multiplier'] = 1;
     $data['is_future'] = 1;
     $data['pay_period_id'] = $getItem['pay_period_id'];
+    $data['watch_flag'] = 1;
 
     $stmt_ins_expense->execute($data);
 }

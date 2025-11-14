@@ -51,7 +51,7 @@ if (!isset($_SESSION['user'])) {
     <div class="row">
         <div class="col-xs-6" >
             <button class="btn btn-default" @click="loadPayPeriods">Reset</button>&nbsp;
-            <button class="btn btn-primary" @click="transferItems">Transfer</button>
+            <!-- <button class="btn btn-primary" @click="transferItems">Transfer</button> -->
         </div>
         <div class="col-xs-6" style="text-align: right;">
             <button class="btn btn-default" @click="syncExpenses">Sync</button>&nbsp;
@@ -65,23 +65,23 @@ if (!isset($_SESSION['user'])) {
             <input type="number" class="form-control" v-model="startingBalance" placeholder="Starting Balance" />
         </div>
         <div class="col-xs-6" style="text-align: right;">
-            
+            <input type="checkbox" value="1" v-model="test_mode"/>&nbsp; Test
         </div>
     </div>
     <div style="clear: both; height: 8px;"></div>
 
     
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-xs-12">
             <label >End Pay Period</label><br>
             <select v-model="selectedPayDate" class="form-control" style="width: 175px; display: inline-block;">
                 <option v-for="date in upcomingPayDates" :key="date.value" :value="date.value">{{ date.label }}</option>   
             </select>&nbsp; 
             <button class="btn btn-primary" @click="loadPayPeriods">Load Pay Periods</button>&nbsp;
-            <input type="checkbox" value="1" v-model="test_mode"/>&nbsp; Test
+            
         </div> 
     </div>
-    <div style="clear: both; height: 16px"></div>
+    <div style="clear: both; height: 16px"></div> -->
 
     <div class="row">
         <div class="col-xs-12">
