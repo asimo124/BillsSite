@@ -48,26 +48,25 @@ if (intval(date("d", strtotime($start_pay_period))) < 15) {
 }
 
 
-if ($end_pay_period == "") {
 
-    $day = intval(date('d', strtotime($date2)));
-    $month = intval(date('m', strtotime($date2)));
-    $year = intval(date('Y', strtotime($date2)));
+$day = intval(date('d', strtotime($date2)));
+$month = intval(date('m', strtotime($date2)));
+$year = intval(date('Y', strtotime($date2)));
 
-    if ($day < 15) {
-        $day = 15;
-    } else {
-        if ($month < 10) {
-            $month += 3;
-        } else {
-            $month = ($month + 3) % 12;
-            $year += 1;
-        }
-        $day = 1;
-    }
-
-    $end_pay_period = date('Y-m-d', strtotime("$year-$month-$day"));
+if ($day < 15) {
+    $day = 15;
+} else {
+    $day = 1;
 }
+if ($month < 10) {
+    $month += 4;
+} else {
+    $month = ($month + 4) - 12;
+    $year += 1;
+}
+
+
+$end_pay_period = date('Y-m-d', strtotime("$year-$month-$day"));
 
 $disposablePerDay          = isset($_REQUEST['disposable_per_day']) ? floatval($_REQUEST['disposable_per_day']) : 40;
 if ($disposablePerDay <= 0) {
@@ -119,8 +118,41 @@ while (true) {
     }
 }
 
+$resultItemsArr = [];
+foreach ($resultsArr as $getResult) {
+
+    $payDate = date("Y-m-d", strtotime($getResult['pay_date']));
+
+    $results = $getResult['results'];
+    $tempResultItem = $getResult;
+    unset($tempResultItem['results']);
+    $tempResultItem['results'] = $results;
+
+    $resultItemsArr[$payDate] = $tempResultItem;
+}
+
 $ipPayPeriodItem = new IpPayPeriodItem();
 $payPeriodResults = $ipPayPeriodItem->index();
+
+$payPeriodResultsArr = [];
+foreach ($payPeriodResults as $getPayPeriodResult) {
+
+    $payDate = $getPayPeriodResult['pay_period_date'];
+    $payPeriodResultsArr[$payDate] = $getPayPeriodResult;
+}
+
+foreach ($payPeriodResultsArr as $payDate => $getItem) {
+
+    $totalDisposable = $resultItemsArr[$payDate]['total_disposable'];
+    $payPeriodResultsArr[$payDate]['disposable_amount'] = $totalDisposable;
+
+    foreach ($getItem['upcoming_purchases'] as $getUpcomingPurchase) {
+        $totalDisposable -= $getUpcomingPurchase['amount_to_save'];
+    }
+    $payPeriodResultsArr[$payDate]['remaining_amount'] = $totalDisposable;
+}
+
+$payPeriodResults = array_values($payPeriodResultsArr);
 
 header("Content-type: application/json");
 header('Access-Control-Allow-Origin: *');
