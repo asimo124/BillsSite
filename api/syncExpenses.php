@@ -9,9 +9,7 @@ include "../inc/includes.php";
 
 $sql = "SELECT vnd_id
         FROM vnd_bills b
-        WHERE 1 
-        AND upcoming_purchase_id iS NOT NULL 
-        AND upcoming_purchase_id NOT IN (SELECT id FROM ip_upcoming_purchase WHERE moved = 1) ";
+        WHERE 1 ";
 
 $oldExpenses = getQuery($sql);
 
@@ -43,7 +41,6 @@ $sql = "SELECT pp.id as pay_period_id
         INNER JOIN ip_upcoming_purchase up 
             ON ppi.id = up.pay_period_item_id
         WHERE 1 
-        AND up.moved = 0
         ORDER BY pp.pay_period_date; ";
 
 $results = getQuery($sql);
@@ -61,62 +58,36 @@ $sql = "SELECT vnd_id
         AND upcoming_purchase_id = :upcoming_purchase_id ";
 $stmt_check_expense = $db_conn->prepare($sql);
 
-$sql = "UPDATE ip_upcoming_purchase SET moved = 1 WHERE id = :id ";
-$stmt_del_upcoming = $db_conn->prepare($sql);
-
 foreach ($results as $index => $getItem) { 
 
-    $sql = "SELECT vnd_id
-            FROM vnd_bills 
-            WHERE 1 
-            AND upcoming_purchase_id = :upcoming_purchase_id ";
-    
-    $stmt_check_expense->execute([
-        ':upcoming_purchase_id' => $getItem['upcoming_purchase_id']
-    ]);
-
-    $existingExpense = $stmt_check_expense->fetch(PDO::FETCH_ASSOC);
-
-    
-    if (!$existingExpense) {
-
-        $payPeriodDate = $getItem['pay_period_date'];
-        if (intval(date("d", strtotime($payPeriodDate))) < 15) {
-            $frequencyTypeValue = date("Y-m-14", strtotime($payPeriodDate));
-        } else {
-            $frequencyTypeValue = date("Y-m-27", strtotime($payPeriodDate));
-        }
-       
-
-        $query = "INSERT INTO vnd_bills 
-        ( vnd_user_id,  vnd_bill,  vnd_frequency_value,  amount,  vnd_is_auto,  
-            vnd_frequency,  vnd_frequency_type,  vnd_entrydate,  multiplier,  is_future,  upcoming_purchase_id,  pay_period_id) VALUES 
-        (:vnd_user_id, :vnd_bill, :vnd_frequency_value, :amount, :vnd_is_auto, 
-            :vnd_frequency, :vnd_frequency_type, :vnd_entrydate, :multiplier, :is_future, :upcoming_purchase_id, :pay_period_id) ";
-
-        $data = array();
-        $data['vnd_user_id'] = 1;
-        $data['vnd_bill'] = $getItem['upcoming_purchase'];
-        $data['vnd_frequency_value'] = $frequencyTypeValue;
-        $data['amount'] = $getItem['cost'];
-        $data['vnd_is_auto'] = 0;
-        $data['vnd_frequency'] = "Once";
-        $data['vnd_frequency_type'] = "Once";
-        $data['vnd_entrydate'] = date("Y-m-d H:i:s");
-        $data['multiplier'] = 1;
-        $data['is_future'] = 1;
-        $data['upcoming_purchase_id'] = $getItem['upcoming_purchase_id'];
-        $data['pay_period_id'] = $getItem['pay_period_id'];
-
-        $stmt_ins_expense->execute($data);
-
-        //*/
-        $sql = "UPDATE ip_upcoming_purchase SET moved = 1 WHERE id = :id ";
-        $stmt_del_upcoming->execute([
-            ':id' => $getItem['upcoming_purchase_id']
-        ]);
-        //*/
+    $payPeriodDate = $getItem['pay_period_date'];
+    if (intval(date("d", strtotime($payPeriodDate))) < 15) {
+        $frequencyTypeValue = date("Y-m-14", strtotime($payPeriodDate));
+    } else {
+        $frequencyTypeValue = date("Y-m-27", strtotime($payPeriodDate));
     }
+    
+
+    $query = "INSERT INTO vnd_bills 
+    ( vnd_user_id,  vnd_bill,  vnd_frequency_value,  amount,  vnd_is_auto,  
+        vnd_frequency,  vnd_frequency_type,  vnd_entrydate,  multiplier,  is_future,  pay_period_id) VALUES 
+    (:vnd_user_id, :vnd_bill, :vnd_frequency_value, :amount, :vnd_is_auto, 
+        :vnd_frequency, :vnd_frequency_type, :vnd_entrydate, :multiplier, :is_future, :pay_period_id) ";
+
+    $data = array();
+    $data['vnd_user_id'] = 1;
+    $data['vnd_bill'] = $getItem['upcoming_purchase'];
+    $data['vnd_frequency_value'] = $frequencyTypeValue;
+    $data['amount'] = $getItem['cost'];
+    $data['vnd_is_auto'] = 0;
+    $data['vnd_frequency'] = "Once";
+    $data['vnd_frequency_type'] = "Once";
+    $data['vnd_entrydate'] = date("Y-m-d H:i:s");
+    $data['multiplier'] = 1;
+    $data['is_future'] = 1;
+    $data['pay_period_id'] = $getItem['pay_period_id'];
+
+    $stmt_ins_expense->execute($data);
 }
 
 header("Content-type: application/json");

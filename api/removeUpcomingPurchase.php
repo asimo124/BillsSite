@@ -26,12 +26,6 @@ $query->execute([
     ':id' => $purchaseId,
 ]);
 
-$sql = "UPDATE vnd_bills SET upcoming_purchase_id = null WHERE upcoming_purchase_id = :id ";
-$query = $db_conn->prepare($sql);
-$query->execute([
-    ':id' => $purchaseId,
-]);
-
 header("Content-type: application/json");
 header('Access-Control-Allow-Origin: *');
 echo json_encode([
