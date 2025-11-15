@@ -282,7 +282,7 @@ createApp({
         async getExpenseDays() {
             const curBalance = parseFloat(this.initBalance) || 0;
             const payDateStr = this.payDate.toLocaleDateString();
-            
+
             try {
                 const response = await axios.get(`/api/loadBillDates2.php?user_id=1&pay_date=${payDateStr}&current_balance=${curBalance}&test_mode=${this.testMode ? 1 : 0}&includeWeekends=1&next_date=${this.nextDate}&prev_date=${this.prevDate}`);
                 
@@ -321,6 +321,10 @@ createApp({
                             }
                         });
                     });
+
+                    if (this.remove15Days) {
+                        this.daysCount = 15;
+                    }
                     
                     //this.countDaysAdd = response.data.count_days_add;
                     //this.daysCount += this.countDaysAdd;
