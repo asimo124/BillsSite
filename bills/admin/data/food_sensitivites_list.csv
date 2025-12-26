@@ -1,0 +1,27 @@
+﻿category_name,title,is_inflammation,value,percentage_towards_inflammation,index
+Miscellaneous,Yeast,1,1.53,76.5,2
+Dairy,Sheep's Milk,1,4.25,95.08,4.47
+Grains,Wheat Gluten,1,1.96,43.85,4.47
+Grains,Whole Wheat,1,1.78,39.82,4.47
+Fish/Seafood,Octopus,1,1.76,39.37,4.47
+Meat/Fowl,Egg White,1,4.64,103.8,4.47
+Nuts/Seeds,Brazil Nut,1,3.75,83.89,4.47
+Nuts/Seeds,Sesame Seed,1,1.59,35.57,4.47
+Herbs/Spices,Ginger,1,1.47,32.89,4.47
+Herbs/Spices,Miso,1,2.57,57.49,4.47
+Beans & Peas,Mung Bean,0,1.19,26.62,4.47
+Fruits,Jackfruit,0,1.08,24.16,4.47
+Fruits,Papaya,0,0.77,17.23,4.47
+Fruits,Pomegranate,0,1.19,26.62,4.47
+Grains,Giladin,0,1.19,26.62,4.47
+Fish/Seafood,Abalone,0,0.84,18.79,4.47
+Fish/Seafood,Oyster,0,1.09,24.38,4.47
+Vegetables,Seeweed Nori,0,1.16,25.95,4.47
+Vegetables,Seeweed Wakame,0,1.12,25.06,4.47
+Herbs/Spices,Black Pepper,0,1.46,32.66,4.47
+Herbs/Spices,Cinammon,0,1.19,26.62,4.47
+Herbs/Spices,Cumin,0,1.47,32.89,4.47
+Herbs/Spices,Dill,0,0.97,21.7,4.47
+Herbs/Spices,Tumeric,0,0.9,20.13,4.47
+Miscellaneous,Meat Glue,0,1.27,28.41,4.47
+Miscellaneous,Oolong tea,0,1.16,25.95,4.47
