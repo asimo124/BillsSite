@@ -2,11 +2,11 @@
     //ini_set("display_errors", 1);
     include "../../inc/includes.php";
 
+
 if (!isset($_SESSION['user'])) {
     header("Location: /login.php");
     exit;
 }
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -47,24 +47,47 @@ if (!isset($_SESSION['user'])) {
     <?php include "../../templates/nav.php"; ?>
     <div style="clear: both; height: 24px"></div>
 
-
-    <div class="row">
-        <div class="col-xs-6" >
-            
-        </div>
-        
-    </div>
-    <div style="clear: both; height: 8px;"></div>
-
-
     <div class="row">
         <div class="col-xs-12">
-            <table class="table table-bordered" style="border: 1px solid #666666;">
-                <thead>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <!-- Sub-navigation tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#foodList" aria-controls="foodList" role="tab" data-toggle="tab">Food List</a>
+                </li>
+                <li role="presentation">
+                    <a href="#foodHistory" aria-controls="foodHistory" role="tab" data-toggle="tab">Food History</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content" style="margin-top: 20px;">
+                <div role="tabpanel" class="tab-pane active" id="foodList">
+                    <h3>Food List</h3>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table class="table table-bordered" style="border: 1px solid #666666;">
+                                <thead>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="foodHistory">
+                    <h3>Food History</h3>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table class="table table-bordered" style="border: 1px solid #666666;">
+                                <thead>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -85,7 +108,7 @@ if (!isset($_SESSION['user'])) {
                     <form>
                         <div class="form-group">
                             <label for="purchaseTitle">Title</label>
-                            <input type="text" class="form-control" id="purchaseTitle" v-model="newPurchase.title" placeholder="Enter title">
+                            <input type="text" class="form-control" id="purchaseTitle" v-model="" placeholder="Enter title">
                         </div>
                     </form>
                 </div>

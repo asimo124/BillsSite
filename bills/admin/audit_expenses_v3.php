@@ -104,6 +104,7 @@ $_SESSION['ae_max_chars'] = 33;
                                     <a href="/bills/admin/weight_ratio.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Weight Ratio</a>
                                     <a href="/bills/admin/pending_transactions.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Pending Transactions</a>
                                     <a href="/bills/admin/debt_progress.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Debt Progress</a>
+                                    <a href="/bills/admin/food_sensitivities.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Food Sensitivities</a>
                                 </div>
                             </div>
                         </div>

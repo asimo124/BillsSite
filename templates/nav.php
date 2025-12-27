@@ -30,6 +30,7 @@
     <a href="/bills/admin/budget_progress2.php">Budget Progress</a>
     <a href="/bills/admin/budget_track.php">Track Progress</a>
     <a href="/bills/admin/income_purchases.php">Income Purchases</a>
+    <a href="/bills/admin/food_sensitivities.php">Food Sensitivities</a>
     <a href="/bills/admin/queue_date_job.php">Queue Date Job</a>
     <a href="/bills/admin/audit_expenses_v3.php">Audit Expenses</a>
     <a href="/bills/admin/weight_ratio.php">Weight Ratio</a>
