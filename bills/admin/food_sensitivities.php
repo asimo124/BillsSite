@@ -86,7 +86,7 @@ if (!isset($_SESSION['user'])) {
                                 <tbody>
                                     <tr v-for="(food, index) in foods" :key="food.id">
                                         <td>{{ food.title }}</td>
-                                        <td>{{ food.is_inflammation ? 'Yes' : 'No' }}</td>
+                                        <td :style="{ color: food.is_inflammation ? 'red' : 'orange', fontWeight: 'bold' }">{{ food.is_inflammation ? 'Yes' : 'No' }}</td>
                                         <td>{{ food.percentage_towards_inflammation }}%</td>
                                     </tr>
                                 </tbody>
@@ -120,7 +120,7 @@ if (!isset($_SESSION['user'])) {
                                     <tr v-for="(food, index) in food_log" :key="food.id">
                                         <td>{{ food.title }}</td>
                                         <td>{{ food.consumed_date }}</td>
-                                        <td>{{ food.is_inflammation ? 'Yes' : 'No' }}</td>
+                                        <td :style="{ color: food.is_inflammation ? 'red' : 'orange', fontWeight: 'bold' }">{{ food.is_inflammation ? 'Yes' : 'No' }}</td>
                                         <td>{{ food.percentage_towards_inflammation }}%</td>
                                         <td>
                                             <button class="btn btn-sm btn-danger" @click="removeFoodLogItem(food.id)">Delete</button>
