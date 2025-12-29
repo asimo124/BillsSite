@@ -11,7 +11,7 @@ if (!isset($_SESSION['user'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Income Purchases</title>
+    <title>Food Sensitivities</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
@@ -55,7 +55,7 @@ if (!isset($_SESSION['user'])) {
                     <a href="#foodList" aria-controls="foodList" role="tab" data-toggle="tab">Food List</a>
                 </li>
                 <li role="presentation">
-                    <a href="#foodHistory" aria-controls="foodHistory" role="tab" data-toggle="tab">Food History</a>
+                    <a href="#foodHistory" aria-controls="foodHistory" role="tab" data-toggle="tab" id="foodHistoryTab">Food History</a>
                 </li>
             </ul>
 
@@ -63,12 +63,31 @@ if (!isset($_SESSION['user'])) {
             <div class="tab-content" style="margin-top: 20px;">
                 <div role="tabpanel" class="tab-pane active" id="foodList">
                     <h3>Food List</h3>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control" placeholder="Search by Title" v-model="food_search_title" @input="loadFoodSensitivities()" />
+                        </div>
+                    </div>
+                    <div style="clear: both; height: 16px;"></div>
+
+
                     <div class="row">
                         <div class="col-xs-12">
                             <table class="table table-bordered" style="border: 1px solid #666666;">
                                 <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Is Inflammation</th>
+                                        <th>Percentage Towards Inflammation</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
+                                    <tr v-for="(food, index) in foods" :key="food.id">
+                                        <td>{{ food.title }}</td>
+                                        <td>{{ food.is_inflammation ? 'Yes' : 'No' }}</td>
+                                        <td>{{ food.percentage_towards_inflammation }}%</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -80,8 +99,20 @@ if (!isset($_SESSION['user'])) {
                         <div class="col-xs-12">
                             <table class="table table-bordered" style="border: 1px solid #666666;">
                                 <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Last Eaten Date</th>
+                                        <th>Is Inflammation</th>
+                                        <th>Percentage Towards Inflammation</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
+                                    <tr v-for="(food, index) in food_log" :key="food.id">
+                                        <td>{{ food.title }}</td>
+                                        <td>{{ food.last_eaten_date }}</td>
+                                        <td>{{ food.is_inflammation ? 'Yes' : 'No' }}</td>
+                                        <td>{{ food.percentage_towards_inflammation }}%</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -133,22 +164,51 @@ const { createApp } = Vue;
 createApp({
     data() {
         return {
-            
+            foods: [],
+            food_log: [],
+            main_error: '',
+            main_msg: '',
+            temp_msg: '',
+            add_purchase_error: '',
+            food_search_title: '',
+            food_log_search_title: '',
         }
     },
     mounted() {
+        this.loadFoodSensitivities();
+        this.loadFoodLog();
 
-        
+        this.clickFoodHistoryTab();
     },
     methods: {
-        async loadTest() {
+        clickFoodHistoryTab() {
+            const foodHistoryTab = document.getElementById('foodHistoryTab');
+            if (foodHistoryTab) {
+                foodHistoryTab.click();
+            } else {
+                console.error('Element with ID "foodHistoryTab" not found.');
+            }
+        },
+        async loadFoodSensitivities() {
             try {
-                const response = await axios.get('/api/test.php');
-                if (response.data) {
-                    
+                const response = await axios.get('/api/loadFoodSensitivities.php?title=' + encodeURIComponent(this.food_search_title));
+                if (response.data && response.data.items) {
+                    this.foods = response.data.items;
+                    //console.log(this.foods);
                 }
             } catch (error) {
-                console.error('Error loading upcoming pay dates:', error);
+                console.error('Error loading upcoming pay dates:', error);  
+            }
+        },
+        async loadFoodLog() {
+            try {
+                const response = await axios.get('/api/loadFoodLog.php?title=' + encodeURIComponent(this.food_log_search_title));
+                if (response.data && response.data.items) {
+                    this.food_log = response.data.items;
+                    console.log(this.food_log);
+                }
+            } catch (error) {
+                console.error('Error loading upcoming pay dates:', error);  
             }
         },
         async addPurchase() {
