@@ -21,6 +21,7 @@ if (!isset($_SESSION['user'])) {
     <link rel="stylesheet" href="/css/nav.css" />
     <link rel="stylesheet" href="/css/bills_admin.css" />
     <link rel="stylesheet" href="/css/income_purchases.css?version=1" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 </head>
 <body>
 <div class="container" id="app">
@@ -95,6 +96,14 @@ if (!isset($_SESSION['user'])) {
                 </div>
                 <div role="tabpanel" class="tab-pane" id="foodHistory">
                     <h3>Food History</h3>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <button class="btn btn-primary" @click="openFoodLogItemModal()">Add Food Consumption</button>
+                        </div>
+                    </div>
+                    <div style="clear: both; height: 16px;"></div>
+
                     <div class="row">
                         <div class="col-xs-12">
                             <table class="table table-bordered" style="border: 1px solid #666666;">
@@ -104,14 +113,18 @@ if (!isset($_SESSION['user'])) {
                                         <th>Last Eaten Date</th>
                                         <th>Is Inflammation</th>
                                         <th>Percentage Towards Inflammation</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(food, index) in food_log" :key="food.id">
                                         <td>{{ food.title }}</td>
-                                        <td>{{ food.last_eaten_date }}</td>
+                                        <td>{{ food.consumed_date }}</td>
                                         <td>{{ food.is_inflammation ? 'Yes' : 'No' }}</td>
                                         <td>{{ food.percentage_towards_inflammation }}%</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" @click="removeFoodLogItem(food.id)">Delete</button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -123,14 +136,14 @@ if (!isset($_SESSION['user'])) {
     </div>
 
     <!-- Add Purchase Modal -->
-    <div class="modal fade" id="addPurchaseModal" tabindex="-1" role="dialog" aria-labelledby="addPurchaseModalLabel">
+    <div class="modal fade" id="FoodLogItemModal" tabindex="-1" role="dialog" aria-labelledby="FoodLogItemModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="addPurchaseModalLabel">Test</h4>
+                    <h4 class="modal-title" id="FoodLogItemModalLabel">Test</h4>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-danger" role="alert" v-if="add_purchase_error">
@@ -138,14 +151,26 @@ if (!isset($_SESSION['user'])) {
                     </div>
                     <form>
                         <div class="form-group">
-                            <label for="purchaseTitle">Title</label>
-                            <input type="text" class="form-control" id="purchaseTitle" v-model="" placeholder="Enter title">
+                            <label for="foodItem">Title</label>
+                            
+                            <select class="form-control" id="foodItem" v-model="foodItem.food_id">
+                                <option value="0">-- Select Food --</option>
+                                <option v-for="(food, index) in foods_sorted_by_title" :key="food.id" :value="food.id">
+                                    {{ food.title }}
+                                </option>
+                                <option value="-1">Red Meat</option>
+                                <option value="-2">Dairy</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateConsumed">Date Consumed</label>
+                            <input type="text" class="form-control" id="dateConsumed" v-model="foodItem.date_consumed">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" @click="addPurchase">Create</button>
+                    <button type="button" class="btn btn-primary" @click="addFoodLogItem">Create</button>
                 </div>
             </div>
         </div>
@@ -157,6 +182,7 @@ if (!isset($_SESSION['user'])) {
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 <script src="/js/nav.js"></script>
 <script>
 const { createApp } = Vue;
@@ -165,6 +191,7 @@ createApp({
     data() {
         return {
             foods: [],
+            foods_sorted_by_title: [],
             food_log: [],
             main_error: '',
             main_msg: '',
@@ -172,13 +199,26 @@ createApp({
             add_purchase_error: '',
             food_search_title: '',
             food_log_search_title: '',
+            foodItem: {
+                food_id: 0,
+                date_consumed: new Date().toLocaleDateString('en-US') // Default to today's date in mm/dd/yyyy format
+            },
         }
     },
     mounted() {
         this.loadFoodSensitivities();
         this.loadFoodLog();
 
-        this.clickFoodHistoryTab();
+        //this.clickFoodHistoryTab();
+
+        // Initialize Bootstrap date picker
+        $('#dateConsumed').datepicker({
+            format: 'mm/dd/yyyy', // Change format to mm/dd/yyyy
+            autoclose: true
+        }).on('changeDate', (e) => {
+            // Use arrow function to ensure 'this' refers to the Vue instance
+            this.foodItem.date_consumed = e.format('mm/dd/yyyy');
+        });
     },
     methods: {
         clickFoodHistoryTab() {
@@ -194,6 +234,7 @@ createApp({
                 const response = await axios.get('/api/loadFoodSensitivities.php?title=' + encodeURIComponent(this.food_search_title));
                 if (response.data && response.data.items) {
                     this.foods = response.data.items;
+                    this.foods_sorted_by_title = [...this.foods].sort((a, b) => a.title.localeCompare(b.title));
                     //console.log(this.foods);
                 }
             } catch (error) {
@@ -211,31 +252,48 @@ createApp({
                 console.error('Error loading upcoming pay dates:', error);  
             }
         },
-        async addPurchase() {
+        async addFoodLogItem() {
             // Handle adding the purchase here
             try {
-                const response = await axios.post(`/api/test.php`);
+                const response = await axios.post(`/api/addFoodLogItem.php?food_id=` + encodeURIComponent(this.foodItem.food_id) + `&consumed_date=` + encodeURIComponent(this.foodItem.date_consumed));
                 
+                /*/
                 if (response.data && response.data.error) {
                     
                     return;
                 }
+                //*/
                 if (response.data && response.data.item) {
-                    
-                } else {
-                   
-                   
+                    this.loadFoodLog();
+                    $('#FoodLogItemModal').modal('hide');
                 }
             } catch (error) {
                 console.error('Error adding purchase:', error);
             }
         }, 
-        openAddPurchaseModal(payPeriodId, index) {
+        async removeFoodLogItem(foodId) {
+            try {
+                const response = await axios.post(`/api/removeFoodLogItem.php?food_id=` + encodeURIComponent(foodId));
+                
+                /*/
+                if (response.data && response.data.error) {
+                    
+                    return;
+                }
+                //*/
+                if (response.data && response.data.success) {
+                    this.loadFoodLog();
+                }
+            } catch (error) {
+                console.error('Error adding purchase:', error);
+            }
+        },
+        openFoodLogItemModal(payPeriodId, index) {
             /*this.newPurchase = {
                 title: '',
             };*/
             // Open modal using jQuery (Bootstrap 3 requirement)
-            $('#addPurchaseModal').modal('show');
+            $('#FoodLogItemModal').modal('show');
         }, 
     }
 }).mount('#app');

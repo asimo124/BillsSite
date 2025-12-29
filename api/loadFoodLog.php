@@ -38,13 +38,14 @@ if ($sortBy1) {
 //*/
 
 $sql = "SELECT 
-        CASE 
+        fh.id 
+        , CASE 
         WHEN f.id iS NOT NULL THEN 
             f.title 
         ELSE
             fg.title 
         END as title
-        , fh.consumed_date
+        , DATE_FORMAT(fh.consumed_date, '%m/%d/%Y') as consumed_date
         , CASE 
         WHEN f.id iS NOT NULL THEN 
             f.is_inflammation 
@@ -53,7 +54,7 @@ $sql = "SELECT
         END as is_inflammation 
         , CASE 
         WHEN f.id iS NOT NULL THEN 
-            f.percentage_towards_inflammation 
+            ROUND(f.percentage_towards_inflammation, 2) 
         ELSE
             30 
         END as percentage_towards_inflammation
