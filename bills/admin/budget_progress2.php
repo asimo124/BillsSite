@@ -139,7 +139,7 @@ createApp({
             spaAmount: 57.50,
             initBalance: 0,
             extraSum: 0,
-            disposablePerDay: 40,
+            disposablePerDay: 25,
             remove15Days: false,
             payDate: new Date(),
             titleDate: '',
@@ -329,7 +329,7 @@ createApp({
                     //this.countDaysAdd = response.data.count_days_add;
                     //this.daysCount += this.countDaysAdd;
                     
-                    this.day40 = this.calcDisposable(40);
+                    this.day40 = this.calcDisposable(this.disposablePerDay);
                 } else {
                     this.balance = 0;
                 }

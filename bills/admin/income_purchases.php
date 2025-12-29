@@ -65,7 +65,8 @@ if (!isset($_SESSION['user'])) {
             <input type="number" class="form-control" v-model="startingBalance" placeholder="Starting Balance" />
         </div>
         <div class="col-xs-6" style="text-align: right;">
-            <input type="checkbox" value="1" v-model="test_mode"/>&nbsp; Test
+            <input type="number" v-model="disposablePerDay" @blur="loadPayPeriods" style="width: 50px;" />
+            &nbsp;<input type="checkbox" value="1" v-model="test_mode"/>&nbsp; Test
         </div>
     </div>
     <div style="clear: both; height: 8px;"></div>
@@ -214,6 +215,7 @@ createApp({
             selectedPayDate: '',
             currentPayPeriodId: null,
             currentPayPeriodItemIndex: null,
+            disposablePerDay: 25,
             newPurchase: {
                 title: '',
                 description: '',
@@ -261,7 +263,7 @@ createApp({
             try {
                 const test_mode = this.test_mode ? 1 : 0;
 
-                const url = `/api/loadPayPeriods.php?user_id=1&current_balance=${this.startingBalance}&end_pay_period=${this.selectedPayDate}&test_mode=${test_mode}`;
+                const url = `/api/loadPayPeriods.php?user_id=1&current_balance=${this.startingBalance}&end_pay_period=${this.selectedPayDate}&test_mode=${test_mode}&disposable_per_day=${this.disposablePerDay}`;
                 const response = await axios.get(url);
                 if (response.data && response.data.items) {
                     this.payPeriodItems = response.data.items;
