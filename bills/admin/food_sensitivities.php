@@ -151,15 +151,23 @@ if (!isset($_SESSION['user'])) {
                     </div>
                     <form>
                         <div class="form-group">
-                            <label for="foodItem">Title</label>
+                            <label for="foodItem">Food Sensitivity</label>
                             
-                            <select class="form-control" id="foodItem" v-model="foodItem.food_id">
+                            <select class="form-control" id="foodItem" v-model="foodItem.food_id" @change="foodItem.food_general_id = 0">
                                 <option value="0">-- Select Food --</option>
                                 <option v-for="(food, index) in foods_sorted_by_title" :key="food.id" :value="food.id">
                                     {{ food.title }}
                                 </option>
-                                <option value="-1">Red Meat</option>
-                                <option value="-2">Dairy</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="foodItemGeneral">Food Sensitivity General</label>
+                            
+                            <select class="form-control" id="foodItemGeneral" v-model="foodItem.food_general_id" @change="foodItem.food_id = 0">
+                                <option value="0">-- Select General Food --</option>
+                                <option v-for="(food, index) in foods_general" :key="food.id" :value="food.id">
+                                    {{ food.title }}
+                                </option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -192,6 +200,7 @@ createApp({
         return {
             foods: [],
             foods_sorted_by_title: [],
+            foods_general: [],
             food_log: [],
             main_error: '',
             main_msg: '',
@@ -201,12 +210,14 @@ createApp({
             food_log_search_title: '',
             foodItem: {
                 food_id: 0,
+                food_general_id: 0,
                 date_consumed: new Date().toLocaleDateString('en-US') // Default to today's date in mm/dd/yyyy format
             },
         }
     },
     mounted() {
         this.loadFoodSensitivities();
+        this.loadFoodGeneral();
         this.loadFoodLog();
 
         //this.clickFoodHistoryTab();
@@ -241,6 +252,16 @@ createApp({
                 console.error('Error loading upcoming pay dates:', error);  
             }
         },
+         async loadFoodGeneral() {
+            try {
+                const response = await axios.get('/api/loadFoodSensitivitiesGeneral.php');
+                if (response.data && response.data.items) {
+                    this.foods_general = response.data.items;
+                }
+            } catch (error) {
+                console.error('Error loading upcoming pay dates:', error);  
+            }
+        },
         async loadFoodLog() {
             try {
                 const response = await axios.get('/api/loadFoodLog.php?title=' + encodeURIComponent(this.food_log_search_title));
@@ -255,7 +276,7 @@ createApp({
         async addFoodLogItem() {
             // Handle adding the purchase here
             try {
-                const response = await axios.post(`/api/addFoodLogItem.php?food_id=` + encodeURIComponent(this.foodItem.food_id) + `&consumed_date=` + encodeURIComponent(this.foodItem.date_consumed));
+                const response = await axios.post(`/api/addFoodLogItem.php?food_id=` + encodeURIComponent(this.foodItem.food_id) + `&food_general_id=` + encodeURIComponent(this.foodItem.food_general_id) + `&consumed_date=` + encodeURIComponent(this.foodItem.date_consumed));
                 
                 /*/
                 if (response.data && response.data.error) {

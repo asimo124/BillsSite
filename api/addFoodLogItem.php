@@ -5,25 +5,27 @@ include "../inc/includes.php";
 //ini_set("display_errors", 1);
 
 $food_id = isset($_REQUEST['food_id']) ? intval($_REQUEST['food_id']) : 0;
+$food_general_id = isset($_REQUEST['food_general_id']) ? intval($_REQUEST['food_general_id']) : 0;
 $consumed_date = isset($_REQUEST['consumed_date']) ? trim($_REQUEST['consumed_date']) : date("m/d/Y");
 
-if ($food_id === 0) {
+if ($food_id === 0 && $food_general_id === 0) {
     header("HTTP/1.1 400 Bad Request");
-    echo "food_id is required";
+    echo "food_id or food_general_id is required";
     die();
 }
 
 $consumed_date2 = date("Y-m-d", strtotime($consumed_date));
 
-$refTable = "fs_food";
-$refTableId = $food_id;
-if ($food_id === -1) {
+$refTable = "";
+$refTableId = 0;
+if ($food_id) {
+    $refTableId = $food_id;
+    $refTable = "fs_food";
+} else {
+    $refTableId = $food_general_id;
     $refTable = "fs_food_general";
-    $refTableId = 1; // Red Meat
-} else if ($food_id === -2) {
-    $refTable = "fs_food_general";;
-    $refTableId = 2; // Dairy
 }
+
 
 $sql = "INSERT INTO fs_food_history 
         (ref_table, ref_table_id, consumed_date) 
