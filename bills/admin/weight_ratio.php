@@ -83,11 +83,7 @@
 <script>
     $( function() {
         
-        var weightLowRange = parseFloat($('#weightLowRange').val());
-        var weightHighRange = parseFloat($('#weightHighRange').val());
-
-        var bodyFatPercentageLowRange = parseFloat($('#bodyFatPercentageLowRange').val());
-        var bodyFatPercentageHighRange = parseFloat($('#bodyFatPercentageHighRange').val());
+        
 
         showMessage = function(message) {
             $('#message').html(message);
@@ -110,6 +106,13 @@
         };
 
         $('#calc_button').on('click', function() {
+
+            var weightLowRange = parseFloat($('#weightLowRange').val());
+            var weightHighRange = parseFloat($('#weightHighRange').val());
+
+            var bodyFatPercentageLowRange = parseFloat($('#bodyFatPercentageLowRange').val());
+            var bodyFatPercentageHighRange = parseFloat($('#bodyFatPercentageHighRange').val());
+
             var weight = parseFloat($('#weight').val());
             var bodyFatPercentage = parseFloat($('#body_fat_percentage').val());
 
