@@ -58,6 +58,9 @@ if (!isset($_SESSION['user'])) {
                 <li role="presentation">
                     <a href="#foodHistory" aria-controls="foodHistory" role="tab" data-toggle="tab" id="foodHistoryTab">Food History</a>
                 </li>
+                <li role="presentation">
+                    <a href="#tabGeneral" aria-controls="tabGeneral" role="tab" data-toggle="tab" id="foodGeneralTab">Food General</a>
+                </li>
             </ul>
 
             <!-- Tab panes -->
@@ -131,11 +134,45 @@ if (!isset($_SESSION['user'])) {
                         </div>
                     </div>
                 </div>
+                <div role="tabpanel" class="tab-pane" id="tabGeneral">
+                    <h3>Food General</h3>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <button class="btn btn-primary" @click="openAddFoodGeneralModal">Add Food General</button>
+                        </div>
+                    </div>
+                    <div style="clear: both; height: 8px;"></div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <table class="table table-bordered" style="border: 1px solid #666666;">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(food, index) in foods_general" :key="food.id">
+                                        <td>{{ food.title }}</td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm" @click="openEditFoodGeneralModalEdit(food)">
+                                                <i class="fa fa-edit"></i>
+                                            </button>&nbsp; 
+                                            <button class="btn btn-danger btn-sm" @click="removeFoodLogGeneralItem(food.id)">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Add Purchase Modal -->
+    <!-- Create Food Item Modal -->
     <div class="modal fade" id="FoodLogItemModal" tabindex="-1" role="dialog" aria-labelledby="FoodLogItemModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -184,6 +221,67 @@ if (!isset($_SESSION['user'])) {
         </div>
     </div>
 
+
+
+    <!-- Create Food General Item Modal -->
+    <div class="modal fade" id="FoodGeneralItemModal" tabindex="-1" role="dialog" aria-labelledby="FoodGeneralItemModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="FoodGeneralItemModalLabel">Test</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger" role="alert" v-if="add_food_general_error">
+                        {{ add_food_general_error }}    
+                    </div>
+                    <form>
+                        <div class="form-group">
+                            <label for="foodGeneral">Food General</label>
+                            <input type="text" class="form-control" id="foodGeneral" v-model="foodGeneralCreate.title">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" @click="addFoodGeneralItem">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Food General Item Modal -->
+    <div class="modal fade" id="FoodGeneralItemEditModal" tabindex="-1" role="dialog" aria-labelledby="FoodGeneralItemEditModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="FoodGeneralItemEditModalLabel">Test</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger" role="alert" v-if="add_food_general_edit_error">
+                        {{ add_food_general_edit_error }}    
+                    </div>
+                    <form>
+                        <div class="form-group">
+                            <label for="foodGeneral">Food General</label>
+                            <input type="text" class="form-control" id="foodGeneral" v-model="foodGeneralEdit.title">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" @click="editFoodGeneralItem">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -213,6 +311,15 @@ createApp({
                 food_general_id: 0,
                 date_consumed: new Date().toLocaleDateString('en-US') // Default to today's date in mm/dd/yyyy format
             },
+            foodGeneralCreate: {
+                title: ''
+            },
+            add_food_general_error: '',
+            foodGeneralEdit: {
+                id: 0,
+                title: ''
+            },
+            add_food_general_edit_error: '',
         }
     },
     mounted() {
@@ -221,6 +328,8 @@ createApp({
         this.loadFoodLog();
 
         //this.clickFoodHistoryTab();
+
+        this.clickFoodGeneralTab();
 
         // Initialize Bootstrap date picker
         $('#dateConsumed').datepicker({
@@ -240,6 +349,14 @@ createApp({
                 console.error('Element with ID "foodHistoryTab" not found.');
             }
         },
+        clickFoodGeneralTab() {
+            const foodGeneralTab = document.getElementById('foodGeneralTab');
+            if (foodGeneralTab) {
+                foodGeneralTab.click();
+            } else {
+                console.error('Element with ID "foodGeneralTab" not found.');
+            }
+        },
         async loadFoodSensitivities() {
             try {
                 const response = await axios.get('/api/loadFoodSensitivities.php?title=' + encodeURIComponent(this.food_search_title));
@@ -252,7 +369,7 @@ createApp({
                 console.error('Error loading upcoming pay dates:', error);  
             }
         },
-         async loadFoodGeneral() {
+        async loadFoodGeneral() {
             try {
                 const response = await axios.get('/api/loadFoodSensitivitiesGeneral.php');
                 if (response.data && response.data.items) {
@@ -291,7 +408,72 @@ createApp({
             } catch (error) {
                 console.error('Error adding purchase:', error);
             }
-        }, 
+        },
+        openAddFoodGeneralModal() {
+            this.foodGeneralCreate.title = '';
+            $('#FoodGeneralItemModal').modal('show');
+        },
+        async addFoodGeneralItem() {
+
+            // Handle adding the purchase here
+            try {
+                const response = await axios.post(`/api/addFoodLogGeneralItem.php?title=` + encodeURIComponent(this.foodGeneralCreate.title));
+                
+                /*/
+                if (response.data && response.data.error) {
+                    
+                    return;
+                }
+                //*/
+                if (response.data && response.data.item) {
+                    this.loadFoodGeneral();
+                    $('#FoodGeneralItemModal').modal('hide');
+                }
+            } catch (error) {
+                console.error('Error adding purchase:', error);
+            }
+        },
+        openEditFoodGeneralModalEdit(food) {
+            this.foodGeneralEdit.id = food.id;
+            this.foodGeneralEdit.title = food.title;
+            $('#FoodGeneralItemEditModal').modal('show');
+        },
+        async editFoodGeneralItem() {
+            // Handle adding the purchase here
+            try {
+                const response = await axios.post(`/api/editFoodLogGeneralItem.php?id=` + encodeURIComponent(this.foodGeneralEdit.id) + `&title=` + encodeURIComponent(this.foodGeneralEdit.title));
+                
+                /*/
+                if (response.data && response.data.error) {
+                    
+                    return;
+                }
+                //*/
+                if (response.data && response.data.item) {
+                    this.loadFoodGeneral();
+                    $('#FoodGeneralItemEditModal').modal('hide');
+                }
+            } catch (error) {
+                console.error('Error adding purchase:', error);
+            }
+        },
+        async removeFoodLogGeneralItem(foodId) {
+            try {
+                const response = await axios.post(`/api/removeFoodLogGeneralItem.php?food_id=` + encodeURIComponent(foodId));
+                
+                /*/
+                if (response.data && response.data.error) {
+                    
+                    return;
+                }
+                //*/
+                if (response.data && response.data.success) {
+                    this.loadFoodGeneral();
+                }
+            } catch (error) {
+                console.error('Error adding purchase:', error);
+            }
+        },
         async removeFoodLogItem(foodId) {
             try {
                 const response = await axios.post(`/api/removeFoodLogItem.php?food_id=` + encodeURIComponent(foodId));
