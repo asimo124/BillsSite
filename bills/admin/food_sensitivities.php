@@ -328,8 +328,7 @@ createApp({
         this.loadFoodLog();
 
         //this.clickFoodHistoryTab();
-
-        this.clickFoodGeneralTab();
+        //this.clickFoodGeneralTab();
 
         // Initialize Bootstrap date picker
         $('#dateConsumed').datepicker({
