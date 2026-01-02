@@ -31,11 +31,11 @@
     <a href="/bills/admin/budget_track.php">Track Progress</a>
     <a href="/bills/admin/income_purchases.php">Income Purchases</a>
     <a href="/bills/admin/food_sensitivities.php">Food Sensitivities</a>
+    <a href="/bills/admin/disposable_income_tracker.php">Disposable Tracker</a>
     <a href="/bills/admin/queue_date_job.php">Queue Date Job</a>
     <a href="/bills/admin/audit_expenses_v3.php">Audit Expenses</a>
     <a href="/bills/admin/weight_ratio.php">Weight Ratio</a>
     <a href="/bills/admin/last_time_i.php">Last Time I</a>
-    <a href="/bills/admin/pending_transactions.php">Pending Transactions</a>
     <a href="/settings/index.php">Settings</a>
     <a href="/bills/admin/debt_progress.php">Debt Progress</a>
     <a href="/logout.php">Logout</a>
