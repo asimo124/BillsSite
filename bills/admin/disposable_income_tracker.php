@@ -59,34 +59,37 @@ if (!isset($_SESSION['user'])) {
             <div>
                 <label for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Upload Rocket Money Data</label>
                 <input type="file" id="rocket_money_file" name="rocket_money_file" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" accept=".csv" />
-                <div class="mt-4">
+                <div class="mt-4 flex items-center justify-between">
                     <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload File</button>
+                    <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded ml-2" @click="updateAllNotCovered">Mark All Not Covered</button>
                 </div>
             </div>
         </div>
     </form>
 
-    <!-- Rocket Money Data Table -->
+    <!-- Transactions Table -->
     <div class="grid grid-cols-1 gap-6 mb-6">
         <div>
             <label for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Rocket Money Data</label>
-            <div class="overflow-x-auto overflow-y-auto max-h-[300px] shadow-sm rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200 bg-white">
+            <div class="overflow-y-auto" style="max-height: 450px;">
+                <table class="min-w-full divide-y divide-gray-200 bg-white" width="100%">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="word-wrap: break-word; white-space: normal;">Name</th>
+                            <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 80px;">Amount</th>
+                            <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 60px;"> </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200"> 
-                        <tr v-if="!rocketMoneyData || rocketMoneyData.length === 0">
-                            <td class="px-6 py-4 text-center text-gray-500 italic">No rocket money data available</td>
+                        <tr v-if="!transactions || transactions.length === 0">
+                            <td class="px-6 py-4 text-center text-gray-500 italic" colspan="3">No rocket money data available</td>
                         </tr>
-                        <tr class="expenses_row hover:bg-gray-50" data-index="<?php echo $index; ?>" v-for="(item, index) in rocketMoneyData" v-else>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ item.Amount }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ item.Amount }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.Date }}</td>
+                        <tr class="expenses_row hover:bg-gray-50" data-index="<?php echo $index; ?>" v-for="(item, index) in transactions" v-else>
+                            <td class="px-6 py-4 text-sm text-gray-900" style="word-wrap: break-word; white-space: normal;">${{ item.name }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900" style="width: 80px;">${{ item.amount }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900" style="width: 60px;">
+                                <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded" title="Delete" @click="updateIsCovered(item.id, 1)">X</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -123,8 +126,11 @@ if (!isset($_SESSION['user'])) {
                     mobileChargesOpen: false,
                     mobileAdminOpen: false,
 
+                    // paycheck date
+                    paycheck_date: null,
+
                     // Existing data properties
-                    expensesAppData: []
+                    transactions: []
                 }
             },
             mounted() {
@@ -139,20 +145,65 @@ if (!isset($_SESSION['user'])) {
             methods: {
                 loadPage() {
                     
-                    this.loadTest();
+                    this.paycheck_date = this.getDefaultPaycheckDate();
+                    this.loadTransactions();
+
+                    console.log('paycheck_date:', this.paycheck_date);
 
                 },
-                async loadTest() {
+                getDefaultPaycheckDate() {
+                    const today = new Date();
+                    const day = today.getDate();
+                    let paycheckDate;
+
+                    if (day <= 15) {
+                        // Previous paycheck is the last day of the previous month
+                        const previousMonth = today.getMonth() - 1;
+                        const year = previousMonth < 0 ? today.getFullYear() - 1 : today.getFullYear();
+                        paycheckDate = new Date(year, previousMonth < 0 ? 11 : previousMonth, 15);
+                    } else {
+                        // Previous paycheck is the 15th of the current month
+                        paycheckDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                    }
+
+                    return paycheckDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+                },
+                async loadTransactions() {
                     try {   
-                        const response = await axios.get('/api/test.php');
+                        const response = await axios.get('/api/loadDisposableTransactions.php?paycheck_date=' + this.paycheck_date);
                         if (response.data && response.data.items) {
                             
-                           
+                           console.log('response.data.items:', response.data.items);
+                           this.transactions = response.data.items;
                         }
                     } catch (error) {
                         
                     }
                 },
+                async updateIsCovered(id, isCovered) {
+                    
+                    try {   
+                        const response = await axios.get('/api/updateDisposableTransactionCovered.php?id=' + id + '&is_covered=' + isCovered);
+                        if (response.data && response.data.success) {
+                            
+                           this.loadTransactions();
+                        }
+                    } catch (error) {
+                        
+                    }
+                },
+                async updateAllNotCovered() {
+                    
+                    try {   
+                        const response = await axios.get('/api/updateAllNotCovered.php');
+                        if (response.data && response.data.success) {
+                            
+                           this.loadTransactions();
+                        }
+                    } catch (error) {
+                        
+                    }
+                }   
             }
     });
     

@@ -43,9 +43,15 @@ if (isset($_FILES['rocket_money_file']) && $_FILES['rocket_money_file']['error']
         $sql = "INSERT INTO dt_transaction_category (title) VALUES (?)";
         $stmt_ins_trans_cat = $db_conn->prepare($sql);
 
+        $sql = "SELECT id FROM dt_transaction WHERE 1
+                AND transaction_date = ? 
+                AND amount = ?  
+                AND `description` = ? LIMIT 1 ";
+        $stmt_sel_transaction = $db_conn->prepare($sql);
+
         $sql = "INSERT INTO dt_transaction 
         (transaction_date, account_type, account_name, account_number, institution_name, `name`, amount, 
-            `description`, transaction_category_id, is_covered, paycheck_date VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)";
+            `description`, transaction_category_id, is_covered, paycheck_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)";
         $stmt_ins_transaction = $db_conn->prepare($sql);
 
 
@@ -88,26 +94,6 @@ if (isset($_FILES['rocket_money_file']) && $_FILES['rocket_money_file']['error']
             $i++;
         }
 
-        $sql = "DELETE FROM dt_transaction WHERE id = ?";
-        $stmt_del_transaction = $db_conn->prepare($sql);
-
-        $sql = "SELECT * FROM dt_transaction ";
-        $currentTransactions = getQuery($sql);
-
-        foreach ($currentTransactions as $currentTransaction) {
-            $date = $currentTransaction['transaction_date'];
-            $amount = $currentTransaction['amount'];
-            $description = $currentTransaction['description'];
-
-            if (isset($csvItemsUniqueArr[$date . '{}|' . $amount . '{}|' . $description])) {
-                unset($csvItemsUniqueArr[$date . '{}|' . $amount . '{}|' . $description]);
-            } else {
-                // Delete transaction not in uploaded file
-                $sql = "DELETE FROM dt_transaction WHERE id = ?";
-                $stmt_del_transaction->execute([$currentTransaction['id']]);
-            }
-        }
-
         $keys = [];
         $i = 0;
         foreach ($rows as $row) {
@@ -124,14 +110,17 @@ if (isset($_FILES['rocket_money_file']) && $_FILES['rocket_money_file']['error']
                 $csvItem[$field] = $value;
             }
 
+            $desc = trim($csvItem['Description']);
+            $desc = preg_replace("/[\r\n\t]/", "", $desc);
+
             $data['transaction_date'] = $csvItem['Date'];
             $data['account_type'] = $csvItem['Account Type'];
             $data['account_name'] = $csvItem['Account Name'];
             $data['account_number'] = $csvItem['Account Number'];
             $data['institution_name'] = $csvItem['Institution Name'];
-            $data['name '] = $csvItem['Name'];
+            $data['name '] = trim($csvItem['Name']);
             $data['amount'] = $csvItem['Amount'];
-            $data['description'] = $csvItem['Description'];
+            $data['description'] = $desc;
 
             $transactionDate = "";
             $transactionDay = intval(date("d", strtotime($csvItem['Date'])));
@@ -159,10 +148,29 @@ if (isset($_FILES['rocket_money_file']) && $_FILES['rocket_money_file']['error']
             }
             $data['transaction_category_id'] = $transactionCategoryId;
 
+            $sql = "SELECT id FROM dt_transaction WHERE 1
+                AND transaction_date = ? 
+                AND amount = ?  
+                AND `description` = ? 
+                LIMIT 1 ";
+
+            $stmt_sel_transaction->execute([
+                $data['transaction_date'],
+                $data['amount'],
+                $data['description']
+            ]);
+
+            $hasTransaction = $stmt_sel_transaction->fetch(PDO::FETCH_ASSOC);
+
+            if ($hasTransaction) {
+                // Skip inserting duplicate transaction
+                $i++;
+                continue;
+            }
 
             $sql = "INSERT INTO dt_transaction 
             (transaction_date, account_type, account_name, account_number, institution_name, `name`, amount, 
-            `description`, transaction_category_id, is_covered, paycheck_date VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)";
+            `description`, transaction_category_id, is_covered, paycheck_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)";
             $stmt_ins_transaction->execute([
                 $data['transaction_date'],
                 $data['account_type'],
