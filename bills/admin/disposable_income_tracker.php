@@ -37,98 +37,120 @@ if (!isset($_SESSION['user'])) {
 <body>
 <div class="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-12 xl:px-16" id="app">
     <div class="py-5"></div>
-    
-    <?php if (isset($_REQUEST['Message'])) { ?>
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
-            <?php echo $_REQUEST['Message']; ?>
-        </div>
-    <?php } ?>
-    <?php if (isset($_REQUEST['error'])) { ?>
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
-            <?php echo $_REQUEST['error']; ?>
-        </div>
-    <?php } ?>
-    
-    <h2 class="text-2xl font-bold mb-4">Disposable Income Tracker</h2>
 
-    <div class="mb-3"></div>
+    <h2 class="text-2xl font-bold mb-4">Disposable Income Tracker</h2>
 
     <!-- Responsive Navigation Bar -->
     <?php include "../../templates/nav4.php"; ?>
 
+    <ul class="flex border-b">
+        <li class="-mb-px mr-1">
+            <a class="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold" href="#" @click="activeTab = 'tracker'">Tracker</a>
+        </li>
+        <li class="mr-1">
+            <a class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#" @click="activeTab = 'upload'">Upload</a>
+        </li>
+    </ul>
 
-    <!-- Rocket Money Upload Form -->
-    <form action="process_disposable_tracker_upload3.php" method="POST" enctype="multipart/form-data" class="mb-6">
-        <div class="grid grid-cols-1 gap-4">
+    <div v-if="activeTab === 'tracker'">
+        <!-- Existing content of the page -->
+        
+        <div style="clear: both; height: 16px;"></div>
+        <h2 class="text-2xl font-bold mb-4">Tracker</h2>
+
+        <!-- Rocket Money Upload Form -->
+        <form action="process_disposable_tracker_upload3.php" method="POST" enctype="multipart/form-data" class="mb-6">
+            <div class="grid grid-cols-1 gap-4">
+                <div>
+                    <label for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Upload Rocket Money Data</label>
+                    <input type="file" id="rocket_money_file" name="rocket_money_file" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" accept=".csv" />
+                    <div class="mt-4 flex items-center justify-between">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload File</button>
+                        <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded ml-2" @click="updateAllNotCovered">Mark All Not Covered</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Date Navigation Row -->
+        <div class="grid grid-cols-3 items-center mb-4">
+            <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded" @click="previousDate">&lt;</button>
+            <span class="text-lg font-medium text-center">{{ paycheck_date_display }}</span>
+            <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded" @click="nextDate">&gt;</button>
+        </div>
+
+        <!-- Transactions Table -->
+        <div class="grid grid-cols-1 gap-6 mb-6">
             <div>
-                <label for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Upload Rocket Money Data</label>
-                <input type="file" id="rocket_money_file" name="rocket_money_file" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" accept=".csv" />
-                <div class="mt-4 flex items-center justify-between">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload File</button>
-                    <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded ml-2" @click="updateAllNotCovered">Mark All Not Covered</button>
+                <label for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Rocket Money Data</label>
+                <div class="overflow-y-auto" style="max-height: 450px;">
+                    <table class="min-w-full divide-y divide-gray-200 bg-white" width="100%">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="word-wrap: break-word; white-space: normal;">Name</th>
+                                <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 80px;">Amount</th>
+                                <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 60px;"> </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200"> 
+                            <tr v-if="!transactions || transactions.length === 0">
+                                <td class="px-6 py-4 text-center text-gray-500 italic" colspan="3">No rocket money data available</td>
+                            </tr>
+                            <tr class="expenses_row hover:bg-gray-50" data-index="<?php echo $index; ?>" v-for="(item, index) in transactions" v-else>
+                                <td class="px-6 py-4 text-sm text-gray-900" style="word-wrap: break-word; white-space: normal;">{{ item.name }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900" style="width: 80px;">${{ item.amount }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900" style="width: 60px;">
+                                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded" title="Delete" @click="updateIsCovered(item.id, 1)">X</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </form>
 
-    <!-- Date Navigation Row -->
-    <div class="grid grid-cols-3 items-center mb-4">
-        <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded" @click="previousDate">&lt;</button>
-        <span class="text-lg font-medium text-center">{{ paycheck_date_display }}</span>
-        <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded" @click="nextDate">&gt;</button>
-    </div>
+        <!-- Date Navigation Row -->
+        <div class="grid grid-cols-3 items-center mb-4">
+            <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded" @click="previousDate">&lt;</button>
+            <span class="text-lg font-medium text-center">{{ paycheck_date_display }}</span>
+            <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded" @click="nextDate">&gt;</button>
+        </div>
 
-    <!-- Transactions Table -->
-    <div class="grid grid-cols-1 gap-6 mb-6">
-        <div>
-            <label for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Rocket Money Data</label>
-            <div class="overflow-y-auto" style="max-height: 450px;">
-                <table class="min-w-full divide-y divide-gray-200 bg-white" width="100%">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="word-wrap: break-word; white-space: normal;">Name</th>
-                            <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 80px;">Amount</th>
-                            <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 60px;"> </th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200"> 
-                        <tr v-if="!transactions || transactions.length === 0">
-                            <td class="px-6 py-4 text-center text-gray-500 italic" colspan="3">No rocket money data available</td>
-                        </tr>
-                        <tr class="expenses_row hover:bg-gray-50" data-index="<?php echo $index; ?>" v-for="(item, index) in transactions" v-else>
-                            <td class="px-6 py-4 text-sm text-gray-900" style="word-wrap: break-word; white-space: normal;">{{ item.name }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900" style="width: 80px;">${{ item.amount }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900" style="width: 60px;">
-                                <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded" title="Delete" @click="updateIsCovered(item.id, 1)">X</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+
+        <div class="py-5"></div>
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Disposable Spent Over Time</h2>
+                <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" @click="loadRoot">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12a7.5 7.5 0 0115 0m-15 0a7.5 7.5 0 0015 0m-15 0H3m18 0h-1.5" />
+                    </svg>
+                    Reload
+                </button>
             </div>
+            
+            <div id="disposable_spent_over_time_chart" class="w-full h-96" style="width: 100%; height: 400px;"></div>
         </div>
     </div>
-    <div style="clear: both; height: 32px;"></div>
 
-    <!-- Date Navigation Row -->
-    <div class="grid grid-cols-3 items-center mb-4">
-        <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded" @click="previousDate">&lt;</button>
-        <span class="text-lg font-medium text-center">{{ paycheck_date_display }}</span>
-        <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded" @click="nextDate">&gt;</button>
-    </div>
-
-    <div class="py-5"></div>
-    <div class="bg-white shadow-md rounded-lg p-6">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Disposable Spent Over Time</h2>
-            <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" @click="loadRoot">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12a7.5 7.5 0 0115 0m-15 0a7.5 7.5 0 0015 0m-15 0H3m18 0h-1.5" />
-                </svg>
-                Reload
-            </button>
-        </div>
+    <div v-if="activeTab === 'upload'">
+        <!-- Blank content for the Upload tab -->
+        <div style="clear: both; height: 16px;"></div>
+        <h2 class="text-2xl font-bold mb-4">Upload</h2>
         
-        <div id="disposable_spent_over_time_chart" class="w-full h-96" style="width: 100%; height: 400px;"></div>
+        <!-- Rocket Money Upload Form -->
+        <form action="process_disposable_tracker_upload4.php" method="POST" enctype="multipart/form-data" class="mb-6" target="_blank">
+            <div class="grid grid-cols-1 gap-4">
+                <div>
+                    <label for="rocket_money_data" class="block text-sm font-medium text-gray-700 mb-2">Upload Rocket Money Data</label>
+                    <input type="file" id="rocket_money_file" name="rocket_money_file" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" accept=".csv" />
+                    <div class="mt-4 flex items-center justify-between">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload File</button>
+                        <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded ml-2" @click="updateAllNotCovered">Mark All Not Covered</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -150,9 +172,9 @@ if (!isset($_SESSION['user'])) {
     const { createApp } = Vue;
 
     const app = createApp({
-            // Removed local registration of apexchart
             data() {
                 return {
+                    activeTab: 'tracker', // Default tab
                     // Navigation state
                     mobileMenuOpen: false,
                     budgetDropdown: false,
