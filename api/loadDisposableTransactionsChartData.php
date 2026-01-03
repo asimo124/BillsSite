@@ -18,7 +18,8 @@ if (!$paycheckDate) {
 $sql = "SELECT 
         t.transaction_date, 
         SUM(t.amount) AS spent, 
-        SUM(SUM(t.amount)) OVER (ORDER BY t.transaction_date) AS accumulated_spent
+        SUM(t.amount) AS accumulated_spent
+        -- SUM(SUM(t.amount)) OVER (ORDER BY t.transaction_date) AS accumulated_spent
         FROM dt_transaction t
         WHERE 1  
         AND t.is_covered = 0 

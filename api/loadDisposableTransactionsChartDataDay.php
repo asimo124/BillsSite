@@ -29,7 +29,8 @@ if (!$transactionDate) {
 $sql = "SELECT 
         tc.title as category_name, 
         SUM(t.amount) AS spent, 
-        SUM(SUM(t.amount)) OVER (ORDER BY tc.title) AS accumulated_spent
+        SUM(t.amount) AS accumulated_spent
+        -- SUM(SUM(t.amount)) OVER (ORDER BY tc.title) AS accumulated_spent
         FROM dt_transaction t
         INNER JOIN dt_transaction_category tc 
             ON t.transaction_category_id = tc.id
