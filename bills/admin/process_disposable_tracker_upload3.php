@@ -113,12 +113,14 @@ if (isset($_FILES['rocket_money_file']) && $_FILES['rocket_money_file']['error']
             $desc = trim($csvItem['Description']);
             $desc = preg_replace("/[\r\n\t]/", "", $desc);
 
+            $desc = str_replace("$", "", $desc);
+
             $data['transaction_date'] = $csvItem['Date'];
             $data['account_type'] = $csvItem['Account Type'];
             $data['account_name'] = $csvItem['Account Name'];
             $data['account_number'] = $csvItem['Account Number'];
             $data['institution_name'] = $csvItem['Institution Name'];
-            $data['name '] = trim($csvItem['Name']);
+            $data['name '] = trim(str_replace("$", "", $csvItem['Name']));
             $data['amount'] = $csvItem['Amount'];
             $data['description'] = $desc;
 

@@ -8,9 +8,20 @@ include "../inc/BillDateHelper.php";
 
 //ini_set("display_errors", 1);
 
+$paycheckDate = isset($_REQUEST['paycheck_date']) ? trim($_REQUEST['paycheck_date']) : '';
 
-$sql = "UPDATE dt_transaction SET is_covered = 0 ";
-$result = execQuery($sql);
+if (!$paycheckDate) {
+    $payCheckDay = date('d');
+    if ($payCheckDay <= 15) {
+        $paycheckDate = date('Y-m-15');
+    } else {
+        $paycheckDate = date('Y-m-t');
+    }
+}
+
+
+$sql = "UPDATE dt_transaction SET is_covered = 0 WHERE paycheck_date = ?";
+$result = execQuery($sql, [$paycheckDate]);
 
 header("Content-type: application/json");
 header('Access-Control-Allow-Origin: *');

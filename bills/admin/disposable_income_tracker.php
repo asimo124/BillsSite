@@ -29,6 +29,10 @@ if (!isset($_SESSION['user'])) {
     <!-- Vue.js CDN -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- Include ApexCharts and Vue-ApexCharts from a reliable source -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://unpkg.com/vue3-apexcharts/dist/vue3-apexcharts.umd.min.js"></script>
 </head>
 <body>
 <div class="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-12 xl:px-16" id="app">
@@ -67,6 +71,13 @@ if (!isset($_SESSION['user'])) {
         </div>
     </form>
 
+    <!-- Date Navigation Row -->
+    <div class="grid grid-cols-3 items-center mb-4">
+        <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded" @click="previousDate">&lt;</button>
+        <span class="text-lg font-medium text-center">{{ paycheck_date_display }}</span>
+        <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded" @click="nextDate">&gt;</button>
+    </div>
+
     <!-- Transactions Table -->
     <div class="grid grid-cols-1 gap-6 mb-6">
         <div>
@@ -85,7 +96,7 @@ if (!isset($_SESSION['user'])) {
                             <td class="px-6 py-4 text-center text-gray-500 italic" colspan="3">No rocket money data available</td>
                         </tr>
                         <tr class="expenses_row hover:bg-gray-50" data-index="<?php echo $index; ?>" v-for="(item, index) in transactions" v-else>
-                            <td class="px-6 py-4 text-sm text-gray-900" style="word-wrap: break-word; white-space: normal;">${{ item.name }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900" style="word-wrap: break-word; white-space: normal;">{{ item.name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900" style="width: 80px;">${{ item.amount }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900" style="width: 60px;">
                                 <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded" title="Delete" @click="updateIsCovered(item.id, 1)">X</button>
@@ -96,7 +107,31 @@ if (!isset($_SESSION['user'])) {
             </div>
         </div>
     </div>
+    <div style="clear: both; height: 32px;"></div>
+
+    <!-- Date Navigation Row -->
+    <div class="grid grid-cols-3 items-center mb-4">
+        <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded" @click="previousDate">&lt;</button>
+        <span class="text-lg font-medium text-center">{{ paycheck_date_display }}</span>
+        <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded" @click="nextDate">&gt;</button>
+    </div>
+
+    <div class="py-5"></div>
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Disposable Spent Over Time</h2>
+            <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" @click="loadRoot">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12a7.5 7.5 0 0115 0m-15 0a7.5 7.5 0 0015 0m-15 0H3m18 0h-1.5" />
+                </svg>
+                Reload
+            </button>
+        </div>
+        
+        <div id="disposable_spent_over_time_chart" class="w-full h-96" style="width: 100%; height: 400px;"></div>
+    </div>
 </div>
+
 
 <script>
     // Cache buster: <?php echo time() . '_' . rand(10000, 99999) . '_' . microtime(true); ?>
@@ -107,14 +142,15 @@ if (!isset($_SESSION['user'])) {
         try {
             window.vueApp.unmount();
         } catch (e) {
-            console.log('No app to unmount');
+            
         }
         delete window.vueApp;
     }
 
     const { createApp } = Vue;
-    
+
     const app = createApp({
+            // Removed local registration of apexchart
             data() {
                 return {
                     // Navigation state
@@ -128,28 +164,66 @@ if (!isset($_SESSION['user'])) {
 
                     // paycheck date
                     paycheck_date: null,
+                    paycheck_date_display: '',
+                    transaction_date: null,
+                    category_name: null,
+                    drilldownLevel: 'root',
 
                     // Existing data properties
-                    transactions: []
-                }
+                    transactions: [],
+
+                    // Chart data
+                    chartOptions: {
+                        chart: {
+                            type: 'bar',
+                        },
+                        xaxis: {
+                            categories: [],
+                        },
+                    },
+                    series: [
+                        {
+                            name: 'Spent',
+                            data: [],
+                        },
+                    ],
+                };
             },
             mounted() {
-
                 this.loadPage();
                 
+                // Force chart redraw after mounting
+                this.$nextTick(() => {
+                    // Create the chart using chartOptions and series from data properties
+                    this.chartInstance = new ApexCharts(document.querySelector("#disposable_spent_over_time_chart"), {
+                        ...this.chartOptions,
+                        series: this.series,
+                        chart: {
+                            ...this.chartOptions.chart,
+                            events: {
+                                dataPointSelection: (event, chartContext, config) => {
+                                    
+                                    const clickedDay = this.chartOptions.xaxis.categories[config.dataPointIndex];
+                                    
+                                    this.drilldownIntoChart(clickedDay);
+                                },
+                            },
+                        },
+                    });
+
+                    this.chartInstance.render().then(() => {
+                        
+                    }).catch((error) => {
+                        console.error('Error rendering native ApexCharts chart:', error);
+                    });
+                });
             },
-            
-            beforeUnmount() {
-                
-            },
+            beforeUnmount() {},
             methods: {
                 loadPage() {
-                    
                     this.paycheck_date = this.getDefaultPaycheckDate();
-                    this.loadTransactions();
-
-                    console.log('paycheck_date:', this.paycheck_date);
-
+                    this.loadData();
+                    
                 },
                 getDefaultPaycheckDate() {
                     const today = new Date();
@@ -157,59 +231,200 @@ if (!isset($_SESSION['user'])) {
                     let paycheckDate;
 
                     if (day <= 15) {
-                        // Previous paycheck is the last day of the previous month
                         const previousMonth = today.getMonth() - 1;
                         const year = previousMonth < 0 ? today.getFullYear() - 1 : today.getFullYear();
                         paycheckDate = new Date(year, previousMonth < 0 ? 11 : previousMonth, 15);
                     } else {
-                        // Previous paycheck is the 15th of the current month
                         paycheckDate = new Date(today.getFullYear(), today.getMonth(), 1);
                     }
 
-                    return paycheckDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+                    this.paycheck_date_display = paycheckDate.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                    return paycheckDate.toISOString().split('T')[0];
+                },
+                loadData() {
+                    this.loadTransactions();
+                    this.loadChartData();
+                },
+                loadRoot() {
+                    this.drilldownLevel = 'root';
+                    this.transaction_date = null;
+                    this.category_name = null;
+                    this.loadChartData();
+                },
+                previousDate() {
+                    const [year, month, day] = this.paycheck_date.split('-').map(Number);
+                    const currentDate = new Date(year, month - 1, day); // Month is zero-based
+                    let newDate;
+
+                    
+                    if (currentDate.getDate() === 15) {
+                        
+                        if (currentDate.getMonth() === 0) {
+                            newDate = new Date(currentDate.getFullYear() - 1, 11, 1); // Go to Dec 1 of the previous year
+                        } else {
+                            newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+                        }
+                        
+                        
+                    } else {
+                        
+
+                        
+                        if (currentDate.getMonth() === 0) {
+                            newDate = new Date(currentDate.getFullYear() - 1, 11, 15); // Go to Dec 15 of the previous year
+                        } else {
+                            newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 15);
+                        }
+                    }
+
+                    this.paycheck_date = newDate.toISOString().split('T')[0];
+                    this.paycheck_date_display = newDate.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                    this.loadData();
+                },
+                nextDate() {
+                    const [year, month, day] = this.paycheck_date.split('-').map(Number);
+                    const currentDate = new Date(year, month - 1, day); // Month is zero-based
+                    let newDate;
+
+                    
+                    if (currentDate.getDate() === 15) {
+                        if (currentDate.getMonth() === 11) {
+                            newDate = new Date(currentDate.getFullYear() + 1, 0, 1); // Go to Jan 1 of the next year
+                        } else {
+                            newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+                        }
+                    } else {
+                        if (currentDate.getMonth() === 11) {
+                            newDate = new Date(currentDate.getFullYear() + 1, 0, 15); // Go to Jan 15 of the next year
+                        } else {
+                            newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 15);
+                        }
+                    }
+
+                    this.paycheck_date = newDate.toISOString().split('T')[0];
+                    this.paycheck_date_display = newDate.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                    this.loadData();
                 },
                 async loadTransactions() {
-                    try {   
+                    try {
                         const response = await axios.get('/api/loadDisposableTransactions.php?paycheck_date=' + this.paycheck_date);
                         if (response.data && response.data.items) {
                             
-                           console.log('response.data.items:', response.data.items);
-                           this.transactions = response.data.items;
+                            this.transactions = response.data.items;
                         }
-                    } catch (error) {
+                    } catch (error) {}
+                },
+                async drilldownIntoChart(dimension) {
+
+                    if (this.drilldownLevel == 'root') {
+                            
+                        const dayOfMonth = parseInt(dimension.split(', ')[1]);
+                        const yearMonth = this.paycheck_date.slice(0, 7);
+                        const clickedDate = `${yearMonth}-${dayOfMonth.toString().padStart(2, '0')}`;
+                    
+                        this.transaction_date = clickedDate;
                         
+                        this.drilldownLevel = 'day';
+                        this.loadChartData();
+
+                    } else if (this.drilldownLevel == 'day') {
+                        
+                        this.category_name = dimension;
+                        this.drilldownLevel = 'category';
+
+                        this.loadChartData();
+                    }
+                },
+                async loadChartData() {
+
+                    if (this.drilldownLevel == 'root') {
+                        
+                        const response = await axios.get('/api/loadDisposableTransactionsChartData.php?paycheck_date=' + this.paycheck_date);
+                        if (response.data) {
+                            
+                            this.chartOptions = response.data.chartOptions;
+                            this.series = response.data.series;
+
+                            // Update the chart with new options and series
+                            if (this.chartInstance) {
+                                this.chartInstance.updateOptions(this.chartOptions);
+                                this.chartInstance.updateSeries(this.series);
+                            }
+                        }
+
+                    } else if (this.drilldownLevel == 'day') {
+                        
+                        try {
+                            const response = await axios.get('/api/loadDisposableTransactionsChartDataDay.php?paycheck_date=' + this.paycheck_date + '&transaction_date=' + this.transaction_date);
+                            if (response.data) {
+                                
+                                this.chartOptions = response.data.chartOptions;
+                                this.series = response.data.series;
+
+                                // Update the chart with new options and series
+                                if (this.chartInstance) {
+                                    this.chartInstance.updateOptions(this.chartOptions);
+                                    this.chartInstance.updateSeries(this.series);
+                                }
+                            }
+                        } catch (error) {}
+
+                    } else if (this.drilldownLevel == 'category') {
+
+                        try {
+                            const response = await axios.get('/api/loadDisposableTransactionsChartDataCategory.php?paycheck_date=' + this.paycheck_date + '&transaction_date=' + this.transaction_date + '&category_name=' + encodeURIComponent(this.category_name));
+                            if (response.data) {
+                                
+                                this.chartOptions = response.data.chartOptions;
+                                this.series = response.data.series;
+
+                                // Update the chart with new options and series
+                                if (this.chartInstance) {
+                                    this.chartInstance.updateOptions(this.chartOptions);
+                                    this.chartInstance.updateSeries(this.series);
+                                }
+                            }
+                        } catch (error) {}
                     }
                 },
                 async updateIsCovered(id, isCovered) {
-                    
-                    try {   
+                    try {
                         const response = await axios.get('/api/updateDisposableTransactionCovered.php?id=' + id + '&is_covered=' + isCovered);
                         if (response.data && response.data.success) {
-                            
-                           this.loadTransactions();
+                            this.loadData();
                         }
-                    } catch (error) {
-                        
-                    }
+                    } catch (error) {}
                 },
                 async updateAllNotCovered() {
-                    
-                    try {   
-                        const response = await axios.get('/api/updateAllNotCovered.php');
+                    try {
+                        const response = await axios.get('/api/updateAllNotCovered.php?paycheck_date=' + this.paycheck_date);
                         if (response.data && response.data.success) {
-                            
-                           this.loadTransactions();
+                            this.loadData();
                         }
-                    } catch (error) {
-                        
-                    }
-                }   
-            }
-    });
-    
-    console.log('Mounting Vue app...');
-    window.vueApp = app.mount('#app');
-    console.log('Vue app mounted successfully');
-</script></div> <!-- End of Vue app -->
+                    } catch (error) {}
+                },
+                reloadData() {
+                    this.loadData();
+                },
+            },
+        });
+
+        
+        window.vueApp = app.mount('#app');
+        
+    </script>
+</div> <!-- End of Vue app -->
 </body>
 </html>
