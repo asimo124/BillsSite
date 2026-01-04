@@ -110,14 +110,14 @@ if (!isset($_SESSION['user'])) {
         </div>
 
         <!-- Date Navigation Row -->
-        <div class="grid grid-cols-3 items-center mb-4">
+        <div class="grid grid-cols-3 items-center">
             <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded" @click="previousDate">&lt;</button>
             <span class="text-lg font-medium text-center">{{ paycheck_date_display }}</span>
             <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded" @click="nextDate">&gt;</button>
         </div>
 
 
-        <div class="py-5"></div>
+        
         <div class="bg-white shadow-md rounded-lg p-6">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <h2 class="text-xl font-semibold text-gray-800 ">Disposable Spent Over Time</h2>
