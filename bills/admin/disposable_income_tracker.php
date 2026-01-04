@@ -120,7 +120,7 @@ if (!isset($_SESSION['user'])) {
         <div class="py-5"></div>
         <div class="bg-white shadow-md rounded-lg p-6">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Disposable Spent Over Time</h2>
+                <h2 class="text-xl font-semibold text-gray-800 ">Disposable Spent Over Time</h2>
                 <div style="display: flex; align-items: center; gap: 8px;">
                     <input type="checkbox" id="cumulative_checkbox" v-model="cumulative" @change="loadChartData" />
                     <label for="cumulative_checkbox" class="text-gray-700">Cumulative</label>
@@ -133,7 +133,7 @@ if (!isset($_SESSION['user'])) {
                 </button>
             </div>
             
-            <div id="disposable_spent_over_time_chart" class="w-full h-96" style="width: 100%; height: 400px;"></div>
+            <div id="disposable_spent_over_time_chart" class="w-full h-96" style="width: 100%; height: 350px;"></div>
         </div>
     </div>
 
