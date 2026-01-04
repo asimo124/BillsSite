@@ -23,7 +23,7 @@ $sql = "SELECT t.*, tc.title as category_name
         AND t.is_covered = 0 
         AND t.amount > 0
         AND t.paycheck_date = ?
-        ORDER BY t.transaction_date
+        ORDER BY t.name
         ";
 
 $results = getQuery($sql, [$paycheckDate]);

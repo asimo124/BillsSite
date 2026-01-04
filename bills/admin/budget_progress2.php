@@ -30,6 +30,10 @@ if (!isset($_SESSION['user'])) {
         </div>
     <?php } ?>
 
+    <div class="alert alert-success" role="alert" v-if="showDisposableUpdated">
+        Paycheck disposable updated successfully!
+    </div>
+
     <h2>Budget Progress</h2>
 
     <div style="clear: both; height: 12px"></div>
@@ -54,6 +58,14 @@ if (!isset($_SESSION['user'])) {
                     <input type="number" class="form-control" placeholder="" style="width: 35%; display: inline-block;" readonly v-model="day40" />
                 </div>
             </div>
+        </div>
+    </div>
+    <div style="clear: both; height: 16px"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <input id="determinedDisposable" style="width: 75px; display: inline-block;" type="number" class="form-control" placeholder="Determined Disposable" v-model="determinedDisposable" />&nbsp;
+            <button type="button" class="btn btn-default" @click="addDeterminedDisposable">Update Paycheck Disposable</button>
         </div>
     </div>
     <div style="clear: both; height: 16px"></div>
@@ -142,13 +154,16 @@ createApp({
             disposablePerDay: 25,
             remove15Days: false,
             payDate: new Date(),
+            payDateFormatted: '',
+            determinedDisposable: 200,
             titleDate: '',
             dateValue: '',
             day40: '',
             balance: 0,
             sumTotal: 0,
             sumSpa: 0,
-            averages: []
+            averages: [],
+            showDisposableUpdated: false,
         }
     },
     mounted() {
@@ -156,6 +171,43 @@ createApp({
         this.loadPage('');
     },
     methods: {
+        loadPage(action) {
+            this.nextDate = 0;
+            this.prevDate = 0;
+            
+            const date2 = parseInt(this.payDate.getDate());
+
+            if (action === 'next') {
+                this.nextDate = 1;
+                this.prevDate = 0;
+            } else if (action === 'prev') {
+                this.nextDate = 0;
+                this.prevDate = 1;
+            }
+            
+            this.titleDate = this.payDate.toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            });
+            
+            this.dateValue = (this.payDate.getMonth() + 1) + '/' + this.payDate.getDate();
+            
+            this.getExpenseDays();
+        },
+        updatePayDateFormatted() {
+
+            const date2 = parseInt(this.payDate.getDate());
+
+            const payDateFormatted = new Date(this.payDate.getFullYear(), this.payDate.getMonth(), date2);
+            if (date2 < 15) {
+                payDateFormatted.setDate(1);
+            } else {
+                payDateFormatted.setDate(15);
+            }
+            this.payDateFormatted = payDateFormatted.toISOString().split('T')[0];
+            console.log("Pay Date Formatted:", this.payDateFormatted);
+        },
         initializeBalance() {
             const savedBalance = localStorage.getItem('initBalance');
             if (!savedBalance) {
@@ -239,30 +291,6 @@ createApp({
                 }
             }
         },
-        loadPage(action) {
-            this.nextDate = 0;
-            this.prevDate = 0;
-            
-            const date2 = parseInt(this.payDate.getDate());
-            
-            if (action === 'next') {
-                this.nextDate = 1;
-                this.prevDate = 0;
-            } else if (action === 'prev') {
-                this.nextDate = 0;
-                this.prevDate = 1;
-            }
-            
-            this.titleDate = this.payDate.toLocaleDateString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric'
-            });
-            
-            this.dateValue = (this.payDate.getMonth() + 1) + '/' + this.payDate.getDate();
-            
-            this.getExpenseDays();
-        },
         calcDisposable(disposableDay) {
 
             remove15Days = this.remove15Days;
@@ -278,6 +306,22 @@ createApp({
             
             
             return this.balance - (disposablePerDay * this.daysCount) - subtractAmount;
+        },
+        async addDeterminedDisposable() {
+
+            try {
+                const response = await axios.get(`/api/updatePaycheckDisposable.php?paycheck_date=${this.payDateFormatted}&amount=${this.determinedDisposable}`);
+                
+                if (response.data && response.data.success) {
+                    this.showDisposableUpdated = true;
+
+                    setTimeout(() => {
+                        this.showDisposableUpdated = false;
+                    }, 8000);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
         },
         async getExpenseDays() {
             const curBalance = parseFloat(this.initBalance) || 0;
@@ -297,6 +341,8 @@ createApp({
                         this.nextDate = 0;
                         this.prevDate = 0;
                     }
+
+                    this.updatePayDateFormatted();
                     
                     this.titleDate = this.payDate.toLocaleDateString('en-US', {
                         month: 'short',
