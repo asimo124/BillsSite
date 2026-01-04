@@ -88,7 +88,7 @@ if (!isset($_SESSION['user'])) {
                 <input type="number" 
                     v-model="sumItems[index]" 
                     @change="calcFinalSums"
-                    style="width: 50%;" class="form-control" />
+                    style="width: 30%; display: inline-block;" class="form-control" />
                 &nbsp;<button type="button" @click="removeSumItem(index)">X</button>
                 <button style="display: none;" type="button" @click="saveSpa(index)">></button> 
                 {{ dateItems[index] }}
