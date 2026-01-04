@@ -121,6 +121,10 @@ if (!isset($_SESSION['user'])) {
         <div class="bg-white shadow-md rounded-lg p-6">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">Disposable Spent Over Time</h2>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="cumulative_checkbox" v-model="cumulative" @change="loadChartData" />
+                    <label for="cumulative_checkbox" class="text-gray-700">Cumulative</label>
+                </div>
                 <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" @click="loadRoot">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12a7.5 7.5 0 0115 0m-15 0a7.5 7.5 0 0015 0m-15 0H3m18 0h-1.5" />
@@ -193,6 +197,7 @@ if (!isset($_SESSION['user'])) {
 
                     // Existing data properties
                     transactions: [],
+                    cumulative: 0,
 
                     // Chart data
                     chartOptions: {
@@ -285,17 +290,10 @@ if (!isset($_SESSION['user'])) {
                     
                     if (currentDate.getDate() === 15) {
                         
-                        if (currentDate.getMonth() === 0) {
-                            newDate = new Date(currentDate.getFullYear() - 1, 11, 1); // Go to Dec 1 of the previous year
-                        } else {
-                            newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-                        }
-                        
+                        newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
                         
                     } else {
-                        
-
-                        
+                    
                         if (currentDate.getMonth() === 0) {
                             newDate = new Date(currentDate.getFullYear() - 1, 11, 15); // Go to Dec 15 of the previous year
                         } else {
@@ -324,11 +322,7 @@ if (!isset($_SESSION['user'])) {
                             newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
                         }
                     } else {
-                        if (currentDate.getMonth() === 11) {
-                            newDate = new Date(currentDate.getFullYear() + 1, 0, 15); // Go to Jan 15 of the next year
-                        } else {
-                            newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 15);
-                        }
+                        newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 15);
                     }
 
                     this.paycheck_date = newDate.toISOString().split('T')[0];
@@ -371,9 +365,11 @@ if (!isset($_SESSION['user'])) {
                 },
                 async loadChartData() {
 
+                    const cumulativeParam = this.cumulative ? 1 : 0;
+
                     if (this.drilldownLevel == 'root') {
                         
-                        const response = await axios.get('/api/loadDisposableTransactionsChartData.php?paycheck_date=' + this.paycheck_date);
+                        const response = await axios.get('/api/loadDisposableTransactionsChartData.php?paycheck_date=' + this.paycheck_date + '&cumulative=' + cumulativeParam);
                         if (response.data) {
                             
                             this.chartOptions = response.data.chartOptions;
@@ -383,13 +379,19 @@ if (!isset($_SESSION['user'])) {
                             if (this.chartInstance) {
                                 this.chartInstance.updateOptions(this.chartOptions);
                                 this.chartInstance.updateSeries(this.series);
+                                this.chartInstance.updateOptions({
+                                    yaxis: {
+                                        min: 0,
+                                        max: response.data.maxY || undefined,
+                                    },
+                                });
                             }
                         }
 
                     } else if (this.drilldownLevel == 'day') {
                         
                         try {
-                            const response = await axios.get('/api/loadDisposableTransactionsChartDataDay.php?paycheck_date=' + this.paycheck_date + '&transaction_date=' + this.transaction_date);
+                            const response = await axios.get('/api/loadDisposableTransactionsChartDataDay.php?paycheck_date=' + this.paycheck_date + '&transaction_date=' + this.transaction_date + '&cumulative=' + cumulativeParam);
                             if (response.data) {
                                 
                                 this.chartOptions = response.data.chartOptions;
@@ -406,7 +408,7 @@ if (!isset($_SESSION['user'])) {
                     } else if (this.drilldownLevel == 'category') {
 
                         try {
-                            const response = await axios.get('/api/loadDisposableTransactionsChartDataCategory.php?paycheck_date=' + this.paycheck_date + '&transaction_date=' + this.transaction_date + '&category_name=' + encodeURIComponent(this.category_name));
+                            const response = await axios.get('/api/loadDisposableTransactionsChartDataCategory.php?paycheck_date=' + this.paycheck_date + '&transaction_date=' + this.transaction_date + '&category_name=' + encodeURIComponent(this.category_name) + '&cumulative=' + cumulativeParam);
                             if (response.data) {
                                 
                                 this.chartOptions = response.data.chartOptions;

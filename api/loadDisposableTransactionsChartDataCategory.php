@@ -18,6 +18,8 @@ if (!$paycheckDate) {
 $transactionDate = isset($_REQUEST['transaction_date']) ? trim($_REQUEST['transaction_date']) : '';
 $categoryName = isset($_REQUEST['category_name']) ? trim($_REQUEST['category_name']) : '';
 
+$cumulative = isset($_REQUEST['cumulative']) ? intval($_REQUEST['cumulative']) : 0;
+
 if (!$transactionDate || !$categoryName) {
     header("Content-type: application/json");
     header('Access-Control-Allow-Origin: *');
@@ -44,11 +46,17 @@ $sql = "SELECT
         -- GROUP BY t.name
         ORDER BY t.name ";
 
-
-
 $results = getQuery($sql, [$paycheckDate, $transactionDate, $categoryName]);
 
+if ($cumulative) {
 
+    foreach ($results as $index => $row) {
+        if ($index == 0) {
+            continue;
+        }
+        $results[$index]['accumulated_spent'] += $results[$index - 1]['accumulated_spent'];
+    }
+}
 
 $chartOptions = [
     'chart' => [

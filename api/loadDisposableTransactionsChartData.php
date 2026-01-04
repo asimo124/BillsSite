@@ -5,6 +5,7 @@ include "../inc/includes.php";
 //ini_set("display_errors", 1);
 
 $paycheckDate = isset($_REQUEST['paycheck_date']) ? trim($_REQUEST['paycheck_date']) : '';
+$cumulative = isset($_REQUEST['cumulative']) ? intval($_REQUEST['cumulative']) : 0;
 
 if (!$paycheckDate) {
     $payCheckDay = date('d');
@@ -15,20 +16,85 @@ if (!$paycheckDate) {
     }
 }
 
+if (!$cumulative) {
+
+    $sql = "SELECT 
+            t.transaction_date, 
+            SUM(t.amount) AS spent, 
+            SUM(t.amount) AS accumulated_spent
+            -- SUM(SUM(t.amount)) OVER (ORDER BY t.transaction_date) AS accumulated_spent
+            FROM dt_transaction t
+            WHERE 1  
+            AND t.is_covered = 0 
+            AND t.amount > 0
+            AND t.paycheck_date = ?
+            GROUP BY t.transaction_date
+            ORDER BY t.transaction_date ";
+
+} else {
+
+    $sql = "SELECT 
+            t.transaction_date, 
+            SUM(t.amount) AS spent, 
+            SUM(SUM(t.amount)) OVER (ORDER BY t.transaction_date) AS accumulated_spent
+            FROM dt_transaction t
+            WHERE 1  
+            AND t.is_covered = 0 
+            AND t.amount > 0
+            AND t.paycheck_date = ?
+            GROUP BY t.transaction_date
+            ORDER BY t.transaction_date ";
+}
+
+$results = getQuery($sql, [$paycheckDate]);
+
+
+
+$paycheck3MonthsAgo = date('Y-m-d', strtotime('-3 months', strtotime($paycheckDate)));
+
+$payCheckDay = date('d');
+if ($payCheckDay < 15) {
+    $paycheck3MonthsAgo = date('Y-m-1', strtotime($paycheck3MonthsAgo));
+} else {
+    $paycheck3MonthsAgo = date('Y-m-15', strtotime($paycheck3MonthsAgo));
+}
+
 $sql = "SELECT 
+        t.paycheck_date,
         t.transaction_date, 
-        SUM(t.amount) AS spent, 
-        SUM(t.amount) AS accumulated_spent
-        -- SUM(SUM(t.amount)) OVER (ORDER BY t.transaction_date) AS accumulated_spent
+        SUM(t.amount) AS spent 
         FROM dt_transaction t
         WHERE 1  
         AND t.is_covered = 0 
         AND t.amount > 0
-        AND t.paycheck_date = ?
-        GROUP BY t.transaction_date
+        AND t.paycheck_date >= ?
+        GROUP BY t.paycheck_date, t.transaction_date
         ORDER BY t.transaction_date ";
 
-$results = getQuery($sql, [$paycheckDate]);
+$recentResults = getQuery($sql, [$paycheck3MonthsAgo]);
+
+$highestRecentAmount = 0;
+$recentResultsArr = [];
+foreach ($recentResults as $row) {
+    
+    if (!isset($recentResultsArr[$row['paycheck_date']])) {
+        $recentResultsArr[$row['paycheck_date']] = [];
+    }
+    $recentResultsArr[$row['paycheck_date']][] = $row;
+}
+
+foreach ($recentResultsArr as $paycheckDateKey => $rows) {
+    $totalForPaycheck = 0;
+    foreach ($rows as $row) {
+        $totalForPaycheck += floatval($row['spent']);
+    }
+    if ($totalForPaycheck > $highestRecentAmount) {
+        $highestRecentAmount = $totalForPaycheck;
+    }
+}
+
+$highestRecentAmount = intval($highestRecentAmount * 0.25);
+
 
 function addOrdinalSuffix($day) {
     if (!in_array(($day % 100), [11, 12, 13])) {
@@ -88,6 +154,7 @@ $series = [
 header("Content-type: application/json");
 header('Access-Control-Allow-Origin: *');
 echo json_encode([
+    'maxY' => intval($highestRecentAmount),
     'chartOptions' => $chartOptions,
     'series' => $series,
 ], JSON_PRETTY_PRINT);

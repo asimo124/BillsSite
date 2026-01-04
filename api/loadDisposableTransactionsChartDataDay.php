@@ -5,6 +5,7 @@ include "../inc/includes.php";
 //ini_set("display_errors", 1);
 
 $paycheckDate = isset($_REQUEST['paycheck_date']) ? trim($_REQUEST['paycheck_date']) : '';
+$cumulative = isset($_REQUEST['cumulative']) ? intval($_REQUEST['cumulative']) : 0;
 
 if (!$paycheckDate) {
     $payCheckDay = date('d');
@@ -26,7 +27,9 @@ if (!$transactionDate) {
     die();
 }
 
-$sql = "SELECT 
+if (!$cumulative) {
+
+    $sql = "SELECT 
         tc.title as category_name, 
         SUM(t.amount) AS spent, 
         SUM(t.amount) AS accumulated_spent
@@ -41,6 +44,26 @@ $sql = "SELECT
         AND t.transaction_date = ?
         GROUP BY tc.title
         ORDER BY tc.title ";
+
+} else {
+
+     $sql = "SELECT 
+        tc.title as category_name, 
+        SUM(t.amount) AS spent, 
+        SUM(SUM(t.amount)) OVER (ORDER BY tc.title) AS accumulated_spent
+        FROM dt_transaction t
+        INNER JOIN dt_transaction_category tc 
+            ON t.transaction_category_id = tc.id
+        WHERE 1  
+        AND t.is_covered = 0 
+        AND t.amount > 0
+        AND t.paycheck_date = ?
+        AND t.transaction_date = ?
+        GROUP BY tc.title
+        ORDER BY tc.title ";
+}
+
+
 
 $results = getQuery($sql, [$paycheckDate, $transactionDate]);
 
