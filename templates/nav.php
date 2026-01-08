@@ -37,7 +37,6 @@
     <a href="/bills/admin/weight_ratio.php">Weight Ratio</a>
     <a href="/bills/admin/last_time_i.php">Last Time I</a>
     <a href="/settings/index.php">Settings</a>
-    <a href="/bills/admin/debt_progress.php">Debt Progress</a>
     <a href="/logout.php">Logout</a>
     <a href="javascript:void(0);" class="icon" onclick="myFunction()">
         <i class="fa fa-bars"></i>
