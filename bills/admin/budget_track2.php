@@ -54,6 +54,10 @@ if (!isset($_SESSION['user'])) {
     <div class="row">
         <div class="col-xs-6">
             <h3>Initial Balance</h3>
+            <label for="loft_balance">Loft Balance</label>
+            <input type="number" id="loft_balance" class="form-control" 
+                placeholder="Loft Balance" v-model="loft_balance" />
+            <div style="clear: both; height: 8px"></div>
             <label for="sofi_balance">Sofi</label>
             <input type="number" id="sofi_balance" class="form-control" 
                 placeholder="Sofi Balance" v-model="sofi_balance" />
@@ -72,6 +76,10 @@ if (!isset($_SESSION['user'])) {
         </div>
         <div class="col-xs-6">
             <h3>Min Payment</h3>
+            <label for="loft_min_payment">Loft</label>
+            <input type="number" id="loft_min_payment" class="form-control" 
+                placeholder="Loft Min Payment" v-model="loft_min_payment" />
+            <div style="clear: both; height: 8px"></div>
             <label for="sofi_min_payment">Sofi</label>
             <input type="number" id="sofi_min_payment" class="form-control" 
                 placeholder="Sofi Min Payment" v-model="sofi_min_payment" />
@@ -94,6 +102,10 @@ if (!isset($_SESSION['user'])) {
     <div class="row">
         <div class="col-xs-12">
             <h3>Months Left</h3>
+            <label for="loft_months_left">Loft</label>
+            <input type="number" id="loft_months_left" class="form-control" 
+                placeholder="Loft Months Left" v-model="loft_months_left" />
+            <div style="clear: both; height: 8px"></div>
             <label for="sofi_months_left">Sofi</label>
             <input type="number" id="sofi_months_left" class="form-control" 
                 placeholder="Sofi Months Left" v-model="sofi_months_left" />
@@ -117,7 +129,7 @@ if (!isset($_SESSION['user'])) {
         <div v-for="(yearGroup, yearIndex) in months_left_arr" :key="yearIndex">
             <h4>{{ yearGroup.year_title }}</h4>
             <div class="col-xs-4 col-sm-3 col-md-2" v-for="(month, monthIndex) in yearGroup.months" :key="monthIndex">
-                <div class="cal_month" :class="{'green_box': month.color === 'green', 'red_box': month.color === 'red', 'blue_box': month.color === 'blue'}">
+                <div class="cal_month" :class="{'orange_box': month.color === 'orange', 'green_box': month.color === 'green', 'red_box': month.color === 'red', 'blue_box': month.color === 'blue'}">
                     <span class="cal_month_title">{{ month.month_year }}</span>
                 </div>
             </div>
@@ -128,6 +140,10 @@ if (!isset($_SESSION['user'])) {
     <div class="row">
         <div class="col-xs-6">
             <h3>Min Payment Principal</h3>
+            <label for="loft_amount_principal">Loft</label>
+            <input type="number" id="loft_amount_principal" class="form-control" 
+                placeholder="Loft Min Payment Principal" v-model="loft_amount_principal" />
+            <div style="clear: both; height: 8px"></div>
             <label for="sofi_amount_principal">Sofi</label>
             <input type="number" id="sofi_amount_principal" class="form-control" 
                 placeholder="Sofi Min Payment Principal" v-model="sofi_amount_principal" />
@@ -155,20 +171,25 @@ if (!isset($_SESSION['user'])) {
         el: '#app',
         data: {
             disposable_per_month: 1100,
+            loft_balance: 1407,
             sofi_balance: 8852,
             mastercard_balance: 12492,
             credit_human_balance: 9598,
             total_balance: 0,
+            loft_min_payment: 68,
             sofi_min_payment: 618,
             mastercard_min_payment: 250,
             credit_human_min_payment: 293,
             total_min_payment: 0,
+            loft_amount_principal: 1407,
             sofi_amount_principal: 566, // from 512 on 9/12/2025
             mastercard_amount_principal: 125,
             credit_human_amount_principal: 200,
+            loft_total_principal_monthly: 0,
             sofi_total_principal_monthly: 0,
             mastercard_total_principal_monthly: 0,
             credit_human_total_principal_monthly: 0,
+            loft_months_left: 0,
             sofi_months_left: 0,
             mastercard_months_left: 0,
             credit_human_months_left: 0,
@@ -178,13 +199,16 @@ if (!isset($_SESSION['user'])) {
         methods: {
             calcProgress: function() {
                 // Calculate total balance
-                this.total_balance = parseFloat(this.sofi_balance) + parseFloat(this.mastercard_balance) + parseFloat(this.credit_human_balance);
+                this.total_balance = parseFloat(this.loft_balance) + parseFloat(this.sofi_balance) + parseFloat(this.mastercard_balance) + parseFloat(this.credit_human_balance);
 
                 // Calculate total min payment
-                this.total_min_payment = parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_min_payment);
+                this.total_min_payment = parseFloat(this.loft_min_payment) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_min_payment);
+
+                this.loft_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.loft_amount_principal));
+                this.loft_months_left = parseFloat((this.loft_balance / this.loft_total_principal_monthly).toFixed(1));
 
                 //this.sofi_amount_principal = parseFloat((this.sofi_min_payment * this.sofi_percentage_principal).toFixed(2));
-                this.sofi_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.sofi_amount_principal));
+                this.sofi_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.loft_min_payment) + parseFloat(this.sofi_amount_principal));
                 this.sofi_months_left = parseFloat((this.sofi_balance / this.sofi_total_principal_monthly).toFixed(1));
 
                 console.log('sofi_amount_principal: ' + this.sofi_amount_principal);
@@ -199,7 +223,7 @@ if (!isset($_SESSION['user'])) {
                 this.credit_human_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_amount_principal));
                 this.credit_human_months_left = parseFloat((this.credit_human_balance / this.credit_human_total_principal_monthly).toFixed(1));
 
-                this.total_months_left = (parseFloat(this.sofi_months_left) + parseFloat(this.mastercard_months_left) + parseFloat(this.credit_human_months_left)).toFixed(1);
+                this.total_months_left = (parseFloat(this.loft_months_left) + parseFloat(this.sofi_months_left) + parseFloat(this.mastercard_months_left) + parseFloat(this.credit_human_months_left)).toFixed(1);
 
                 var total_paychecks_left = Math.round(this.total_months_left * 2);
                 console.log('Total Paychecks Left: ' + total_paychecks_left);
@@ -237,13 +261,19 @@ if (!isset($_SESSION['user'])) {
                         };
                     }
 
-                    var sofi_threshold = this.sofi_months_left;
+                    var loft_threshhold = this.loft_months_left;
+                    var sofi_threshold = loft_threshhold + this.sofi_months_left;
                     var mastercard_threshold = sofi_threshold + this.mastercard_months_left;
                     var credit_human_threshold = mastercard_threshold + this.credit_human_months_left;
 
                     console.log('i: ' + i + ', sofi_threshold: ' + sofi_threshold + ', mastercard_threshold: ' + mastercard_threshold + ', credit_human_threshold: ' + credit_human_threshold);
 
-                    if (i < sofi_threshold) {
+                    if (i < loft_threshhold) {
+                        yearGroups[displayYear].months.push({
+                            month_year: monthYearString,
+                            color: "orange",
+                        });
+                    } else if (i < sofi_threshold) {
                         yearGroups[displayYear].months.push({
                             month_year: monthYearString,
                             color: "red",
@@ -295,6 +325,9 @@ if (!isset($_SESSION['user'])) {
             }
         },
         watch: {
+            loft_balance: function(newVal, oldVal) {
+                localStorage.setItem('loft_balance', newVal);
+            },
             sofi_balance: function(newVal, oldVal) {
                 localStorage.setItem('sofi_balance', newVal);
             },
@@ -307,8 +340,14 @@ if (!isset($_SESSION['user'])) {
             disposable_per_month: function(newVal, oldVal) {
                 localStorage.setItem('disposable_per_month', newVal);
             },
+            loft_months_left: function(newVal, oldVal) {
+                localStorage.setItem('loft_months_left', newVal);
+            },
             sofi_months_left: function(newVal, oldVal) {
                 localStorage.setItem('sofi_months_left', newVal);
+            },
+            loft_amount_principal: function(newVal, oldVal) {
+                localStorage.setItem('loft_amount_principal', newVal);
             },
             sofi_amount_principal: function(newVal, oldVal) {
                 localStorage.setItem('sofi_amount_principal', newVal);
@@ -321,6 +360,10 @@ if (!isset($_SESSION['user'])) {
             },
         },
         mounted() {
+
+            if (localStorage.getItem('loft_balance') && !isNaN(localStorage.getItem('loft_balance'))) {
+                this.loft_balance = parseFloat(localStorage.getItem('loft_balance'));
+            }
 
             if (localStorage.getItem('sofi_balance') && !isNaN(localStorage.getItem('sofi_balance'))) {
                 this.sofi_balance = parseFloat(localStorage.getItem('sofi_balance'));
@@ -336,6 +379,10 @@ if (!isset($_SESSION['user'])) {
 
             if (localStorage.getItem('disposable_per_month') && !isNaN(localStorage.getItem('disposable_per_month'))) {
                 this.disposable_per_month = parseFloat(localStorage.getItem('disposable_per_month'));
+            } 
+            
+            if (localStorage.getItem('loft_amount_principal') && !isNaN(localStorage.getItem('loft_amount_principal'))) {
+                this.loft_amount_principal = parseFloat(localStorage.getItem('loft_amount_principal'));
             }
 
             if (localStorage.getItem('sofi_amount_principal') && !isNaN(localStorage.getItem('sofi_amount_principal'))) {
@@ -348,9 +395,9 @@ if (!isset($_SESSION['user'])) {
                 this.credit_human_amount_principal = parseFloat(localStorage.getItem('credit_human_amount_principal'));
             }
 
-            this.total_balance = parseFloat(this.sofi_balance) + parseFloat(this.mastercard_balance) + parseFloat(this.credit_human_balance);
+            this.total_balance = parseFloat(this.loft_balance) + parseFloat(this.sofi_balance) + parseFloat(this.mastercard_balance) + parseFloat(this.credit_human_balance);
 
-            this.total_min_payment = parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_min_payment);
+            this.total_min_payment = parseFloat(this.loft_min_payment) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_min_payment);
         
             this.calcProgress();
         }
