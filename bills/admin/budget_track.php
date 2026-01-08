@@ -183,27 +183,31 @@ if (!isset($_SESSION['user'])) {
                 // Calculate total min payment
                 this.total_min_payment = parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_min_payment);
 
-                //this.sofi_amount_principal = parseFloat((this.sofi_min_payment * this.sofi_percentage_principal).toFixed(2));
                 this.sofi_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.sofi_amount_principal));
                 this.sofi_months_left = parseFloat((this.sofi_balance / this.sofi_total_principal_monthly).toFixed(1));
 
-                console.log('sofi_amount_principal: ' + this.sofi_amount_principal);
-                console.log('sofi_total_principal_monthly: ' + this.sofi_total_principal_monthly);
-                console.log('sofi_months_left: ' + this.sofi_months_left);  
+                console.log("Sofi Months Left: " + this.sofi_months_left);
+                console.log("Sofi Total Principal Monthly: " + this.sofi_total_principal_monthly);
+                
 
-                //this.mastercard_amount_principal = parseFloat((this.mastercard_min_payment * this.mastercard_percentage_principal).toFixed(2));
                 this.mastercard_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_amount_principal));
                 this.mastercard_months_left = parseFloat((this.mastercard_balance / this.mastercard_total_principal_monthly).toFixed(1));
 
-                //this.credit_human_amount_principal = parseFloat((this.credit_human_min_payment * this.credit_human_percentage_principal).toFixed(2));
+                console.log("Mastercard Months Left: " + this.mastercard_months_left);
+                console.log("Mastercard Total Principal Monthly: " + this.mastercard_total_principal_month);
+
+
                 this.credit_human_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_amount_principal));
                 this.credit_human_months_left = parseFloat((this.credit_human_balance / this.credit_human_total_principal_monthly).toFixed(1));
+
+                console.log("Credit Human Months Left: " + this.credit_human_months_left);
+                console.log("Credit Human Total Principal Monthly: " + this.credit_human_total_principal_monthly);
+
 
                 this.total_months_left = (parseFloat(this.sofi_months_left) + parseFloat(this.mastercard_months_left) + parseFloat(this.credit_human_months_left)).toFixed(1);
 
                 var total_paychecks_left = Math.round(this.total_months_left * 2);
-                console.log('Total Paychecks Left: ' + total_paychecks_left);
-
+    
                 var date2 = new Date();
                 var curDay = date2.getDate();
                 if (curDay > 15) {
@@ -241,8 +245,6 @@ if (!isset($_SESSION['user'])) {
                     var mastercard_threshold = sofi_threshold + this.mastercard_months_left;
                     var credit_human_threshold = mastercard_threshold + this.credit_human_months_left;
 
-                    console.log('i: ' + i + ', sofi_threshold: ' + sofi_threshold + ', mastercard_threshold: ' + mastercard_threshold + ', credit_human_threshold: ' + credit_human_threshold);
-
                     if (i < sofi_threshold) {
                         yearGroups[displayYear].months.push({
                             month_year: monthYearString,
@@ -263,35 +265,6 @@ if (!isset($_SESSION['user'])) {
                 
                 // Convert to array
                 this.months_left_arr = Object.values(yearGroups);
-
-                console.log('Months array:', this.months_left_arr);
-
-                console.log({
-                    "items": {
-                        "disposable_per_month": this.disposable_per_month,
-                        "sofi_balance": this.sofi_balance,
-                        "mastercard_balance": this.mastercard_balance,
-                        "credit_human_balance": this.credit_human_balance,
-                        "total_balance": this.total_balance,
-                        "sofi_min_payment": this.sofi_min_payment,
-                        "mastercard_min_payment": this.mastercard_min_payment,
-                        "credit_human_min_payment": this.credit_human_min_payment,
-                        "total_min_payment": this.total_min_payment,
-                        "sofi_percentage_principal": this.sofi_percentage_principal,
-                        "mastercard_percentage_principal": this.mastercard_percentage_principal,
-                        "credit_human_percentage_principal": this.credit_human_percentage_principal,
-                        "sofi_amount_principal": this.sofi_amount_principal,
-                        "mastercard_amount_principal": this.mastercard_amount_principal,
-                        "credit_human_amount_principal": this.credit_human_amount_principal,
-                        "sofi_total_principal_monthly": this.sofi_total_principal_monthly,
-                        "mastercard_total_principal_monthly": this.mastercard_total_principal_monthly,
-                        "credit_human_total_principal_monthly": this.credit_human_total_principal_monthly,
-                        "sofi_months_left": this.sofi_months_left,
-                        "mastercard_months_left": this.mastercard_months_left,
-                        "credit_human_months_left": this.credit_human_months_left,
-                        "total_months_left": this.total_months_left,
-                    }
-                })
             }
         },
         watch: {

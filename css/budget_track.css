@@ -18,6 +18,14 @@
   font-size: 32px;
 }
 
+.yellow_box {
+  background-color: #e3c229;
+}
+
+.purple_box {
+  background-color: #6a3ab8;
+}
+
 .orange_box {
   background-color: #d47c2f;
 }

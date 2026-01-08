@@ -20,7 +20,7 @@ if (!isset($_SESSION['user'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/nav.css" />
     <link rel="stylesheet" href="/css/bills_admin.css" />
-    <link rel="stylesheet" href="/css/budget_track.css?version=8" />
+    <link rel="stylesheet" href="/css/budget_track.css?version=10" />
     <!-- Vue.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 </head>
@@ -54,44 +54,74 @@ if (!isset($_SESSION['user'])) {
     <div class="row">
         <div class="col-xs-6">
             <h3>Initial Balance</h3>
+
+            <label for="dell_balance">Dell Balance</label>
+            <input type="number" id="dell_balance" class="form-control" 
+                placeholder="Dell Balance" v-model="dell_balance" />
+            <div style="clear: both; height: 8px"></div>
+
+            <label for="irs_balance">IRS Balance</label>
+            <input type="number" id="irs_balance" class="form-control" 
+                placeholder="IRS Balance" v-model="irs_balance" />
+            <div style="clear: both; height: 8px"></div>
+
             <label for="loft_balance">Loft Balance</label>
             <input type="number" id="loft_balance" class="form-control" 
                 placeholder="Loft Balance" v-model="loft_balance" />
             <div style="clear: both; height: 8px"></div>
+
             <label for="sofi_balance">Sofi</label>
             <input type="number" id="sofi_balance" class="form-control" 
                 placeholder="Sofi Balance" v-model="sofi_balance" />
             <div style="clear: both; height: 8px"></div>
+
             <label for="mastercard_balance">Mastercard</label>
             <input type="number" id="mastercard_balance" class="form-control" 
                 placeholder="Mastercard Balance" v-model="mastercard_balance" />
             <div style="clear: both; height: 8px"></div>
+
             <label for="credit_human_balance">Credit Human</label>
             <input type="number" id="credit_human_balance" class="form-control" 
                 placeholder="Credit Human Balance" v-model="credit_human_balance" />
             <div style="clear: both; height: 8px"></div>
+
             <label for="total_balance">Total Balance</label>
             <input type="number" id="total_balance" class="form-control" 
                 placeholder="Total Balance" v-model="total_balance" />
         </div>
         <div class="col-xs-6">
             <h3>Min Payment</h3>
+
+            <label for="dell_min_payment">Dell</label>
+            <input type="number" id="dell_min_payment" class="form-control" 
+                placeholder="Dell Min Payment" v-model="dell_min_payment" />
+            <div style="clear: both; height: 8px"></div>
+
+            <label for="irs_min_payment">IRS</label>
+            <input type="number" id="irs_min_payment" class="form-control" 
+                placeholder="IRS Min Payment" v-model="irs_min_payment" />
+            <div style="clear: both; height: 8px"></div>
+
             <label for="loft_min_payment">Loft</label>
             <input type="number" id="loft_min_payment" class="form-control" 
                 placeholder="Loft Min Payment" v-model="loft_min_payment" />
             <div style="clear: both; height: 8px"></div>
+
             <label for="sofi_min_payment">Sofi</label>
             <input type="number" id="sofi_min_payment" class="form-control" 
                 placeholder="Sofi Min Payment" v-model="sofi_min_payment" />
             <div style="clear: both; height: 8px"></div>
+
             <label for="mastercard_min_payment">Mastercard</label>
             <input type="number" id="mastercard_min_payment" class="form-control" 
                 placeholder="Mastercard Min Payment" v-model="mastercard_min_payment" />
             <div style="clear: both; height: 8px"></div>
+
             <label for="credit_human_min_payment">Credit Human</label>
             <input type="number" id="credit_human_min_payment" class="form-control" 
                 placeholder="Credit Human Min Payment" v-model="credit_human_min_payment" />
             <div style="clear: both; height: 8px"></div>
+
             <label for="total_min_payment">Total Min Payment</label>
             <input type="number" id="total_min_payment" class="form-control" 
                 placeholder="Total Min Payment" v-model="total_min_payment" />
@@ -102,22 +132,37 @@ if (!isset($_SESSION['user'])) {
     <div class="row">
         <div class="col-xs-12">
             <h3>Months Left</h3>
+
+            <label for="dell_months_left">Dell</label>
+            <input type="number" id="dell_months_left" class="form-control" 
+                placeholder="Dell Months Left" v-model="dell_months_left" />
+            <div style="clear: both; height: 8px"></div>
+
+            <label for="irs_months_left">IRS</label>
+            <input type="number" id="irs_months_left" class="form-control" 
+                placeholder="IRS Months Left" v-model="irs_months_left" />
+            <div style="clear: both; height: 8px"></div>
+
             <label for="loft_months_left">Loft</label>
             <input type="number" id="loft_months_left" class="form-control" 
                 placeholder="Loft Months Left" v-model="loft_months_left" />
             <div style="clear: both; height: 8px"></div>
+
             <label for="sofi_months_left">Sofi</label>
             <input type="number" id="sofi_months_left" class="form-control" 
                 placeholder="Sofi Months Left" v-model="sofi_months_left" />
             <div style="clear: both; height: 8px"></div>
+
             <label for="mastercard_months_left">Mastercard</label>
             <input type="number" id="mastercard_months_left" class="form-control" 
                 placeholder="Mastercard Months Left" v-model="mastercard_months_left" />
             <div style="clear: both; height: 8px"></div>
+
             <label for="credit_human_months_left">Credit Human</label>
             <input type="number" id="credit_human_months_left" class="form-control" 
                 placeholder="Credit Human Months Left" v-model="credit_human_months_left" />
             <div style="clear: both; height: 8px"></div>
+
             <label for="total_months_left">Total Months Left</label>
             <input type="number" id="total_months_left" class="form-control" 
                 placeholder="Total Months Left" v-model="total_months_left" />
@@ -129,7 +174,7 @@ if (!isset($_SESSION['user'])) {
         <div v-for="(yearGroup, yearIndex) in months_left_arr" :key="yearIndex">
             <h4>{{ yearGroup.year_title }}</h4>
             <div class="col-xs-4 col-sm-3 col-md-2" v-for="(month, monthIndex) in yearGroup.months" :key="monthIndex">
-                <div class="cal_month" :class="{'orange_box': month.color === 'orange', 'green_box': month.color === 'green', 'red_box': month.color === 'red', 'blue_box': month.color === 'blue'}">
+                <div class="cal_month" :class="{'yellow_box': month.color === 'yellow', 'purple_box': month.color === 'purple', 'orange_box': month.color === 'orange', 'green_box': month.color === 'green', 'red_box': month.color === 'red', 'blue_box': month.color === 'blue'}">
                     <span class="cal_month_title">{{ month.month_year }}</span>
                 </div>
             </div>
@@ -140,18 +185,32 @@ if (!isset($_SESSION['user'])) {
     <div class="row">
         <div class="col-xs-6">
             <h3>Min Payment Principal</h3>
+
+            <label for="dell_amount_principal">Dell</label>
+            <input type="number" id="dell_amount_principal" class="form-control" 
+                placeholder="Dell Min Payment Principal" v-model="dell_amount_principal" />
+            <div style="clear: both; height: 8px"></div>
+
+            <label for="irs_amount_principal">IRS</label>
+            <input type="number" id="irs_amount_principal" class="form-control" 
+                placeholder="IRS Min Payment Principal" v-model="irs_amount_principal" />
+            <div style="clear: both; height: 8px"></div>
+
             <label for="loft_amount_principal">Loft</label>
             <input type="number" id="loft_amount_principal" class="form-control" 
                 placeholder="Loft Min Payment Principal" v-model="loft_amount_principal" />
             <div style="clear: both; height: 8px"></div>
+
             <label for="sofi_amount_principal">Sofi</label>
             <input type="number" id="sofi_amount_principal" class="form-control" 
                 placeholder="Sofi Min Payment Principal" v-model="sofi_amount_principal" />
             <div style="clear: both; height: 8px"></div>
+
             <label for="mastercard_amount_principal">Mastercard</label>
             <input type="number" id="mastercard_amount_principal" class="form-control" 
                 placeholder="Mastercard Min Payment Principal" v-model="mastercard_amount_principal" />
             <div style="clear: both; height: 8px"></div>
+
             <label for="credit_human_amount_principal">Credit Human</label>
             <input type="number" id="credit_human_amount_principal" class="form-control" 
                 placeholder="Credit Human Min Payment Principal" v-model="credit_human_amount_principal" />
@@ -171,62 +230,99 @@ if (!isset($_SESSION['user'])) {
         el: '#app',
         data: {
             disposable_per_month: 1100,
+
+            dell_balance: 545,
+            irs_balance: 1824,
             loft_balance: 1407,
             sofi_balance: 8852,
             mastercard_balance: 12492,
             credit_human_balance: 9598,
+
             total_balance: 0,
+
+            dell_min_payment: 100,
+            irs_min_payment: 75,
             loft_min_payment: 68,
             sofi_min_payment: 618,
             mastercard_min_payment: 250,
             credit_human_min_payment: 293,
+
             total_min_payment: 0,
+
+            dell_amount_principal: 545,
+            irs_amount_principal: 1824,
             loft_amount_principal: 1407,
             sofi_amount_principal: 566, // from 512 on 9/12/2025
             mastercard_amount_principal: 125,
             credit_human_amount_principal: 200,
+
+            dell_total_principal_monthly: 0,
+            irs_total_principal_monthly: 0,
             loft_total_principal_monthly: 0,
             sofi_total_principal_monthly: 0,
             mastercard_total_principal_monthly: 0,
             credit_human_total_principal_monthly: 0,
+
+            dell_months_left: 0,
+            irs_months_left: 0,
             loft_months_left: 0,
             sofi_months_left: 0,
             mastercard_months_left: 0,
             credit_human_months_left: 0,
+
             total_months_left: 0,
+
             months_left_arr: []
         },
         methods: {
             calcProgress: function() {
                 // Calculate total balance
-                this.total_balance = parseFloat(this.loft_balance) + parseFloat(this.sofi_balance) + parseFloat(this.mastercard_balance) + parseFloat(this.credit_human_balance);
+                this.total_balance = parseFloat(this.dell_balance) + parseFloat(this.loft_balance) + parseFloat(this.sofi_balance) + parseFloat(this.mastercard_balance) + parseFloat(this.credit_human_balance);
 
                 // Calculate total min payment
-                this.total_min_payment = parseFloat(this.loft_min_payment) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_min_payment);
+                this.total_min_payment = parseFloat(this.dell_min_payment) + parseFloat(this.loft_min_payment) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_min_payment);
 
-                this.loft_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.loft_amount_principal));
+                this.dell_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.dell_amount_principal));
+                this.dell_months_left = parseFloat((this.dell_balance / this.dell_total_principal_monthly).toFixed(1));
+
+                console.log("Dell Months Left: " + this.dell_months_left);
+                console.log("Dell Total Principal Monthly: " + this.dell_total_principal_monthly);
+
+                this.irs_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.dell_amount_principal) + parseFloat(this.irs_amount_principal));
+                this.irs_months_left = parseFloat((this.irs_balance / this.irs_total_principal_monthly).toFixed(1));
+
+                console.log("IRS Months Left: " + this.irs_months_left);
+                console.log("IRS Total Principal Monthly: " + this.irs_total_principal_monthly);
+
+                this.loft_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.dell_min_payment) + parseFloat(this.irs_min_payment) + parseFloat(this.loft_amount_principal));
                 this.loft_months_left = parseFloat((this.loft_balance / this.loft_total_principal_monthly).toFixed(1));
 
-                //this.sofi_amount_principal = parseFloat((this.sofi_min_payment * this.sofi_percentage_principal).toFixed(2));
-                this.sofi_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.loft_min_payment) + parseFloat(this.sofi_amount_principal));
+                console.log("Loft Months Left: " + this.loft_months_left);
+                console.log("Loft Total Principal Monthly: " + this.loft_total_principal_monthly);
+
+                this.sofi_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.dell_min_payment) + parseFloat(this.irs_min_payment) + parseFloat(this.loft_min_payment) + parseFloat(this.sofi_amount_principal));
                 this.sofi_months_left = parseFloat((this.sofi_balance / this.sofi_total_principal_monthly).toFixed(1));
 
-                console.log('sofi_amount_principal: ' + this.sofi_amount_principal);
-                console.log('sofi_total_principal_monthly: ' + this.sofi_total_principal_monthly);
-                console.log('sofi_months_left: ' + this.sofi_months_left);  
-
-                //this.mastercard_amount_principal = parseFloat((this.mastercard_min_payment * this.mastercard_percentage_principal).toFixed(2));
-                this.mastercard_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_amount_principal));
+                console.log("Sofi Months Left: " + this.sofi_months_left);
+                console.log("Sofi Total Principal Monthly: " + this.sofi_total_principal_monthly);
+                
+                this.mastercard_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.dell_min_payment) + parseFloat(this.irs_min_payment) + parseFloat(this.loft_min_payment) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_amount_principal));
                 this.mastercard_months_left = parseFloat((this.mastercard_balance / this.mastercard_total_principal_monthly).toFixed(1));
 
-                //this.credit_human_amount_principal = parseFloat((this.credit_human_min_payment * this.credit_human_percentage_principal).toFixed(2));
-                this.credit_human_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_amount_principal));
+                console.log("Mastercard Months Left: " + this.mastercard_months_left);
+                console.log("Mastercard Total Principal Monthly: " + this.mastercard_total_principal_month);
+
+                this.credit_human_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.dell_min_payment) + parseFloat(this.irs_min_payment) + parseFloat(this.loft_min_payment) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_amount_principal));
                 this.credit_human_months_left = parseFloat((this.credit_human_balance / this.credit_human_total_principal_monthly).toFixed(1));
 
-                this.total_months_left = (parseFloat(this.loft_months_left) + parseFloat(this.sofi_months_left) + parseFloat(this.mastercard_months_left) + parseFloat(this.credit_human_months_left)).toFixed(1);
+                console.log("Credit Human Months Left: " + this.credit_human_months_left);
+                console.log("Credit Human Total Principal Monthly: " + this.credit_human_total_principal_monthly);
+
+                this.total_months_left = (parseFloat(this.dell_months_left) + parseFloat(this.irs_months_left) + parseFloat(this.loft_months_left) + parseFloat(this.sofi_months_left) + parseFloat(this.mastercard_months_left) + parseFloat(this.credit_human_months_left)).toFixed(1);
+
+                console.log("Total Months Left: " + this.total_months_left);
 
                 var total_paychecks_left = Math.round(this.total_months_left * 2);
-                console.log('Total Paychecks Left: ' + total_paychecks_left);
 
                 var date2 = new Date();
                 var curDay = date2.getDate();
@@ -261,14 +357,24 @@ if (!isset($_SESSION['user'])) {
                         };
                     }
 
-                    var loft_threshhold = this.loft_months_left;
+                    var dell_threshold = this.dell_months_left;
+                    var irs_threshold = dell_threshold + this.irs_months_left;
+                    var loft_threshhold = irs_threshold + this.loft_months_left;
                     var sofi_threshold = loft_threshhold + this.sofi_months_left;
                     var mastercard_threshold = sofi_threshold + this.mastercard_months_left;
                     var credit_human_threshold = mastercard_threshold + this.credit_human_months_left;
 
-                    console.log('i: ' + i + ', sofi_threshold: ' + sofi_threshold + ', mastercard_threshold: ' + mastercard_threshold + ', credit_human_threshold: ' + credit_human_threshold);
-
-                    if (i < loft_threshhold) {
+                    if (i < dell_threshold) {
+                        yearGroups[displayYear].months.push({
+                            month_year: monthYearString,
+                            color: "purple",
+                        });
+                    } else if (i < irs_threshold) {
+                        yearGroups[displayYear].months.push({
+                            month_year: monthYearString,
+                            color: "yellow",
+                        });
+                    } else if (i < loft_threshhold) {
                         yearGroups[displayYear].months.push({
                             month_year: monthYearString,
                             color: "orange",
@@ -293,38 +399,15 @@ if (!isset($_SESSION['user'])) {
                 
                 // Convert to array
                 this.months_left_arr = Object.values(yearGroups);
-
-                console.log('Months array:', this.months_left_arr);
-
-                console.log({
-                    "items": {
-                        "disposable_per_month": this.disposable_per_month,
-                        "sofi_balance": this.sofi_balance,
-                        "mastercard_balance": this.mastercard_balance,
-                        "credit_human_balance": this.credit_human_balance,
-                        "total_balance": this.total_balance,
-                        "sofi_min_payment": this.sofi_min_payment,
-                        "mastercard_min_payment": this.mastercard_min_payment,
-                        "credit_human_min_payment": this.credit_human_min_payment,
-                        "total_min_payment": this.total_min_payment,
-                        "sofi_percentage_principal": this.sofi_percentage_principal,
-                        "mastercard_percentage_principal": this.mastercard_percentage_principal,
-                        "credit_human_percentage_principal": this.credit_human_percentage_principal,
-                        "sofi_amount_principal": this.sofi_amount_principal,
-                        "mastercard_amount_principal": this.mastercard_amount_principal,
-                        "credit_human_amount_principal": this.credit_human_amount_principal,
-                        "sofi_total_principal_monthly": this.sofi_total_principal_monthly,
-                        "mastercard_total_principal_monthly": this.mastercard_total_principal_monthly,
-                        "credit_human_total_principal_monthly": this.credit_human_total_principal_monthly,
-                        "sofi_months_left": this.sofi_months_left,
-                        "mastercard_months_left": this.mastercard_months_left,
-                        "credit_human_months_left": this.credit_human_months_left,
-                        "total_months_left": this.total_months_left,
-                    }
-                })
             }
         },
         watch: {
+            dell_balance: function(newVal, oldVal) {
+                localStorage.setItem('dell_balance', newVal);
+            },
+            irs_balance: function(newVal, oldVal) {
+                localStorage.setItem('irs_balance', newVal);
+            },
             loft_balance: function(newVal, oldVal) {
                 localStorage.setItem('loft_balance', newVal);
             },
@@ -337,14 +420,32 @@ if (!isset($_SESSION['user'])) {
             credit_human_balance: function(newVal, oldVal) {
                 localStorage.setItem('credit_human_balance', newVal);
             },
+
             disposable_per_month: function(newVal, oldVal) {
                 localStorage.setItem('disposable_per_month', newVal);
+            },
+
+            dell_months_left: function(newVal, oldVal) {
+                localStorage.setItem('dell_months_left', newVal);
+            },
+            irs_months_left: function(newVal, oldVal) {
+                localStorage.setItem('irs_months_left', newVal);
             },
             loft_months_left: function(newVal, oldVal) {
                 localStorage.setItem('loft_months_left', newVal);
             },
             sofi_months_left: function(newVal, oldVal) {
                 localStorage.setItem('sofi_months_left', newVal);
+            },
+            loft_amount_principal: function(newVal, oldVal) {
+                localStorage.setItem('loft_amount_principal', newVal);
+            },
+
+            dell_amount_principal: function(newVal, oldVal) {
+                localStorage.setItem('dell_amount_principal', newVal);
+            },
+            irs_amount_principal: function(newVal, oldVal) {
+                localStorage.setItem('irs_amount_principal', newVal);
             },
             loft_amount_principal: function(newVal, oldVal) {
                 localStorage.setItem('loft_amount_principal', newVal);
@@ -360,6 +461,14 @@ if (!isset($_SESSION['user'])) {
             },
         },
         mounted() {
+
+            if (localStorage.getItem('dell_balance') && !isNaN(localStorage.getItem('dell_balance'))) {
+                this.dell_balance = parseFloat(localStorage.getItem('dell_balance'));
+            }
+
+            if (localStorage.getItem('irs_balance') && !isNaN(localStorage.getItem('irs_balance'))) {
+                this.irs_balance = parseFloat(localStorage.getItem('irs_balance'));
+            }
 
             if (localStorage.getItem('loft_balance') && !isNaN(localStorage.getItem('loft_balance'))) {
                 this.loft_balance = parseFloat(localStorage.getItem('loft_balance'));
@@ -377,9 +486,19 @@ if (!isset($_SESSION['user'])) {
                 this.credit_human_balance = parseFloat(localStorage.getItem('credit_human_balance'));
             }
 
+
             if (localStorage.getItem('disposable_per_month') && !isNaN(localStorage.getItem('disposable_per_month'))) {
                 this.disposable_per_month = parseFloat(localStorage.getItem('disposable_per_month'));
             } 
+
+
+            if (localStorage.getItem('dell_amount_principal') && !isNaN(localStorage.getItem('dell_amount_principal'))) {
+                this.dell_amount_principal = parseFloat(localStorage.getItem('dell_amount_principal'));
+            }
+
+            if (localStorage.getItem('irs_amount_principal') && !isNaN(localStorage.getItem('irs_amount_principal'))) {
+                this.irs_amount_principal = parseFloat(localStorage.getItem('irs_amount_principal'));
+            }
             
             if (localStorage.getItem('loft_amount_principal') && !isNaN(localStorage.getItem('loft_amount_principal'))) {
                 this.loft_amount_principal = parseFloat(localStorage.getItem('loft_amount_principal'));
@@ -395,9 +514,10 @@ if (!isset($_SESSION['user'])) {
                 this.credit_human_amount_principal = parseFloat(localStorage.getItem('credit_human_amount_principal'));
             }
 
-            this.total_balance = parseFloat(this.loft_balance) + parseFloat(this.sofi_balance) + parseFloat(this.mastercard_balance) + parseFloat(this.credit_human_balance);
 
-            this.total_min_payment = parseFloat(this.loft_min_payment) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_min_payment);
+            this.total_balance = parseFloat(this.dell_balance) + parseFloat(this.irs_balance) + parseFloat(this.loft_balance) + parseFloat(this.sofi_balance) + parseFloat(this.mastercard_balance) + parseFloat(this.credit_human_balance);
+
+            this.total_min_payment = parseFloat(this.dell_min_payment) + parseFloat(this.irs_min_payment) + parseFloat(this.loft_min_payment) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_min_payment);
         
             this.calcProgress();
         }
