@@ -8,6 +8,8 @@ class BillDateHelper {
     private $disposablePerDay = 40;
     private $days15 = false;
 
+    public $paycheckDisposableAmount = 0;
+
     public function __construct() {
         
     }
@@ -86,6 +88,23 @@ class BillDateHelper {
                 $pay_date = $getCurYear6 . "-" . $getCurMonth6 . "-" . $getCurDay6;
             }
         }
+
+        $payDateDay = intval(date("d", strtotime($pay_date)));
+
+        $paycheck_date = "";
+        if ($payDateDay < 15) {
+            $paycheck_date = date("Y-m-01", strtotime($pay_date));
+        } else {
+            $paycheck_date = date("Y-m-15", strtotime($pay_date));
+        }
+
+        $sql = "SELECT disposable_amount 
+                FROM dt_paycheck_disposable 
+                WHERE paycheck_date = ?";
+
+        $payCheckDateDisposable = getQuerySingle($sql, [$paycheck_date]);
+
+        $this->paycheckDisposableAmount = $payCheckDateDisposable ? floatval($payCheckDateDisposable['disposable_amount']) : 0;
 
         if (!$current_balance) {
 
@@ -484,6 +503,8 @@ class BillDateHelper {
 
         $totalDisposable = $this->formatFloat($totalDisposable);
         $this->results['total_disposable'] = $totalDisposable;
+
+        $this->results['paycheck_disposable_amount'] = $this->paycheckDisposableAmount;
 
         if ($insertPayPeriodItem) {
             $IpPayPeriodItem = new IpPayPeriodItem();

@@ -155,7 +155,7 @@ createApp({
             remove15Days: false,
             payDate: new Date(),
             payDateFormatted: '',
-            determinedDisposable: 200,
+            determinedDisposable: 0,
             titleDate: '',
             dateValue: '',
             day40: '',
@@ -371,6 +371,8 @@ createApp({
                     if (this.remove15Days) {
                         this.daysCount = 15;
                     }
+
+                    this.determinedDisposable = response.data.paycheck_disposable_amount ? parseFloat(response.data.paycheck_disposable_amount) : 0;
                     
                     //this.countDaysAdd = response.data.count_days_add;
                     //this.daysCount += this.countDaysAdd;
