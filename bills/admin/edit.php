@@ -9,7 +9,8 @@ if (!isset($_SESSION['user'])) {
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 $sql = "SELECT vnd_bill, amount, vnd_is_auto, vnd_frequency_notes,
-        vnd_frequency, vnd_frequency_type, vnd_frequency_value, vnd_frequency_value_original, end_date, start_date
+        vnd_frequency, vnd_frequency_type, vnd_frequency_value, vnd_frequency_value_original, end_date, start_date,
+        multiplier, can_be_multiplied_by
         FROM vnd_bills
         WHERE vnd_id = :id ";
 $Bills = getQuery($sql, [
@@ -57,6 +58,7 @@ $frequencyShow = isset($_REQUEST['frequency']) ? $_REQUEST['frequency'] : [
 ];
 $btnSearch = isset($_REQUEST['btnSearch']) ? $_REQUEST['btnSearch'] : "";
 $showAuditFields = isset($_REQUEST['showAuditFields']) ? intval($_REQUEST['showAuditFields']) : 0;
+$multiplierGreaterThan1 = isset($_REQUEST['multiplierGreaterThan1']) ? intval($_REQUEST['multiplierGreaterThan1']) : 0;
 
 
 $searchFiltersRequestArr = [
@@ -68,6 +70,7 @@ $searchFiltersRequestArr = [
     'frequency' => $frequencyShow,
     'btnSearch' => $btnSearch,
     'showAuditFields' => $showAuditFields,
+    'multiplierGreaterThan1' => $multiplierGreaterThan1
 ];
 $i = 0;
 foreach ($searchFiltersRequestArr as $key => $value) {
@@ -167,6 +170,12 @@ foreach ($searchFiltersRequestArr as $key => $value) {
                 <label class="col-md-4 control-label" for="textinput">Frequency Value</label>
                 <div class="col-md-4">
                     <input id="vnd_frequency_value" name="vnd_frequency_value" type="text" placeholder="Frequency Value (Month Day, Start Date)" class="form-control input-md" value="<?php echo $Bill['vnd_frequency_value']; ?>" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Can Be Multiplied By</label>
+                <div class="col-md-4">
+                    <input id="can_be_multiplied_by" name="can_be_multiplied_by" min="1" type="number" class="form-control input-md" value="<?php echo $Bill['can_be_multiplied_by']; ?>" />
                 </div>
             </div>
             <div class="form-group">

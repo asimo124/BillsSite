@@ -56,6 +56,7 @@ if (isset($_REQUEST['btnSearch'])) {
         "Once" => 1
     ];
     $showAuditFields = isset($_REQUEST['showAuditFields']) ? intval($_REQUEST['showAuditFields']) : 0;
+    $multiplierGreaterThan1 = isset($_REQUEST['multiplierGreaterThan1']) ? intval($_REQUEST['multiplierGreaterThan1']) : 0;
 
     $searchFiltersRequestArr = [
         'vnd_bill2' => $vndBill,
@@ -65,7 +66,8 @@ if (isset($_REQUEST['btnSearch'])) {
         'sort2_dir' => $sort2_dir,
         'frequency' => $frequencyShow,
         'btnSearch' => 1,
-        'showAuditFields' => $showAuditFields
+        'showAuditFields' => $showAuditFields,
+        'multiplierGreaterThan1' => $multiplierGreaterThan1
     ];
     $i = 0;
     foreach ($searchFiltersRequestArr as $key => $value) {
@@ -138,6 +140,7 @@ if ($sort2) {
 
 $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value, 
        vnd_frequency_value_original, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2,
+       can_be_multiplied_by
        start_date
         FROM vnd_bills 
         WHERE 1 
@@ -146,13 +149,16 @@ if ($vndBill) {
     $sql .= "AND vnd_bill LIKE :vnd_bill 
     ";
 }
+if ($multiplierGreaterThan1) {
+    $sql .= "AND can_be_multiplied_by > 1 ";
+}
 $sql .= $orderBy;
 
 $stmt_sel_bills = $db_conn->prepare($sql);
 
 $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value,
        vnd_frequency_value_original, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2,
-       start_date
+       start_date, can_be_multiplied_by
         FROM vnd_bills 
         WHERE 1 
         AND vnd_frequency = :frequency
@@ -160,6 +166,9 @@ $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_
 if ($vndBill) {
     $sql .= "AND vnd_bill LIKE :vnd_bill 
     ";
+}
+if ($multiplierGreaterThan1) {
+    $sql .= "AND can_be_multiplied_by > 1 ";
 }
 $sql .= $orderBy;
 $stmt_sel_bills_type = $db_conn->prepare($sql);
@@ -173,13 +182,16 @@ foreach ($frequencyArr as $getFrequency) {
 
             $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value, 
        vnd_frequency_value_original, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2,
-       start_date
+       start_date, can_be_multiplied_by
             FROM vnd_bills 
             WHERE 1 
             AND vnd_frequency = :frequency ";
             if ($vndBill) {
                 $sql .= "AND vnd_bill LIKE :vnd_bill 
                 ";
+            }
+            if ($multiplierGreaterThan1) {
+                $sql .= "AND can_be_multiplied_by > 1 ";
             }
             $sql .= $orderBy;
             $dataParams = [
@@ -204,7 +216,7 @@ foreach ($frequencyArr as $getFrequency) {
             $frequencyArr = explode(" - ", $getFrequency);
 
             $sql = "SELECT vnd_id, vnd_bill, amount, vnd_frequency, vnd_frequency_type, vnd_frequency_value_original, 
-       vnd_frequency_value, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2, start_date
+       vnd_frequency_value, is_heavy, watch_flag, end_date, audit_regex, audit_keyword1, audit_keyword2, start_date, can_be_multiplied_by
                     FROM vnd_bills 
                     WHERE 1 
                     AND vnd_frequency = :frequency
@@ -213,6 +225,9 @@ foreach ($frequencyArr as $getFrequency) {
                 $sql .= "AND vnd_bill LIKE :vnd_bill 
                 ";
             }
+            if ($multiplierGreaterThan1) {
+                $sql .= "AND can_be_multiplied_by > 1 ";
+            }   
             $sql .= $orderBy;
             $dataParams = [
                 "frequency" => $frequencyArr[0],
@@ -236,6 +251,16 @@ foreach ($frequencyArr as $getFrequency) {
             $resultset[$getFrequency] = $items;
         }
     }
+}
+
+function getMultiplierColor($multiplier) {
+    $color = "black";
+    if ($multiplier == 4) {
+        $color = "purple";
+    } else if ($multiplier == 2) {
+        $color = "blue";
+    }
+    return $color;
 }
 
 ?>
@@ -321,13 +346,22 @@ foreach ($frequencyArr as $getFrequency) {
 
         <div style="clear: both; height: 15px;"></div>
         <div class="row">
-            <div class="col-md-2 col-xs-6">
+            <div class="col-xs-6">
+                <input class="form-check-input" type="checkbox" value="1" name="multiplierGreaterThan1"
+                    id="multiplierGreaterThan1" <?php echo ($multiplierGreaterThan1) ? "CHECKED" : ""; ?>>
+                    <label class="form-check-label" for="multiplierGreaterThan1" >
+                    Multiplier
+                    </label>
+                
+            </div>
+            <div class="col-xs-6">
                 <input class="form-check-input" type="checkbox" value="1" name="showAuditFields"
                        id="showAuditFields" <?php echo ($showAuditFields) ? "CHECKED" : ""; ?>>
-                <label class="form-check-label" for="checkDefault" >
+                <label class="form-check-label" for="showAuditFields" >
                 Show Audit Fields
                 </label>
             </div>
+            
         </div>
         <div style="clear: both; height: 15px;"></div>
         <div class="row">
@@ -443,7 +477,14 @@ foreach ($frequencyArr as $getFrequency) {
                         <tr>
                             <td><?php echo $getBill['vnd_id']; ?></td>
                             <td>
-                                <span style="font-weight: bold; <?php echo (($getBill['watch_flag']) ? "color: orange;" : (($getBill['is_heavy']) ? "color: red; " : "")); ?>"><?php echo $getBill['vnd_bill']; ?></span>
+                                <span style="font-weight: bold; <?php echo (($getBill['watch_flag']) ? "color: orange;" : (($getBill['is_heavy']) ? "color: red; " : "")); ?>">
+                                    <?php echo $getBill['vnd_bill']; ?>&nbsp;
+                                    <?php if ($getBill['can_be_multiplied_by'] > 1): ?>
+                                        <span style="color: <?php echo getMultiplierColor($getBill['can_be_multiplied_by']); ?>">
+                                            <?php echo $getBill['can_be_multiplied_by']; ?>x
+                                        </span>
+                                    <?php endif; ?>
+                                </span>
                             </td>
                             <?php if (!$showAuditFields): ?>
                                 <td><?php echo formatCurrency($getBill['amount']); ?></td>

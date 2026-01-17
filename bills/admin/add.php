@@ -43,6 +43,7 @@ $frequencyShow = isset($_REQUEST['frequency']) ? $_REQUEST['frequency'] : [
 ];
 $btnSearch = isset($_REQUEST['btnSearch']) ? $_REQUEST['btnSearch'] : "";
 $showAuditFields = isset($_REQUEST['showAuditFields']) ? intval($_REQUEST['showAuditFields']) : 0;
+$multiplierGreaterThan1 = isset($_REQUEST['multiplierGreaterThan1']) ? intval($_REQUEST['multiplierGreaterThan1']) : 0;
 
 $searchFiltersRequestArr = [
     'vnd_bill2' => $vndBill,
@@ -53,6 +54,7 @@ $searchFiltersRequestArr = [
     'frequency' => $frequencyShow,
     'btnSearch' => $btnSearch,
     'showAuditFields' => $showAuditFields,
+    'multiplierGreaterThan1' => $multiplierGreaterThan1
 ];
 $i = 0;
 foreach ($searchFiltersRequestArr as $key => $value) {
@@ -152,6 +154,12 @@ foreach ($searchFiltersRequestArr as $key => $value) {
                 <label class="col-md-4 control-label" for="textinput">Frequency Value</label>
                 <div class="col-md-4">
                     <input id="vnd_frequency_value" name="vnd_frequency_value" type="text" placeholder="Frequency Value (Month Day, Start Date)" class="form-control input-md" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Can Be Multiplied By</label>
+                <div class="col-md-4" >
+                    <input id="can_be_multiplied_by" name="can_be_multiplied_by" type="number" min="1" class="form-control input-md" value="1" />
                 </div>
             </div>
             <div class="form-group">

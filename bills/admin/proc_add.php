@@ -15,6 +15,7 @@ $vnd_frequency = isset($_REQUEST['vnd_frequency']) ? ($_REQUEST['vnd_frequency']
 $vnd_frequency_type = isset($_REQUEST['vnd_frequency_type']) ? ($_REQUEST['vnd_frequency_type']) : "";
 $vnd_frequency_value = isset($_REQUEST['vnd_frequency_value']) ? trim($_REQUEST['vnd_frequency_value']) : "";
 $vnd_frequency_value_original = isset($_REQUEST['vnd_frequency_value_original']) ? trim($_REQUEST['vnd_frequency_value_original']) : null;
+$can_be_multiplied_by = isset($_REQUEST['can_be_multiplied_by']) ? $_REQUEST['can_be_multiplied_by'] : 1;
 $end_date = isset($_REQUEST['end_date']) ? trim($_REQUEST['end_date']) : null;
 $start_date = isset($_REQUEST['start_date']) ? trim($_REQUEST['start_date']) : null;
 
@@ -32,8 +33,8 @@ if ($vnd_bill == "" || $amount <= 0) {
 }
 
 $sql = "INSERT INTO vnd_bills
-        ( vnd_user_id,  vnd_bill,  amount,  vnd_is_auto,  vnd_frequency_notes,  vnd_frequency,  vnd_frequency_type,  vnd_frequency_value,  vnd_frequency_value_original,  end_date,  start_date) VALUES
-        (:vnd_user_id, :vnd_bill, :amount, :vnd_is_auto, :vnd_frequency_notes, :vnd_frequency, :vnd_frequency_type, :vnd_frequency_value, :vnd_frequency_value_original, :end_date, :start_date) ";
+        ( vnd_user_id,  vnd_bill,  amount,  vnd_is_auto,  vnd_frequency_notes,  vnd_frequency,  vnd_frequency_type,  vnd_frequency_value,  vnd_frequency_value_original,  end_date,  start_date, can_be_multiplied_by) VALUES
+        (:vnd_user_id, :vnd_bill, :amount, :vnd_is_auto, :vnd_frequency_notes, :vnd_frequency, :vnd_frequency_type, :vnd_frequency_value, :vnd_frequency_value_original, :end_date, :start_date, :can_be_multiplied_by) ";
 
 execQuery($sql, [
     "vnd_user_id" => 1,
@@ -46,7 +47,8 @@ execQuery($sql, [
     "vnd_frequency_value"  => $vnd_frequency_value,
     "vnd_frequency_value_original"  => $vnd_frequency_value_original,
     "end_date" => $end_date,
-    "start_date" => $start_date
+    "start_date" => $start_date,
+    "can_be_multiplied_by" => $can_be_multiplied_by
 ]);
 
 $lastId = $db_conn->lastInsertId();
@@ -88,6 +90,7 @@ $frequencyShow = isset($_REQUEST['frequency']) ? $_REQUEST['frequency'] : [
 ];
 $btnSearch = isset($_REQUEST['btnSearch']) ? $_REQUEST['btnSearch'] : "";
 $showAuditFields = isset($_REQUEST['showAuditFields']) ? intval($_REQUEST['showAuditFields']) : 0;
+$multiplierGreaterThan1 = isset($_REQUEST['multiplierGreaterThan1']) ? intval($_REQUEST['multiplierGreaterThan1']) : 0;
 
 $searchFiltersRequestArr = [
     'vnd_bill2' => $vndBill,
@@ -97,7 +100,8 @@ $searchFiltersRequestArr = [
     'sort2_dir' => $sort2_dir,
     'frequency' => $frequencyShow,
     'btnSearch' => $btnSearch,
-    'showAuditFields' => $showAuditFields
+    'showAuditFields' => $showAuditFields,
+    'multiplierGreaterThan1' => $multiplierGreaterThan1
 ];
 $i = 0;
 foreach ($searchFiltersRequestArr as $key => $value) {
