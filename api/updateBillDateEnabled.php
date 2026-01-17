@@ -15,7 +15,7 @@ $title = isset($_REQUEST['title']) ? trim($_REQUEST['title']) : "";
 
 $isEnabled    = isset($_REQUEST['is_enabled']) ? intval($_REQUEST['is_enabled']) : 0;
 
-if (!$date || !$title || $amount <= 0) {
+if (!$date || !$title) {
     header("Content-type: application/json");
     header('Access-Control-Allow-Origin: *');
     echo json_encode([
@@ -25,12 +25,12 @@ if (!$date || !$title || $amount <= 0) {
     die();
 }
 
-$sql = "SELECT * FROM vnd_pay_period_bill_date_passed WHERE bill_date = '{$date}' AND title = '{$title}' AND amount = {$amount} LIMIT 1;";
+$sql = "SELECT * FROM vnd_pay_period_bill_date_passed WHERE bill_date = '{$date}' AND title = '{$title}';";
 $existingRecord = getQuerySingle($sql);
 
 if ($existingRecord) {
     // Update the existing record
-    $sql = "UPDATE vnd_pay_period_bill_date_passed SET is_enabled = {$isEnabled} WHERE bill_date = '{$date}' AND title = '{$title}' AND amount = {$amount};";
+    $sql = "UPDATE vnd_pay_period_bill_date_passed SET is_enabled = {$isEnabled} WHERE bill_date = '{$date}' AND title = '{$title}' ";
     execQuery($sql);
 } else {
     // Insert a new record

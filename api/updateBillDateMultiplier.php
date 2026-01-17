@@ -25,12 +25,12 @@ if (!$date || !$title || $multiplier <= 0) {
     die();
 }
 
-$sql = "SELECT * FROM vnd_pay_period_bill_date_passed WHERE bill_date = '{$date}' AND title = '{$title}' AND amount = {$amount} LIMIT 1;";
+$sql = "SELECT * FROM vnd_pay_period_bill_date_passed WHERE bill_date = '{$date}' AND title = '{$title}' LIMIT 1;";
 $existingRecord = getQuerySingle($sql);
 
 if ($existingRecord) {
     // Update the existing record
-    $sql = "UPDATE vnd_pay_period_bill_date_passed SET multiplier = {$multiplier} WHERE bill_date = '{$date}' AND title = '{$title}' AND amount = {$amount};";
+    $sql = "UPDATE vnd_pay_period_bill_date_passed SET multiplier = {$multiplier} WHERE bill_date = '{$date}' AND title = '{$title}' ;";
     execQuery($sql);
 } else {
     // Insert a new record

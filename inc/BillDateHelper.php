@@ -204,12 +204,42 @@ class BillDateHelper {
         $Bill->setPayPeriod($end_date, $start_date);
         $billDates = $Bill->loadBillDatesByUserID($user_id, $pay_period_id);
 
+
+        $sql = "SELECT * 
+                FROM vnd_pay_period_bill_date_passed 
+                WHERE bill_date = :bill_date
+                AND amount = :amount
+                AND title = :title";
+
+        $stmt_sel_bill_date_passed = $db_conn->prepare($sql);
+        
         foreach ($billDates as $getDate) {
             $newDate = array();
             $newDate['bill_date_id'] = $getDate['vnd_id'];
             $newDate['is_enabled'] = intval($getDate['is_enabled']);
             $newDate['desc'] = $getDate['vnd_bill_desc'];
             $amount = $this->formatFloat($getDate['vnd_amount']);
+
+            //*/
+            $sql = "SELECT * 
+                FROM vnd_pay_period_bill_date_passed 
+                WHERE bill_date = :bill_date
+                AND amount = :amount
+                AND title = :title";
+
+            $stmt_sel_bill_date_passed->execute([
+                'bill_date' => $getDate['vnd_date'],
+                'amount' => $amount,
+                'title' => $getDate['vnd_bill_desc']
+            ]);
+
+            $multiplier = 1;
+            $billDatePassed = $stmt_sel_bill_date_passed->fetch(2);
+            if ($billDatePassed) {
+                $multiplier = floatval($billDatePassed['multiplier']);
+                $amount = $amount * $multiplier;    
+            }
+                //*/
 
             $newDate['amount'] = $amount;
             $newDate['is_heavy'] = round(floatval($getDate['is_heavy']), 2);

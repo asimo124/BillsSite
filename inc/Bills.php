@@ -68,9 +68,17 @@ class Bills {
 		global $db_conn;
 		
 		$query = "
-		SELECT *, 
-		bd.vnd_bill_desc,
-		pb.title,
+		SELECT 
+		vnd_bill_desc,
+		vnd_amount,
+		vnd_date,
+		vnd_user_id,
+		vnd_is_auto,
+		vnd_is_future,
+		is_heavy,
+		vnd_frequency,
+		vnd_frequency_type,
+		can_be_multiplied_by,
 		CASE WHEN pb.is_enabled iS NULL THEN 
 			1 
 		ELSE 
