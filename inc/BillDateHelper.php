@@ -215,8 +215,14 @@ class BillDateHelper {
             $newDate['is_heavy'] = round(floatval($getDate['is_heavy']), 2);
             $newDate['vnd_frequency'] = $getDate['vnd_frequency'];
             $newDate['vnd_frequency_type'] = $getDate['vnd_frequency_type'];
+            $newDate['can_be_multiplied_by'] = $getDate['can_be_multiplied_by'];
+            $newDate['multiplier'] = $getDate['multiplier'];
+
 
             $key = strtotime(date("Y-m-d 00:00:00", strtotime($getDate['vnd_date'])));
+
+            $newDate['date'] = date("Y-m-d 00:00:00", strtotime($getDate['vnd_date']));
+
             $dateDay = intval(date("d", strtotime($getDate['vnd_date'])));
             if ($dateDay == 28) {
                 $key = strtotime(date("Y-m-t 00:00:00", strtotime($getDate['vnd_date']))) - 86400;
@@ -333,12 +339,16 @@ class BillDateHelper {
                     "bill_date_id" => $getBill['bill_date_id'],
                     "pay_period_id" => $pay_period_id,
                     "title" => $getBill['desc'] . " - $" . $getBill["amount"],
+                    "desc" => $getBill['desc'],
                     "amount" => ($getBill['is_enabled']) ? $getBill['amount'] : 0,
                     "savedAmount" => $getBill['amount'],
                     "isEnabled" => $getBill['is_enabled'],
                     "is_heavy" => intval($getBill['is_heavy']),
                     "vnd_frequency" => ($getBill['vnd_frequency']),
-                    "vnd_frequency_type" => ($getBill['vnd_frequency_type'])
+                    "vnd_frequency_type" => ($getBill['vnd_frequency_type']),
+                    "can_be_multiplied_by" => ($getBill['can_be_multiplied_by']),
+                    "multiplier" => ($getBill['multiplier']),
+                    "date" => ($getBill['date'])
                 ];
                 $full_cur_amount -= $getBill["amount"];
             }

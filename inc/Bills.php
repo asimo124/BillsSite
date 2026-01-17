@@ -68,11 +68,29 @@ class Bills {
 		global $db_conn;
 		
 		$query = "
-		SELECT *, 1 as is_enabled
+		SELECT *, 
+		bd.vnd_bill_desc,
+		pb.title,
+		CASE WHEN pb.is_enabled iS NULL THEN 
+			1 
+		ELSE 
+			pb.is_enabled 
+		END as is_enabled, 
+		
+		CASE WHEN pb.multiplier iS NULL THEN
+		    1 
+		ELSE 
+		    pb.multiplier
+		END as multiplier
 		FROM vnd_bill_dates bd
+		LEFT JOIN vnd_pay_period_bill_date_passed pb 
+			ON bd.vnd_date = pb.bill_date
+			AND bd.vnd_amount = pb.amount
+			AND bd.vnd_bill_desc = pb.title
 		WHERE 1
 		AND bd.vnd_user_id = :user_id
 		and bd.vnd_date between :start_date and :end_date
+		GROUP BY bd.vnd_id
 		ORDER BY bd.vnd_date, bd.vnd_bill_desc ";
 		
 		$data = array();

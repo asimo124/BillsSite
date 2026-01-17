@@ -13,9 +13,9 @@ $date = isset($_REQUEST['date']) ? trim($_REQUEST['date']) : "";
 $amount = isset($_REQUEST['amount']) ? floatval($_REQUEST['amount']) : 0.0;
 $title = isset($_REQUEST['title']) ? trim($_REQUEST['title']) : "";
 
-$isEnabled    = isset($_REQUEST['is_enabled']) ? intval($_REQUEST['is_enabled']) : 0;
+$multiplier    = isset($_REQUEST['multiplier']) ? intval($_REQUEST['multiplier']) : 0;
 
-if (!$date || !$title || $amount <= 0) {
+if (!$date || !$title || $multiplier <= 0) {
     header("Content-type: application/json");
     header('Access-Control-Allow-Origin: *');
     echo json_encode([
@@ -30,11 +30,11 @@ $existingRecord = getQuerySingle($sql);
 
 if ($existingRecord) {
     // Update the existing record
-    $sql = "UPDATE vnd_pay_period_bill_date_passed SET is_enabled = {$isEnabled} WHERE bill_date = '{$date}' AND title = '{$title}' AND amount = {$amount};";
+    $sql = "UPDATE vnd_pay_period_bill_date_passed SET multiplier = {$multiplier} WHERE bill_date = '{$date}' AND title = '{$title}' AND amount = {$amount};";
     execQuery($sql);
 } else {
     // Insert a new record
-    $sql = "INSERT INTO vnd_pay_period_bill_date_passed (bill_date, title, amount, is_enabled, multiplier) VALUES ('{$date}', '{$title}', {$amount}, {$isEnabled}, 1);";
+    $sql = "INSERT INTO vnd_pay_period_bill_date_passed (bill_date, title, amount, is_enabled, multiplier) VALUES ('{$date}', '{$title}', {$amount}, 1, {$multiplier});";
     execQuery($sql);
 }
 
