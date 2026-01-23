@@ -625,7 +625,7 @@
               <button
                 v-if="!showSearch"
                 class="btn btn-secondary"
-                @click="toggleSearch"
+                @click="openSearchModal"
               >
                 Search
               </button>
@@ -668,73 +668,48 @@
               <!-- Inner content -->
               <div class="inner-content">
 
-                <!-- Modal for Add Item -->
-                <div
-                  class="modal fade"
-                  :class="{ show: isVisible, 'd-block': isVisible }"
-                  tabindex="-1"
-                  v-if="isVisible"
-                >
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title">Add Item Used</h5>
-                        <button
-                          type="button"
-                          class="btn-close"
-                          @click="handleCancel"
-                        ></button>
+                
+
+                
+               
+                
+                
+
+                
+                <!-- Search view -->
+                <div v-if="searchItemsUsedList?.length">
+                  <h3 class="mb-3 mt-3">Search Results</h3>
+                  <div
+                    v-for="item in searchItemsUsedList"
+                    :key="item.date"
+                    class="mb-4"
+                  >
+                    <div class="card">
+                      <div class="card-header">
+                        <span class="fw-bold fs-5">{{ item.date_used }}</span>
                       </div>
-                      <div class="modal-body">
-                        <div class="row">
-                          <div class="col-6">
-                            <select class="form-select" v-model="selectedItem">
-                              <option value="">Select Item</option>
-                              <option
-                                v-for="item in itemsList"
-                                :key="item.id"
-                                :value="item.id"
-                              >
-                                {{ item.title }}
-                              </option>
-                            </select>
-                          </div>
-                          <div class="col-6">
-                            <input
-                              type="date"
-                              class="form-control"
-                              v-model="dateUsed"
-                              @change="onDateChanged"
-                            />
-                          </div>
+                      <div class="list-group list-group-flush">
+                        
+                        <div
+                            
+                            style="width: 75px; padding: 10px 10px 5px 10px;"
+                           
+                          >
+                          <span
+                              class="badge cal-day-item d-block mb-1"
+                              :style="{ backgroundColor: item.color }"
+                            >
+                              {{ item.title }}
+                          </span>
+                          
                         </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button
-                          type="button"
-                          class="btn btn-secondary"
-                          @click="handleCancel"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="button"
-                          class="btn btn-primary"
-                          @click="handleOk"
-                        >
-                          OK
-                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div
-                  class="modal-backdrop fade"
-                  :class="{ show: isVisible }"
-                  v-if="isVisible"
-                ></div>
 
-                <!-- Calendar view -->
+                 <!-- Calendar view -->
+                 
                 <div v-if="!showSearch">
                   <!-- Calendar container -->
                   <div class="calendar-container">
@@ -829,45 +804,137 @@
                       </div>
                     </template>
                   </div>
-                  <div id="top"></div>
+                  
                 </div>
 
-                <!-- Search view -->
-                <div v-else>
-                  <div class="mb-3">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Search"
-                      v-model="keyword"
-                      @input="beginSearchItemsUsed"
-                    />
-                  </div>
-
-                  <div v-if="searchItemsUsedList?.length">
-                    <h3 class="mb-3 mt-3">Search Results</h3>
-                    <div
-                      v-for="dates in searchItemsUsedList"
-                      :key="dates.date"
-                      class="mb-4"
-                    >
-                      <div class="card">
-                        <div class="card-header">
-                          <span class="fw-bold fs-5">{{ dates.date }}</span>
-                        </div>
-                        <div class="list-group list-group-flush">
-                          <div
-                            v-for="item in dates.children"
-                            :key="item.id"
-                            class="list-group-item"
-                          >
-                            {{ item.item_name }}
+                <!-- Modal for Add Item -->
+                <div
+                  class="modal fade"
+                  :class="{ show: isVisible, 'd-block': isVisible }"
+                  tabindex="-1"
+                  v-if="isVisible"
+                >
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Add Item Used</h5>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          @click="handleCancel"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                          <div class="col-6">
+                            <select class="form-select" v-model="selectedItem">
+                              <option value="">Select Item</option>
+                              <option
+                                v-for="item in itemsList"
+                                :key="item.id"
+                                :value="item.id"
+                              >
+                                {{ item.title }}
+                              </option>
+                            </select>
+                          </div>
+                          <div class="col-6">
+                            <input
+                              type="date"
+                              class="form-control"
+                              v-model="dateUsed"
+                              @change="onDateChanged"
+                            />
                           </div>
                         </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          @click="handleCancel"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-primary"
+                          @click="handleOk"
+                        >
+                          OK
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
+                <div
+                  class="modal-backdrop fade"
+                  :class="{ show: isVisible }"
+                  v-if="isVisible"
+                ></div>
+
+
+
+
+                <!-- Modal for Search Item -->
+                <div
+                  class="modal fade"
+                  :class="{ show: isVisibleSearch, 'd-block': isVisibleSearch }"
+                  tabindex="-1"
+                  v-if="isVisibleSearch"
+                >
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Search Item</h5>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          @click="handleCancelSearch"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                          <div class="col-12">
+                            <select class="form-select" v-model="selectedSearchItem">
+                              <option value="">Select Item</option>
+                              <option
+                                v-for="item in itemsList"
+                                :key="item.id"
+                                :value="item.id"
+                              >
+                                {{ item.title }}
+                              </option>
+                            </select>
+                          </div>
+                          
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          @click="handleCancelSearch"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-primary"
+                          @click="handleOkSearch"
+                        >
+                          OK
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="modal-backdrop fade"
+                  :class="{ show: isVisibleSearch }"
+                  v-if="isVisibleSearch"
+                ></div>
+                
               </div>
             </div>
           </div>
@@ -909,7 +976,9 @@
             currentYear: new Date().getFullYear(),
             // Modal state
             isVisible: false,
+            isVisibleSearch: false,
             selectedItem: "",
+            selectedSearchItem: "",
             dateUsed: "",
             dateFormat: "YYYY-MM-DD",
             // Search state
@@ -1042,9 +1111,15 @@
             }
           },
 
-          async searchItemUsed(keyword) {
+          async searchItemUsed() {
+
+            if (!this.selectedSearchItem) {
+              console.warn("Please select an item to search");
+              return;
+            }
+
             try {
-              const requestParams = "keyword=" + keyword;
+              const requestParams = "item_id=" + this.selectedSearchItem;
               const response = await fetch(
                 "https://api.hawleywebdesign.com/last-time/search?" +
                   requestParams
@@ -1056,6 +1131,10 @@
 
               const data = await response.json();
               this.searchItemsUsedList = data; // Update search results
+
+              this.isVisibleSearch = false;
+              this.selectedSearchItem = "";
+
               console.log("Search completed successfully");
             } catch (err) {
               console.error("Error loading Items Used History:", err.message);
@@ -1162,10 +1241,26 @@
             }
           },
 
+          handleOkSearch() {
+            console.log("Search OK clicked");
+            if (this.selectedSearchItem) {
+              this.showSearch = true;
+              console.log('showSearch:', this.showSearch);
+              this.searchItemUsed()
+            } else {
+              console.warn("Please select an item");
+            }
+          },
+
           handleCancel() {
             this.isVisible = false;
             this.selectedItem = "";
             this.dateUsed = "";
+          },
+
+          handleCancelSearch() {
+            this.isVisibleSearch = false;
+            this.selectedSearchItem = "";
           },
 
           onDateChanged(event) {
@@ -1179,11 +1274,16 @@
           },
 
           toggleSearch() {
-            this.showSearch = !this.showSearch;
-            if (!this.showSearch) {
-              this.keyword = "";
-              this.searchItemsUsedList = [];
-            }
+            
+            
+            this.selectedSearchItem = "";
+            this.searchItemsUsedList = [];
+            this.showSearch = false;
+            
+          },
+
+          openSearchModal() {
+            this.isVisibleSearch = true;
           },
 
           // Calendar methods
