@@ -215,7 +215,7 @@ createApp({
             selectedPayDate: '',
             currentPayPeriodId: null,
             currentPayPeriodItemIndex: null,
-            disposablePerDay: 25,
+            disposablePerDay: 11,
             newPurchase: {
                 title: '',
                 description: '',

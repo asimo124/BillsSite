@@ -151,7 +151,7 @@ createApp({
             spaAmount: 57.50,
             initBalance: 0,
             extraSum: 0,
-            disposablePerDay: 25,
+            disposablePerDay: 11,
             remove15Days: false,
             payDate: new Date(),
             payDateFormatted: '',
