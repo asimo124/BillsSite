@@ -139,7 +139,7 @@ const { createApp } = Vue;
 createApp({
     data() {
         return {
-            defaultBalance: 3544,
+            defaultBalance: 3455,
             daysCount: 0,
             countDaysAdd: 0,
             sumItems: [],

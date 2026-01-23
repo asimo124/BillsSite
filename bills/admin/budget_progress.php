@@ -105,7 +105,7 @@ if (!isset($_SESSION['user'])) {
 
     $(document).ready(function() {
 
-        var defaultBalance = 3544;
+        var defaultBalance = 3455;
 
         var daysCount = 0;
 
