@@ -65,7 +65,7 @@ if (!isset($_SESSION['user'])) {
             <input type="number" class="form-control" v-model="startingBalance" placeholder="Starting Balance" />
         </div>
         <div class="col-xs-6" style="text-align: right;">
-            <input type="number" v-model="disposablePerDay" @blur="loadPayPeriods" style="width: 50px;" />
+            <input type="number" v-model="disposablePerDay" @blur="loadPayPeriods" style="width: 50px;" @change="updateDisposablePerDay" />
             &nbsp;<input type="checkbox" value="1" v-model="test_mode"/>&nbsp; Test
         </div>
     </div>
@@ -240,6 +240,10 @@ createApp({
                 this.selectedPayDate = this.upcomingPayDates[8].value;
             }
         });
+
+        if (localStorage.getItem('disposable_per_day')) {
+            this.disposablePerDay = localStorage.getItem('disposable_per_day');
+        }
         
         // Check screen width and adjust input widths if needed
         
@@ -460,6 +464,9 @@ createApp({
                     });
                 }, 100);
             }
+        },
+        updateDisposablePerDay() {
+            localStorage.setItem('disposable_per_day', this.disposablePerDay);
         },
         transferItems() {
             // First check for negative amounts and fix them

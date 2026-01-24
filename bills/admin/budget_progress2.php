@@ -76,7 +76,7 @@ if (!isset($_SESSION['user'])) {
         </div>
         <div class="col-xs-6">
             <input type="checkbox" v-model="testMode" /> Test Mode
-            &nbsp; <input type="number" v-model="disposablePerDay" style="width: 50px;"/> Disposable
+            &nbsp; <input type="number" v-model="disposablePerDay" style="width: 50px;" @blur="updateDisposablePerDay" /> Disposable
             &nbsp; <input type="checkbox" v-model="remove15Days" /> 15 Days
         </div>
     </div>
@@ -168,6 +168,11 @@ createApp({
     },
     mounted() {
         this.initializeBalance();
+
+        if (localStorage.getItem('disposable_per_day')) {
+            this.disposablePerDay = localStorage.getItem('disposable_per_day');
+        }
+
         this.loadPage('');
     },
     methods: {
@@ -239,6 +244,9 @@ createApp({
             this.dateItems.splice(index, 1);
             this.spaItems.splice(index, 1);
             this.calcFinalSums();
+        },
+        updateDisposablePerDay() {
+            localStorage.setItem('disposable_per_day', this.disposablePerDay);
         },
         saveSpa(index) {
             this.spaItems[index] = this.spaAmount;
