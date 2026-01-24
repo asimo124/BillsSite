@@ -7,6 +7,8 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 
+$increaseCreditLimitBy = isset($_REQUEST['increase_credit_limit_by']) ? floatval($_REQUEST['increase_credit_limit_by']) : 0;
+
 $sql = "SELECT * FROM cu_loan ORDER BY sort_order ASC";
 $loans = getQuery($sql);
 
@@ -17,10 +19,43 @@ foreach ($loans as $loan) {
     $totalCreditLimit += floatval($loan['credit_limit']);
 }
 
+$totalCreditLimit += $increaseCreditLimitBy;
+
+$creditUtilization = ($totalCreditLimit > 0) ? round(($totalDebtOwed / $totalCreditLimit), 4) * 100 : 0;
+
+$creditUtilizationOrig = $creditUtilization / 100;
+
+$minHeader = 0.29;
+$headerLength = round($creditUtilization / 100, 4) - 0.29;
+if ($headerLength < 0) {
+    $headerLength = 0;
+}
+
+$chartHeaders[] = 0.29;
+
+$numHeaders = 4;
+
+$increments = $headerLength / $numHeaders;
+for ($i = 1; $i <= $numHeaders; $i++) {
+    $minHeader += $increments;
+    $chartHeaders[] = round($minHeader, 4);
+}
+
+
+$creditUtilPercentage = round($creditUtilization / 100, 4);
+
+sort($chartHeaders);
+$chartValues = [];
+foreach ($chartHeaders as $header) {
+    $chartValues[] = round(($header * $totalCreditLimit), 4);
+   
+}
+
+
 $totalDebtOwed = number_format($totalDebtOwed, 2);
 $totalCreditLimit = number_format($totalCreditLimit, 2);
 
-$creditUtilization = ($totalCreditLimit > 0) ? ($totalDebtOwed / $totalCreditLimit) * 100 : 0;
+
 $creditUtilization = number_format($creditUtilization, 2);
 
 ?>
@@ -77,6 +112,10 @@ $creditUtilization = number_format($creditUtilization, 2);
             </table>
         </div>
     </div>
+    <div style="clear: both; height: 16px;"></div>
+
+    
+
     <div class="row">
         <div class="col-md-12">
             
@@ -104,6 +143,40 @@ $creditUtilization = number_format($creditUtilization, 2);
             </tbody>
         </table>
     </div>
+    <div style="clear: both; height: 16px;"></div>
+
+    <form action="index.php" id="frmIncreaseCreditLimit" method="post">
+        <div class="row">
+            <div class="col-md-12">
+                <input type="number" name="increase_credit_limit_by" id="increase_credit_limit_by" placeholder="Increase Credit Limit By Amount" class="form-control" style="width: 300px; display: inline-block;" value="<?= $increaseCreditLimitBy; ?>" />
+                <a href="javascript:void(0);" onclick="$('#frmIncreaseCreditLimit').submit();" class="btn btn-primary">Increase Credit Limit</a>
+            </div>
+        </div>
+    </form>
+    <div style="clear: both; height: 16px;"></div>
+
+    <h2>Credit Utilization Chart Out of $<?=$totalCreditLimit; ?></h2>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered summary-table">
+                <tr>
+                    <?php foreach ($chartHeaders as $header) : ?>
+                    <th <?= (($creditUtilizationOrig == $header) ? 'style="color: red;"' : (($header == 0.29) ? 'style="color: green;"' : '')); ?>>
+                    <?= ($header * 100) . '% of Credit Used'; ?></th>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <?php foreach ($chartValues as $value) : ?>
+                    
+                    <td ><?php echo '$' . number_format($value, 2); ?></td>
+                    <?php endforeach; ?>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div style="clear: both; height: 16px;"></div>
+
+    
     
 
     <form action="delete.php?" name="frmDel" id="frmDel" method="post">
