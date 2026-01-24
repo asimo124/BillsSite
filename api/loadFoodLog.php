@@ -9,14 +9,14 @@ $sortBy1 = isset($_REQUEST['sort_by1']) ? trim($_REQUEST['sort_by1']) : 'consume
 $sortDir1 = isset($_REQUEST['sort_dir1']) ? trim($_REQUEST['sort_dir1']) : 'DESC';
 
 if ($sortDir1 != 'ASC' && $sortDir1 != 'DESC') {
-    $sortDir1 = 'ASC';
+    $sortDir1 = 'DESC';
 }
 
 $sortBy2 = isset($_REQUEST['sort_by2']) ? trim($_REQUEST['sort_by2']) : '';
-$sortDir2 = isset($_REQUEST['sort_dir2']) ? trim($_REQUEST['sort_dir2']) : 'ASC';
+$sortDir2 = isset($_REQUEST['sort_dir2']) ? trim($_REQUEST['sort_dir2']) : 'DESC';
 
 if ($sortDir2 != 'ASC' && $sortDir2 != 'DESC') {
-    $sortDir2 = 'ASC';
+    $sortDir2 = 'DESC';
 }
 
 $whereSql = "";
@@ -28,7 +28,7 @@ if ($title) {
 //*/
 
 $orderBySql = "";
-/*/
+//*/
 if ($sortBy1) {
     $orderBySql .= " ORDER BY $sortBy1 $sortDir1 ";
     if ($sortBy2) {
@@ -71,8 +71,10 @@ $sql = "SELECT
             OR fg.id IS NOT NULL 
         )
         $whereSql 
-        $orderBySql
+        ORDER BY fh.consumed_date DESC
         ";
+
+
 
 $results = getQuery($sql);
 
