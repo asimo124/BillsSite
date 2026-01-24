@@ -53,6 +53,6 @@ foreach ($vnd_frequency_value as $vnd_id => $freq_val) {
 	$sthUpdate->execute($data);
 }
 
-header("Location: show_expenses.php?Message=" . urlencode("You have updated your Future Expenses."));
+header("Location: index.php?Message=" . urlencode("You have updated your Future Expenses."));
 exit;
 ?>

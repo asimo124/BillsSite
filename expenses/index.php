@@ -13,6 +13,12 @@ $ipArr = explode(".", $ip);
 $userAgentArr = explode(" ", $user_agent);
 $string_to_hash = $ip[1] . SALT2 . $userAgentArr[2] . SALT1 . $ip[3] . $userAgentArr[0];
 $hash_key = md5($string_to_hash);
+
+$query = "SELECT * FROM vnd_bills WHERE is_future = 1 ORDER BY vnd_frequency_value ";
+$sth = $db_conn->prepare($query);
+
+$sth->execute();
+$expenses = $sth->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +33,7 @@ $hash_key = md5($string_to_hash);
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
 $( function() {
-	$( "#vnd_frequency_value" ).datepicker({ dateFormat: 'yy-mm-dd' });
+	$( "[id^=vnd_frequency_value]" ).datepicker({ dateFormat: 'yy-mm-dd' });
 } );
 </script>
 <style type="text/css">
@@ -77,12 +83,62 @@ a.btn {
 	font-weight: bold;
 }
 
+.expenses_text {
+
+	font-size: 15px;
+	padding: 0px;
+	width: 100%;
+}
+
+.expenses_text2 {
+
+	font-size: 15px;
+	margin-left: 4px;
+	width: 88%;
+}
+
 </style>
 </head>
 <body>
+
+<?php include "../templates/nav.php"; ?>
+<div style="clear: both; height: 7px"></div>
+
+<span class="page_title" >Future Expenses</span>
+<div class="clear" style="height: 12px;"></div>
+
+<a href="javascript:void(0);" onclick="$('#frmUpdate').submit();" class="btn">Update All</a>
+<div style="clear: both; height: 12px"></div>
+
+<form action="update.php" method="post" name="frmUpdate" id="frmUpdate" >
+	<table width="100%" align="left" >
+	<?php foreach ($expenses as $get_expense) : ?>
+		<tr>
+			<td width="22%">
+				<?php echo $get_expense['vnd_bill']; ?>
+			</td>
+			<td width="22%">
+				<input type="text" name="vnd_frequency_value[<?php echo $get_expense['vnd_id']; ?>]" id="vnd_frequency_value<?php echo $get_expense['vnd_id']; ?>" value="<?php echo $get_expense['vnd_frequency_value']; ?>" class="expenses_text" />
+			</td>
+			<td width="22%">
+				<input type="text" name="amount[<?php echo $get_expense['vnd_id']; ?>]" id="amount<?php echo $get_expense['vnd_id']; ?>" value="<?php echo $get_expense['amount']; ?>" class="expenses_text2" />
+			</td>
+			<td width="22%" align="left" style="padding-left: 24px;">
+				<input type="checkbox" name="watch_flag[<?php echo $get_expense['vnd_id']; ?>]" id="watch_flag<?php
+					echo $get_expense['vnd_id']; ?>" value="1" <?php echo ($get_expense['watch_flag']) ? "CHECKED" : ""; ?> />&nbsp; Watched
+			</td>
+			<td width="12%">
+				<a href="delete.php?vnd_id=<?php echo $get_expense['vnd_id']; ?>&hash_key_token_cs=<?php echo urlencode($hash_key); ?>" class="delete btn" >Delete</a>
+			</td>
+		</tr>
+	<?php endforeach; ?>
+	</table>
+	<input type="hidden" name="hash_key_token_cs" id="hash_key_token_cs" value="<?php echo $hash_key; ?>" />
+</form>
 	
 <form action="save_expense.php" method="post" name="frmAdd" id="frmAdd" >
 	<div class="wrapper" >
+		
 		<span class="page_title" >Add Future Expense</span>
 		<div class="clear" style="height: 12px;"></div>
 
@@ -93,8 +149,7 @@ a.btn {
 		<?php endif; ?>
 		<div style="clear: both; height: 12px"></div>
 
-		<?php include "../templates/nav.php"; ?>
-		<div style="clear: both; height: 7px"></div>
+		
 
 		Desc:<br>
 		<input type="text" name="vnd_bill" id="vnd_bill" value="" class="expense_field" />
@@ -112,9 +167,12 @@ a.btn {
 		<div class="clear" style="height: 12px;"></div>
 
 		<input type="hidden" name="hash_key_token_cs" id="hash_key_token_cs" value="<?php echo $hash_key; ?>" />
-		<a href="show_expenses.php">All Future Expenses</a>
+		
 	</div>
 </form>
+<div style="clear: both; height: 16px;"></div>
+
+
 
 <script src="/js/nav.js" ></script>
 </body>

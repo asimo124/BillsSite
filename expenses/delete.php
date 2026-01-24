@@ -58,6 +58,6 @@ $sth->execute($data);
 
 
 
-header("Location: show_expenses.php?Message=" . urlencode("You have deleted a future expense."));
+header("Location: index.php?Message=" . urlencode("You have deleted a future expense."));
 exit;
 ?>
