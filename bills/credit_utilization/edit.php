@@ -15,7 +15,7 @@ $Bill = getQuerySingle($sql, [':id' => $id]);
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Charge Catgories</title>
+    <title>Edit Loan/Card</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
@@ -35,7 +35,7 @@ $Bill = getQuerySingle($sql, [':id' => $id]);
     <form class="form-horizontal" id="frmEditBill" action="proc_edit.php?<?= $searchFilersQueryStr ?>" method="post" >
         <fieldset>
             <!-- Form Name -->
-            <legend>Edit Bill</legend>
+            <legend>Edit Loan/Card</legend>
 
             <?php include "../../templates/nav.php"; ?>
             <div style="clear: both; height: 7px"></div>

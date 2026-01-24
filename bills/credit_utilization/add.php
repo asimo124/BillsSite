@@ -32,7 +32,7 @@ if (!isset($_SESSION['user'])) {
     <form class="form-horizontal" id="frmAddBill" action="proc_add.php" method="post" >
         <fieldset>
             <!-- Form Name -->
-            <legend>Edit Loan/Card</legend>
+            <legend>Create Loan/Card</legend>
 
             <?php include "../../templates/nav.php"; ?>
             <div style="clear: both; height: 7px"></div>
