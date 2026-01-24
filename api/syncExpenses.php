@@ -35,6 +35,7 @@ $sql = "SELECT pp.id as pay_period_id
         , up.title as upcoming_purchase
         , up.description as `description`
         , up.cost as cost
+        , up.id as upcoming_purchase_id
         FROM ip_pay_period_item ppi 
         INNER JOIN ip_pay_period pp 
             ON ppi.pay_period_id = pp.id 
@@ -57,6 +58,11 @@ $sql = "SELECT vnd_id
         WHERE 1 
         AND upcoming_purchase_id = :upcoming_purchase_id ";
 $stmt_check_expense = $db_conn->prepare($sql);
+
+$sql = "DELETE FROM ip_upcoming_purchase 
+        WHERE 1 
+        AND id = :upcoming_purchase_id ";
+$stmt_del_existing = $db_conn->prepare($sql);
 
 foreach ($results as $index => $getItem) { 
 
@@ -89,6 +95,13 @@ foreach ($results as $index => $getItem) {
     $data['watch_flag'] = 1;
 
     $stmt_ins_expense->execute($data);
+
+    $sql = "DELETE FROM ip_upcoming_purchase 
+        WHERE 1 
+        AND id = :upcoming_purchase_id ";
+    $stmt_del_existing->execute([
+        ':upcoming_purchase_id' => $getItem['upcoming_purchase_id']
+    ]);
 }
 
 header("Content-type: application/json");
