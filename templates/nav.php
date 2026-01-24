@@ -34,6 +34,7 @@
     <a href="/bills/admin/disposable_income_tracker.php">Disposable Tracker</a>
     <a href="/bills/admin/queue_date_job.php">Queue Date Job</a>
     <a href="/bills/admin/audit_expenses_v3.php">Audit Expenses</a>
+    <a href="/bills/credit_utilization/index.php">Credit Utilization</a>
     <a href="/bills/admin/weight_ratio.php">Weight Ratio</a>
     <a href="/bills/admin/last_time_i.php">Last Time I</a>
     <a href="/settings/index.php">Settings</a>

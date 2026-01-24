@@ -1,0 +1,144 @@
+<?php
+    //ini_set("display_errors", 1);
+    include "../../inc/includes.php";
+
+if (!isset($_SESSION['user'])) {
+    header("Location: /login.php");
+    exit;
+}
+
+$sql = "SELECT * FROM cu_loan ORDER BY sort_order ASC";
+$loans = getQuery($sql);
+
+$totalDebtOwed = 0;
+$totalCreditLimit = 0;
+foreach ($loans as $loan) {
+    $totalDebtOwed += floatval($loan['debt_owed']);
+    $totalCreditLimit += floatval($loan['credit_limit']);
+}
+
+$totalDebtOwed = number_format($totalDebtOwed, 2);
+$totalCreditLimit = number_format($totalCreditLimit, 2);
+
+$creditUtilization = ($totalCreditLimit > 0) ? ($totalDebtOwed / $totalCreditLimit) * 100 : 0;
+$creditUtilization = number_format($creditUtilization, 2);
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Credit Utilization</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <!-- Font Awesome for hamburger icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/nav.css" />
+    <link rel="stylesheet" href="/css/bills_admin.css" />
+</head>
+<body>
+<div class="container">
+    <div style="clear: both; height: 20px;" ></div>
+    <?php if (isset($_REQUEST['Message'])) { ?>
+        <div class="alert alert-success" role="alert">
+            <?php echo $_REQUEST['Message']; ?>
+        </div>
+    <?php } ?>
+
+    <h2>Bills</h2>
+
+    <div style="clear: both; height: 12px"></div>
+
+    <?php include "../../templates/nav.php"; ?>
+    <div style="clear: both; height: 7px"></div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="add.php" class="btn btn-primary">Create Loan/Card</a>
+        </div>
+    </div>
+    <div style="clear: both; height: 16px;"></div>
+
+    <h2>Credit Utilization Summary</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered summary-table">
+                <tr>
+                    <th>Total Debt Owed</th>
+                    <th>Total Credit Limit</th>
+                    <th>Credit Utilization (%)</th>
+                </tr>
+                <tr>
+                    <td><?php echo '$' . $totalDebtOwed; ?></td>
+                    <td><?php echo '$' . $totalCreditLimit; ?></td>
+                    <td><?php echo $creditUtilization . '%'; ?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            
+            <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>Loan/Card</th>
+                <th>Debt Owed</th>
+                <th>Credit Limit</th>
+                <th>Sort Order</th>
+                <th colspan="2">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($loans as $loan) : ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($loan['title']); ?></td>
+                    <td><?php echo '$' . number_format($loan['debt_owed'], 2); ?></td>
+                    <td><?php echo '$' . number_format($loan['credit_limit'], 2); ?></td>
+                    <td><?php echo htmlspecialchars($loan['sort_order']); ?></td>
+                    <td><a href="edit.php?id=<?php echo $loan['id']; ?>" class="btn btn-primary">Edit</a></td>
+                    <td><a class="btn btn-primary del_btn" data-id="<?php echo $loan['id']; ?>" data-toggle="modal" data-target="#delBill">Delete</a></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    
+
+    <form action="delete.php?" name="frmDel" id="frmDel" method="post">
+        <div class="modal fade" id="delBill">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Loan/Card</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you wish to delete this Loan/Card?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="save_del_btn" data-id="">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="hidden" name="id" id="del_id" value="" />
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+</div>
+</body>
+<script src="https://code.jquery.com/jquery.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="/js/nav.js" ></script>
+<script>
+
+    $(document).ready(function() {
+        $('.del_btn').click(function() {
+            $('#del_id').val($(this).attr("data-id"));
+        })
+    })
+</script>
