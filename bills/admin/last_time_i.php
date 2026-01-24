@@ -1030,7 +1030,9 @@
           scrollToToday() {
             this.$nextTick(() => {
               const today = new Date();
-              const todayString = today.toISOString().split("T")[0];
+              const todayString = today.getFullYear() + '-' +
+                String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                String(today.getDate()).padStart(2, '0');
               
               // Find the calendar day element with today's date
               const calendarDays = document.querySelectorAll('.calendar-day-content');
@@ -1064,7 +1066,9 @@
           findDateForElement(element) {
             // Try to find the date from the calendar data structure
             const today = new Date();
-            const todayString = today.toISOString().split("T")[0];
+            const todayString = today.getFullYear() + '-' +
+                String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                String(today.getDate()).padStart(2, '0');
             
             // Check if any of the billsDays match this element
             for (let week of this.billsDays) {
@@ -1220,7 +1224,9 @@
           addItemUsed(item) {
             this.isVisible = true;
             this.selectedItem = "";
-            this.dateUsed = new Date().toISOString().split("T")[0];
+            this.dateUsed = new Date().getFullYear() + '-' +
+                String(new Date().getMonth() + 1).padStart(2, '0') + '-' +
+                String(new Date().getDate()).padStart(2, '0');
           },
 
           async handleOk() {
