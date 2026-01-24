@@ -120,19 +120,19 @@ if (!isset($_SESSION['user'])) {
         
         <div class="bg-white shadow-md rounded-lg p-6">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2 class="text-xl font-semibold text-gray-800 ">Disposable Spent Over Time</h2>
+                <h2 class="text-xl font-semibold text-gray-800 ">{{ chartLabel }}</h2>
                 <div style="display: flex; align-items: center; gap: 8px;">
                     <input type="checkbox" id="cumulative_checkbox" v-model="cumulative" @change="loadChartData" />
                     <label for="cumulative_checkbox" class="text-gray-700">Cumulative</label>
                 </div>
-                <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" @click="loadRoot">
+                <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" v-if="chartLabel !== 'Dates'" @click="reverseDrilldownChart">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12a7.5 7.5 0 0115 0m-15 0a7.5 7.5 0 0015 0m-15 0H3m18 0h-1.5" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H3m0 0l3.75-3.75M3 12l3.75 3.75" />
                     </svg>
-                    Reload
+                    Back
                 </button>
             </div>
-            
+
             <div id="disposable_spent_over_time_chart" class="w-full h-96" style="width: 100%; height: 350px;"></div>
         </div>
     </div>
@@ -194,6 +194,8 @@ if (!isset($_SESSION['user'])) {
                     transaction_date: null,
                     category_name: null,
                     drilldownLevel: 'root',
+
+                    chartLabel: 'Dates',
 
                     // Existing data properties
                     transactions: [],
@@ -363,11 +365,25 @@ if (!isset($_SESSION['user'])) {
                         this.loadChartData();
                     }
                 },
+                async reverseDrilldownChart() {
+                    if (this.drilldownLevel == 'category') {
+                        this.drilldownLevel = 'day';
+                        this.category_name = null;
+                        this.loadChartData();
+                    } else if (this.drilldownLevel == 'day') {
+                        this.drilldownLevel = 'root';
+                        this.transaction_date = null;
+                        this.loadChartData();
+                    }
+
+                },
                 async loadChartData() {
 
                     const cumulativeParam = this.cumulative ? 1 : 0;
 
                     if (this.drilldownLevel == 'root') {
+
+                        this.chartLabel = 'Dates';
                         
                         const response = await axios.get('/api/loadDisposableTransactionsChartData.php?paycheck_date=' + this.paycheck_date + '&cumulative=' + cumulativeParam);
                         if (response.data) {
@@ -390,6 +406,8 @@ if (!isset($_SESSION['user'])) {
 
                     } else if (this.drilldownLevel == 'day') {
                         
+                        this.chartLabel = 'Categories';
+
                         try {
                             const response = await axios.get('/api/loadDisposableTransactionsChartDataDay.php?paycheck_date=' + this.paycheck_date + '&transaction_date=' + this.transaction_date + '&cumulative=' + cumulativeParam);
                             if (response.data) {
@@ -406,6 +424,8 @@ if (!isset($_SESSION['user'])) {
                         } catch (error) {}
 
                     } else if (this.drilldownLevel == 'category') {
+
+                        this.chartLabel = 'Transactions';
 
                         try {
                             const response = await axios.get('/api/loadDisposableTransactionsChartDataCategory.php?paycheck_date=' + this.paycheck_date + '&transaction_date=' + this.transaction_date + '&category_name=' + encodeURIComponent(this.category_name) + '&cumulative=' + cumulativeParam);
