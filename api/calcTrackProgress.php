@@ -17,16 +17,19 @@ foreach ($results as $getItem) {
 
 $totalMonthsLeft = 0;
 $totalAmountPrincipal = 0;
+$minPaymentAccum = 0;
 $previousItem = [];
 foreach ($results as $index => $getItem) {
 
 	$totalAmountPrincipal += floatval($getItem['amount_to_principal']);
-    $results[$index]['total_principal_monthly'] = $disposablePerMonth + $totalAmountPrincipal;
+    $results[$index]['total_principal_monthly'] = $disposablePerMonth + $minPaymentAccum +  $getItem['amount_to_principal'];
 	$results[$index]['months_left'] = round($getItem['debt_owed'] / $results[$index]['total_principal_monthly'], 1);
 
 	$totalMonthsLeft += $results[$index]['months_left'];
-	$previousItem = $getItem;
+	
+	$minPaymentAccum += floatval($getItem['min_payment']);
 }
+
 
 $totalPaychecksLeft = round(($totalMonthsLeft * 2));
 
@@ -41,10 +44,7 @@ $monthsLeftArr = [];
 $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
 					'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-$currentMonth = intval(date("m")) - 1;
-$currentYear = intval(date("Y"));
 
-$yearGroups = [];
 
 $totalThreshold = 0;
 foreach ($results as $index => $getItem) {
@@ -72,14 +72,39 @@ $randomColors = [
 	"#8446fa", // (Purple) 
 ];
 
+//print_r($randomColors);
+
+foreach ($results as $index => $getItem) {
+	
+	$colorIndex = $index % count($randomColors);
+	$results[$index]['color'] = $randomColors[$colorIndex];
+}
+
+//echo "<pre>";
+
+$currentMonth = intval(date("m")) - 1;
+$currentYear = intval(date("Y"));
+
+$yearGroups = [];
+
+$previousThreshold = 0;
 $resultsIndex = 0;
 for ($i = 0; $i < $totalMonthsLeftAfter; $i++) {
 	
 	$monthIndex = ($currentMonth + 1 + $i) % 12; // Start from next month
+
+	//print_r("monthIndex: $monthIndex\n");
+
     $yearOffset = floor(($currentMonth + 1 + $i) / 12); // Calculate year offset
+
+	//print_r("yearOffset: $yearOffset\n");
+
     $displayYear = $currentYear + $yearOffset; // Full year
     $displayYearShort = substr($displayYear, -2); // Last two digits of year
     $monthYearString = $monthNames[$monthIndex] . ' ' . $displayYearShort;
+
+	//print_r("monthYearString: $monthYearString\n");
+	
     
     // Group by year
     if (!isset($yearGroups[$displayYear])) {
@@ -89,14 +114,26 @@ for ($i = 0; $i < $totalMonthsLeftAfter; $i++) {
 		];
     }
 
-	if (isset($results[$resultsIndex]) && $i < $results[$resultsIndex]['threshold']) {
-		$colorIndex = $index;
-		$yearGroups[$displayYear]['months'][] = [
-			"month_year" => $monthYearString,
-			"color" => $randomColors[$colorIndex],
-		];
+	/*/
+	print_r("i: $i \n");
+	print_r("resultsIndex: $resultsIndex \n");
+	print_r("previousThreshold: $previousThreshold \n");
+	print_r("current threshold: " . $results[$resultsIndex]['threshold'] . "\n");
+	//*/
+	if ($i >= $previousThreshold && $i < $results[$resultsIndex]['threshold']) {
+
+		$color = $results[$resultsIndex]['color'];
+
+		//print_r("Using color: $color \n");
+		
+		$previousThreshold = $results[$resultsIndex]['threshold'];
 		$resultsIndex++;
-	}	
+	}
+
+	$yearGroups[$displayYear]['months'][] = [
+		"month_year" => $monthYearString,
+		"color" => $color,
+	];
 }
 
 header("Content-type: text/json");
@@ -110,6 +147,9 @@ foreach ($yearGroups2 as $year => $data) {
 	];
 }
 
-$results = array("items" => $yearGroups);
+$results = [
+	"items" => $yearGroups,
+	"loans" => $results
+];
 echo json_encode($results);
 ?>

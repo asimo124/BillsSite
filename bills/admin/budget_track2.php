@@ -45,7 +45,7 @@ if (!isset($_SESSION['user'])) {
     <div class="row">
         <div class="col-xs-6">
             <input type="number" id="Disposable Per Month" class="form-control" 
-                placeholder="Disposable Per Month" v-model="disposable_per_month" />
+                placeholder="Disposable Per Month" v-model="disposable_per_month" @change="updateDisposablePerMonth" />
         </div>
         <div class="col-xs-6">
             <button class="btn btn-default" @click="calcProgress">Calculate</button>
@@ -103,6 +103,27 @@ if (!isset($_SESSION['user'])) {
     <div style="clear: both; height: 16px"></div> -->
 
     <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Loan/Card</th>
+                        <th>Color</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(loan, index) in loans" :key="index">
+                        <td>{{ loan.title }}</td>
+                        <td>
+                            <span :style="{ backgroundColor: loan.color, display: 'inline-block', width: '20px', height: '20px', border: '1px solid #000' }"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
         <div v-for="(yearGroup, yearIndex) in months_left_arr" :key="yearIndex">
             <h4>{{ yearGroup.year_title }}</h4>
             <div class="col-xs-4 col-sm-3 col-md-2" v-for="(month, monthIndex) in yearGroup.months" :key="monthIndex">
@@ -129,7 +150,8 @@ createApp({
         return {
             disposable_per_month: 1100,
 
-            months_left_arr: []
+            months_left_arr: [],
+            loans: []
         }
     },
     methods: {
@@ -140,16 +162,17 @@ createApp({
                 if (response.data && response.data.items) {
                     this.months_left_arr = response.data.items;
                 }
+                if (response.data && response.data.loans) {
+                    this.loans = response.data.loans;
+                }
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
+        },
+        updateDisposablePerMonth() {
+            localStorage.setItem('disposable_per_month', this.disposable_per_month);
         }
     },
-    /*watch: {
-        disposable_per_month: function(newVal, oldVal) {
-            localStorage.setItem('disposable_per_month', newVal);
-        },
-    },*/
     mounted() {
         if (localStorage.getItem('disposable_per_month') && !isNaN(localStorage.getItem('disposable_per_month'))) {
             this.disposable_per_month = parseFloat(localStorage.getItem('disposable_per_month'));
