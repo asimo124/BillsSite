@@ -60,6 +60,18 @@ $Bill = getQuerySingle($sql, [':id' => $id]);
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Minimum Payment</label>
+                <div class="col-md-4">
+                    <input id="min_payment" name="min_payment" type="number" placeholder="Minimum Payment" class="form-control input-md" value="<?php echo $Bill['min_payment']; ?>" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Amount Goes To Principal</label>
+                <div class="col-md-4">
+                    <input id="amount_to_principal" name="amount_to_principal" type="number" placeholder="Amount Goes To Principal" class="form-control input-md" value="<?php echo $Bill['amount_to_principal']; ?>" />
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Sort Order</label>
                 <div class="col-md-4">
                     <input id="sort_order" name="sort_order" type="number" placeholder="Sort Order" class="form-control input-md" value="<?php echo $Bill['sort_order']; ?>" />

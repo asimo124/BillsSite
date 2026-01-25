@@ -57,6 +57,18 @@ if (!isset($_SESSION['user'])) {
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Mininum Payment</label>
+                <div class="col-md-4">
+                    <input id="min_payment" name="min_payment" type="number" placeholder="Minimum Payment" class="form-control input-md" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Amount Goes To Principal</label>
+                <div class="col-md-4">
+                    <input id="amount_to_principal" name="amount_to_principal" type="number" placeholder="Amount Goes To Principal" class="form-control input-md" value="" />
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Sort Order</label>
                 <div class="col-md-4">
                     <input id="sort_order" name="sort_order" type="number" placeholder="Sort Order" class="form-control input-md" value="" />
