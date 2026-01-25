@@ -26,9 +26,11 @@ foreach ($results as $index => $getItem) {
 
 	$results[$index]['months_left'] = round($getItem['debt_owed'] / $results[$index]['total_principal_monthly'], 1);
 
+	$totalMonthsLeft += $results[$index]['months_left'];
+
 	$results[$index]['months_left_accum'] += round($totalMonthsLeft, 1);
 
-	$totalMonthsLeft += $results[$index]['months_left'];
+	
 	
 	$minPaymentAccum += floatval($getItem['min_payment']);
 }
@@ -49,11 +51,13 @@ $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
 
 
 
+$lastThreshold = 0;
 $totalThreshold = 0;
 foreach ($results as $index => $getItem) {
 
 	$totalThreshold += $results[$index]['months_left'];
 	$results[$index]['threshold'] = $totalThreshold;
+	$lastThreshold = $totalThreshold;
 }
 
 $randomColors = [
@@ -110,6 +114,7 @@ for ($i = 0; $i < $totalMonthsLeftAfter; $i++) {
 
 	//print_r("monthYearString: $monthYearString\n");
 	
+	
     
     // Group by year
     if (!isset($yearGroups[$displayYear])) {
@@ -141,6 +146,8 @@ for ($i = 0; $i < $totalMonthsLeftAfter; $i++) {
 		$previousThreshold = $results[$resultsIndex]['threshold'];
 		$resultsIndex++;
 	}
+
+	
 
 
 	$yearGroups[$displayYear]['months'][] = [
