@@ -88,6 +88,8 @@ $currentYear = intval(date("Y"));
 
 $yearGroups = [];
 
+//echo "totalMonthsLeftAfter: $totalMonthsLeftAfter\n";
+
 $previousThreshold = 0;
 $resultsIndex = 0;
 for ($i = 0; $i < $totalMonthsLeftAfter; $i++) {
@@ -115,6 +117,7 @@ for ($i = 0; $i < $totalMonthsLeftAfter; $i++) {
 		];
     }
 
+	//echo "i: $i, previousThreshold: $previousThreshold, resultsIndex: $resultsIndex, currentThreshold: " . $results[$resultsIndex]['threshold'] . "\n";
 	if ($i >= $previousThreshold && $i < $results[$resultsIndex]['threshold']) {
 
 		$color = $results[$resultsIndex]['color'];
@@ -129,6 +132,12 @@ for ($i = 0; $i < $totalMonthsLeftAfter; $i++) {
 		$previousThreshold = $results[$resultsIndex]['threshold'];
 		$resultsIndex++;
 		//*/
+	} else if ($results[$resultsIndex]['threshold'] - $previousThreshold < 1) {
+
+		$color = $results[$resultsIndex]['color'];
+
+		$previousThreshold = $results[$resultsIndex]['threshold'];
+		$resultsIndex++;
 	}
 
 
