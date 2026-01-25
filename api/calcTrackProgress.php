@@ -26,6 +26,8 @@ foreach ($results as $index => $getItem) {
 
 	$results[$index]['months_left'] = round($getItem['debt_owed'] / $results[$index]['total_principal_monthly'], 1);
 
+	$results[$index]['months_left_accum'] += round($totalMonthsLeft, 1);
+
 	$totalMonthsLeft += $results[$index]['months_left'];
 	
 	$minPaymentAccum += floatval($getItem['min_payment']);
