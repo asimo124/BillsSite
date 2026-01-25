@@ -47,8 +47,6 @@ for ($i = 1; $i <= $numHeaders; $i++) {
     $minHeader += $increments;
     $chartHeaders[] = round($minHeader, 4);
 }
-
-
 $creditUtilPercentage = round($creditUtilization / 100, 4);
 
 sort($chartHeaders);
@@ -57,6 +55,41 @@ foreach ($chartHeaders as $header) {
     $chartValues[] = round(($header * $totalCreditLimit), 4);
    
 }
+
+$sql = "SELECT * FROM cu_loan WHERE milestone_order > 0 ORDER BY milestone_order ASC";
+$loansByMilestone = getQuery($sql);
+
+
+$totalDebtOwedNew = $totalDebtOwed;
+
+$chartMilestoneResults = [];
+$chartMilestoneValues = [];
+$chartMilestoneHeaders = [];
+foreach ($loansByMilestone as $loan) {
+
+    $title = $loan['title'];
+    $debtOwed = floatval($loan['debt_owed']);
+    $creditLimit = floatval($loan['credit_limit']);
+
+    $totalDebtOwedNew -= $debtOwed;
+
+    $creditUtilization2 = ($totalCreditLimit > 0) ? round(($totalDebtOwedNew / $totalCreditLimit), 4) * 100 : 0;
+
+    $chartMilestoneHeaders[] = $title;
+    $chartMilestoneValues[] = $creditUtilization2;
+    $chartMilestoneResults[] = [
+        'title' => $title,
+        'value' => $creditUtilization2
+    ];
+
+    if ($totalDebtOwedNew < 0) {
+        $totalDebtOwedNew = 0;
+    }
+}
+
+
+
+
 
 
 $totalDebtOwed = number_format($totalDebtOwed, 2);
@@ -160,6 +193,7 @@ $creditUtilization = number_format($creditUtilization, 2);
                     <th>Debt Owed</th>
                     <th>Credit Limit</th>
                     <th>Sort Order</th>
+                    <th>Milestone Order</th>
                     <th colspan="2">Actions</th>
                 </tr>
                 </thead>
@@ -170,6 +204,7 @@ $creditUtilization = number_format($creditUtilization, 2);
                         <td><?php echo '$' . number_format($loan['debt_owed'], 2); ?></td>
                         <td><?php echo '$' . number_format($loan['credit_limit'], 2); ?></td>
                         <td><?php echo htmlspecialchars($loan['sort_order']); ?></td>
+                        <td><?php echo htmlspecialchars($loan['milestone_order']); ?></td>
                         <td><a href="edit.php?id=<?php echo $loan['id']; ?>" class="btn btn-primary">Edit</a></td>
                         <td><a class="btn btn-primary del_btn" data-id="<?php echo $loan['id']; ?>" data-toggle="modal" data-target="#delBill">Delete</a></td>
                     </tr>
@@ -206,6 +241,25 @@ $creditUtilization = number_format($creditUtilization, 2);
                     <td ><?php echo '$' . number_format($value, 2); ?></td>
                     <?php endforeach; ?>
                 </tr>
+            </table>
+        </div>
+    </div>
+    <div style="clear: both; height: 16px;"></div>
+
+    <h2>Credit Milestones Chart Out of $<?=$totalCreditLimit; ?></h2>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered summary-table">
+                <tr>
+                    <th>When Milestone Paid</th>
+                    <th>Credit Utilization (%)</th> 
+                </tr>
+                <?php foreach ($chartMilestoneResults as $milestone) : ?>
+                <tr>
+                    <td style="font-weight: bold;<?= ($milestone['value'] < 30) ? 'color: green; "' : 'color: red; "'; ?>"><?php echo $milestone['title']; ?></td>
+                    <td style="font-weight: bold;<?= ($milestone['value'] < 30) ? 'color: green; "' : 'color: red; "'; ?>"><?php echo $milestone['value'] . '%'; ?></td>
+                </tr>
+                <?php endforeach; ?>
             </table>
         </div>
     </div>

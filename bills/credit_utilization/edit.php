@@ -65,6 +65,12 @@ $Bill = getQuerySingle($sql, [':id' => $id]);
                     <input id="sort_order" name="sort_order" type="number" placeholder="Sort Order" class="form-control input-md" value="<?php echo $Bill['sort_order']; ?>" />
                 </div>
             </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Milestone Order</label>
+                <div class="col-md-4">
+                    <input id="milestone_order" name="milestone_order" type="number" placeholder="Milestone Order" class="form-control input-md" value="<?php echo $Bill['milestone_order']; ?>" />
+                </div>
+            </div>
             <input type="hidden" name="id" id="id" value="<?php echo $id; ?>" />
         </fieldset>
         <a href="javascript:void(0);" onclick="$('#frmEditBill').submit();" class="btn btn-primary">Update</a>
