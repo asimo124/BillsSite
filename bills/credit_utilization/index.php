@@ -154,28 +154,29 @@ $creditUtilization = number_format($creditUtilization, 2);
         <div class="col-md-12">
             
             <table class="table table-striped table-bordered">
-            <thead>
-            <tr>
-                <th>Loan/Card</th>
-                <th>Debt Owed</th>
-                <th>Credit Limit</th>
-                <th>Sort Order</th>
-                <th colspan="2">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($loans as $loan) : ?>
+                <thead>
                 <tr>
-                    <td><?php echo htmlspecialchars($loan['title']); ?></td>
-                    <td><?php echo '$' . number_format($loan['debt_owed'], 2); ?></td>
-                    <td><?php echo '$' . number_format($loan['credit_limit'], 2); ?></td>
-                    <td><?php echo htmlspecialchars($loan['sort_order']); ?></td>
-                    <td><a href="edit.php?id=<?php echo $loan['id']; ?>" class="btn btn-primary">Edit</a></td>
-                    <td><a class="btn btn-primary del_btn" data-id="<?php echo $loan['id']; ?>" data-toggle="modal" data-target="#delBill">Delete</a></td>
+                    <th>Loan/Card</th>
+                    <th>Debt Owed</th>
+                    <th>Credit Limit</th>
+                    <th>Sort Order</th>
+                    <th colspan="2">Actions</th>
                 </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($loans as $loan) : ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($loan['title']); ?></td>
+                        <td><?php echo '$' . number_format($loan['debt_owed'], 2); ?></td>
+                        <td><?php echo '$' . number_format($loan['credit_limit'], 2); ?></td>
+                        <td><?php echo htmlspecialchars($loan['sort_order']); ?></td>
+                        <td><a href="edit.php?id=<?php echo $loan['id']; ?>" class="btn btn-primary">Edit</a></td>
+                        <td><a class="btn btn-primary del_btn" data-id="<?php echo $loan['id']; ?>" data-toggle="modal" data-target="#delBill">Delete</a></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
     <div style="clear: both; height: 16px;"></div>
 
