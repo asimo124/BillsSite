@@ -63,7 +63,8 @@ class IpPayPeriodItem {
                 "total_disposable" => $items[0]['total_disposable'] ?? 0,
                 "remaining_amount" => $items[0]['remaining_amount'],
                 "upcoming_purchases" => [],
-                "one_time_expenses" => []
+                "one_time_expenses" => [],
+                "one_time_expenses_total" => 0
             ];
             
             $expenseResults = [];
@@ -93,6 +94,10 @@ class IpPayPeriodItem {
 
             $expenseResults = $stmt_sel_expenses->fetchAll(PDO::FETCH_ASSOC);
             $eachPayPeriod['one_time_expenses'] = $expenseResults;
+             
+            foreach ($expenseResults as $expense) {
+                $eachPayPeriod['one_time_expenses_total'] += floatval($expense['amount']);
+            }
 
             $upcomingPurchases = [];
             foreach ($items as $item) {

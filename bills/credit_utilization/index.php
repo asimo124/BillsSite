@@ -7,9 +7,16 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 
+$sort = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : 'sort_order';
+$sort_dir = isset($_REQUEST['sort_dir']) ? $_REQUEST['sort_dir'] : 'ASC';
+
+if ($sort_dir != 'ASC' && $sort_dir != 'DESC') {
+    $sort_dir = 'ASC';
+}
+
 $increaseCreditLimitBy = isset($_REQUEST['increase_credit_limit_by']) ? floatval($_REQUEST['increase_credit_limit_by']) : 0;
 
-$sql = "SELECT * FROM cu_loan ORDER BY sort_order ASC";
+$sql = "SELECT * FROM cu_loan ORDER BY $sort $sort_dir";
 $loans = getQuery($sql);
 
 $totalDebtOwed = 0;
@@ -81,19 +88,46 @@ $creditUtilization = number_format($creditUtilization, 2);
         </div>
     <?php } ?>
 
-    <h2>Bills</h2>
+    
 
     <div style="clear: both; height: 12px"></div>
 
     <?php include "../../templates/nav.php"; ?>
-    <div style="clear: both; height: 7px"></div>
+    <div style="clear: both; height: 0px"></div>
 
-    <div class="row">
+    <h1>Credit Utilization</h1>
+
+    <form action="index.php" id="frmSort" method="get">
+        <div class="row">
+            <div class="col-md-4">
+                <select class="form-control" id="sort" name="sort">
+                    <option value="sort_order" <?= (isset($_REQUEST['sort']) && $_REQUEST['sort'] == 'sort_order') ? 'selected' : ''; ?>>Sort Order</option>
+                    <option value="debt_owed" <?= (isset($_REQUEST['sort']) && $_REQUEST['sort'] == 'debt_owed') ? 'selected' : ''; ?>>Debt Owed</option>
+                    <option value="title" <?= (isset($_REQUEST['sort']) && $_REQUEST['sort'] == 'title') ? 'selected' : ''; ?>>Name</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-control" id="sort_dir" name="sort_dir">
+                    <option value="ASC" <?= (isset($_REQUEST['sort_dir']) && $_REQUEST['sort_dir'] == 'ASC') ? 'selected' : ''; ?>>ASC</option>
+                    <option value="DESC" <?= (isset($_REQUEST['sort_dir']) && $_REQUEST['sort_dir'] == 'DESC') ? 'selected' : ''; ?>>DESC</option>
+                    
+                </select>
+            </div>
+            <div class="col-md-4">
+                <a href="javascript:void(0);" onclick="$('#frmSort').submit();" class="btn btn-primary">Sort</a>
+            </div>
+        </div>
+
+       
+    </form>
+    <div style="clear: both; height: 32px;"></div>
+
+     <div class="row">
         <div class="col-md-12">
             <a href="add.php" class="btn btn-primary">Create Loan/Card</a>
         </div>
     </div>
-    <div style="clear: both; height: 16px;"></div>
+    <div style="clear: both; height: 0px;"></div>
 
     <h2>Credit Utilization Summary</h2>
     <div class="row">

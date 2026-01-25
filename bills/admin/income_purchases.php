@@ -143,6 +143,9 @@ if (!isset($_SESSION['user'])) {
                                     </tr>
                                 </tbody>
                             </table>
+                            <div style="text-align: right;" v-if="item.one_time_expenses.length > 0">
+                                <span style="font-weight: bold;">Total:</span> ${{ item.one_time_expenses_total.toFixed(2) }}</span>
+                            </div>
                         </td>
                         <td style="border: 1px solid #666666;">
                             <input type="number" class="form-control input_num" v-model="item.remaining_amount" style="width: 60px;" />
