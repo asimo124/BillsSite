@@ -23,6 +23,7 @@ foreach ($results as $index => $getItem) {
 
 	$totalAmountPrincipal += floatval($getItem['amount_to_principal']);
     $results[$index]['total_principal_monthly'] = $disposablePerMonth + $minPaymentAccum +  $getItem['amount_to_principal'];
+
 	$results[$index]['months_left'] = round($getItem['debt_owed'] / $results[$index]['total_principal_monthly'], 1);
 
 	$totalMonthsLeft += $results[$index]['months_left'];
@@ -114,21 +115,22 @@ for ($i = 0; $i < $totalMonthsLeftAfter; $i++) {
 		];
     }
 
-	/*/
-	print_r("i: $i \n");
-	print_r("resultsIndex: $resultsIndex \n");
-	print_r("previousThreshold: $previousThreshold \n");
-	print_r("current threshold: " . $results[$resultsIndex]['threshold'] . "\n");
-	//*/
 	if ($i >= $previousThreshold && $i < $results[$resultsIndex]['threshold']) {
 
 		$color = $results[$resultsIndex]['color'];
 
-		//print_r("Using color: $color \n");
-		
 		$previousThreshold = $results[$resultsIndex]['threshold'];
 		$resultsIndex++;
+	} else if ($i >= floor($previousThreshold) && $i < $results[$resultsIndex]['threshold']) {
+
+		//*/
+		$color = $results[$resultsIndex]['color'];
+
+		$previousThreshold = $results[$resultsIndex]['threshold'];
+		$resultsIndex++;
+		//*/
 	}
+
 
 	$yearGroups[$displayYear]['months'][] = [
 		"month_year" => $monthYearString,

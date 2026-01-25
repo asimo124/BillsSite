@@ -240,21 +240,21 @@ if (!isset($_SESSION['user'])) {
 
             total_balance: 0,
 
-            dell_min_payment: 100,
-            irs_min_payment: 75,
+            dell_min_payment: 91,
+            irs_min_payment: 0,
             loft_min_payment: 68,
             sofi_min_payment: 618,
-            mastercard_min_payment: 250,
-            credit_human_min_payment: 293,
+            mastercard_min_payment: 240,
+            credit_human_min_payment: 265,
 
             total_min_payment: 0,
 
-            dell_amount_principal: 545,
-            irs_amount_principal: 1824,
-            loft_amount_principal: 1407,
-            sofi_amount_principal: 566, // from 512 on 9/12/2025
-            mastercard_amount_principal: 125,
-            credit_human_amount_principal: 200,
+            dell_amount_principal: 91,
+            irs_amount_principal: 0,
+            loft_amount_principal: 37,
+            sofi_amount_principal: 594, // from 512 on 9/12/2025
+            mastercard_amount_principal: 134,
+            credit_human_amount_principal: 194,
 
             dell_total_principal_monthly: 0,
             irs_total_principal_monthly: 0,
@@ -288,7 +288,7 @@ if (!isset($_SESSION['user'])) {
                 console.log("Dell Months Left: " + this.dell_months_left);
                 console.log("Dell Total Principal Monthly: " + this.dell_total_principal_monthly);
 
-                this.irs_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.dell_amount_principal) + parseFloat(this.irs_amount_principal));
+                this.irs_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.dell_min_payment) + parseFloat(this.irs_amount_principal));
                 this.irs_months_left = parseFloat((this.irs_balance / this.irs_total_principal_monthly).toFixed(1));
 
                 console.log("IRS Months Left: " + this.irs_months_left);
@@ -310,7 +310,7 @@ if (!isset($_SESSION['user'])) {
                 this.mastercard_months_left = parseFloat((this.mastercard_balance / this.mastercard_total_principal_monthly).toFixed(1));
 
                 console.log("Mastercard Months Left: " + this.mastercard_months_left);
-                console.log("Mastercard Total Principal Monthly: " + this.mastercard_total_principal_month);
+                console.log("Mastercard Total Principal Monthly: " + this.mastercard_total_principal_monthly);
 
                 this.credit_human_total_principal_monthly = (parseFloat(this.disposable_per_month) + parseFloat(this.dell_min_payment) + parseFloat(this.irs_min_payment) + parseFloat(this.loft_min_payment) + parseFloat(this.sofi_min_payment) + parseFloat(this.mastercard_min_payment) + parseFloat(this.credit_human_amount_principal));
                 this.credit_human_months_left = parseFloat((this.credit_human_balance / this.credit_human_total_principal_monthly).toFixed(1));

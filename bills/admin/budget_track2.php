@@ -108,12 +108,15 @@ if (!isset($_SESSION['user'])) {
                 <thead>
                     <tr>
                         <th>Loan/Card</th>
+                        <th>Months Left</th>
                         <th>Color</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(loan, index) in loans" :key="index">
                         <td>{{ loan.title }}</td>
+                        <td>{{ loan.months_left }}</td>
                         <td>
                             <span :style="{ backgroundColor: loan.color, display: 'inline-block', width: '20px', height: '20px', border: '1px solid #000' }"></span>
                         </td>
