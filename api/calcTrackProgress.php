@@ -35,30 +35,29 @@ foreach ($results as $index => $getItem) {
 	$minPaymentAccum += floatval($getItem['min_payment']);
 }
 
-/*/
-$previousMonthsAccumLeft = 0;
-$previousItem = [];
+//*/
+
+$origResults = $results;
+
+$fractionAccum = 0;
 $results2 = $results;
 $results = [];
-$fractionAccum = 0;
 foreach ($results2 as $index => $getItem) {
 	
-	$monthsAccumLeft = $getItem['months_left_accum'];
-
-	$smallIncrease = false;
-	if ($monthsAccumLeft - $previousMonthsAccumLeft < 1) {
-		$smallIncrease = true;
-		$fractionAccum += ($monthsAccumLeft - $previousMonthsAccumLeft);
+	$getItem['disabled'] = false;
+	if ($getItem['months_left'] < 0.7) {
+		$getItem['disabled'] = true;
 	} else {
-		$monthsAccumLeft += $fractionAccum;
-		$getItem['months_left_accum'] = round($monthsAccumLeft, 1);
-		$fractionAccum = 0;
-		$results[] = $getItem;
+		$fractionAccum += $getItem['months_left'];
 	}
-	$previousItem = $getItem;
-	$previousMonthsAccumLeft = $getItem['months_left_accum'];
+	$results[] = $getItem;
+	
 }
-*/
+
+$results[count($results) - 1]['months_left'] += $fractionAccum;
+
+
+
 
 
 $totalPaychecksLeft = round(($totalMonthsLeft * 2));
@@ -138,8 +137,6 @@ for ($i = 0; $i < $totalMonthsLeftAfter; $i++) {
     $monthYearString = $monthNames[$monthIndex] . ' ' . $displayYearShort;
 
 	//print_r("monthYearString: $monthYearString\n");
-	
-	
     
     // Group by year
     if (!isset($yearGroups[$displayYear])) {
@@ -148,6 +145,8 @@ for ($i = 0; $i < $totalMonthsLeftAfter; $i++) {
 			"months" => []
 		];
     }
+
+	
 
 	//echo "i: $i, previousThreshold: $previousThreshold, resultsIndex: $resultsIndex, currentThreshold: " . $results[$resultsIndex]['threshold'] . "\n";
 	if ($i >= $previousThreshold && $i < $results[$resultsIndex]['threshold']) {
@@ -170,7 +169,7 @@ for ($i = 0; $i < $totalMonthsLeftAfter; $i++) {
 
 		$previousThreshold = $results[$resultsIndex]['threshold'];
 		$resultsIndex++;
-	}
+	} 
 
 	
 
@@ -178,6 +177,7 @@ for ($i = 0; $i < $totalMonthsLeftAfter; $i++) {
 	$yearGroups[$displayYear]['months'][] = [
 		"month_year" => $monthYearString,
 		"color" => $color,
+		"disabled" => $results[$resultsIndex]['disabled']
 	];
 }
 
@@ -186,15 +186,28 @@ header("Content-type: text/json");
 $yearGroups2 = $yearGroups;
 $yearGroups = [];
 foreach ($yearGroups2 as $year => $data) {
-	$yearGroups[] = [
+
+	
+
+	$eachItem = [
 		"year_title" => $year,
-		"months" => $data['months']
+		"months" => []
 	];
+	$months = $data['months'];
+	foreach ($months as $month) {
+		//if ($month['disabled'] == false) {
+			$eachItem['months'][] = $month;
+		//}
+		
+	}
+
+	$yearGroups[] = $eachItem;
 }
 
 $results = [
 	"items" => $yearGroups,
-	"loans" => $results
+	"loans" => $results,
+	"loansOrig" => $origResults,
 ];
 echo json_encode($results);
 ?>

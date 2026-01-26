@@ -109,6 +109,7 @@ if (!isset($_SESSION['user'])) {
                     <tr>
                         <th>Loan/Card</th>
                         <th>Months Left</th>
+                        <th>Months Left Accum</th>
                         <th>Color</th>
                         
                     </tr>
@@ -116,6 +117,7 @@ if (!isset($_SESSION['user'])) {
                 <tbody>
                     <tr v-for="(loan, index) in loans" :key="index">
                         <td>{{ loan.title }}</td>
+                        <td>{{ loan.months_left }}</td>
                         <td>{{ loan.months_left_accum }}</td>
                         <td>
                             <span :style="{ backgroundColor: loan.color, display: 'inline-block', width: '20px', height: '20px', border: '1px solid #000' }"></span>
@@ -154,7 +156,8 @@ createApp({
             disposable_per_month: 1100,
 
             months_left_arr: [],
-            loans: []
+            loans: [],
+            loansOrig: []
         }
     },
     methods: {
@@ -167,6 +170,9 @@ createApp({
                 }
                 if (response.data && response.data.loans) {
                     this.loans = response.data.loans;
+                }
+                if (response.data && response.data.loansOrig) {
+                    this.loansOrig = response.data.loansOrig;
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
