@@ -7,7 +7,7 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 
-$sort = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : 'sort_order';
+$sort = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : 'milestone_order';
 $sort_dir = isset($_REQUEST['sort_dir']) ? $_REQUEST['sort_dir'] : 'ASC';
 
 if ($sort_dir != 'ASC' && $sort_dir != 'DESC') {
@@ -15,6 +15,10 @@ if ($sort_dir != 'ASC' && $sort_dir != 'DESC') {
 }
 
 $increaseCreditLimitBy = isset($_REQUEST['increase_credit_limit_by']) ? floatval($_REQUEST['increase_credit_limit_by']) : 0;
+
+if ($sort == "milestone_order") {
+    $sort = "CASE WHEN milestone_order = 0 THEN 9999 ELSE milestone_order END";
+}
 
 $sql = "SELECT * FROM cu_loan ORDER BY $sort $sort_dir";
 $loans = getQuery($sql);

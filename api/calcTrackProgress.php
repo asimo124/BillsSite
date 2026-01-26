@@ -54,7 +54,7 @@ foreach ($results2 as $index => $getItem) {
 	
 }
 
-$results[count($results) - 1]['months_left'] += $fractionAccum;
+//$results[count($results) - 1]['months_left'] += $fractionAccum;
 
 
 
