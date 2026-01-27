@@ -23,11 +23,14 @@ if ($sort == "milestone_order") {
 $sql = "SELECT * FROM cu_loan ORDER BY $sort $sort_dir";
 $loans = getQuery($sql);
 
+$minPaymentAccum = 0;
 $totalDebtOwed = 0;
 $totalCreditLimit = 0;
-foreach ($loans as $loan) {
+foreach ($loans as $index => $loan) {
     $totalDebtOwed += floatval($loan['debt_owed']);
     $totalCreditLimit += floatval($loan['credit_limit']);
+    $minPaymentAccum += floatval($loan['min_payment']);
+    $loans[$index]['min_payment_accum'] = $minPaymentAccum;
 }
 
 $totalCreditLimit += $increaseCreditLimitBy;
@@ -196,7 +199,7 @@ $creditUtilization = number_format($creditUtilization, 2);
                     <th>Loan/Card</th>
                     <th>Debt Owed</th>
                     <th>Credit Limit</th>
-                    <th>Sort Order</th>
+                    <th colspan="2">Min Payment</th>
                     <th>Milestone Order</th>
                     <th colspan="2">Actions</th>
                 </tr>
@@ -207,7 +210,8 @@ $creditUtilization = number_format($creditUtilization, 2);
                         <td><?php echo htmlspecialchars($loan['title']); ?></td>
                         <td><?php echo '$' . number_format($loan['debt_owed'], 2); ?></td>
                         <td><?php echo '$' . number_format($loan['credit_limit'], 2); ?></td>
-                        <td><?php echo htmlspecialchars($loan['sort_order']); ?></td>
+                        <td><?php echo '$' . number_format($loan['min_payment'], 2); ?></td>
+                        <td><?php echo '$' . number_format($loan['min_payment_accum'], 2); ?></td>
                         <td><?php echo htmlspecialchars($loan['milestone_order']); ?></td>
                         <td><a href="edit.php?id=<?php echo $loan['id']; ?>" class="btn btn-primary">Edit</a></td>
                         <td><a class="btn btn-primary del_btn" data-id="<?php echo $loan['id']; ?>" data-toggle="modal" data-target="#delBill">Delete</a></td>
