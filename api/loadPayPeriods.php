@@ -10,11 +10,11 @@ include "../inc/includes.php";
 set_time_limit(300);
 
 $user_id 			= isset($_REQUEST['user_id']) ? intval($_REQUEST['user_id']) : 0;
-$current_balance 	= isset($_REQUEST['current_balance']) ? intval($_REQUEST['current_balance']) : 3471;
+$current_balance 	= isset($_REQUEST['current_balance']) ? intval($_REQUEST['current_balance']) : 3588;
 $end_pay_period = isset($_REQUEST['end_pay_period']) ? trim($_REQUEST['end_pay_period']) : "";
 
 if ($current_balance <= 0) {
-    $current_balance = 3471;
+    $current_balance = 3588;
 }
 
 $pay_date = "";

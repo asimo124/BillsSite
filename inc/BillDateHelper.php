@@ -2,7 +2,7 @@
 
 class BillDateHelper {
     
-    private $current_balance = 3471;
+    private $current_balance = 3588;
 
     private $results = [];
     private $disposablePerDay = 40;
