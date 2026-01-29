@@ -68,6 +68,7 @@ $loansByMilestone = getQuery($sql);
 
 
 $totalDebtOwedNew = $totalDebtOwed;
+$totalMinPayment = 0;
 
 $chartMilestoneResults = [];
 $chartMilestoneValues = [];
@@ -77,6 +78,7 @@ foreach ($loansByMilestone as $loan) {
     $title = $loan['title'];
     $debtOwed = floatval($loan['debt_owed']);
     $creditLimit = floatval($loan['credit_limit']);
+    $totalMinPayment += floatval($loan['min_payment']);
 
     $totalDebtOwedNew -= $debtOwed;
 
@@ -219,6 +221,11 @@ $creditUtilization = number_format($creditUtilization, 2);
                     <?php endforeach; ?>
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            Total Paying Monthly: <?= '$' . number_format($totalMinPayment, 2); ?>
         </div>
     </div>
     <div style="clear: both; height: 16px;"></div>
