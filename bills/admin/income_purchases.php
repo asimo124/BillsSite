@@ -213,7 +213,7 @@ createApp({
         return {
             main_error: '',
             payPeriodItems: [],
-            startingBalance: 3588,
+            startingBalance: 3584,
             upcomingPayDates: [],
             selectedPayDate: '',
             currentPayPeriodId: null,
