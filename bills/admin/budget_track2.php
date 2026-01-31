@@ -23,6 +23,9 @@ if (!isset($_SESSION['user'])) {
     <link rel="stylesheet" href="/css/budget_track.css?version=10" />
     <!-- Vue.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-echarts/dist/vue-echarts.min.js"></script>
 </head>
 <body>
 <div class="container" id="app">
@@ -51,56 +54,8 @@ if (!isset($_SESSION['user'])) {
             <button class="btn btn-default" @click="calcProgress">Calculate</button>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-6">
-            
-        </div>
-        <div class="col-xs-6">
-            
-        </div>
-    </div>
+    
     <div style="clear: both; height: 16px"></div>
-
-    <!-- <div class="row">
-        <div class="col-xs-12">
-            <h3>Months Left</h3>
-
-            <label for="dell_months_left">Dell</label>
-            <input type="number" id="dell_months_left" class="form-control" 
-                placeholder="Dell Months Left" v-model="dell_months_left" />
-            <div style="clear: both; height: 8px"></div>
-
-            <label for="irs_months_left">IRS</label>
-            <input type="number" id="irs_months_left" class="form-control" 
-                placeholder="IRS Months Left" v-model="irs_months_left" />
-            <div style="clear: both; height: 8px"></div>
-
-            <label for="loft_months_left">Loft</label>
-            <input type="number" id="loft_months_left" class="form-control" 
-                placeholder="Loft Months Left" v-model="loft_months_left" />
-            <div style="clear: both; height: 8px"></div>
-
-            <label for="sofi_months_left">Sofi</label>
-            <input type="number" id="sofi_months_left" class="form-control" 
-                placeholder="Sofi Months Left" v-model="sofi_months_left" />
-            <div style="clear: both; height: 8px"></div>
-
-            <label for="mastercard_months_left">Mastercard</label>
-            <input type="number" id="mastercard_months_left" class="form-control" 
-                placeholder="Mastercard Months Left" v-model="mastercard_months_left" />
-            <div style="clear: both; height: 8px"></div>
-
-            <label for="credit_human_months_left">Credit Human</label>
-            <input type="number" id="credit_human_months_left" class="form-control" 
-                placeholder="Credit Human Months Left" v-model="credit_human_months_left" />
-            <div style="clear: both; height: 8px"></div>
-
-            <label for="total_months_left">Total Months Left</label>
-            <input type="number" id="total_months_left" class="form-control" 
-                placeholder="Total Months Left" v-model="total_months_left" />
-        </div>
-    </div>
-    <div style="clear: both; height: 16px"></div> -->
 
     <div class="row">
         <div class="col-xs-12">
@@ -128,7 +83,7 @@ if (!isset($_SESSION['user'])) {
         </div>
     </div>
 
-    <div class="row">
+    <!-- <div class="row">
         <div v-for="(yearGroup, yearIndex) in months_left_arr" :key="yearIndex">
             <h4>{{ yearGroup.year_title }}</h4>
             <div class="col-xs-4 col-sm-3 col-md-2" v-for="(month, monthIndex) in yearGroup.months" :key="monthIndex">
@@ -138,41 +93,39 @@ if (!isset($_SESSION['user'])) {
             </div>
             <div style="clear: both;"></div>
         </div>
+    </div> -->
+
+    <div class="row">
+        <div class="col-xs-12">
+            <v-chart :options="getChartOptions()" style="width: 100%; height: 400px;"></v-chart>
+        </div>
     </div>
 
 
 </div>
 </body>
-<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="/js/nav.js" ></script>
 <script>
-// Vue.js App
-const { createApp } = Vue;
+Vue.component('v-chart', VueECharts);
 
-createApp({
+new Vue({
+    el: '#app',
     data() {
         return {
             disposable_per_month: 1100,
-
-            months_left_arr: [],
+            chartData: null, // Store the response.data.items here
             loans: [],
-            loansOrig: []
-        }
+            loansOrig: [],
+        };
     },
     methods: {
         async calcProgress() {
             try {
                 const response = await axios.get(`/api/calcTrackProgress.php?disposable_per_month=${this.disposable_per_month}`);
                 
-                if (response.data && response.data.items) {
-                    this.months_left_arr = response.data.items;
-                }
-                if (response.data && response.data.loans) {
+                if (response.data) {
                     this.loans = response.data.loans;
-                }
-                if (response.data && response.data.loansOrig) {
-                    this.loansOrig = response.data.loansOrig;
+                    this.loansOrig = response.data.loans;
+                    this.chartData = response.data.items; // Store the entire response.data
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -180,7 +133,76 @@ createApp({
         },
         updateDisposablePerMonth() {
             localStorage.setItem('disposable_per_month', this.disposable_per_month);
-        }
+        },
+        getChartOptions() {
+            if (!this.chartData) {
+                return {}; // Return an empty object if no data is available
+            }
+
+            const option = {
+                tooltip: {
+                    formatter: params => {
+                    const start = new Date(params.value[0]).toLocaleDateString();
+                    const end = new Date(params.value[1]).toLocaleDateString();
+                    return `${params.name}<br>${start} → ${end}`;
+                    }
+                },
+
+                grid: {
+                    left: 150,
+                    right: 50,
+                    top: 20,
+                    bottom: 40
+                },
+
+                xAxis: {
+                    type: "time"
+                },
+
+                yAxis: {
+                    type: "category",
+                    data: this.chartData.categories
+                },
+
+                series: [
+                    {
+                    type: "custom",
+                    name: "Loan Durations",
+                    renderItem: function (params, api) {
+                        const categoryIndex = api.value(2); // we will add this
+                        const start = api.coord([api.value(0), categoryIndex]);
+                        const end = api.coord([api.value(1), categoryIndex]);
+
+                        const height = 20;
+
+                        return {
+                        type: "rect",
+                        shape: {
+                            x: start[0],
+                            y: start[1] - height / 2,
+                            width: end[0] - start[0],
+                            height: height
+                        },
+                        style: api.style()
+                        };
+                    },
+                    encode: {
+                        x: [0, 1],
+                        y: 2
+                    },
+                    data: this.chartData.series[0].data.map((item, index) => ({
+                        value: [...item.value, index],
+                        itemStyle: item.itemStyle,
+                        name: item.name
+                    }))
+                    }
+                ]
+            };
+
+
+
+            return option;
+        },
     },
     mounted() {
         if (localStorage.getItem('disposable_per_month') && !isNaN(localStorage.getItem('disposable_per_month'))) {
@@ -189,5 +211,5 @@ createApp({
         console.log("Mounted - calculating progress");
         this.calcProgress();
     }
-}).mount('#app');
+});
 </script>

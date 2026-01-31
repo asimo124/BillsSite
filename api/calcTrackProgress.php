@@ -30,35 +30,8 @@ foreach ($results as $index => $getItem) {
 
 	$results[$index]['months_left_accum'] = round($totalMonthsLeft, 1);
 
-	
-
 	$minPaymentAccum += floatval($getItem['min_payment']);
 }
-
-//*/
-
-$origResults = $results;
-
-$fractionAccum = 0;
-$results2 = $results;
-$results = [];
-foreach ($results2 as $index => $getItem) {
-	
-	$getItem['disabled'] = false;
-	if ($getItem['months_left'] < 0.7) {
-		$getItem['disabled'] = true;
-	} else {
-		$fractionAccum += $getItem['months_left'];
-	}
-	$results[] = $getItem;
-	
-}
-
-//$results[count($results) - 1]['months_left'] += $fractionAccum;
-
-
-
-
 
 $totalPaychecksLeft = round(($totalMonthsLeft * 2));
 
@@ -72,8 +45,6 @@ $totalMonthsLeftAfter = round(($totalPaychecksLeft / 2));
 $monthsLeftArr = [];
 $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
 					'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-
 
 $lastThreshold = 0;
 $totalThreshold = 0;
@@ -105,109 +76,74 @@ $randomColors = [
 
 //print_r($randomColors);
 
-foreach ($results as $index => $getItem) {
-	
-	$colorIndex = $index % count($randomColors);
-	$results[$index]['color'] = $randomColors[$colorIndex];
+$startDate = "";
+$currentDay = intval(date("d"));
+if ($currentDay < 15) {
+	$startDate = date("Y-m-1");
+} else {
+	$startDate = date("Y-m-15");
 }
 
-//echo "<pre>";
+$startDate = strtotime($startDate);
 
+
+
+$categories = [];
+$resultsArr = [];
+$seriesData = [];
+foreach ($results as $index => $getItem) {
+    
+
+	$colorIndex = $index % count($randomColors);
+	$results[$index]['color'] = $randomColors[$colorIndex];
+
+    $endDate = strtotime("+" . floor($getItem['months_left']) . " months", $startDate);
+
+	// Account for fractional months
+	$fractionalDays = ($getItem['months_left'] - floor($getItem['months_left'])) * 30; // Approximate days in a month
+	$endDate = strtotime("+" . round($fractionalDays) . " days", $endDate);
+
+	$categories[] = $getItem['title'];
+
+	$seriesData[] = [
+		"name" => $getItem['title'],
+		"value" => [$startDate * 1000, $endDate * 1000],
+		"itemStyle" => [ "color" => $results[$index]['color']],
+	];
+
+	$resultsArr[] = [
+		"title" => $getItem['title'],
+		"start_date" => $startDate,
+		"end_date" => $endDate,
+	];
+
+	$startDate = strtotime(date("Y-m-d", ($endDate + 86400)));
+}
+
+$resultsFinal = [
+	"categories" => $categories,
+	"series" => [
+		[
+			"name" => "Loan Durations",
+			"type" => "bar",
+			"data" => $seriesData,
+		],
+	],
+];
+
+$currentYear = intval(date("Y"));
 $currentMonth = intval(date("m")) - 1;
 $currentYear = intval(date("Y"));
+$currentDate = date("Y-m-d");
 
 $yearGroups = [];
 
-//echo "totalMonthsLeftAfter: $totalMonthsLeftAfter\n";
-
-$previousThreshold = 0;
-$resultsIndex = 0;
-for ($i = 0; $i < $totalMonthsLeftAfter; $i++) {
-	
-	$monthIndex = ($currentMonth + 1 + $i) % 12; // Start from next month
-
-	//print_r("monthIndex: $monthIndex\n");
-
-    $yearOffset = floor(($currentMonth + 1 + $i) / 12); // Calculate year offset
-
-	//print_r("yearOffset: $yearOffset\n");
-
-    $displayYear = $currentYear + $yearOffset; // Full year
-    $displayYearShort = substr($displayYear, -2); // Last two digits of year
-    $monthYearString = $monthNames[$monthIndex] . ' ' . $displayYearShort;
-
-	//print_r("monthYearString: $monthYearString\n");
-    
-    // Group by year
-    if (!isset($yearGroups[$displayYear])) {
-		$yearGroups[$displayYear][] = [
-			"year_title" => $displayYear,
-			"months" => []
-		];
-    }
-
-	
-
-	//echo "i: $i, previousThreshold: $previousThreshold, resultsIndex: $resultsIndex, currentThreshold: " . $results[$resultsIndex]['threshold'] . "\n";
-	if ($i >= $previousThreshold && $i < $results[$resultsIndex]['threshold']) {
-
-		$color = $results[$resultsIndex]['color'];
-
-		$previousThreshold = $results[$resultsIndex]['threshold'];
-		$resultsIndex++;
-	} else if ($i >= floor($previousThreshold) && $i < $results[$resultsIndex]['threshold']) {
-
-		//*/
-		$color = $results[$resultsIndex]['color'];
-
-		$previousThreshold = $results[$resultsIndex]['threshold'];
-		$resultsIndex++;
-		//*/
-	} else if ($results[$resultsIndex]['threshold'] - $previousThreshold < 1) {
-
-		$color = $results[$resultsIndex]['color'];
-
-		$previousThreshold = $results[$resultsIndex]['threshold'];
-		$resultsIndex++;
-	} 
-
-	
-
-
-	$yearGroups[$displayYear]['months'][] = [
-		"month_year" => $monthYearString,
-		"color" => $color,
-		"disabled" => $results[$resultsIndex]['disabled']
-	];
-}
 
 header("Content-type: text/json");
 
-$yearGroups2 = $yearGroups;
-$yearGroups = [];
-foreach ($yearGroups2 as $year => $data) {
-
-	
-
-	$eachItem = [
-		"year_title" => $year,
-		"months" => []
-	];
-	$months = $data['months'];
-	foreach ($months as $month) {
-		//if ($month['disabled'] == false) {
-			$eachItem['months'][] = $month;
-		//}
-		
-	}
-
-	$yearGroups[] = $eachItem;
-}
-
 $results = [
-	"items" => $yearGroups,
+	"items" => $resultsFinal,
 	"loans" => $results,
-	"loansOrig" => $origResults,
 ];
 echo json_encode($results);
 ?>
