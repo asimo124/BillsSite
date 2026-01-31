@@ -5,7 +5,18 @@
 
 $disposablePerMonth = isset($_REQUEST['disposable_per_month']) ? floatval($_REQUEST['disposable_per_month']) : 0;
 
-$sql = "SELECT * FROM cu_loan WHERE milestone_order > 0 ORDER BY milestone_order ASC";
+$allowBlankSortOrder = isset($_REQUEST['allow_blank_sort_order']) ? intval($_REQUEST['allow_blank_sort_order']) : 0;
+
+$whereSql = "";
+if ($allowBlankSortOrder == 0) {
+	$whereSql = " AND sort_order > 0 ";
+}
+
+$sql = "SELECT * FROM cu_loan 
+		WHERE 1
+		$whereSql
+		AND milestone_order > 0 
+		ORDER BY milestone_order ASC";
 $results = getQuery($sql);
 
 $totalBalance = 0;

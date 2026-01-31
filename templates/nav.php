@@ -28,13 +28,13 @@
     <a href="/bills/admin/index.php">Bills Admin</a>
     <a href="/bills/admin/upcoming_expenses.php">Upcoming Expenses</a>
     <a href="/bills/admin/budget_progress2.php">Budget Progress</a>
-    <a href="/bills/admin/budget_track.php">Track Progress</a>
+    <a href="/bills/admin/budget_track2.php?allow_blank_sort_order=0">Track Progress</a>
     <a href="/bills/admin/income_purchases.php">Income Purchases</a>
     <a href="/bills/admin/food_sensitivities.php">Food Sensitivities</a>
     <a href="/bills/admin/disposable_income_tracker.php">Disposable Tracker</a>
     <a href="/bills/admin/queue_date_job.php">Queue Date Job</a>
     <a href="/bills/admin/audit_expenses_v3.php">Audit Expenses</a>
-    <a href="/bills/credit_utilization/index.php">Credit Utilization</a>
+    <a href="/bills/credit_utilization/index.php?allow_blank_sort_order=0">Credit Utilization</a>
     <a href="/bills/admin/weight_ratio.php">Weight Ratio</a>
     <a href="/bills/admin/last_time_i.php">Last Time I</a>
     <a href="/settings/index.php">Settings</a>

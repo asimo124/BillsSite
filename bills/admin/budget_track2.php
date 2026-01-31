@@ -7,6 +7,8 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 
+$allowBlankSortOrder = isset($_REQUEST['allow_blank_sort_order']) ? intval($_REQUEST['allow_blank_sort_order']) : 0;
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -115,12 +117,13 @@ new Vue({
             chartData: null, // Store the response.data.items here
             loans: [],
             loansOrig: [],
+            allowBlankSortOrder: <?php echo $allowBlankSortOrder; ?>,
         };
     },
     methods: {
         async calcProgress() {
             try {
-                const response = await axios.get(`/api/calcTrackProgress.php?disposable_per_month=${this.disposable_per_month}`);
+                const response = await axios.get(`/api/calcTrackProgress.php?disposable_per_month=${this.disposable_per_month}&allow_blank_sort_order=${this.allowBlankSortOrder}`);
                 
                 if (response.data) {
                     this.loans = response.data.loans;

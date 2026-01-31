@@ -115,6 +115,9 @@ a.btn {
 
 			<button type="button" onclick="window.location.href='/bills/admin/budget_track2.php'" class="btn btn-danger" >Track Progress 2</button>
 
+			<br><br>
+			<button type="button" onclick="window.location.href='/bills/credit_utilization/index.php?allow_blank_sort_order=1'" class="btn btn-danger" >Credit Utilization 2</button>
+
         </div>
         <input type="hidden" name="hash_key_token_cs" id="hash_key_token_cs" value="<?php echo $hash_key; ?>" />
     </form>
