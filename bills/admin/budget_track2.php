@@ -159,8 +159,30 @@ new Vue({
                 },
 
                 xAxis: {
-                    type: "time"
+                    type: "time",
+                    splitNumber: 12,
+                    minInterval: 1000 * 60 * 60 * 24 * 28,
+
+                    axisLabel: {
+                        formatter: value => {
+                        const d = new Date(value);
+
+                        const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                        const shortMonthName = shortMonthNames[d.getMonth()];
+
+                        //const mm = String(d.getMonth() + 1).padStart(2, "0");
+                        const mm = shortMonthName;
+                        const yy = String(d.getFullYear()).slice(-2);
+                        return `${mm} ${yy}`;
+                        }
+                    },
+
+                    axisTick: {
+                        alignWithLabel: true
+                    }
                 },
+
+
 
                 yAxis: {
                     type: "category",
