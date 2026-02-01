@@ -83,7 +83,12 @@ foreach ($chartHeaders as $header) {
    
 }
 
-$sql = "SELECT * FROM cu_loan WHERE milestone_order > 0 ORDER BY milestone_order ASC";
+$sql = "SELECT * 
+        FROM cu_loan 
+        WHERE 1
+        AND milestone_order > 0 
+        $whereSql
+        ORDER BY milestone_order ASC";
 $loansByMilestone = getQuery($sql);
 
 

@@ -113,7 +113,7 @@ a.btn {
             <button class="btn btn-primary" type="submit" name="resetDb">Reset Test DB</button>
 			<br><br>
 
-			<button type="button" onclick="window.location.href='/bills/admin/budget_track2.php'" class="btn btn-danger" >Track Progress 2</button>
+			<button type="button" onclick="window.location.href='/bills/admin/budget_track2.php?allow_blank_sort_order=1'" class="btn btn-default" >Track Progress 2</button>
 
 			<br><br>
 			<button type="button" onclick="window.location.href='/bills/credit_utilization/index.php?allow_blank_sort_order=1'" class="btn btn-danger" >Credit Utilization 2</button>
