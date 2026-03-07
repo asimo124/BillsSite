@@ -125,10 +125,8 @@ createApp({
             this.addRow();
         },
         clear() {
-            this.expenseRows.forEach((row, index) => {
-                this.expenseRows[index].transferType = "";
-                this.expenseRows[index].robPeter = 0;
-            });
+            this.expenseRows = [];
+            this.addRow();
         },
         saveRows() {
             console.log('111');
@@ -200,7 +198,7 @@ createApp({
                     
                 }
             });
-            this.clear();
+           
         },
         addRow() {
             this.expenseRows.push({
