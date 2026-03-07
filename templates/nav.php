@@ -30,6 +30,7 @@
     <a href="/bills/admin/budget_progress2.php">Budget Progress</a>
     <a href="/bills/admin/budget_track2.php?allow_blank_sort_order=0">Track Progress</a>
     <a href="/bills/admin/income_purchases.php">Income Purchases</a>
+    <a href="/bills/admin/disposable_balancer.php">Disposable Balancer</a>
     <a href="/bills/admin/food_sensitivities.php">Food Sensitivities</a>
     <a href="/bills/admin/disposable_income_tracker.php">Disposable Tracker</a>
     <a href="/bills/admin/queue_date_job.php">Queue Date Job</a>

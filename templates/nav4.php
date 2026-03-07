@@ -27,6 +27,7 @@
                                 <a href="/bills/admin/budget_progress2.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Budget Progress</a>
                                 <a href="/bills/admin/budget_track2.php?allow_blank_sort_order=0" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Track Progress</a>
                                 <a href="/bills/admin/income_purchases.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Income Purchases</a>
+                                <a href="/bills/admin/disposable_balancer.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Disposable Balancer</a>
                                 <a href="/bills/credit_utilization/index.php?allow_blank_sort_order=0" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Credit Utilization</a>
                                 <a href="/bills/admin/disposable_income_tracker.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Audit Expenses</a>
                                 <a href="/bills/admin/queue_date_job.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Queue Date Job</a>
