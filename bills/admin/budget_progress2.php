@@ -41,14 +41,25 @@ if (!isset($_SESSION['user'])) {
     <?php include "../../templates/nav.php"; ?>
     <div style="clear: both; height: 24px"></div>
 
+
+     <div class="row">
+        <div class="col-xs-4">
+            <input type="number" class="form-control" placeholder="Initial Balance 1st" 
+                    v-model="initBalanceFirst" @change="saveInitBalanceFirst"
+                    style="" />
+        </div>
+        <div class="col-xs-4">
+            <input type="number" class="form-control" placeholder="Initial Balance 15th" 
+                    v-model="initBalanceFifteenth" @change="saveInitBalanceFifteenth"
+                    style="" />
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2">
             <div class="row">
                 <div class="col-xs-5" style="text-align: right;">
-                    <input type="number" class="form-control" placeholder="Initial Balance" 
-                    v-model="initBalance" @change="saveInitBalance"
-                    style="width: 35%; display: inline-block;" />
-                    &nbsp;<button type="button" class="btn btn-default" @click="checkBalance">+</button>
+                    <button type="button" class="btn btn-default" @click="checkBalance">+</button>
                     <button class="btn btn-default" @click="loadPage('prev')"><</button>
                 </div>
                 <div class="col-xs-2" style="text-align: center;"><h4>{{ titleDate }}</h4></div>
@@ -140,16 +151,21 @@ createApp({
     data() {
         return {
             defaultBalance: 3584,
+            defaultBalanceFirst: 6584,
+            defaultBalanceFifteenth: 3584,
             daysCount: 0,
             countDaysAdd: 0,
             sumItems: [],
             spaItems: [],
             dateItems: [],
             testMode: false,
+            payDayTimeOfMonth: 1,
             nextDate: 0,
             prevDate: 0,
             spaAmount: 57.50,
             initBalance: 0,
+            initBalanceFirst: 6584,
+            initBalanceFifteenth: 3584,
             extraSum: 0,
             disposablePerDay: 11,
             remove15Days: false,
@@ -198,6 +214,8 @@ createApp({
             
             this.dateValue = (this.payDate.getMonth() + 1) + '/' + this.payDate.getDate();
             
+            this.initializeBalance();
+
             this.getExpenseDays();
         },
         updatePayDateFormatted() {
@@ -207,19 +225,40 @@ createApp({
             const payDateFormatted = new Date(this.payDate.getFullYear(), this.payDate.getMonth(), date2);
             if (date2 < 15) {
                 payDateFormatted.setDate(1);
+                this.payDayTimeOfMonth = 1;
             } else {
                 payDateFormatted.setDate(15);
+                this.payDayTimeOfMonth = 15;
             }
             this.payDateFormatted = payDateFormatted.toISOString().split('T')[0];
             console.log("Pay Date Formatted:", this.payDateFormatted);
         },
         initializeBalance() {
-            const savedBalance = localStorage.getItem('initBalance');
+
+            const date2 = parseInt(this.payDate.getDate());
+
+            var savedBalance = 0;
+            if (date2 >= 15) {
+                this.payDayTimeOfMonth = 1;
+                savedBalance = localStorage.getItem('initBalanceFirst');
+                this.defaultBalance = this.defaultBalanceFirst;
+            } else {
+                this.payDayTimeOfMonth = 15;
+                savedBalance = localStorage.getItem('initBalanceFifteenth');
+                this.defaultBalance = this.defaultBalanceFifteenth;
+            }
+
             if (!savedBalance) {
                 this.initBalance = this.defaultBalance;
             } else {
                 this.initBalance = parseFloat(savedBalance);
             }
+        },
+        saveInitBalanceFirst() {
+            localStorage.setItem('initBalanceFirst', this.initBalanceFirst);
+        },
+        saveInitBalanceFifteenth() {
+            localStorage.setItem('initBalanceFifteenth', this.initBalanceFifteenth);
         },
         saveInitBalance() {
             localStorage.setItem('initBalance', this.initBalance);
