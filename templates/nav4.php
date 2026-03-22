@@ -48,6 +48,7 @@
                         <div v-show="adminDropdown" class="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                             <div class="py-1">
                                 <a href="/bills/admin/weight_ratio.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Weight Ratio</a>
+                                <a href="/bills/dietlog/index.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dietary Log</a>
                                 <a href="/bills/admin/food_sensitivities.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Food Sensitivities</a>
                             </div>
                         </div>
