@@ -34,6 +34,7 @@ foreach ($foods as $getItem) {
 }
 
 $sql = "SELECT md.title as meal_of_day
+        , fl.id as log_id 
         , f.title as food
         , mt.title as macro_type 
         , fl.date_consumed 
@@ -212,6 +213,7 @@ $meals_of_day = getQuery($sql);
                                         <th>Amount in Grams</th>
                                         <th>Fiber Amount</th>
                                         <th>Soluble Fiber Amount</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -224,6 +226,9 @@ $meals_of_day = getQuery($sql);
                                         <td><?php echo $log['amount_grams']; ?></td>
                                         <td><?php echo $log['fiber_amount_grams']; ?></td>
                                         <td><?php echo $log['soluble_fiber_amount_grams']; ?></td>
+                                        <td><button class="btn btn-sm btn-danger del_log_item" 
+                                            data-id="<?= $log['log_id']; ?>">X</button>
+                                        </td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -268,7 +273,7 @@ $meals_of_day = getQuery($sql);
                                             <td><?php echo $food['title']; ?></td>
                                             <td><?php echo $food['macro_type']; ?></td>
                                             <td><?php echo $food['type']; ?></td>
-                                            <td ><button class="btn btn-sm btn-danger">X</button></td>
+                                            <td ><button class="btn btn-sm btn-danger delete_food_item" data-id="<?= $food['id']; ?>">X</button></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -415,6 +420,14 @@ $meals_of_day = getQuery($sql);
         </div>
     </div>
 
+    <form action="proc_delete_food_log_item.php" method="POST" id="deleteFoodLogItemForm">
+        <input type="hidden" name="log_id" id="delete_log_id" value="">
+    </form>
+
+     <form action="proc_delete_food.php" method="POST" id="deleteFoodForm">
+        <input type="hidden" name="food_id" id="delete_food_id" value="">
+    </form>
+
 </div>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -462,6 +475,25 @@ $(document).ready(function() {
             $('#amount').val(defaultAmountMatch[1]);
         }
     });
+
+    $('.del_log_item').click(function() {
+        var logId = $(this).data('id');
+        if (confirm('Are you sure you want to delete this log item?')) {
+
+            console.log('Deleting log item with ID:', logId);
+            $('#delete_log_id').val(logId);
+            $('#deleteFoodLogItemForm').submit();
+        }
+    })
+
+    $('.delete_food_item').click(function() {
+        var id = $(this).data('id');
+        if (confirm('Are you sure you want to delete this food item?')) {
+            console.log('Deleting food item with ID: ', id);
+            $('#delete_food_id').val(id);
+            $('#deleteFoodForm').submit();
+        }
+    })
 
     
 })
