@@ -9,7 +9,7 @@ if (!isset($_SESSION['user'])) {
 }
 
 $sql = "SELECT mt.title as macro_type, t.title as `type`, f.*
-        , CONCAT(f.title, ' (', ROUND(f.default_amount, 1), ' ', u.title, ')') as title_display 
+        , CONCAT(f.title, ' (', ROUND(f.default_amount, 2), ' ', u.title, ')') as title_display 
         FROM dl_food f 
         INNER JOIN dl_macro_type mt 
             ON f.macro_type_id = mt.id 
@@ -50,9 +50,9 @@ $sql = "SELECT md.title as meal_of_day
                 WHEN uom.title = 'tablespoons' THEN fl.amount * 14.7868
                 WHEN uom.title = 'grams'       THEN fl.amount
             END
-        , 4) AS VARCHAR(255)), ' g') as amount_grams 
-        , CONCAT(CAST(ROUND(fl.amount * f.percent_fiber, 4) AS VARCHAR(255)), ' ', uom.title) as fiber_amount 
-        , CONCAT(CAST(ROUND(fl.amount * f.percent_fiber * f.percent_soluble_fiber, 4) AS VARCHAR(255)), ' ', uom.title) as soluble_fiber_amount
+        , 2) AS VARCHAR(255)), ' g') as amount_grams 
+        , CONCAT(CAST(ROUND(fl.amount * f.percent_fiber, 2) AS VARCHAR(255)), ' ', uom.title) as fiber_amount 
+        , CONCAT(CAST(ROUND(fl.amount * f.percent_fiber * f.percent_soluble_fiber, 2) AS VARCHAR(255)), ' ', uom.title) as soluble_fiber_amount
         , CONCAT(CAST(ROUND(
             CASE 
                 WHEN uom.title = 'cups'        THEN fl.amount * f.percent_fiber * 236.588
@@ -61,7 +61,7 @@ $sql = "SELECT md.title as meal_of_day
                 WHEN uom.title = 'tablespoons' THEN fl.amount * f.percent_fiber * 14.7868
                 WHEN uom.title = 'grams'       THEN fl.amount * f.percent_fiber
             END
-        , 4) AS VARCHAR(255)), ' g') as fiber_amount_grams
+        , 2) AS VARCHAR(255)), ' g') as fiber_amount_grams
         , CONCAT(CAST(ROUND(
             CASE 
                 WHEN uom.title = 'cups'        THEN fl.amount * f.percent_fiber * f.percent_soluble_fiber * 236.588
@@ -70,7 +70,7 @@ $sql = "SELECT md.title as meal_of_day
                 WHEN uom.title = 'tablespoons' THEN fl.amount * f.percent_fiber * f.percent_soluble_fiber * 14.7868
                 WHEN uom.title = 'grams'       THEN fl.amount * f.percent_fiber * f.percent_soluble_fiber
             END
-        , 4) AS VARCHAR(255)), ' g') as soluble_fiber_amount_grams
+        , 2) AS VARCHAR(255)), ' g') as soluble_fiber_amount_grams
         FROM dl_food_log fl 
         INNER JOIN dl_food f 
             ON fl.food_id = f.id 
