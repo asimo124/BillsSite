@@ -81,14 +81,14 @@ $sql = "SELECT md.title as meal_of_day
         INNER JOIN dl_unit_of_measure uom 
             ON f.unit_of_measure_id = uom.id 
         WHERE 1 
-        ORDER BY md.id, mt.id, f.title ";
+        ORDER BY fl.date_consumed DESC, md.id, mt.id, f.title ";
 
 $foodsLog = getQuery($sql);
 
 
 $foodsLogArr = [];
 foreach ($foodsLog as $foodLogItem) {
-    $dateConsumed = $foodLogItem['date_consumed'];    
+    $dateConsumed = date("Y-m-d", strtotime($foodLogItem['date_consumed']));       
 
     $fiberGrams = floatval(str_replace(" g", "", $foodLogItem['fiber_amount_grams']));
     $solubleFiberGrams = floatval(str_replace(" g", "", $foodLogItem['soluble_fiber_amount_grams']));
@@ -208,13 +208,13 @@ $meals_of_day = getQuery($sql);
                     </table>
                 </div>
             </div>
-            <div style="clear: both; height: 8px;"></div>
+            <div style="clear: both; height: 0px;"></div>
 
             <h4>Total Fiber: <?php echo $logItem['total_fiber']; ?> grams</h4>
             <h4>Total Soluble Fiber: <?php echo $logItem['total_soluble_fiber']; ?> grams</h4>
             <h4>Total Percent Soluble: <?php echo $logItem['total_percent_soluble']; ?></h4>
 
-            <div style="clear: both; height: 24px;"></div>
+            <div style="clear: both; height: 32px;"></div>
             <?php endforeach; ?>
         </div>
     </div>
