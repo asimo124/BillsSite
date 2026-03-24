@@ -8,22 +8,8 @@ if (!isset($_SESSION['user'])) {
 }
 
 /*
- * Dummy API endpoints (implement under /api/ or adjust base URL):
- *
- * GET  /api/dietlog_foods.php
- *      → { "foods": [ { id, title, macro_type, type, title_display, default_amount, ... } ] }
- *
- * GET  /api/dietlog_log.php
- *      → { "by_date": { "Y-m-d": { total_fiber, total_soluble_fiber, total_percent_soluble, items: [ row... ] } } }
- *      (or flat "entries" — adapt mapLogResponse() when your shape is fixed)
- *
- * GET  /api/dietlog_lookups.php
- *      → { "macros": [], "types": [], "units_of_measure": [], "meals_of_day": [] }
- *
- * POST /api/dietlog_food_create.php
- * POST /api/dietlog_entry_create.php
- * POST /api/dietlog_food_delete.php   (body: log_id or food_id as your API expects)
- * POST /api/dietlog_entry_delete.php
+ * Diet log JSON API: /api/dietlog_*.php (see /api/dietlog_inc.php)
+ * Includes create/update/delete for foods and log entries.
  */
 ?>
 <!DOCTYPE html>
@@ -37,6 +23,25 @@ if (!isset($_SESSION['user'])) {
     <link rel="stylesheet" href="/css/nav.css" />
     <link rel="stylesheet" href="/css/bills_admin.css" />
     <link rel="stylesheet" href="/css/income_purchases.css?version=1" />
+    <style>
+        /* iOS: no native number spinners; explicit steppers + 16px input avoids zoom-on-focus */
+        .dietlog-stepper .dietlog-step-btn {
+            min-width: 44px;
+            min-height: 44px;
+            padding: 10px 14px;
+            font-size: 22px;
+            line-height: 1;
+            font-weight: 600;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        .dietlog-stepper .form-control {
+            font-size: 16px;
+            text-align: center;
+            min-height: 44px;
+        }
+    </style>
 </head>
 <body>
 
@@ -75,7 +80,9 @@ if (!isset($_SESSION['user'])) {
 
                     <div class="row">
                         <div class="col-xs-12">
-                            <button type="button" class="btn btn-primary" @click="showLogModal = true">Log Food Consumed</button>&nbsp;
+                            <button type="button" class="btn btn-primary" @click="openCreateLogModal">Log Food Consumed</button>&nbsp;
+                            <button type="button" class="btn btn-danger" :disabled="selectedLogIds.length === 0"
+                                @click="openBulkDeleteLogConfirm">Delete selected</button>&nbsp;
                             <a class="btn btn-info" href="proc_add_oatmeal.php" id="add_oatmeal_btn">Add Oatmeal</a>&nbsp;
                             <a class="btn btn-info" href="proc_add_oatmeal.php?blueberries=1" id="add_oatemal_blueberries_btn">Add Oatmeal w/ Blueberries</a>
                         </div>
@@ -91,6 +98,11 @@ if (!isset($_SESSION['user'])) {
                                 <table class="table table-bordered" style="border: 1px solid #666666;">
                                     <thead>
                                         <tr>
+                                            <th style="width: 44px;" title="Select all for this day">
+                                                <input type="checkbox"
+                                                    :checked="allLogsSelectedForDate(dateConsumed)"
+                                                    @change="toggleSelectAllForDate(dateConsumed)">
+                                            </th>
                                             <th>Meal Of Day</th>
                                             <th>Food</th>
                                             <th>Macro Type</th>
@@ -103,6 +115,11 @@ if (!isset($_SESSION['user'])) {
                                     </thead>
                                     <tbody>
                                         <tr v-for="log in logByDate[dateConsumed].items" :key="log.log_id">
+                                            <td>
+                                                <input type="checkbox"
+                                                    :checked="isLogSelected(log.log_id)"
+                                                    @change="toggleLogSelection(log.log_id)">
+                                            </td>
                                             <td>{{ log.meal_of_day }}</td>
                                             <td>{{ log.food }}</td>
                                             <td>{{ log.macro_type }}</td>
@@ -110,16 +127,17 @@ if (!isset($_SESSION['user'])) {
                                             <td>{{ log.amount_grams }}</td>
                                             <td>{{ log.fiber_amount_grams }}</td>
                                             <td>{{ log.soluble_fiber_amount_grams }}</td>
-                                            <td>
-                                                <button type="button" class="btn btn-sm btn-danger" @click="deleteLogItem(log.log_id)">X</button>
+                                            <td style="white-space: nowrap;">
+                                                <button type="button" class="btn btn-sm btn-default" @click="openEditLog(log)">Edit</button>
+                                                <button type="button" class="btn btn-sm btn-danger" @click="openDeleteLogConfirm(log.log_id)">X</button>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        <h4>Total Fiber: {{ logByDate[dateConsumed].total_fiber }} grams</h4>
-                        <h4>Total Soluble Fiber: {{ logByDate[dateConsumed].total_soluble_fiber }} grams</h4>
+                        <h4>Total Fiber: {{ formatFiberTotal(logByDate[dateConsumed].total_fiber) }} grams</h4>
+                        <h4>Total Soluble Fiber: {{ formatFiberTotal(logByDate[dateConsumed].total_soluble_fiber) }} grams</h4>
                         <h4>Total Percent Soluble: {{ logByDate[dateConsumed].total_percent_soluble }}</h4>
                         <div style="clear: both; height: 32px;"></div>
                     </template>
@@ -129,7 +147,7 @@ if (!isset($_SESSION['user'])) {
                     <h3>Foods</h3>
                     <div class="row">
                         <div class="col-xs-6">
-                            <button type="button" class="btn btn-primary" @click="showFoodModal = true">Add Food</button>
+                            <button type="button" class="btn btn-primary" @click="openCreateFoodModal">Add Food</button>
                         </div>
                     </div>
                     <div style="clear: both; height: 16px;"></div>
@@ -150,8 +168,9 @@ if (!isset($_SESSION['user'])) {
                                         <td>{{ food.title }}</td>
                                         <td>{{ food.macro_type }}</td>
                                         <td>{{ food.type }}</td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-danger" @click="deleteFood(food.id)">X</button>
+                                        <td style="white-space: nowrap;">
+                                            <button type="button" class="btn btn-sm btn-default" @click="openEditFood(food)">Edit</button>
+                                            <button type="button" class="btn btn-sm btn-danger" @click="openDeleteFoodConfirm(food.id)">X</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -169,8 +188,8 @@ if (!isset($_SESSION['user'])) {
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" aria-label="Close" @click="showFoodModal = false"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Create Food</h4>
+                    <button type="button" class="close" aria-label="Close" @click="closeFoodModal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{ foodModalTitle }}</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
@@ -198,11 +217,33 @@ if (!isset($_SESSION['user'])) {
                     </div>
                     <div class="form-group">
                         <label>Percent Fiber</label>
-                        <input type="number" class="form-control" v-model.number="newFood.percent_fiber" min="0" max="100" step="1">
+                        <div class="input-group dietlog-stepper">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default dietlog-step-btn" aria-label="Decrease percent fiber"
+                                    @click.prevent="stepNumeric(newFood, 'percent_fiber', -1, 0, 100, 1)">−</button>
+                            </span>
+                            <input type="number" inputmode="numeric" class="form-control"
+                                v-model.number="newFood.percent_fiber" min="0" max="100" step="1">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default dietlog-step-btn" aria-label="Increase percent fiber"
+                                    @click.prevent="stepNumeric(newFood, 'percent_fiber', 1, 0, 100, 1)">+</button>
+                            </span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Percent Soluble Fiber</label>
-                        <input type="number" class="form-control" v-model.number="newFood.percent_soluble_fiber" min="0" max="100" step="1">
+                        <div class="input-group dietlog-stepper">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default dietlog-step-btn" aria-label="Decrease percent soluble fiber"
+                                    @click.prevent="stepNumeric(newFood, 'percent_soluble_fiber', -1, 0, 100, 1)">−</button>
+                            </span>
+                            <input type="number" inputmode="numeric" class="form-control"
+                                v-model.number="newFood.percent_soluble_fiber" min="0" max="100" step="1">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default dietlog-step-btn" aria-label="Increase percent soluble fiber"
+                                    @click.prevent="stepNumeric(newFood, 'percent_soluble_fiber', 1, 0, 100, 1)">+</button>
+                            </span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Unit Of Measure</label>
@@ -212,12 +253,23 @@ if (!isset($_SESSION['user'])) {
                     </div>
                     <div class="form-group">
                         <label>Default Amount</label>
-                        <input type="number" class="form-control" v-model.number="newFood.default_amount" min="0" max="50" step="0.5">
+                        <div class="input-group dietlog-stepper">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default dietlog-step-btn" aria-label="Decrease default amount"
+                                    @click.prevent="stepNumeric(newFood, 'default_amount', -1, 0, 50, 0.5)">−</button>
+                            </span>
+                            <input type="number" inputmode="decimal" class="form-control"
+                                v-model.number="newFood.default_amount" min="0" max="50" step="0.5">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default dietlog-step-btn" aria-label="Increase default amount"
+                                    @click.prevent="stepNumeric(newFood, 'default_amount', 1, 0, 50, 0.5)">+</button>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" @click="showFoodModal = false">Cancel</button>
-                    <button type="button" class="btn btn-primary" @click="saveFood">Create</button>
+                    <button type="button" class="btn btn-default" @click="closeFoodModal">Cancel</button>
+                    <button type="button" class="btn btn-primary" @click="saveFood">{{ foodModalSaveLabel }}</button>
                 </div>
             </div>
         </div>
@@ -229,8 +281,8 @@ if (!isset($_SESSION['user'])) {
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" aria-label="Close" @click="showLogModal = false"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Log Food Consumed</h4>
+                    <button type="button" class="close" aria-label="Close" @click="closeLogModal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{ logModalTitle }}</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
@@ -246,7 +298,18 @@ if (!isset($_SESSION['user'])) {
                     </div>
                     <div class="form-group">
                         <label>Amount</label>
-                        <input type="number" class="form-control" v-model.number="newLog.amount" min="0" max="100" step="0.5">
+                        <div class="input-group dietlog-stepper">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default dietlog-step-btn" aria-label="Decrease amount"
+                                    @click.prevent="stepNumeric(newLog, 'amount', -1, 0, 100, 0.5)">−</button>
+                            </span>
+                            <input type="number" inputmode="decimal" class="form-control"
+                                v-model.number="newLog.amount" min="0" max="100" step="0.5">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default dietlog-step-btn" aria-label="Increase amount"
+                                    @click.prevent="stepNumeric(newLog, 'amount', 1, 0, 100, 0.5)">+</button>
+                            </span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Date Consumed</label>
@@ -260,8 +323,28 @@ if (!isset($_SESSION['user'])) {
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" @click="showLogModal = false">Cancel</button>
-                    <button type="button" class="btn btn-primary" @click="saveLogEntry">Create</button>
+                    <button type="button" class="btn btn-default" @click="closeLogModal">Cancel</button>
+                    <button type="button" class="btn btn-primary" @click="saveLogEntry">{{ logModalSaveLabel }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div v-if="showConfirmModal" class="modal-backdrop fade in"></div>
+    <div class="modal fade" :class="{ in: showConfirmModal }" tabindex="-1" role="dialog"
+         v-show="showConfirmModal" style="display: block !important;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" aria-label="Close" @click="closeConfirmModal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Are you sure?</h4>
+                </div>
+                <div class="modal-body">
+                    <p>{{ confirmMessage }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" @click="closeConfirmModal">Cancel</button>
+                    <button type="button" class="btn btn-danger" @click="executeConfirmDelete">Delete</button>
                 </div>
             </div>
         </div>
@@ -279,9 +362,12 @@ const API = {
     log: '/api/dietlog_log.php',
     lookups: '/api/dietlog_lookups.php',
     foodCreate: '/api/dietlog_food_create.php',
+    foodUpdate: '/api/dietlog_food_update.php',
     entryCreate: '/api/dietlog_entry_create.php',
+    entryUpdate: '/api/dietlog_entry_update.php',
     foodDelete: '/api/dietlog_food_delete.php',
     entryDelete: '/api/dietlog_entry_delete.php',
+    suggestedMeal: '/api/dietlog_suggested_meal.php',
 };
 
 createApp({
@@ -300,6 +386,13 @@ createApp({
             meals_of_day: [],
             showFoodModal: false,
             showLogModal: false,
+            editingFoodId: null,
+            editingLogId: null,
+            showConfirmModal: false,
+            confirmDeleteType: null,
+            pendingDeleteId: null,
+            pendingBulkLogIds: null,
+            selectedLogIds: [],
             newFood: {
                 title: '',
                 macro_type_id: '',
@@ -332,6 +425,31 @@ createApp({
             }
             return groups;
         },
+        confirmMessage() {
+            if (this.confirmDeleteType === 'log_bulk' && this.pendingBulkLogIds) {
+                const n = this.pendingBulkLogIds.length;
+                return `Are you sure you want to delete ${n} selected log ${n === 1 ? 'entry' : 'entries'}? This cannot be undone.`;
+            }
+            if (this.confirmDeleteType === 'log') {
+                return 'Are you sure you want to delete this log entry? This cannot be undone.';
+            }
+            if (this.confirmDeleteType === 'food') {
+                return 'Are you sure you want to delete this food? This cannot be undone.';
+            }
+            return '';
+        },
+        foodModalTitle() {
+            return this.editingFoodId ? 'Edit Food' : 'Create Food';
+        },
+        foodModalSaveLabel() {
+            return this.editingFoodId ? 'Save' : 'Create';
+        },
+        logModalTitle() {
+            return this.editingLogId ? 'Edit Log Entry' : 'Log Food Consumed';
+        },
+        logModalSaveLabel() {
+            return this.editingLogId ? 'Save' : 'Create';
+        },
     },
     mounted() {
         this.bootstrapData();
@@ -340,6 +458,21 @@ createApp({
         formatLogHeading(dateStr) {
             const d = new Date(dateStr + 'T12:00:00');
             return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        },
+        formatFiberTotal(n) {
+            const v = parseFloat(n);
+            if (Number.isNaN(v)) return '0.00';
+            return v.toFixed(2);
+        },
+        stepNumeric(obj, key, direction, min, max, step) {
+            let v = parseFloat(obj[key]);
+            if (Number.isNaN(v)) v = min;
+            v += direction * step;
+            let snapped = min + Math.round((v - min) / step) * step;
+            if (snapped < min) snapped = min;
+            if (snapped > max) snapped = max;
+            const stepDecimals = (String(step).split('.')[1] || '').length;
+            obj[key] = stepDecimals > 0 ? Number(snapped.toFixed(stepDecimals)) : Math.round(snapped);
         },
         mapLogResponse(data) {
             if (data && data.by_date) {
@@ -353,11 +486,104 @@ createApp({
             this.logByDate = {};
         },
         applyDefaultAmountFromFood() {
+            if (this.editingLogId) return;
             const id = this.newLog.food_id;
             const food = this.foods.find((f) => f.id == id);
             if (food && food.default_amount != null) {
                 this.newLog.amount = parseFloat(food.default_amount);
             }
+        },
+        resetNewFoodForm() {
+            this.newFood = {
+                title: '',
+                macro_type_id: '',
+                type_id: this.types[0] ? this.types[0].id : 1,
+                is_cruciferous: 0,
+                has_fiber: 0,
+                percent_fiber: 0,
+                percent_soluble_fiber: 0,
+                unit_of_measure_id: this.units_of_measure[0] ? this.units_of_measure[0].id : '',
+                default_amount: 0,
+            };
+        },
+        openCreateFoodModal() {
+            this.editingFoodId = null;
+            this.resetNewFoodForm();
+            this.showFoodModal = true;
+        },
+        openEditFood(food) {
+            const pf = parseFloat(food.percent_fiber) || 0;
+            const psf = parseFloat(food.percent_soluble_fiber) || 0;
+            this.editingFoodId = food.id;
+            this.newFood = {
+                title: food.title,
+                macro_type_id: food.macro_type_id,
+                type_id: food.type_id,
+                is_cruciferous: parseInt(food.is_cruciferous, 10) || 0,
+                has_fiber: parseInt(food.has_fiber, 10) || 0,
+                percent_fiber: Math.round(pf * 10000) / 100,
+                percent_soluble_fiber: Math.round(psf * 10000) / 100,
+                unit_of_measure_id: food.unit_of_measure_id,
+                default_amount: parseFloat(food.default_amount) || 0,
+            };
+            this.showFoodModal = true;
+        },
+        closeFoodModal() {
+            this.showFoodModal = false;
+            this.editingFoodId = null;
+            this.resetNewFoodForm();
+        },
+        todayYmd() {
+            const today = new Date();
+            return today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+        },
+        async openCreateLogModal() {
+            this.editingLogId = null;
+            let mealId = this.meals_of_day[0] ? this.meals_of_day[0].id : '';
+            try {
+                const r = await axios.get(API.suggestedMeal);
+                if (r.data && r.data.success && r.data.meal_of_day_id != null) {
+                    const sid = Number(r.data.meal_of_day_id);
+                    if (this.meals_of_day.some((m) => Number(m.id) === sid)) {
+                        mealId = sid;
+                    }
+                }
+            } catch (e) {
+                console.error('suggested meal:', e);
+            }
+            this.newLog = {
+                food_id: '',
+                amount: 0,
+                date_consumed: this.todayYmd(),
+                meal_of_day_id: mealId,
+            };
+            this.showLogModal = true;
+        },
+        openEditLog(log) {
+            let ymd = '';
+            if (log.date_consumed_date) {
+                ymd = String(log.date_consumed_date).slice(0, 10);
+            } else if (log.date_consumed) {
+                ymd = String(log.date_consumed).slice(0, 10);
+            }
+            this.editingLogId = log.log_id;
+            this.newLog = {
+                food_id: log.food_id,
+                amount: parseFloat(log.amount_value) || 0,
+                date_consumed: ymd,
+                meal_of_day_id: log.meal_of_day_id,
+            };
+            this.showLogModal = true;
+        },
+        closeLogModal() {
+            this.showLogModal = false;
+            this.editingLogId = null;
+            this.newLog = {
+                food_id: '',
+                amount: 0,
+                date_consumed: this.todayYmd(),
+                meal_of_day_id: this.meals_of_day[0] ? this.meals_of_day[0].id : '',
+            };
         },
         async bootstrapData() {
             this.loading = true;
@@ -370,6 +596,7 @@ createApp({
                 ]);
                 this.foods = (foodsRes.data && foodsRes.data.foods) ? foodsRes.data.foods : [];
                 this.mapLogResponse(logRes.data);
+                this.pruneSelectedLogIds();
                 if (lookRes.data) {
                     this.macros = lookRes.data.macros || [];
                     this.types = lookRes.data.types || [];
@@ -398,11 +625,16 @@ createApp({
                 Object.keys(this.newFood).forEach((k) => {
                     body.append(k, this.newFood[k]);
                 });
-                await axios.post(API.foodCreate, body);
-                this.showFoodModal = false;
+                if (this.editingFoodId) {
+                    body.append('food_id', this.editingFoodId);
+                    await axios.post(API.foodUpdate, body);
+                } else {
+                    await axios.post(API.foodCreate, body);
+                }
+                this.closeFoodModal();
                 await this.bootstrapData();
             } catch (e) {
-                console.error('saveFood (dummy endpoint):', e);
+                console.error('saveFood:', e);
             }
         },
         async saveLogEntry() {
@@ -412,33 +644,116 @@ createApp({
                 body.append('amount', this.newLog.amount);
                 body.append('date_consumed', this.newLog.date_consumed);
                 body.append('meal_of_day_id', this.newLog.meal_of_day_id);
-                await axios.post(API.entryCreate, body);
-                this.showLogModal = false;
+                if (this.editingLogId) {
+                    body.append('log_id', this.editingLogId);
+                    await axios.post(API.entryUpdate, body);
+                } else {
+                    await axios.post(API.entryCreate, body);
+                }
+                this.closeLogModal();
                 await this.bootstrapData();
             } catch (e) {
-                console.error('saveLogEntry (dummy endpoint):', e);
+                console.error('saveLogEntry:', e);
             }
         },
-        async deleteLogItem(logId) {
-            if (!confirm('Are you sure you want to delete this log item?')) return;
-            try {
-                const body = new URLSearchParams();
-                body.append('log_id', logId);
-                await axios.post(API.entryDelete, body);
-                await this.bootstrapData();
-            } catch (e) {
-                console.error('deleteLogItem (dummy endpoint):', e);
+        normalizeLogId(logId) {
+            const n = Number(logId);
+            return Number.isNaN(n) ? logId : n;
+        },
+        isLogSelected(logId) {
+            const id = this.normalizeLogId(logId);
+            return this.selectedLogIds.some((x) => this.normalizeLogId(x) === id);
+        },
+        toggleLogSelection(logId) {
+            const id = this.normalizeLogId(logId);
+            const i = this.selectedLogIds.findIndex((x) => this.normalizeLogId(x) === id);
+            if (i === -1) {
+                this.selectedLogIds.push(id);
+            } else {
+                this.selectedLogIds.splice(i, 1);
             }
         },
-        async deleteFood(foodId) {
-            if (!confirm('Are you sure you want to delete this food item?')) return;
+        logIdsForDate(dateConsumed) {
+            const items = this.logByDate[dateConsumed]?.items || [];
+            return items.map((l) => this.normalizeLogId(l.log_id));
+        },
+        allLogsSelectedForDate(dateConsumed) {
+            const ids = this.logIdsForDate(dateConsumed);
+            if (ids.length === 0) return false;
+            return ids.every((id) => this.isLogSelected(id));
+        },
+        toggleSelectAllForDate(dateConsumed) {
+            const ids = this.logIdsForDate(dateConsumed);
+            if (ids.length === 0) return;
+            const allOn = this.allLogsSelectedForDate(dateConsumed);
+            if (allOn) {
+                this.selectedLogIds = this.selectedLogIds.filter((x) => !ids.includes(this.normalizeLogId(x)));
+            } else {
+                const set = new Set(this.selectedLogIds.map((x) => this.normalizeLogId(x)));
+                ids.forEach((id) => set.add(id));
+                this.selectedLogIds = [...set];
+            }
+        },
+        pruneSelectedLogIds() {
+            const existing = new Set();
+            for (const d of Object.keys(this.logByDate)) {
+                for (const row of this.logByDate[d].items || []) {
+                    existing.add(this.normalizeLogId(row.log_id));
+                }
+            }
+            this.selectedLogIds = this.selectedLogIds.filter((id) => existing.has(this.normalizeLogId(id)));
+        },
+        openBulkDeleteLogConfirm() {
+            if (this.selectedLogIds.length === 0) return;
+            this.confirmDeleteType = 'log_bulk';
+            this.pendingBulkLogIds = this.selectedLogIds.slice();
+            this.pendingDeleteId = null;
+            this.showConfirmModal = true;
+        },
+        openDeleteLogConfirm(logId) {
+            this.confirmDeleteType = 'log';
+            this.pendingDeleteId = logId;
+            this.pendingBulkLogIds = null;
+            this.showConfirmModal = true;
+        },
+        openDeleteFoodConfirm(foodId) {
+            this.confirmDeleteType = 'food';
+            this.pendingDeleteId = foodId;
+            this.pendingBulkLogIds = null;
+            this.showConfirmModal = true;
+        },
+        closeConfirmModal() {
+            this.showConfirmModal = false;
+            this.confirmDeleteType = null;
+            this.pendingDeleteId = null;
+            this.pendingBulkLogIds = null;
+        },
+        async executeConfirmDelete() {
             try {
-                const body = new URLSearchParams();
-                body.append('food_id', foodId);
-                await axios.post(API.foodDelete, body);
+                if (this.confirmDeleteType === 'log_bulk' && this.pendingBulkLogIds && this.pendingBulkLogIds.length) {
+                    await Promise.all(this.pendingBulkLogIds.map((logId) => {
+                        const body = new URLSearchParams();
+                        body.append('log_id', logId);
+                        return axios.post(API.entryDelete, body);
+                    }));
+                    this.selectedLogIds = [];
+                } else if (this.confirmDeleteType === 'log' && this.pendingDeleteId != null) {
+                    const body = new URLSearchParams();
+                    body.append('log_id', this.pendingDeleteId);
+                    await axios.post(API.entryDelete, body);
+                    const id = this.normalizeLogId(this.pendingDeleteId);
+                    this.selectedLogIds = this.selectedLogIds.filter((x) => this.normalizeLogId(x) !== id);
+                } else if (this.confirmDeleteType === 'food' && this.pendingDeleteId != null) {
+                    const body = new URLSearchParams();
+                    body.append('food_id', this.pendingDeleteId);
+                    await axios.post(API.foodDelete, body);
+                } else {
+                    return;
+                }
+                this.closeConfirmModal();
                 await this.bootstrapData();
             } catch (e) {
-                console.error('deleteFood (dummy endpoint):', e);
+                console.error('delete failed:', e);
             }
         },
     },

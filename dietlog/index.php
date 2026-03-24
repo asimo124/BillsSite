@@ -1,266 +1,194 @@
 <?php
     include "../inc/includes.php";
 
-/*/    
-if (!isset($_SESSION['user'])) {
-    header("Location: /login.php");
-    exit;
-}
-//*/
-
-$sql = "SELECT mt.title as macro_type, t.title as `type`, f.*
-        , CONCAT(f.title, ' (', ROUND(f.default_amount, 2), ' ', u.title, ')') as title_display 
-        FROM dl_food f 
-        INNER JOIN dl_macro_type mt 
-            ON f.macro_type_id = mt.id 
-        LEFT JOIN dl_type t 
-            oN f.type_id = t.id 
-        INNER JOIN dl_unit_of_measure u
-            ON f.unit_of_measure_id = u.id 
-        WHERE 1 
-        ORDER BY mt.id
-        , f.title ";
-
-$foods = getQuery($sql);
-
-$foodsArr = [];
-foreach ($foods as $getItem) {
-    $macroType = $getItem['macro_type'];    
-
-    if (!isset($foodsArr[$macroType])) {
-        $foodsArr[$macroType] = [];
-    }
-    $foodsArr[$macroType][] = $getItem;
-}
-
-$sql = "SELECT md.title as meal_of_day
-        , fl.id as log_id 
-        , f.title as food
-        , mt.title as macro_type 
-        , fl.date_consumed 
-        , f.is_soluble_fiber
-        , f.is_cruciferous
-        , uom.title as unit_of_measure
-        , CONCAT(CAST(fl.amount AS VARCHAR(255)), ' ', uom.title) as amount
-        , CONCAT(CAST(ROUND(
-            CASE 
-                WHEN uom.title = 'cups'        THEN fl.amount * 236.588
-                WHEN uom.title = 'ounces'      THEN fl.amount * 28.3495
-                WHEN uom.title = 'teaspoons'   THEN fl.amount * 4.92892
-                WHEN uom.title = 'tablespoons' THEN fl.amount * 14.7868
-                WHEN uom.title = 'grams'       THEN fl.amount
-            END
-        , 2) AS VARCHAR(255)), ' g') as amount_grams 
-        , CONCAT(CAST(ROUND(fl.amount * f.percent_fiber, 2) AS VARCHAR(255)), ' ', uom.title) as fiber_amount 
-        , CONCAT(CAST(ROUND(fl.amount * f.percent_fiber * f.percent_soluble_fiber, 2) AS VARCHAR(255)), ' ', uom.title) as soluble_fiber_amount
-        , CONCAT(CAST(ROUND(
-            CASE 
-                WHEN uom.title = 'cups'        THEN fl.amount * f.percent_fiber * 236.588
-                WHEN uom.title = 'ounces'      THEN fl.amount * f.percent_fiber * 28.3495
-                WHEN uom.title = 'teaspoons'   THEN fl.amount * f.percent_fiber * 4.92892
-                WHEN uom.title = 'tablespoons' THEN fl.amount * f.percent_fiber * 14.7868
-                WHEN uom.title = 'grams'       THEN fl.amount * f.percent_fiber
-            END
-        , 2) AS VARCHAR(255)), ' g') as fiber_amount_grams
-        , CONCAT(CAST(ROUND(
-            CASE 
-                WHEN uom.title = 'cups'        THEN fl.amount * f.percent_fiber * f.percent_soluble_fiber * 236.588
-                WHEN uom.title = 'ounces'      THEN fl.amount * f.percent_fiber * f.percent_soluble_fiber * 28.3495
-                WHEN uom.title = 'teaspoons'   THEN fl.amount * f.percent_fiber * f.percent_soluble_fiber * 4.92892
-                WHEN uom.title = 'tablespoons' THEN fl.amount * f.percent_fiber * f.percent_soluble_fiber * 14.7868
-                WHEN uom.title = 'grams'       THEN fl.amount * f.percent_fiber * f.percent_soluble_fiber
-            END
-        , 2) AS VARCHAR(255)), ' g') as soluble_fiber_amount_grams
-        FROM dl_food_log fl 
-        INNER JOIN dl_food f 
-            ON fl.food_id = f.id 
-        INNER JOIN dl_macro_type mt 
-            ON f.macro_type_id = mt.id 
-        INNER JOIN dl_meal_of_day md 
-            ON fl.meal_of_day_id = md.id 
-        INNER JOIN dl_unit_of_measure uom 
-            ON f.unit_of_measure_id = uom.id 
-        WHERE 1 
-        ORDER BY fl.date_consumed DESC, md.id, mt.id, f.title ";
-
-$foodsLog = getQuery($sql);
-
-
-$foodsLogArr = [];
-foreach ($foodsLog as $foodLogItem) {
-    $dateConsumed = date("Y-m-d", strtotime($foodLogItem['date_consumed']));       
-
-    $fiberGrams = floatval(str_replace(" g", "", $foodLogItem['fiber_amount_grams']));
-    $solubleFiberGrams = floatval(str_replace(" g", "", $foodLogItem['soluble_fiber_amount_grams']));
-
-    if (!isset($foodsLogArr[$dateConsumed])) {
-        $foodsLogArr[$dateConsumed] = [
-            'total_fiber' => 0,
-            'total_soluble_fiber' => 0,
-            'total_percent_soluble' => 0,
-            'items' => []
-        ];
-    }
-    $foodsLogArr[$dateConsumed]['total_fiber'] += $fiberGrams;
-    $foodsLogArr[$dateConsumed]['total_soluble_fiber'] += $solubleFiberGrams;
-    if ($foodsLogArr[$dateConsumed]['total_fiber'] == 0) {
-        $foodsLogArr[$dateConsumed]['total_percent_soluble'] = 0;
-    } else {
-        $foodsLogArr[$dateConsumed]['total_percent_soluble'] = strval(round($foodsLogArr[$dateConsumed]['total_soluble_fiber'] 
-            / $foodsLogArr[$dateConsumed]['total_fiber'], 4) * 100) . "%";
-    }
-    $foodsLogArr[$dateConsumed]['items'][] = $foodLogItem;
-}
-
-$sql = "SELECT * FROM dl_macro_type ";
-$macros = getQuery($sql);
-
-$sql = "SELECT * FROM dl_type ";
-$types = getQuery($sql);
-
-$sql = "SELECT * FROM dl_unit_of_measure ";
-$units_of_measure = getQuery($sql);
-
-$sql = "SELECT * FROM dl_meal_of_day ";
-$meals_of_day = getQuery($sql);
-
-
+/*
+ * Read-only public view. Session login is disabled; data loads via *_public GET endpoints
+ * (same shape as /api/dietlog_foods.php and /api/dietlog_log.php).
+ */
+// if (!isset($_SESSION['user'])) {
+//     header("Location: /login.php");
+//     exit;
+// }
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dietary Log</title>
+    <title>Alex's Dietary Log</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
-     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <!-- Font Awesome for hamburger icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/nav.css" />
     <link rel="stylesheet" href="/css/bills_admin.css" />
     <link rel="stylesheet" href="/css/income_purchases.css?version=1" />
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 </head>
 <body>
 
-
-<!-- id="app" -->
-<div class="container" >
-
-
-    <div style="clear: both; height: 20px;" ></div>
+<div class="container" id="app">
+    <div style="clear: both; height: 20px;"></div>
     <?php if (isset($_REQUEST['Message'])) { ?>
         <div class="alert alert-success" role="alert">
-            <?php echo $_REQUEST['Message']; ?>
+            <?php echo htmlspecialchars($_REQUEST['Message']); ?>
         </div>
     <?php } ?>
 
+    <div class="alert alert-warning" role="alert" v-if="loadError">
+        Could not load diet log data. Check the browser console or network tab.
+    </div>
+
     <h2>Alex's Dietary Log</h2>
-    <!-- <div class="alert alert-danger" role="alert" ></div>
-    <div class="alert alert-success" role="alert" ></div>
-    <div class="alert alert-info" role="alert" ></div> -->
 
     <div style="clear: both; height: 12px"></div>
-
-    <?php //include "../templates/nav.php"; ?>
+    <?php // include "../templates/nav.php"; ?>
     <div style="clear: both; height: 24px"></div>
 
     <div class="row">
         <div class="col-xs-12">
-                
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" :class="{ active: activeTab === 'log' }">
+                    <a href="#foodHistory" aria-controls="foodHistory" role="tab" @click.prevent="activeTab = 'log'">Log</a>
+                </li>
+                <li role="presentation" :class="{ active: activeTab === 'foods' }">
+                    <a href="#foodList" aria-controls="foodList" role="tab" @click.prevent="activeTab = 'foods'">Foods</a>
+                </li>
+            </ul>
 
-            <?php foreach ($foodsLogArr as $dateConsumed => $logItem): ?>
-            <h4>
-                <?php echo date("F j, Y", strtotime($dateConsumed)); ?>
-                <?//= $dateConsumed; ?>
-            </h4>
+            <div class="tab-content" style="margin-top: 20px;">
+                <div role="tabpanel" class="tab-pane" :class="{ active: activeTab === 'log' }" id="foodHistory" v-show="activeTab === 'log'">
+                    <h3>Food log</h3>
+                    <p class="text-muted" v-if="!loading && sortedLogDates.length === 0">No log entries loaded.</p>
 
-            <div class="row">
-                <div class="col-xs-12">
-                    <table class="table table-bordered" style="border: 1px solid #666666;">
-                        <thead>
-                            <tr>
-                                <th>Meal Of Day</th>
-                                <th>Food </th>
-                                <th>Macro Type</th>
-                                <th>Amount</th>
-                                <th>Amount in Grams</th>
-                                <th>Fiber Amount</th>
-                                <th>Soluble Fiber Amount</th>
-                                
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($logItem['items'] as $log): ?>
-                            <tr>
-                                <td><?php echo $log['meal_of_day']; ?></td>
-                                <td><?php echo $log['food']; ?></td>
-                                <td><?php echo $log['macro_type']; ?></td>
-                                <td><?php echo $log['amount']; ?></td>
-                                <td><?php echo $log['amount_grams']; ?></td>
-                                <td><?php echo $log['fiber_amount_grams']; ?></td>
-                                <td><?php echo $log['soluble_fiber_amount_grams']; ?></td>
-                                
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                    <template v-for="dateConsumed in sortedLogDates" :key="dateConsumed">
+                        <h4>{{ formatLogHeading(dateConsumed) }}</h4>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <table class="table table-bordered" style="border: 1px solid #666666;">
+                                    <thead>
+                                        <tr>
+                                            <th>Meal Of Day</th>
+                                            <th>Food</th>
+                                            <th>Macro Type</th>
+                                            <th>Amount</th>
+                                            <th>Amount in Grams</th>
+                                            <th>Fiber Amount</th>
+                                            <th>Soluble Fiber Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="log in logByDate[dateConsumed].items" :key="log.log_id">
+                                            <td>{{ log.meal_of_day }}</td>
+                                            <td>{{ log.food }}</td>
+                                            <td>{{ log.macro_type }}</td>
+                                            <td>{{ log.amount }}</td>
+                                            <td>{{ log.amount_grams }}</td>
+                                            <td>{{ log.fiber_amount_grams }}</td>
+                                            <td>{{ log.soluble_fiber_amount_grams }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <h4>Total Fiber: {{ formatFiberTotal(logByDate[dateConsumed].total_fiber) }} grams</h4>
+                        <h4>Total Soluble Fiber: {{ formatFiberTotal(logByDate[dateConsumed].total_soluble_fiber) }} grams</h4>
+                        <h4>Total Percent Soluble: {{ logByDate[dateConsumed].total_percent_soluble }}</h4>
+                        <div style="clear: both; height: 32px;"></div>
+                    </template>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" :class="{ active: activeTab === 'foods' }" id="foodList" v-show="activeTab === 'foods'">
+                    <h3>Foods</h3>
+                    <p class="text-muted" v-if="!loading && foods.length === 0">No foods loaded.</p>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table class="table table-bordered" style="border: 1px solid #666666;">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Macro Type</th>
+                                        <th>Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="food in foods" :key="food.id">
+                                        <td>{{ food.title }}</td>
+                                        <td>{{ food.macro_type }}</td>
+                                        <td>{{ food.type }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div style="clear: both; height: 0px;"></div>
-
-            <h4>Total Fiber: <?php echo $logItem['total_fiber']; ?> grams</h4>
-            <h4>Total Soluble Fiber: <?php echo $logItem['total_soluble_fiber']; ?> grams</h4>
-            <h4>Total Percent Soluble: <?php echo $logItem['total_percent_soluble']; ?></h4>
-
-            <div style="clear: both; height: 32px;"></div>
-            <?php endforeach; ?>
         </div>
     </div>
-
 </div>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 <script src="/js/nav.js"></script>
 <script>
+const { createApp } = Vue;
 
-$(document).ready(function() {
-    
-})
+const API = {
+    foods: '/api/dietlog_foods_public.php',
+    log: '/api/dietlog_log_public.php',
+};
 
-
-// const { createApp } = Vue;
-
-// createApp({
-//     data() {
-//         return {
-//         }
-//     },
-//     mounted() {  
-//     },
-//     methods: {
-//         async addFoodGeneralItem() {
-//             try {
-//                 const response = await axios.post(`/api/addFoodLogGeneralItem.php?title=` + encodeURIComponent(this.foodGeneralCreate.title));
-//                 if (response.data && response.data.item) {
-//                     this.loadFoodGeneral();
-//                     $('#FoodGeneralItemModal').modal('hide');
-//                 }
-//             } catch (error) {
-//                 console.error('Error adding purchase:', error);
-//             }
-//         },
-//         openFoodLogItemModal(payPeriodId, index) {
-//             $('#FoodLogItemModal').modal('show');
-//         }, 
-//     }
-// }).mount('#app');
+createApp({
+    data() {
+        return {
+            activeTab: 'log',
+            loading: false,
+            loadError: false,
+            foods: [],
+            logByDate: {},
+        };
+    },
+    computed: {
+        sortedLogDates() {
+            return Object.keys(this.logByDate).sort().reverse();
+        },
+    },
+    mounted() {
+        this.bootstrapData();
+    },
+    methods: {
+        formatLogHeading(dateStr) {
+            const d = new Date(dateStr + 'T12:00:00');
+            return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        },
+        formatFiberTotal(n) {
+            const v = parseFloat(n);
+            if (Number.isNaN(v)) return '0.00';
+            return v.toFixed(2);
+        },
+        mapLogResponse(data) {
+            if (data && data.by_date) {
+                this.logByDate = data.by_date;
+                return;
+            }
+            this.logByDate = {};
+        },
+        async bootstrapData() {
+            this.loading = true;
+            this.loadError = false;
+            try {
+                const [foodsRes, logRes] = await Promise.all([
+                    axios.get(API.foods),
+                    axios.get(API.log),
+                ]);
+                this.foods = (foodsRes.data && foodsRes.data.foods) ? foodsRes.data.foods : [];
+                this.mapLogResponse(logRes.data);
+            } catch (e) {
+                console.error('Diet log load failed:', e);
+                this.loadError = true;
+            } finally {
+                this.loading = false;
+            }
+        },
+    },
+}).mount('#app');
 </script>
 </body>
 </html>
