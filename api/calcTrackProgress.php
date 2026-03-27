@@ -9,14 +9,17 @@ $allowBlankSortOrder = isset($_REQUEST['allow_blank_sort_order']) ? intval($_REQ
 
 $whereSql = "";
 if ($allowBlankSortOrder == 0) {
-	$whereSql = " AND sort_order > 0 ";
+	$whereSql = " AND l.sort_order > 0 ";
 }
 
-$sql = "SELECT * FROM cu_loan 
+$sql = "SELECT l.*, b.vnd_bill, b.end_date as current_end_date
+		FROM cu_loan l
+		LEFT JOIN vnd_bills b 
+			ON l.bill_id = b.vnd_id
 		WHERE 1
 		$whereSql
-		AND milestone_order > 0 
-		ORDER BY milestone_order ASC";
+		AND l.milestone_order > 0 
+		ORDER BY l.milestone_order ASC";
 $results = getQuery($sql);
 
 $totalBalance = 0;
@@ -97,8 +100,13 @@ if ($currentDay < 15) {
 
 $startDate = strtotime($startDate);
 
+$sql = "TRUNCATE TABLE tmp_bill_end_date";
+execQuery($sql);
 
+$sql = "INSERT INTO tmp_bill_end_date (bill_id, bill_title, current_end_date, new_end_date) VALUES (:bill_id, :bill_title, :current_end_date, :new_end_date)";
+$stmt_ins_bill_end_date = $db_conn->prepare($sql);
 
+$billEndDateArr = [];
 $categories = [];
 $resultsArr = [];
 $seriesData = [];
@@ -113,6 +121,17 @@ foreach ($results as $index => $getItem) {
 	// Account for fractional months
 	$fractionalDays = ($getItem['months_left'] - floor($getItem['months_left'])) * 30; // Approximate days in a month
 	$endDate = strtotime("+" . round($fractionalDays) . " days", $endDate);
+
+	if ($getItem['bill_id']) {
+
+		$params = [
+			"bill_id" => $getItem['bill_id'],
+			"bill_title" => $getItem['title'],
+			"current_end_date" => $getItem['current_end_date'],
+			"new_end_date" => date("Y-m-d", $endDate),
+		];
+		$stmt_ins_bill_end_date->execute($params);
+	}
 
 	$categories[] = $getItem['title'];
 
@@ -130,6 +149,11 @@ foreach ($results as $index => $getItem) {
 
 	$startDate = strtotime(date("Y-m-d", ($endDate + 86400)));
 }
+
+$sql = "SELECT * FROM tmp_bill_end_date ORDER BY current_end_date ASC";
+$tmpBillEndDateResults = getQuery($sql);
+
+
 
 $resultsFinal = [
 	"categories" => $categories,
@@ -155,6 +179,7 @@ header("Content-type: text/json");
 $results = [
 	"items" => $resultsFinal,
 	"loans" => $results,
+	"bill_end_dates" => $tmpBillEndDateResults,
 ];
 echo json_encode($results);
 ?>

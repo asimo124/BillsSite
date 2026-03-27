@@ -47,6 +47,26 @@ $allowBlankSortOrder = isset($_REQUEST['allow_blank_sort_order']) ? intval($_REQ
 
 
     <h4>Disposable Per Month</h4>
+    
+    <div class="alert alert-danger" role="alert" v-if="main_error">
+        {{ main_error }}    
+    </div>
+    <div class="alert alert-success" role="alert" v-if="main_msg">
+        {{ main_msg }}    
+    </div>
+    <div class="alert alert-info" role="alert" v-if="temp_msg">
+        {{ temp_msg }}    
+    </div>
+    
+
+    <div class="row">
+        <div class="col-xs-12" style="text-align: right;">
+            <button class="btn btn-primary" @click="queueDateJob(0)">Run Dates Job</button>&nbsp;
+            <button class="btn btn-danger" @click="queueDateJob(1)">Run Dates Job Test</button>&nbsp;
+        </div>
+    </div>
+    <div style="clear: both; height: 16px"></div>
+
     <div class="row">
         <div class="col-xs-6">
             <input type="number" id="Disposable Per Month" class="form-control" 
@@ -85,21 +105,35 @@ $allowBlankSortOrder = isset($_REQUEST['allow_blank_sort_order']) ? intval($_REQ
         </div>
     </div>
 
-    <!-- <div class="row">
-        <div v-for="(yearGroup, yearIndex) in months_left_arr" :key="yearIndex">
-            <h4>{{ yearGroup.year_title }}</h4>
-            <div class="col-xs-4 col-sm-3 col-md-2" v-for="(month, monthIndex) in yearGroup.months" :key="monthIndex">
-                <div class="cal_month" :style="{ backgroundColor: month.color }">
-                    <span class="cal_month_title">{{ month.month_year }}</span>
-                </div>
-            </div>
-            <div style="clear: both;"></div>
-        </div>
-    </div> -->
-
     <div class="row">
         <div class="col-xs-12">
             <v-chart :options="getChartOptions()" style="width: 100%; height: 400px;"></v-chart>
+        </div>
+    </div>
+    <div style="clear: both; height: 16px"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <h4>Bill End Dates</h4>
+            <div style="clear: both; height: 16px"></div>
+            <button class="btn btn-primary" @click="commitNewEndDates">Commit New End Dates</button>
+            <div style="clear: both; height: 8px"></div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Bill</th>
+                        <th>Current End Date</th>
+                        <th>New End Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(billEndDate, index) in billEndDates" :key="index">
+                        <td>{{ billEndDate.bill_title }}</td>
+                        <td>{{ billEndDate.current_end_date }}</td>
+                        <td>{{ billEndDate.new_end_date }}</td> 
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -116,8 +150,16 @@ new Vue({
             disposable_per_month: 1100,
             chartData: null, // Store the response.data.items here
             loans: [],
+            billEndDates: [],
             loansOrig: [],
             allowBlankSortOrder: <?php echo $allowBlankSortOrder; ?>,
+            isRunning: true,
+            secondsWait: 180,
+            main_msg: '',
+            main_error: '',
+            temp_msg: '',
+            did_queue: false,
+            times_run: 0
         };
     },
     methods: {
@@ -128,10 +170,80 @@ new Vue({
                 if (response.data) {
                     this.loans = response.data.loans;
                     this.loansOrig = response.data.loans;
+                    this.billEndDates = response.data.bill_end_dates;
                     this.chartData = response.data.items; // Store the entire response.data
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
+            }
+        },
+        async commitNewEndDates() {
+            try {
+                const response = await axios.post(`/api/commitNewEndDates.php`, {});
+                if (response.data.success) {
+                    this.calcProgress();
+                } else {
+                    alert(response.data.error);
+                }
+            } catch (error) {
+                console.error("Error committing new end dates:", error);
+            }
+        },
+        async checkJobsDone() {
+            if (!this.did_queue) {
+                return;
+            }
+            try {
+                const response = await axios.get('/api/check_date_job_done.php');
+                if (response.data && response.data.return_status && response.data.return_status == "done") {
+                    this.isRunning = false;
+                    this.temp_msg = '';
+                    this.main_msg = 'All jobs completed.';
+                    this.main_error = '';
+                    this.did_queue = false;
+                    this.loadPayPeriodItems();
+                } else {
+                    // Still running, check again after a delay
+                    setTimeout(() => {
+                        this.checkJobsDone();
+                    }, 5000); // Check every 5 seconds
+                }
+            } catch (error) {
+
+                if (this.times_run > 12) { // Stop after 1 minute of retries
+                    this.main_error = 'Error checking job status. Please try again later.';
+                    this.temp_msg = '';
+                    this.did_queue = false;
+                    return;
+                }
+
+                this.times_run += 1;
+                // Retry after a delay
+                setTimeout(() => {
+                    this.checkJobsDone();
+                }, 5000);
+            }
+        },
+        async queueDateJob(testMode) {
+            this.main_msg = '';
+            this.main_error = '';
+            this.temp_msg = 'Queueing job...';
+            this.did_queue = true;
+            this.times_run = 0;
+            try {
+                const response = await axios.get(`/api/queue_date_job.php?test_mode=${testMode}`);
+                
+                if (response.data && response.data.return_status && response.data.return_status == "success") {
+                    
+                    console.log("Date job queued successfully.");
+                    this.checkJobsDone();
+                } else {
+
+                    console.error('Error queueing job:', response.data.error);
+                    this.main_error = response.data.error || 'Error queueing job.';
+                }
+            } catch (error) {
+                console.error("Error", error);
             }
         },
         updateDisposablePerMonth() {

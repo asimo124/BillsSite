@@ -9,7 +9,10 @@ if (!isset($_SESSION['user'])) {
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 $sql = "SELECT * FROM cu_loan WHERE id = :id";
-$Bill = getQuerySingle($sql, [':id' => $id]);
+$Loan = getQuerySingle($sql, [':id' => $id]);
+
+$sql = "SELECT * FROM vnd_bills ORDER BY vnd_bill ASC";
+$Bills = getQuery($sql);
 
 ?>
 <!DOCTYPE html>
@@ -44,43 +47,62 @@ $Bill = getQuerySingle($sql, [':id' => $id]);
             <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Title</label>
                 <div class="col-md-4">
-                    <input id="title" name="title" type="text" placeholder="Bill Desc" class="form-control input-md" value="<?php echo $Bill['title']; ?>" />
+                    <input id="title" name="title" type="text" placeholder="Bill Desc" class="form-control input-md" value="<?php echo $Loan['title']; ?>" />
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Debt Owed</label>
                 <div class="col-md-4">
-                    <input id="debt_owed" name="debt_owed" type="number" placeholder="Debt Owed" class="form-control input-md" value="<?php echo $Bill['debt_owed']; ?>" />
+                    <input id="debt_owed" name="debt_owed" type="number" placeholder="Debt Owed" class="form-control input-md" value="<?php echo $Loan['debt_owed']; ?>" />
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Credit Limit</label>
                 <div class="col-md-4">
-                    <input id="credit_limit" name="credit_limit" type="number" placeholder="Credit Limit" class="form-control input-md" value="<?php echo $Bill['credit_limit']; ?>" />
+                    <input id="credit_limit" name="credit_limit" type="number" placeholder="Credit Limit" class="form-control input-md" value="<?php echo $Loan['credit_limit']; ?>" />
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Minimum Payment</label>
                 <div class="col-md-4">
-                    <input id="min_payment" name="min_payment" type="number" placeholder="Minimum Payment" class="form-control input-md" value="<?php echo $Bill['min_payment']; ?>" />
+                    <input id="min_payment" name="min_payment" type="number" placeholder="Minimum Payment" class="form-control input-md" value="<?php echo $Loan['min_payment']; ?>" />
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Amount Goes To Principal</label>
                 <div class="col-md-4">
-                    <input id="amount_to_principal" name="amount_to_principal" type="number" placeholder="Amount Goes To Principal" class="form-control input-md" value="<?php echo $Bill['amount_to_principal']; ?>" />
+                    <input id="amount_to_principal" name="amount_to_principal" type="number" placeholder="Amount Goes To Principal" class="form-control input-md" value="<?php echo $Loan['amount_to_principal']; ?>" />
                 </div>
             </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Vnd Bill</label>
+                <div class="col-md-4">
+                    <select name="bill_id" id="bill_id" class="form-control" >
+                        <?php foreach ($Bills as $Bill) { ?>
+                            <option value="<?php echo $Bill['vnd_id']; ?>" <?php echo ($Loan['bill_id'] == $Bill['vnd_id']) ? "SELECTED" : ""; ?>><?php echo $Bill['vnd_bill']; ?></option>
+                        <?php } ?>
+                    </select>
+                </div> 
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Should Update End Date?</label>
+                <div class="col-md-4" style="padding-top: 4px;">
+                    <input type="checkbox" name="can_update_end_date" id="can_update_end_date" value="1" <?php echo ($Loan['can_update_end_date'] == 1) ? "CHECKED" : ""; ?> />&nbsp;
+                </div>
+            </div>
+            
             <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Sort Order</label>
                 <div class="col-md-4">
-                    <input id="sort_order" name="sort_order" type="number" placeholder="Sort Order" class="form-control input-md" value="<?php echo $Bill['sort_order']; ?>" />
+                    <input id="sort_order" name="sort_order" type="number" placeholder="Sort Order" class="form-control input-md" value="<?php echo $Loan['sort_order']; ?>" />
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Milestone Order</label>
                 <div class="col-md-4">
-                    <input id="milestone_order" name="milestone_order" type="number" placeholder="Milestone Order" class="form-control input-md" value="<?php echo $Bill['milestone_order']; ?>" />
+                    <input id="milestone_order" name="milestone_order" type="number" placeholder="Milestone Order" class="form-control input-md" value="<?php echo $Loan['milestone_order']; ?>" />
                 </div>
             </div>
             <input type="hidden" name="id" id="id" value="<?php echo $id; ?>" />
