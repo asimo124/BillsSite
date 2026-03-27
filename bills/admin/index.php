@@ -278,7 +278,7 @@ function getMultiplierColor($multiplier) {
     <link rel="stylesheet" href="/css/bills_admin.css" />
 </head>
 <body>
-<div class="container">
+<div class="container" id="app">
     <div style="clear: both; height: 20px;" ></div>
     <?php if (isset($_REQUEST['Message'])) { ?>
         <div class="alert alert-success" role="alert">
@@ -287,6 +287,21 @@ function getMultiplierColor($multiplier) {
     <?php } ?>
 
     <h2>Bills</h2>
+    <div class="alert alert-danger" role="alert" v-if="main_error">
+        {{ main_error }}
+    </div>
+    <div class="alert alert-success" role="alert" v-if="main_msg">
+        {{ main_msg }}
+    </div>
+    <div class="alert alert-info" role="alert" v-if="temp_msg">
+        {{ temp_msg }}
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <button type="button" class="btn btn-primary" @click="queueDateJob(0)">Run Dates Job</button>&nbsp;
+            <button type="button" class="btn btn-danger" @click="queueDateJob(1)">Run Dates Job Test</button>
+        </div>
+    </div>
 
     <div style="clear: both; height: 12px"></div>
 
@@ -559,13 +574,78 @@ function getMultiplierColor($multiplier) {
                 </div>
             </div>
         </div>
-</div>
+    </form>
 
 </div>
 </body>
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script src="/js/nav.js" ></script>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+const { createApp } = Vue;
+
+createApp({
+    data() {
+        return {
+            main_msg: '',
+            main_error: '',
+            temp_msg: '',
+            did_queue: false,
+            times_run: 0
+        };
+    },
+    methods: {
+        async checkJobsDone() {
+            if (!this.did_queue) {
+                return;
+            }
+            try {
+                const response = await axios.get('/api/check_date_job_done.php');
+                if (response.data && response.data.return_status && response.data.return_status == "done") {
+                    this.temp_msg = '';
+                    this.main_msg = 'All jobs completed.';
+                    this.main_error = '';
+                    this.did_queue = false;
+                } else {
+                    setTimeout(() => {
+                        this.checkJobsDone();
+                    }, 5000);
+                }
+            } catch (error) {
+                if (this.times_run > 12) {
+                    this.main_error = 'Error checking job status. Please try again later.';
+                    this.temp_msg = '';
+                    this.did_queue = false;
+                    return;
+                }
+                this.times_run += 1;
+                setTimeout(() => {
+                    this.checkJobsDone();
+                }, 5000);
+            }
+        },
+        async queueDateJob(testMode) {
+            this.main_msg = '';
+            this.main_error = '';
+            this.temp_msg = 'Queueing job...';
+            this.did_queue = true;
+            this.times_run = 0;
+            try {
+                const response = await axios.get(`/api/queue_date_job.php?test_mode=${testMode}`);
+                if (response.data && response.data.return_status && response.data.return_status == "success") {
+                    this.checkJobsDone();
+                } else {
+                    this.main_error = response.data.error || 'Error queueing job.';
+                }
+            } catch (error) {
+                console.error("Error", error);
+            }
+        }
+    }
+}).mount('#app');
+</script>
 <script>
 
     $(document).ready(function() {

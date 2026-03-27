@@ -27,6 +27,7 @@ $expenses = $sth->fetchAll();
 	<meta charset="UTF-8">
 	<title>Add Expense</title>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css"> -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="/css/nav.css" />
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -104,8 +105,24 @@ a.btn {
 <?php include "../templates/nav.php"; ?>
 <div style="clear: both; height: 7px"></div>
 
+<div id="app">
 <span class="page_title" >Future Expenses</span>
 <div class="clear" style="height: 12px;"></div>
+
+<div class="alert alert-danger" role="alert" v-if="main_error">
+	{{ main_error }}
+</div>
+<div class="alert alert-success" role="alert" v-if="main_msg">
+	{{ main_msg }}
+</div>
+<div class="alert alert-info" role="alert" v-if="temp_msg">
+	{{ temp_msg }}
+</div>
+<div class="clear" style="height: 8px;"></div>
+<div style="margin-bottom: 12px;">
+	<button type="button" class="btn btn-primary" @click="queueDateJob(0)">Run Dates Job</button>&nbsp;
+	<button type="button" class="btn btn-danger" @click="queueDateJob(1)">Run Dates Job Test</button>
+</div>
 
 <a href="javascript:void(0);" onclick="$('#frmUpdate').submit();" class="btn">Update All</a>
 <div style="clear: both; height: 12px"></div>
@@ -172,8 +189,73 @@ a.btn {
 </form>
 <div style="clear: both; height: 16px;"></div>
 
+</div>
 
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+const { createApp } = Vue;
 
+createApp({
+	data() {
+		return {
+			main_msg: '',
+			main_error: '',
+			temp_msg: '',
+			did_queue: false,
+			times_run: 0
+		};
+	},
+	methods: {
+		async checkJobsDone() {
+			if (!this.did_queue) {
+				return;
+			}
+			try {
+				const response = await axios.get('/api/check_date_job_done.php');
+				if (response.data && response.data.return_status && response.data.return_status == "done") {
+					this.temp_msg = '';
+					this.main_msg = 'All jobs completed.';
+					this.main_error = '';
+					this.did_queue = false;
+				} else {
+					setTimeout(() => {
+						this.checkJobsDone();
+					}, 5000);
+				}
+			} catch (error) {
+				if (this.times_run > 12) {
+					this.main_error = 'Error checking job status. Please try again later.';
+					this.temp_msg = '';
+					this.did_queue = false;
+					return;
+				}
+				this.times_run += 1;
+				setTimeout(() => {
+					this.checkJobsDone();
+				}, 5000);
+			}
+		},
+		async queueDateJob(testMode) {
+			this.main_msg = '';
+			this.main_error = '';
+			this.temp_msg = 'Queueing job...';
+			this.did_queue = true;
+			this.times_run = 0;
+			try {
+				const response = await axios.get(`/api/queue_date_job.php?test_mode=${testMode}`);
+				if (response.data && response.data.return_status && response.data.return_status == "success") {
+					this.checkJobsDone();
+				} else {
+					this.main_error = response.data.error || 'Error queueing job.';
+				}
+			} catch (error) {
+				console.error("Error", error);
+			}
+		}
+	}
+}).mount('#app');
+</script>
 <script src="/js/nav.js" ></script>
 </body>
 </html>
