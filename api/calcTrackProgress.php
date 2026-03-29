@@ -29,17 +29,22 @@ foreach ($results as $getItem) {
     $totalMinPayment += floatval($getItem['min_payment']);
 }
 
+$runningDisposableAmount = 0;
 $totalMonthsLeft = 0;
 $totalAmountPrincipal = 0;
 $minPaymentAccum = 0;
 $previousItem = [];
 foreach ($results as $index => $getItem) {
 
+
+
 	$totalAmountPrincipal += floatval($getItem['amount_to_principal']);
 
 	$adjustDisposableAmountAccum += floatval($getItem['adjust_disposable_amount']);
 	
     $results[$index]['total_principal_monthly'] = $disposablePerMonth + $minPaymentAccum +  $getItem['amount_to_principal'] + $adjustDisposableAmountAccum;
+
+	$runningDisposableAmount = $disposablePerMonth + $minPaymentAccum +  $adjustDisposableAmountAccum;
 
 	$results[$index]['months_left'] = round($getItem['debt_owed'] / $results[$index]['total_principal_monthly'], 1);
 
@@ -50,6 +55,7 @@ foreach ($results as $index => $getItem) {
 	/*/
 	echo "<pre>";
 	print_r($results[$index]);
+	echo "runningDisposableAmount: " . $runningDisposableAmount . "<br>";
 	echo "minPaymentAccum: " . $minPaymentAccum . "<br>";
 	//*/
 
