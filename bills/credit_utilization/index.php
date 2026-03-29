@@ -49,9 +49,19 @@ $totalCreditLimit = 0;
 foreach ($loans as $index => $loan) {
     $totalDebtOwed += floatval($loan['debt_owed']);
     $totalCreditLimit += floatval($loan['credit_limit']);
-    $minPaymentAccum += floatval($loan['min_payment']);
+    
+    $adjustDisposableAmountAccum += floatval($loan['adjust_disposable_amount']);
     $loans[$index]['min_payment_accum'] = $minPaymentAccum;
+    $loans[$index]['adjust_disposable_amount_accum'] = $adjustDisposableAmountAccum;
+    $minPaymentAccum += floatval($loan['min_payment']);
 }
+
+/*/
+echo "<pre>";
+print_r($loans);
+echo "</pre>";
+die();
+//*/
 
 $totalCreditLimit += $increaseCreditLimitBy;
 
@@ -226,7 +236,8 @@ $creditUtilization = number_format($creditUtilization, 2);
                     <th>Loan/Card</th>
                     <th>Debt Owed</th>
                     <th>Credit Limit</th>
-                    <th colspan="2">Min Payment</th>
+                    <th>Min Payment</th>
+                    <th>Adjust Disposable Amount</th>
                     <th>Milestone Order</th>
                     <th colspan="2">Actions</th>
                 </tr>
@@ -237,8 +248,8 @@ $creditUtilization = number_format($creditUtilization, 2);
                         <td><?php echo htmlspecialchars($loan['title']); ?></td>
                         <td><?php echo '$' . number_format($loan['debt_owed'], 2); ?></td>
                         <td><?php echo '$' . number_format($loan['credit_limit'], 2); ?></td>
-                        <td><?php echo '$' . number_format($loan['min_payment'], 2); ?></td>
                         <td><?php echo '$' . number_format($loan['min_payment_accum'], 2); ?></td>
+                        <td><?php echo '$' . number_format($loan['adjust_disposable_amount_accum'], 2); ?></td>
                         <td><?php echo htmlspecialchars($loan['milestone_order']); ?></td>
                         <td><a href="edit.php?id=<?php echo $loan['id']; ?>" class="btn btn-primary">Edit</a></td>
                         <td><a class="btn btn-primary del_btn" data-id="<?php echo $loan['id']; ?>" data-toggle="modal" data-target="#delBill">Delete</a></td>
