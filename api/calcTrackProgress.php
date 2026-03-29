@@ -36,7 +36,23 @@ $previousItem = [];
 foreach ($results as $index => $getItem) {
 
 	$totalAmountPrincipal += floatval($getItem['amount_to_principal']);
-    $results[$index]['total_principal_monthly'] = $disposablePerMonth + $minPaymentAccum +  $getItem['amount_to_principal'];
+
+	/*/
+	echo "<pre>";
+	echo "Adjust Disposable Amount: " . $getItem['adjust_disposable_amount'] . "<br>";
+	echo "getItem.min_payment: " . $getItem['min_payment'] . "<br>";
+	echo "getItem.amount_to_principal: " . $getItem['amount_to_principal'] . "<br>";
+	echo "minPaymentAccum: " . $minPaymentAccum . "<br>";
+	//*/
+	
+    $results[$index]['total_principal_monthly'] = $disposablePerMonth + $minPaymentAccum +  $getItem['amount_to_principal'] + $getItem['adjust_disposable_amount'];
+
+    //echo "results.total_principal_monthly: " . $results[$index]['total_principal_monthly'] . "<br>";
+
+    /*/
+	echo "getItem.amount_to_principal: " . $getItem['amount_to_principal'] . "<br>";
+	echo "results[$index]['total_principal_monthly']: " . $results[$index]['total_principal_monthly'] . "<br>";
+	//*/
 
 	$results[$index]['months_left'] = round($getItem['debt_owed'] / $results[$index]['total_principal_monthly'], 1);
 
@@ -46,6 +62,8 @@ foreach ($results as $index => $getItem) {
 
 	$minPaymentAccum += floatval($getItem['min_payment']);
 }
+
+//die();
 
 $totalPaychecksLeft = round(($totalMonthsLeft * 2));
 

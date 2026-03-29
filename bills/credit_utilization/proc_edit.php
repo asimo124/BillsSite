@@ -17,6 +17,7 @@ $bill_id = isset($_REQUEST['bill_id']) ? intval($_REQUEST['bill_id']) : 0;
 $can_update_end_date = isset($_REQUEST['can_update_end_date']) ? intval($_REQUEST['can_update_end_date']) : 0;
 $sort_order = isset($_REQUEST['sort_order']) ? intval($_REQUEST['sort_order']) : 0;
 $milestone_order = isset($_REQUEST['milestone_order']) ? intval($_REQUEST['milestone_order']) : 0;
+$adjust_disposable_amount = isset($_REQUEST['adjust_disposable_amount']) ? floatval($_REQUEST['adjust_disposable_amount']) : 0;
 
 if ($title == "" || ($debt_owed <= 0 && $credit_limit <= 0)) {
     header("Location: edit.php?id=" . $id . "&Message=" . urlencode("You did not fill in all the required fields.") . "&error=1");
@@ -32,7 +33,8 @@ $sql = "UPDATE cu_loan
             sort_order = :sort_order,
             milestone_order = :milestone_order,
             can_update_end_date = :can_update_end_date,
-            bill_id = :bill_id
+            bill_id = :bill_id,
+            adjust_disposable_amount = :adjust_disposable_amount
         WHERE id = :id ";
 
 execQuery($sql, [
@@ -45,6 +47,7 @@ execQuery($sql, [
     "milestone_order" => $milestone_order,
     "can_update_end_date" => $can_update_end_date,
     "bill_id" => $bill_id,
+    "adjust_disposable_amount" => $adjust_disposable_amount,
     "id" => $id
 ]);
 

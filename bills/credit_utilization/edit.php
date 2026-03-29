@@ -87,6 +87,14 @@ $Bills = getQuery($sql);
             </div>
 
             <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Adjustment to Disposable Income</label>
+                <div class="col-md-4">
+                    <input id="adjust_disposable_amount" name="adjust_disposable_amount" type="number" placeholder="Disposable Income Adjustment" class="form-control input-md" value="<?php echo $Loan['adjust_disposable_amount']; ?>" />
+                    <p class="help-block">This is the amount that will be added to the disposable income. This is in addition to the minimum payment.</p>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Should Update End Date?</label>
                 <div class="col-md-4" style="padding-top: 4px;">
                     <input type="checkbox" name="can_update_end_date" id="can_update_end_date" value="1" <?php echo ($Loan['can_update_end_date'] == 1) ? "CHECKED" : ""; ?> />&nbsp;
