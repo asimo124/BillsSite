@@ -150,7 +150,7 @@ foreach ($results as $index => $getItem) {
 		$stmt_ins_bill_end_date->execute($params);
 	}
 
-	$categories[] = $getItem['title'];
+	$categories[] = substr($getItem['title'], 0, 11);
 
 	$seriesData[] = [
 		"name" => $getItem['title'],
