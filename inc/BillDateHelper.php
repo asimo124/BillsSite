@@ -207,14 +207,13 @@ class BillDateHelper {
 
         $sql = "SELECT * 
                 FROM vnd_pay_period_bill_date_passed 
-                WHERE bill_date = :bill_date
-                AND amount = :amount
-                AND title = :title";
+                WHERE bill_id = :bill_id";
 
         $stmt_sel_bill_date_passed = $db_conn->prepare($sql);
         
         foreach ($billDates as $getDate) {
             $newDate = array();
+            $newDate['bill_id'] = $getDate['bill_id'];
             $newDate['bill_date_id'] = $getDate['vnd_id'];
             $newDate['is_enabled'] = intval($getDate['is_enabled']);
             $newDate['desc'] = $getDate['vnd_bill_desc'];
@@ -223,14 +222,10 @@ class BillDateHelper {
             //*/
             $sql = "SELECT * 
                 FROM vnd_pay_period_bill_date_passed 
-                WHERE bill_date = :bill_date
-                AND amount = :amount
-                AND title = :title";
+                WHERE bill_id = :bill_id";
 
             $stmt_sel_bill_date_passed->execute([
-                'bill_date' => $getDate['vnd_date'],
-                'amount' => $amount,
-                'title' => $getDate['vnd_bill_desc']
+                'bill_id' => $getDate['bill_id']
             ]);
 
             $multiplier = 1;
@@ -241,6 +236,7 @@ class BillDateHelper {
             }
                 //*/
 
+            $newDate['bill_id'] = $getDate['bill_id'];
             $newDate['amount'] = $amount;
             $newDate['is_heavy'] = round(floatval($getDate['is_heavy']), 2);
             $newDate['vnd_frequency'] = $getDate['vnd_frequency'];
@@ -366,6 +362,7 @@ class BillDateHelper {
 
                 $hasBills = true;
                 $billsDescArr[] = [
+                    "bill_id" => $getBill['bill_id'],
                     "bill_date_id" => $getBill['bill_date_id'],
                     "pay_period_id" => $pay_period_id,
                     "title" => $getBill['desc'] . " - $" . $getBill["amount"],

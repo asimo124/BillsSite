@@ -12,6 +12,7 @@ set_time_limit(300);
 $date = isset($_REQUEST['date']) ? trim($_REQUEST['date']) : "";
 $amount = isset($_REQUEST['amount']) ? floatval($_REQUEST['amount']) : 0.0;
 $title = isset($_REQUEST['title']) ? trim($_REQUEST['title']) : "";
+$bill_id = isset($_REQUEST['bill_id']) ? intval($_REQUEST['bill_id']) : 0;
 
 $isEnabled    = isset($_REQUEST['is_enabled']) ? intval($_REQUEST['is_enabled']) : 0;
 
@@ -25,16 +26,16 @@ if (!$date || !$title) {
     die();
 }
 
-$sql = "SELECT * FROM vnd_pay_period_bill_date_passed WHERE bill_date = '{$date}' AND title = '{$title}';";
+$sql = "SELECT * FROM vnd_pay_period_bill_date_passed WHERE bill_id = '{$bill_id}';";
 $existingRecord = getQuerySingle($sql);
 
 if ($existingRecord) {
     // Update the existing record
-    $sql = "UPDATE vnd_pay_period_bill_date_passed SET is_enabled = {$isEnabled} WHERE bill_date = '{$date}' AND title = '{$title}' ";
+    $sql = "UPDATE vnd_pay_period_bill_date_passed SET is_enabled = {$isEnabled} WHERE bill_id = '{$bill_id}' ";
     execQuery($sql);
 } else {
     // Insert a new record
-    $sql = "INSERT INTO vnd_pay_period_bill_date_passed (bill_date, title, amount, is_enabled, multiplier) VALUES ('{$date}', '{$title}', {$amount}, {$isEnabled}, 1);";
+    $sql = "INSERT INTO vnd_pay_period_bill_date_passed (bill_date, title, amount, is_enabled, multiplier, bill_id) VALUES ('{$date}', '{$title}', {$amount}, {$isEnabled}, 1, {$bill_id});";
     execQuery($sql);
 }
 
