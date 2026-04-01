@@ -45,10 +45,19 @@ if (!isset($_SESSION['user'])) {
 
     <ul class="flex border-b">
         <li class="-mb-px mr-1">
-            <a class="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold" href="#" @click="activeTab = 'tracker'">Tracker</a>
+            <a class="bg-white inline-block py-2 px-4 font-semibold" href="#"
+               :class="activeTab === 'tracker' ? 'border-l border-t border-r rounded-t text-blue-700' : 'text-blue-500 hover:text-blue-800'"
+               @click.prevent="activeTab = 'tracker'">Tracker</a>
         </li>
-        <li class="mr-1">
-            <a class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#" @click="activeTab = 'upload'">Upload</a>
+        <li class="-mb-px mr-1">
+            <a class="bg-white inline-block py-2 px-4 font-semibold" href="#"
+               :class="activeTab === 'upload' ? 'border-l border-t border-r rounded-t text-blue-700' : 'text-blue-500 hover:text-blue-800'"
+               @click.prevent="activeTab = 'upload'">Upload</a>
+        </li>
+        <li class="-mb-px mr-1">
+            <a class="bg-white inline-block py-2 px-4 font-semibold" href="#"
+               :class="activeTab === 'transactions' ? 'border-l border-t border-r rounded-t text-blue-700' : 'text-blue-500 hover:text-blue-800'"
+               @click.prevent="activeTab = 'transactions'">Transactions</a>
         </li>
     </ul>
 
@@ -156,6 +165,107 @@ if (!isset($_SESSION['user'])) {
             </div>
         </form>
     </div>
+
+    <div v-if="activeTab === 'transactions'">
+        <div style="clear: both; height: 16px;"></div>
+        <h2 class="text-2xl font-bold mb-4">Transactions</h2>
+
+        <div class="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label for="tx_cat_start_date" class="block text-sm font-medium text-gray-700 mb-1">Start date</label>
+                    <input type="date" id="tx_cat_start_date" v-model="txCategoriesStartDate" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+                <div>
+                    <label for="tx_cat_end_date" class="block text-sm font-medium text-gray-700 mb-1">End date</label>
+                    <input type="date" id="tx_cat_end_date" v-model="txCategoriesEndDate" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+                <div>
+                    <label for="tx_cat_sort_by" class="block text-sm font-medium text-gray-700 mb-1">Order by</label>
+                    <select id="tx_cat_sort_by" v-model="txCategoriesSortBy" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="title">Title</option>
+                        <option value="amount">Amount</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="tx_cat_sort_dir" class="block text-sm font-medium text-gray-700 mb-1">Direction</label>
+                    <select id="tx_cat_sort_dir" v-model="txCategoriesSortDir" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="ASC">Ascending</option>
+                        <option value="DESC">Descending</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-end mt-4 pt-4 border-t border-gray-200">
+                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="loadTransactionCategories">Apply filters</button>
+            </div>
+        </div>
+        
+        <!-- Transaction Categories Table -->
+        <div class="grid grid-cols-1 gap-6 mb-6" v-if="transactionCategoryDrilldownLevel === 'root'">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800">Transaction categories</h3>
+                <div class="overflow-y-auto" style="max-height: 450px;">
+                    <table class="min-w-full divide-y divide-gray-200 bg-white" width="100%">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="word-wrap: break-word; white-space: normal;">Category</th>
+                                <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 80px;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200"> 
+                            <tr v-if="!transaction_categories || transaction_categories.length === 0">
+                                <td class="px-6 py-4 text-center text-gray-500 italic" colspan="2">No data for this range</td>
+                            </tr>
+                            <tr class="expenses_row hover:bg-gray-50" data-index="<?php echo $index; ?>" v-for="(item, index) in transaction_categories" v-else>
+                                <td class="px-6 py-4 text-sm text-gray-900" style="word-wrap: break-word; white-space: normal;"><a href="#" @click="drilldownIntoTransactionCategory(item.title)">{{ item.title }}</a></td>
+                                <td class="px-6 py-4 text-sm text-gray-900" style="width: 80px;">${{ item.amount_per_category }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 mb-6" v-if="transactionCategoryDrilldownLevel === 'category'">
+            <div>
+                <div class="flex items-center gap-3 mb-3">
+                    <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" @click="resetTransactionCategoryDrilldown">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H3m0 0l3.75-3.75M3 12l3.75 3.75" />
+                        </svg>
+                        Back
+                    </button>
+                    <h3 class="text-lg font-semibold text-gray-800 m-0">{{ transactionCategoryName }}</h3>
+                </div>
+                <div class="overflow-y-auto" style="max-height: 450px;">
+                    <table class="min-w-full divide-y divide-gray-200 bg-white" width="100%">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="word-wrap: break-word; white-space: normal;">Category</th>
+                                <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 80px;">Amount</th>
+                                <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="word-wrap: break-word; white-space: normal;">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200"> 
+                            <tr v-if="!drilldown_transactions || drilldown_transactions.length === 0">
+                                <td class="px-6 py-4 text-center text-gray-500 italic" colspan="3">No data for this range</td>
+                            </tr>
+                            <tr class="expenses_row hover:bg-gray-50" data-index="<?php echo $index; ?>" v-for="(item, index) in drilldown_transactions" v-else>
+                                <td class="px-6 py-4 text-sm text-gray-900" style="word-wrap: break-word; white-space: normal;">{{ item.name }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900" style="width: 80px;">${{ item.amount }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900" style="word-wrap: break-word; white-space: normal;">{{ item.transaction_date }}</td>
+                                
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-3 flex justify-end border-t border-gray-200 pt-3">
+                    <span class="text-sm font-semibold text-gray-800">Total: ${{ Number(drilldown_transactions_amount_total).toFixed(2) }}</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 
@@ -199,7 +309,18 @@ if (!isset($_SESSION['user'])) {
 
                     // Existing data properties
                     transactions: [],
+                    transaction_categories: [],
+                    drilldown_transactions: [],
+                    drilldown_transactions_amount_total: 0,
                     cumulative: 0,
+
+                    txCategoriesStartDate: '',
+                    txCategoriesEndDate: '',
+                    txCategoriesSortBy: 'title',
+                    txCategoriesSortDir: 'ASC',
+
+                    transactionCategoryDrilldownLevel: 'root',
+                    transactionCategoryName: null,
 
                     // Chart data
                     chartOptions: {
@@ -219,6 +340,11 @@ if (!isset($_SESSION['user'])) {
                 };
             },
             mounted() {
+                const end = new Date();
+                const start = new Date();
+                start.setMonth(start.getMonth() - 3);
+                this.txCategoriesEndDate = end.toISOString().split('T')[0];
+                this.txCategoriesStartDate = start.toISOString().split('T')[0];
                 this.loadPage();
                 
                 // Force chart redraw after mounting
@@ -277,6 +403,7 @@ if (!isset($_SESSION['user'])) {
                 loadData() {
                     this.loadTransactions();
                     this.loadChartData();
+                    this.loadTransactionCategories();
                 },
                 loadRoot() {
                     this.drilldownLevel = 'root';
@@ -341,6 +468,50 @@ if (!isset($_SESSION['user'])) {
                         if (response.data && response.data.items) {
                             
                             this.transactions = response.data.items;
+                        }
+                    } catch (error) {}
+                },
+                async loadTransactionCategories() {
+                    try {
+                        const params = new URLSearchParams({
+                            start_date: this.txCategoriesStartDate,
+                            end_date: this.txCategoriesEndDate,
+                            sort_by: this.txCategoriesSortBy,
+                            sort_dir: this.txCategoriesSortDir,
+                        });
+                        const response = await axios.get('/api/loadTransactionCategories.php?' + params.toString());
+                        if (response.data && response.data.error) {
+                            this.transaction_categories = [];
+                            return;
+                        }
+                        if (response.data && response.data.items) {
+                            this.transaction_categories = response.data.items;
+                        }
+                    } catch (error) {}
+                },
+                resetTransactionCategoryDrilldown() {
+                    this.transactionCategoryDrilldownLevel = 'root';
+                    this.transactionCategoryName = null;
+                    this.drilldown_transactions = [];
+                    this.drilldown_transactions_amount_total = 0;
+                },
+                async drilldownIntoTransactionCategory(categoryName) {
+                    this.transactionCategoryDrilldownLevel = 'category';
+                    this.transactionCategoryName = categoryName;
+                    this.loadDrilldownTransactions();
+                },
+                async loadDrilldownTransactions() {
+                    try {
+                        const response = await axios.get('/api/loadTransactionDrilldown.php?category_name=' + encodeURIComponent(this.transactionCategoryName) + '&start_date=' + this.txCategoriesStartDate + '&end_date=' + this.txCategoriesEndDate + '&sort_by=' + this.txCategoriesSortBy + '&sort_dir=' + this.txCategoriesSortDir);
+                        if (response.data && response.data.error) {
+                            this.drilldown_transactions = [];
+                            this.drilldown_transactions_amount_total = 0;
+                            return;
+                        }
+                        if (response.data) {
+                            this.drilldown_transactions = response.data.items || [];
+                            const t = response.data.amount_total;
+                            this.drilldown_transactions_amount_total = t !== undefined && t !== null ? Number(t) : 0;
                         }
                     } catch (error) {}
                 },
@@ -469,6 +640,5 @@ if (!isset($_SESSION['user'])) {
         window.vueApp = app.mount('#app');
         
     </script>
-</div> <!-- End of Vue app -->
 </body>
 </html>
