@@ -265,6 +265,149 @@ if (!isset($_SESSION['user'])) {
             </div>
         </div>
 
+        <div class="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <h3 class="text-sm font-semibold text-gray-700 mb-3">All transactions — filters</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label for="all_tx_start_date" class="block text-sm font-medium text-gray-700 mb-1">Start date</label>
+                    <input type="date" id="all_tx_start_date" v-model="allTxStartDate" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+                <div>
+                    <label for="all_tx_end_date" class="block text-sm font-medium text-gray-700 mb-1">End date</label>
+                    <input type="date" id="all_tx_end_date" v-model="allTxEndDate" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+                <div>
+                    <label for="all_tx_category_name" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                    <select id="all_tx_category_name" v-model="allTxCategoryName" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All</option>
+                        <option v-for="(row, idx) in disposableCategoryNames" :key="'cat-' + idx" :value="row.category_name">{{ row.category_name }}</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="all_tx_account_type" class="block text-sm font-medium text-gray-700 mb-1">Account type</label>
+                    <select id="all_tx_account_type" v-model="allTxAccountType" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All</option>
+                        <option v-for="(row, idx) in disposableAccountTypes" :key="'at-' + idx" :value="row.account_type">{{ row.account_type }}</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="all_tx_account_name" class="block text-sm font-medium text-gray-700 mb-1">Account name</label>
+                    <select id="all_tx_account_name" v-model="allTxAccountName" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All</option>
+                        <option v-for="(row, idx) in disposableAccountNames" :key="'an-' + idx" :value="row.account_name">{{ row.account_name }}</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="all_tx_account_number" class="block text-sm font-medium text-gray-700 mb-1">Account number</label>
+                    <select id="all_tx_account_number" v-model="allTxAccountNumber" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All</option>
+                        <option v-for="(row, idx) in disposableAccountNumbers" :key="'ano-' + idx" :value="row.account_number">{{ row.account_number }}</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="all_tx_institution_name" class="block text-sm font-medium text-gray-700 mb-1">Institution</label>
+                    <select id="all_tx_institution_name" v-model="allTxInstitutionName" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All</option>
+                        <option v-for="(row, idx) in disposableInstitutionNames" :key="'in-' + idx" :value="row.institution_name">{{ row.institution_name }}</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="all_tx_name1" class="block text-sm font-medium text-gray-700 mb-1">Name search 1</label>
+                    <input type="text" id="all_tx_name1" v-model="allTxName1" placeholder="Contains…" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+                <div>
+                    <label for="all_tx_name2" class="block text-sm font-medium text-gray-700 mb-1">Name search 2</label>
+                    <input type="text" id="all_tx_name2" v-model="allTxName2" placeholder="Contains…" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+                <div>
+                    <label for="all_tx_name3" class="block text-sm font-medium text-gray-700 mb-1">Name search 3</label>
+                    <input type="text" id="all_tx_name3" v-model="allTxName3" placeholder="Contains…" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+                <div>
+                    <label for="all_tx_amount_start" class="block text-sm font-medium text-gray-700 mb-1">Amount min</label>
+                    <input type="text" id="all_tx_amount_start" v-model="allTxAmountStart" placeholder="Optional" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+                <div>
+                    <label for="all_tx_amount_end" class="block text-sm font-medium text-gray-700 mb-1">Amount max</label>
+                    <input type="text" id="all_tx_amount_end" v-model="allTxAmountEnd" placeholder="Optional" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+                <div>
+                    <label for="all_tx_sort_by1" class="block text-sm font-medium text-gray-700 mb-1">Sort by</label>
+                    <select id="all_tx_sort_by1" v-model="allTxSortBy1" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="transaction_date">Transaction date</option>
+                        <option value="amount">Amount</option>
+                        <option value="name">Name</option>
+                        <option value="category">Category</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="all_tx_sort_dir1" class="block text-sm font-medium text-gray-700 mb-1">Direction</label>
+                    <select id="all_tx_sort_dir1" v-model="allTxSortDir1" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="ASC">Ascending</option>
+                        <option value="DESC">Descending</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="all_tx_sort_by2" class="block text-sm font-medium text-gray-700 mb-1">Then sort by</label>
+                    <select id="all_tx_sort_by2" v-model="allTxSortBy2" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="name">Name</option>
+                        <option value="transaction_date">Transaction date</option>
+                        <option value="amount">Amount</option>
+                        <option value="category">Category</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="all_tx_sort_dir2" class="block text-sm font-medium text-gray-700 mb-1">Then direction</label>
+                    <select id="all_tx_sort_dir2" v-model="allTxSortDir2" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="ASC">Ascending</option>
+                        <option value="DESC">Descending</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-4 pt-4 border-t border-gray-200">
+                <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded" @click="clearAllTxFilters">Clear filters</button>
+                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="loadAllTransactions">Apply filters</button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 mb-6">
+            <div>
+                <div class="flex items-center gap-3 mb-3">
+                    <h3 class="text-lg font-semibold text-gray-800 m-0">All transactions</h3>
+                </div>
+                <div class="overflow-y-auto" style="max-height: 450px;">
+                    <table class="min-w-full divide-y divide-gray-200 bg-white" width="100%">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="word-wrap: break-word; white-space: normal;">Category</th>
+                                <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="word-wrap: break-word; white-space: normal;">Expense</th>
+                                <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 80px;">Amount</th>
+                                <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="word-wrap: break-word; white-space: normal;">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr v-if="!all_transactions || all_transactions.length === 0">
+                                <td class="px-6 py-4 text-center text-gray-500 italic" colspan="4">No data for this range</td>
+                            </tr>
+                            <tr class="expenses_row hover:bg-gray-50" data-index="<?php echo $index; ?>" v-for="(item, index) in all_transactions" v-else>
+                                <td class="px-6 py-4 text-sm text-gray-900" style="word-wrap: break-word; white-space: normal;">{{ item.category_name }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900" style="word-wrap: break-word; white-space: normal;">{{ item.name }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900" style="width: 80px;">${{ item.amount }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900" style="word-wrap: break-word; white-space: normal;">{{ item.transaction_date }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-3 flex justify-end border-t border-gray-200 pt-3">
+                    <span class="text-sm font-semibold text-gray-800">Total: ${{ Number(all_transactions_amount_total).toFixed(2) }}</span>
+                </div>
+            </div>
+        </div>
+            
+
+
+
+
     </div>
 </div>
 
@@ -309,6 +452,29 @@ if (!isset($_SESSION['user'])) {
 
                     // Existing data properties
                     transactions: [],
+                    all_transactions: [],
+                    all_transactions_amount_total: 0,
+                    disposableAccountNames: [],
+                    disposableAccountTypes: [],
+                    disposableAccountNumbers: [],
+                    disposableInstitutionNames: [],
+                    disposableCategoryNames: [],
+                    allTxStartDate: '',
+                    allTxEndDate: '',
+                    allTxCategoryName: '',
+                    allTxAccountType: '',
+                    allTxAccountName: '',
+                    allTxAccountNumber: '',
+                    allTxInstitutionName: '',
+                    allTxName1: '',
+                    allTxName2: '',
+                    allTxName3: '',
+                    allTxAmountStart: '',
+                    allTxAmountEnd: '',
+                    allTxSortBy1: 'transaction_date',
+                    allTxSortDir1: 'ASC',
+                    allTxSortBy2: 'name',
+                    allTxSortDir2: 'ASC',
                     transaction_categories: [],
                     drilldown_transactions: [],
                     drilldown_transactions_amount_total: 0,
@@ -345,7 +511,11 @@ if (!isset($_SESSION['user'])) {
                 start.setMonth(start.getMonth() - 3);
                 this.txCategoriesEndDate = end.toISOString().split('T')[0];
                 this.txCategoriesStartDate = start.toISOString().split('T')[0];
+                this.allTxEndDate = this.txCategoriesEndDate;
+                this.allTxStartDate = this.txCategoriesStartDate;
                 this.loadPage();
+                this.loadDisposableFilterOptions();
+                this.loadAllTransactions();
                 
                 // Force chart redraw after mounting
                 this.$nextTick(() => {
@@ -512,6 +682,106 @@ if (!isset($_SESSION['user'])) {
                             this.drilldown_transactions = response.data.items || [];
                             const t = response.data.amount_total;
                             this.drilldown_transactions_amount_total = t !== undefined && t !== null ? Number(t) : 0;
+                        }
+                    } catch (error) {}
+                },
+                async loadDisposableFilterOptions() {
+                    try {
+                        const [names, types, numbers, institutions, categories] = await Promise.all([
+                            axios.get('/api/loadDisposableAccountNames.php'),
+                            axios.get('/api/loadDisposableAccountTypes.php'),
+                            axios.get('/api/loadDisposableAccountNumbers.php'),
+                            axios.get('/api/loadDisposableInstitutionNames.php'),
+                            axios.get('/api/loadDisposableCategoryNames.php'),
+                        ]);
+                        if (names.data && names.data.items) {
+                            this.disposableAccountNames = names.data.items;
+                        }
+                        if (types.data && types.data.items) {
+                            this.disposableAccountTypes = types.data.items;
+                        }
+                        if (numbers.data && numbers.data.items) {
+                            this.disposableAccountNumbers = numbers.data.items;
+                        }
+                        if (institutions.data && institutions.data.items) {
+                            this.disposableInstitutionNames = institutions.data.items;
+                        }
+                        if (categories.data && categories.data.items) {
+                            this.disposableCategoryNames = categories.data.items;
+                        }
+                    } catch (error) {}
+                },
+                clearAllTxFilters() {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setMonth(start.getMonth() - 3);
+                    this.allTxEndDate = end.toISOString().split('T')[0];
+                    this.allTxStartDate = start.toISOString().split('T')[0];
+                    this.allTxCategoryName = '';
+                    this.allTxAccountType = '';
+                    this.allTxAccountName = '';
+                    this.allTxAccountNumber = '';
+                    this.allTxInstitutionName = '';
+                    this.allTxName1 = '';
+                    this.allTxName2 = '';
+                    this.allTxName3 = '';
+                    this.allTxAmountStart = '';
+                    this.allTxAmountEnd = '';
+                    this.allTxSortBy1 = 'transaction_date';
+                    this.allTxSortDir1 = 'DESC';
+                    this.allTxSortBy2 = 'name';
+                    this.allTxSortDir2 = 'ASC';
+                    this.loadAllTransactions();
+                },
+                async loadAllTransactions() {
+                    try {
+                        const params = new URLSearchParams();
+                        params.set('start_date', this.allTxStartDate);
+                        params.set('end_date', this.allTxEndDate);
+                        if (this.allTxCategoryName) {
+                            params.set('category_name', this.allTxCategoryName);
+                        }
+                        if (this.allTxAccountType) {
+                            params.set('account_type', this.allTxAccountType);
+                        }
+                        if (this.allTxAccountName) {
+                            params.set('account_name', this.allTxAccountName);
+                        }
+                        if (this.allTxAccountNumber) {
+                            params.set('account_number', this.allTxAccountNumber);
+                        }
+                        if (this.allTxInstitutionName) {
+                            params.set('institution_name', this.allTxInstitutionName);
+                        }
+                        if (this.allTxName1) {
+                            params.set('name1', this.allTxName1);
+                        }
+                        if (this.allTxName2) {
+                            params.set('name2', this.allTxName2);
+                        }
+                        if (this.allTxName3) {
+                            params.set('name3', this.allTxName3);
+                        }
+                        if (this.allTxAmountStart !== '') {
+                            params.set('amount_start', this.allTxAmountStart);
+                        }
+                        if (this.allTxAmountEnd !== '') {
+                            params.set('amount_end', this.allTxAmountEnd);
+                        }
+                        params.set('sort_by1', this.allTxSortBy1);
+                        params.set('sort_dir1', this.allTxSortDir1);
+                        params.set('sort_by2', this.allTxSortBy2);
+                        params.set('sort_dir2', this.allTxSortDir2);
+                        const response = await axios.get('/api/loadTransactionAll.php?' + params.toString());
+                        if (response.data && response.data.error) {
+                            this.all_transactions = [];
+                            this.all_transactions_amount_total = 0;
+                            return;
+                        }
+                        if (response.data) {
+                            this.all_transactions = response.data.items || [];
+                            const t = response.data.amount_total;
+                            this.all_transactions_amount_total = t !== undefined && t !== null ? Number(t) : 0;
                         }
                     } catch (error) {}
                 },
