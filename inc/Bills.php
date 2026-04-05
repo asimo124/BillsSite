@@ -93,14 +93,14 @@ class Bills {
 		END as multiplier
 		FROM vnd_bill_dates bd
 		LEFT JOIN vnd_pay_period_bill_date_passed pb 
-			ON bd.vnd_date = pb.bill_date
-			AND bd.vnd_amount = pb.amount
-			AND bd.vnd_bill_desc = pb.title
+			ON bd.bill_id = pb.bill_id
 		WHERE 1
 		AND bd.vnd_user_id = :user_id
 		and bd.vnd_date between :start_date and :end_date
 		GROUP BY bd.vnd_id
 		ORDER BY bd.vnd_date, bd.vnd_bill_desc ";
+
+		
 		
 		$data = array();
 		$data['user_id'] = $user_id;
