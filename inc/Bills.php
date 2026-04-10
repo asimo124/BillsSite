@@ -64,7 +64,7 @@ class Bills {
 		return $resultset;	
 	}
 	
-	public function loadBillDatesByUserID($user_id, $pay_period_id = 0) {
+	public function loadBillDatesByUserID($user_id, $pay_period_id = 0, $paycheck_date = "") {
 		global $db_conn;
 		
 		$query = "
@@ -94,6 +94,7 @@ class Bills {
 		FROM vnd_bill_dates bd
 		LEFT JOIN vnd_pay_period_bill_date_passed pb 
 			ON bd.bill_id = pb.bill_id
+			AND pb.paycheck_date = :paycheck_date
 		WHERE 1
 		AND bd.vnd_user_id = :user_id
 		and bd.vnd_date between :start_date and :end_date
@@ -106,6 +107,7 @@ class Bills {
 		$data['user_id'] = $user_id;
 		$data['start_date'] = $this->today;
 		$data['end_date'] = $this->nextPayDay;
+		$data['paycheck_date'] = $paycheck_date;
 
 		$sth = $db_conn->prepare($query);
 		$sth->execute($data);

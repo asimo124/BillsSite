@@ -202,7 +202,7 @@ class BillDateHelper {
         $Bill = new Bills();
 
         $Bill->setPayPeriod($end_date, $start_date);
-        $billDates = $Bill->loadBillDatesByUserID($user_id, $pay_period_id);
+        $billDates = $Bill->loadBillDatesByUserID($user_id, $pay_period_id, $use_pay_period_date);
 
 
         $sql = "SELECT * 
