@@ -27,7 +27,7 @@ if (!$date || !$title) {
     die();
 }
 
-$sql = "SELECT * FROM vnd_pay_period_bill_date_passed WHERE bill_id = '{$bill_id}';";
+$sql = "SELECT * FROM vnd_pay_period_bill_date_passed WHERE bill_id = '{$bill_id}' AND paycheck_date = '{$paycheck_date}';";
 $existingRecord = getQuerySingle($sql);
 
 if ($existingRecord) {

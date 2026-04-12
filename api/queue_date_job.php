@@ -14,17 +14,25 @@ if (php_sapi_name() !== 'cli' && !isset($_SESSION['user'])) {
     exit;
 }
 
+$test_mode = isset($_REQUEST['test_mode']) ? intval($_REQUEST['test_mode']) : 0;
 
 
 $sql = "DELETE FROM date_job WHERE `status` IN ('pending', 'done') ";
 execQuery1($sql, []);
 
 
+if ($test_mode == 1) {
+    $sql = "INSERT INTO date_job 
+    (`status`,  `command`,                 created_at,           updated_at, test_mode) VALUES 
+    ('pending', 'generate_bill_dates:{}', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), 1)";
+    execQuery1($sql, []);
+} else {
+    $sql = "INSERT INTO date_job 
+    (`status`,  `command`,                 created_at,           updated_at) VALUES 
+    ('pending', 'generate_bill_dates:{}', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()))";
+    execQuery1($sql, []);
+}
 
-$sql = "INSERT INTO date_job 
-(`status`,  `command`,                 created_at,           updated_at,            test_mode) VALUES 
-('pending', 'generate_bill_dates:{}', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), $changeTestMode)";
-execQuery1($sql, []);
 
 header("Content-type: text/json");
 echo json_encode([

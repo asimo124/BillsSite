@@ -102,7 +102,9 @@ class BillDateHelper {
                 FROM dt_paycheck_disposable 
                 WHERE paycheck_date = ?";
 
-        $payCheckDateDisposable = getQuerySingle($sql, [$paycheck_date]);
+    
+        //$payCheckDateDisposable = getQuerySingle($sql, [$paycheck_date]);
+        $payCheckDateDisposable['disposable_amount'] = 0;
 
         $this->paycheckDisposableAmount = $payCheckDateDisposable ? floatval($payCheckDateDisposable['disposable_amount']) : 0;
 
