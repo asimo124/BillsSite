@@ -100,11 +100,14 @@ if (!isset($_SESSION['user'])) {
                         <input type="number" id="loan2_adjust_disposable_per_month" v-model.number="loan2_adjust_disposable_per_month" class="form-control" step="any" @blur="persistLoanForm" />
                     </div>
                 </div>
-                <div class="form-group" style="text-align: right;">
-                    <button type="button" class="btn btn-default" style="margin-right: 8px;" @click="clearLoanFormData">Clear Data</button>
-                    <button type="button" class="btn btn-primary" @click="calculateLoanCountdown">Calculate Loan Countdown</button>
-                </div>
             </form>
+        </div>
+    </div>
+    <div style="clear: both; height: 4px"></div>
+    <div class="row">
+        <div class="col-xs-12" style="text-align: right;">
+            <button type="button" class="btn btn-default" style="margin-right: 8px;" @click="clearLoanFormData">Clear Data</button>
+            <button type="button" class="btn btn-primary" @click="calculateLoanCountdown">Calculate Loan Countdown</button>
         </div>
     </div>
     <div style="clear: both; height: 16px"></div>
