@@ -30,10 +30,6 @@ if (!isset($_SESSION['user'])) {
         </div>
     <?php } ?>
 
-    <div class="alert alert-success" role="alert" >
-        
-    </div>
-
     <h2>Loan Countdown</h2>
 
     <div style="clear: both; height: 12px"></div>
@@ -134,6 +130,12 @@ if (!isset($_SESSION['user'])) {
                         </tr>
                     </tbody>
                 </table>
+                <p v-if="loan1PayoffLeftover !== null" class="lead" style="margin-top: 12px;">
+                    Money left over from paying {{ loan1_name }}: <strong>${{ formatMoney(loan1PayoffLeftover) }}</strong>
+                </p>
+                <p v-if="loan2BalanceAfterLoan1Spill != null" class="lead" style="margin-top: 4px;">
+                    New balance for {{ (loan2_name && loan2_name.trim()) ? loan2_name : 'Loan #2' }}: <strong>${{ formatMoney(loan2BalanceAfterLoan1Spill) }}</strong>
+                </p>
             </template>
 
             <template v-if="loan2Schedule.length">
@@ -154,11 +156,10 @@ if (!isset($_SESSION['user'])) {
                         </tr>
                     </tbody>
                 </table>
+                <p v-if="loan2PayoffLeftover !== null" class="lead" style="margin-top: 12px;">
+                    Money left over from paying {{ (loan2_name && loan2_name.trim()) ? loan2_name : 'Loan #2' }}: <strong>${{ formatMoney(loan2PayoffLeftover) }}</strong>
+                </p>
             </template>
-
-            <p v-if="finalPaymentLeftover !== null" class="lead" style="margin-top: 20px;">
-                Money left over after the final payment: <strong>${{ formatMoney(finalPaymentLeftover) }}</strong>
-            </p>
         </div>
     </div>
 
@@ -207,7 +208,9 @@ createApp({
             loan1Schedule: [],
             loan2Schedule: [],
             countdownValidationError: '',
-            finalPaymentLeftover: null,
+            loan1PayoffLeftover: null,
+            loan2PayoffLeftover: null,
+            loan2BalanceAfterLoan1Spill: null,
         };
     },
     computed: {
@@ -247,6 +250,7 @@ createApp({
     },
     mounted() {
         this.loadLoanFormFromStorage();
+        this.calculateLoanCountdown();
     },
     methods: {
         persistLoanForm() {
@@ -318,7 +322,9 @@ createApp({
             this.loan1Schedule = [];
             this.loan2Schedule = [];
             this.countdownValidationError = '';
-            this.finalPaymentLeftover = null;
+            this.loan1PayoffLeftover = null;
+            this.loan2PayoffLeftover = null;
+            this.loan2BalanceAfterLoan1Spill = null;
         },
         formatMoney(value) {
             const n = Number(value);
@@ -340,7 +346,9 @@ createApp({
             this.countdownValidationError = '';
             this.loan1Schedule = [];
             this.loan2Schedule = [];
-            this.finalPaymentLeftover = null;
+            this.loan1PayoffLeftover = null;
+            this.loan2PayoffLeftover = null;
+            this.loan2BalanceAfterLoan1Spill = null;
 
             const base = Number(this.disposable_per_month);
             if (!this.starting_month) {
@@ -366,6 +374,7 @@ createApp({
                     loan2Bal = b;
                 }
             }
+            const hadLoan2StartingBalance = loan2Bal > 0;
 
             const adj1 = Number(this.loan1_adjust_disposable_per_month);
             const adj2 = Number(this.loan2_adjust_disposable_per_month);
@@ -377,34 +386,50 @@ createApp({
 
             while ((loan1Bal > 0 || loan2Bal > 0) && monthOffset < maxMonths) {
                 const dateLabel = monthLabelFromOffset(this.starting_month, monthOffset);
-                let monthLeftover = 0;
 
+                // Loan 2 only starts the month after loan 1 is fully paid (never same month as loan 1's last payment).
                 if (loan1Bal > 0) {
                     const pool1 = roundMoney(base + add1);
                     const applied1 = roundMoney(Math.min(loan1Bal, pool1));
                     loan1Bal = roundMoney(loan1Bal - applied1);
-                    monthLeftover = roundMoney(monthLeftover + (pool1 - applied1));
                     this.loan1Schedule.push({
                         dateLabel,
                         disposableApplied: applied1,
                         runningTotal: loan1Bal,
                     });
-                }
-
-                if (loan2Bal > 0) {
+                    if (loan1Bal <= 0) {
+                        loan1Bal = 0;
+                        const spillFromLoan1 = roundMoney(pool1 - applied1);
+                        this.loan1PayoffLeftover = spillFromLoan1;
+                        let roll = spillFromLoan1;
+                        if (loan2Bal > 0 && roll > 0) {
+                            const toLoan2 = roundMoney(Math.min(loan2Bal, roll));
+                            loan2Bal = Math.max(0, roundMoney(loan2Bal - toLoan2));
+                            roll = roundMoney(roll - toLoan2);
+                            if (loan2Bal <= 0) {
+                                loan2Bal = 0;
+                                this.loan2PayoffLeftover = roll;
+                            }
+                        }
+                        if (hadLoan2StartingBalance) {
+                            this.loan2BalanceAfterLoan1Spill = loan2Bal;
+                        }
+                    }
+                } else if (loan2Bal > 0) {
                     const pool2 = roundMoney(base + add2);
                     const applied2 = roundMoney(Math.min(loan2Bal, pool2));
                     loan2Bal = roundMoney(loan2Bal - applied2);
-                    monthLeftover = roundMoney(monthLeftover + (pool2 - applied2));
                     this.loan2Schedule.push({
                         dateLabel,
                         disposableApplied: applied2,
                         runningTotal: loan2Bal,
                     });
+                    if (loan2Bal <= 0) {
+                        this.loan2PayoffLeftover = roundMoney(pool2 - applied2);
+                    }
                 }
 
                 if (loan1Bal <= 0 && loan2Bal <= 0) {
-                    this.finalPaymentLeftover = roundMoney(monthLeftover);
                     break;
                 }
 
@@ -413,7 +438,9 @@ createApp({
 
             if (monthOffset >= maxMonths && (loan1Bal > 0 || loan2Bal > 0)) {
                 this.countdownValidationError = 'Schedule stopped after 600 months; check your amounts.';
-                this.finalPaymentLeftover = null;
+                this.loan1PayoffLeftover = null;
+                this.loan2PayoffLeftover = null;
+                this.loan2BalanceAfterLoan1Spill = null;
             }
         },
     }
