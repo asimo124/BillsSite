@@ -209,7 +209,7 @@ class BillDateHelper {
 
         $sql = "SELECT * 
                 FROM vnd_pay_period_bill_date_passed 
-                WHERE bill_id = :bill_id";
+                WHERE bill_id = :bill_id AND paycheck_date = :paycheck_date";
 
         $stmt_sel_bill_date_passed = $db_conn->prepare($sql);
         
@@ -224,10 +224,11 @@ class BillDateHelper {
             //*/
             $sql = "SELECT * 
                 FROM vnd_pay_period_bill_date_passed 
-                WHERE bill_id = :bill_id";
+                WHERE bill_id = :bill_id AND paycheck_date = :paycheck_date";
 
             $stmt_sel_bill_date_passed->execute([
-                'bill_id' => $getDate['bill_id']
+                'bill_id' => $getDate['bill_id'],
+                'paycheck_date' => $start_date
             ]);
 
             $multiplier = 1;

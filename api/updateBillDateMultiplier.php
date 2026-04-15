@@ -32,7 +32,7 @@ $existingRecord = getQuerySingle($sql);
 
 if ($existingRecord) {
     // Update the existing record
-    $sql = "UPDATE vnd_pay_period_bill_date_passed SET multiplier = {$multiplier} WHERE bill_id = '{$bill_id}' AND paycheck_date = '{$paycheck_date}' ;";
+    $sql = "UPDATE vnd_pay_period_bill_date_passed SET multiplier = {$multiplier}, amount = {$amount} WHERE bill_id = '{$bill_id}' AND paycheck_date = '{$paycheck_date}';";
     execQuery($sql);
 } else {
     // Insert a new record
