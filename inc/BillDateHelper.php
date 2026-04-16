@@ -228,7 +228,7 @@ class BillDateHelper {
 
             $stmt_sel_bill_date_passed->execute([
                 'bill_id' => $getDate['bill_id'],
-                'paycheck_date' => $start_date
+                'paycheck_date' => $use_pay_period_date
             ]);
 
             $multiplier = 1;
