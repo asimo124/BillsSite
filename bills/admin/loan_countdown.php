@@ -91,9 +91,29 @@ if (!isset($_SESSION['user'])) {
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label" for="adjust_disposable_per_month">Adjust disposable per month</label>
+                    <label class="col-sm-4 control-label" for="loan2_adjust_disposable_per_month">Adjust disposable per month</label>
                     <div class="col-sm-8">
                         <input type="number" id="loan2_adjust_disposable_per_month" v-model.number="loan2_adjust_disposable_per_month" class="form-control" step="any" @blur="persistLoanForm" />
+                    </div>
+                </div>
+
+                <h3 class="h4" style="margin-top: 24px; padding-bottom: 8px; border-bottom: 1px solid #ddd;">Loan #3</h3>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label" for="loan3_name">Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="loan3_name" v-model="loan3_name" class="form-control" @blur="persistLoanForm" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label" for="loan3_remaining_balance">Remaining balance</label>
+                    <div class="col-sm-8">
+                        <input type="number" id="loan3_remaining_balance" v-model.number="loan3_remaining_balance" class="form-control" step="0.01" min="0" @blur="persistLoanForm" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label" for="loan3_adjust_disposable_per_month">Adjust disposable per month</label>
+                    <div class="col-sm-8">
+                        <input type="number" id="loan3_adjust_disposable_per_month" v-model.number="loan3_adjust_disposable_per_month" class="form-control" step="any" @blur="persistLoanForm" />
                     </div>
                 </div>
             </form>
@@ -136,6 +156,9 @@ if (!isset($_SESSION['user'])) {
                 <p v-if="loan2BalanceAfterLoan1Spill != null" class="lead" style="margin-top: 4px;">
                     New balance for {{ (loan2_name && loan2_name.trim()) ? loan2_name : 'Loan #2' }}: <strong>${{ formatMoney(loan2BalanceAfterLoan1Spill) }}</strong>
                 </p>
+                <p v-if="loan3BalanceAfterLoan2Spill != null && !loan2Schedule.length" class="lead" style="margin-top: 4px;">
+                    New balance for {{ (loan3_name && loan3_name.trim()) ? loan3_name : 'Loan #3' }} (after Loan #2 spill from Loan #1): <strong>${{ formatMoney(loan3BalanceAfterLoan2Spill) }}</strong>
+                </p>
             </template>
 
             <template v-if="loan2Schedule.length">
@@ -158,6 +181,32 @@ if (!isset($_SESSION['user'])) {
                 </table>
                 <p v-if="loan2PayoffLeftover !== null" class="lead" style="margin-top: 12px;">
                     Money left over from paying {{ (loan2_name && loan2_name.trim()) ? loan2_name : 'Loan #2' }}: <strong>${{ formatMoney(loan2PayoffLeftover) }}</strong>
+                </p>
+                <p v-if="loan3BalanceAfterLoan2Spill != null && loan2Schedule.length" class="lead" style="margin-top: 4px;">
+                    New balance for {{ (loan3_name && loan3_name.trim()) ? loan3_name : 'Loan #3' }}: <strong>${{ formatMoney(loan3BalanceAfterLoan2Spill) }}</strong>
+                </p>
+            </template>
+
+            <template v-if="loan3Schedule.length">
+                <h2 style="margin-top: 24px;">{{ (loan3_name && loan3_name.trim()) ? loan3_name : 'Loan #3' }}</h2>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Disposable per month</th>
+                            <th>Running total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(row, idx) in loan3Schedule" :key="'l3-' + idx">
+                            <td>{{ row.dateLabel }}</td>
+                            <td>${{ formatMoney(row.disposableApplied) }}</td>
+                            <td>${{ formatMoney(row.runningTotal) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p v-if="loan3PayoffLeftover !== null" class="lead" style="margin-top: 12px;">
+                    Money left over from paying {{ (loan3_name && loan3_name.trim()) ? loan3_name : 'Loan #3' }}: <strong>${{ formatMoney(loan3PayoffLeftover) }}</strong>
                 </p>
             </template>
         </div>
@@ -183,6 +232,9 @@ function defaultLoanFormState() {
         loan2_name: '',
         loan2_remaining_balance: null,
         loan2_adjust_disposable_per_month: null,
+        loan3_name: '',
+        loan3_remaining_balance: null,
+        loan3_adjust_disposable_per_month: null,
     };
 }
 
@@ -207,10 +259,13 @@ createApp({
             ...defaultLoanFormState(),
             loan1Schedule: [],
             loan2Schedule: [],
+            loan3Schedule: [],
             countdownValidationError: '',
             loan1PayoffLeftover: null,
             loan2PayoffLeftover: null,
             loan2BalanceAfterLoan1Spill: null,
+            loan3PayoffLeftover: null,
+            loan3BalanceAfterLoan2Spill: null,
         };
     },
     computed: {
@@ -247,6 +302,15 @@ createApp({
             const n = Number(bal);
             return Number.isFinite(n) && n >= 0;
         },
+        loan3_filled() {
+            const name = this.loan3_name != null ? String(this.loan3_name).trim() : '';
+            const bal = this.loan3_remaining_balance;
+            if (!name || bal === null || bal === '') {
+                return false;
+            }
+            const n = Number(bal);
+            return Number.isFinite(n) && n >= 0;
+        },
     },
     mounted() {
         this.loadLoanFormFromStorage();
@@ -263,6 +327,9 @@ createApp({
                 loan2_name: this.loan2_name,
                 loan2_remaining_balance: this.loan2_remaining_balance,
                 loan2_adjust_disposable_per_month: this.loan2_adjust_disposable_per_month,
+                loan3_name: this.loan3_name,
+                loan3_remaining_balance: this.loan3_remaining_balance,
+                loan3_adjust_disposable_per_month: this.loan3_adjust_disposable_per_month,
             };
             try {
                 localStorage.setItem(LOAN_COUNTDOWN_STORAGE_KEY, JSON.stringify(payload));
@@ -285,8 +352,10 @@ createApp({
                     'disposable_per_month',
                     'loan1_remaining_balance',
                     'loan2_remaining_balance',
+                    'loan3_remaining_balance',
                     'loan1_adjust_disposable_per_month',
                     'loan2_adjust_disposable_per_month',
+                    'loan3_adjust_disposable_per_month',
                 ]);
                 Object.keys(defaults).forEach((key) => {
                     if (Object.prototype.hasOwnProperty.call(saved, key)) {
@@ -321,10 +390,13 @@ createApp({
             });
             this.loan1Schedule = [];
             this.loan2Schedule = [];
+            this.loan3Schedule = [];
             this.countdownValidationError = '';
             this.loan1PayoffLeftover = null;
             this.loan2PayoffLeftover = null;
             this.loan2BalanceAfterLoan1Spill = null;
+            this.loan3PayoffLeftover = null;
+            this.loan3BalanceAfterLoan2Spill = null;
         },
         formatMoney(value) {
             const n = Number(value);
@@ -346,9 +418,12 @@ createApp({
             this.countdownValidationError = '';
             this.loan1Schedule = [];
             this.loan2Schedule = [];
+            this.loan3Schedule = [];
             this.loan1PayoffLeftover = null;
             this.loan2PayoffLeftover = null;
             this.loan2BalanceAfterLoan1Spill = null;
+            this.loan3PayoffLeftover = null;
+            this.loan3BalanceAfterLoan2Spill = null;
 
             const base = Number(this.disposable_per_month);
             if (!this.starting_month) {
@@ -376,18 +451,30 @@ createApp({
             }
             const hadLoan2StartingBalance = loan2Bal > 0;
 
+            let loan3Bal = 0;
+            if (this.loan3_filled) {
+                loan3Bal = roundMoney(this.loan3_remaining_balance);
+            } else if (this.loan3_remaining_balance != null && this.loan3_remaining_balance !== '') {
+                const b3 = roundMoney(this.loan3_remaining_balance);
+                if (Number.isFinite(b3) && b3 >= 0) {
+                    loan3Bal = b3;
+                }
+            }
+            const hadLoan3StartingBalance = loan3Bal > 0;
+
             const adj1 = Number(this.loan1_adjust_disposable_per_month);
             const adj2 = Number(this.loan2_adjust_disposable_per_month);
+            const adj3 = Number(this.loan3_adjust_disposable_per_month);
             const add1 = Number.isFinite(adj1) ? adj1 : 0;
             const add2 = Number.isFinite(adj2) ? adj2 : 0;
+            const add3 = Number.isFinite(adj3) ? adj3 : 0;
 
             const maxMonths = 600;
             let monthOffset = 0;
 
-            while ((loan1Bal > 0 || loan2Bal > 0) && monthOffset < maxMonths) {
+            while ((loan1Bal > 0 || loan2Bal > 0 || loan3Bal > 0) && monthOffset < maxMonths) {
                 const dateLabel = monthLabelFromOffset(this.starting_month, monthOffset);
 
-                // Loan 2 only starts the month after loan 1 is fully paid (never same month as loan 1's last payment).
                 if (loan1Bal > 0) {
                     const pool1 = roundMoney(base + add1);
                     const applied1 = roundMoney(Math.min(loan1Bal, pool1));
@@ -406,13 +493,36 @@ createApp({
                             const toLoan2 = roundMoney(Math.min(loan2Bal, roll));
                             loan2Bal = Math.max(0, roundMoney(loan2Bal - toLoan2));
                             roll = roundMoney(roll - toLoan2);
+                            if (hadLoan2StartingBalance) {
+                                this.loan2BalanceAfterLoan1Spill = loan2Bal;
+                            }
                             if (loan2Bal <= 0) {
                                 loan2Bal = 0;
                                 this.loan2PayoffLeftover = roll;
+                                if (loan3Bal > 0 && roll > 0) {
+                                    const toLoan3 = roundMoney(Math.min(loan3Bal, roll));
+                                    loan3Bal = Math.max(0, roundMoney(loan3Bal - toLoan3));
+                                    roll = roundMoney(roll - toLoan3);
+                                    if (loan3Bal <= 0) {
+                                        loan3Bal = 0;
+                                        this.loan3PayoffLeftover = roll;
+                                    }
+                                }
+                                if (hadLoan3StartingBalance) {
+                                    this.loan3BalanceAfterLoan2Spill = loan3Bal;
+                                }
                             }
-                        }
-                        if (hadLoan2StartingBalance) {
-                            this.loan2BalanceAfterLoan1Spill = loan2Bal;
+                        } else if (loan2Bal <= 0 && loan3Bal > 0 && roll > 0) {
+                            const toLoan3 = roundMoney(Math.min(loan3Bal, roll));
+                            loan3Bal = Math.max(0, roundMoney(loan3Bal - toLoan3));
+                            roll = roundMoney(roll - toLoan3);
+                            if (loan3Bal <= 0) {
+                                loan3Bal = 0;
+                                this.loan3PayoffLeftover = roll;
+                            }
+                            if (hadLoan3StartingBalance) {
+                                this.loan3BalanceAfterLoan2Spill = loan3Bal;
+                            }
                         }
                     }
                 } else if (loan2Bal > 0) {
@@ -425,22 +535,52 @@ createApp({
                         runningTotal: loan2Bal,
                     });
                     if (loan2Bal <= 0) {
-                        this.loan2PayoffLeftover = roundMoney(pool2 - applied2);
+                        loan2Bal = 0;
+                        const spillFromLoan2 = roundMoney(pool2 - applied2);
+                        this.loan2PayoffLeftover = spillFromLoan2;
+                        let roll = spillFromLoan2;
+                        if (loan3Bal > 0 && roll > 0) {
+                            const toLoan3 = roundMoney(Math.min(loan3Bal, roll));
+                            loan3Bal = Math.max(0, roundMoney(loan3Bal - toLoan3));
+                            roll = roundMoney(roll - toLoan3);
+                            if (loan3Bal <= 0) {
+                                loan3Bal = 0;
+                                this.loan3PayoffLeftover = roll;
+                            }
+                        }
+                        if (hadLoan3StartingBalance) {
+                            this.loan3BalanceAfterLoan2Spill = loan3Bal;
+                        }
+                    }
+                } else if (loan3Bal > 0) {
+                    const pool3 = roundMoney(base + add3);
+                    const applied3 = roundMoney(Math.min(loan3Bal, pool3));
+                    loan3Bal = roundMoney(loan3Bal - applied3);
+                    this.loan3Schedule.push({
+                        dateLabel,
+                        disposableApplied: applied3,
+                        runningTotal: loan3Bal,
+                    });
+                    if (loan3Bal <= 0) {
+                        loan3Bal = 0;
+                        this.loan3PayoffLeftover = roundMoney(pool3 - applied3);
                     }
                 }
 
-                if (loan1Bal <= 0 && loan2Bal <= 0) {
+                if (loan1Bal <= 0 && loan2Bal <= 0 && loan3Bal <= 0) {
                     break;
                 }
 
                 monthOffset += 1;
             }
 
-            if (monthOffset >= maxMonths && (loan1Bal > 0 || loan2Bal > 0)) {
+            if (monthOffset >= maxMonths && (loan1Bal > 0 || loan2Bal > 0 || loan3Bal > 0)) {
                 this.countdownValidationError = 'Schedule stopped after 600 months; check your amounts.';
                 this.loan1PayoffLeftover = null;
                 this.loan2PayoffLeftover = null;
                 this.loan2BalanceAfterLoan1Spill = null;
+                this.loan3PayoffLeftover = null;
+                this.loan3BalanceAfterLoan2Spill = null;
             }
         },
     }
