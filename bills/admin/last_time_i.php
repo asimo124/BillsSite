@@ -19,6 +19,19 @@
 
     <!-- Custom CSS -->
     <style>
+
+      .badge2 {
+        padding: 0.25em 0.4em;
+        font-size: 0.75em;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        /*white-space: nowrap;
+        vertical-align: baseline;*/
+        border-radius: 0.25rem;
+      }
+
       .cal-day {
         border: 1px solid #dee2e6;
         border-radius: 0.375rem;
@@ -31,8 +44,8 @@
 
       .cal-day-item {
         font-size: 0.68rem;
-        white-space: nowrap;
-        overflow: hidden;
+        /*white-space: nowrap;
+        overflow: hidden;*/
         text-overflow: ellipsis;
         text-align: left !important;
       }
@@ -696,7 +709,7 @@
                            
                           >
                           <span
-                              class="badge cal-day-item d-block mb-1"
+                              class="badge2 cal-day-item d-block mb-1"
                               :style="{ backgroundColor: item.color }"
                             >
                               {{ item.title }}
@@ -792,7 +805,7 @@
                             v-if="day.showAsDay"
                           >
                             <span
-                              class="badge cal-day-item d-block mb-1"
+                              class="badge2 cal-day-item d-block mb-1"
                               :style="{ backgroundColor: expense.color }"
                               @click.stop="removeItemUsed(expense.id, $event)"
                               style="cursor: pointer"
