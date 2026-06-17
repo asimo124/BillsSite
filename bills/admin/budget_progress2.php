@@ -183,6 +183,15 @@ createApp({
         }
     },
     mounted() {
+        const savedFirst = localStorage.getItem('initBalanceFirst');
+        if (savedFirst !== null && savedFirst !== '') {
+            this.initBalanceFirst = parseFloat(savedFirst);
+        }
+        const savedFifteenth = localStorage.getItem('initBalanceFifteenth');
+        if (savedFifteenth !== null && savedFifteenth !== '') {
+            this.initBalanceFifteenth = parseFloat(savedFifteenth);
+        }
+
         this.initializeBalance();
 
         if (localStorage.getItem('disposable_per_day')) {
@@ -234,31 +243,41 @@ createApp({
             console.log("Pay Date Formatted:", this.payDateFormatted);
         },
         initializeBalance() {
-
             const date2 = parseInt(this.payDate.getDate());
 
-            var savedBalance = 0;
             if (date2 >= 15) {
                 this.payDayTimeOfMonth = 1;
-                savedBalance = localStorage.getItem('initBalanceFirst');
                 this.defaultBalance = this.defaultBalanceFirst;
+                this.initBalance = parseFloat(this.initBalanceFirst) || this.defaultBalanceFirst;
             } else {
                 this.payDayTimeOfMonth = 15;
-                savedBalance = localStorage.getItem('initBalanceFifteenth');
                 this.defaultBalance = this.defaultBalanceFifteenth;
-            }
-
-            if (!savedBalance) {
-                this.initBalance = this.defaultBalance;
-            } else {
-                this.initBalance = parseFloat(savedBalance);
+                this.initBalance = parseFloat(this.initBalanceFifteenth) || this.defaultBalanceFifteenth;
             }
         },
         saveInitBalanceFirst() {
-            localStorage.setItem('initBalanceFirst', this.initBalanceFirst);
+            const value = parseFloat(this.initBalanceFirst);
+            if (isNaN(value)) {
+                return;
+            }
+            this.initBalanceFirst = value;
+            localStorage.setItem('initBalanceFirst', String(value));
+            this.initializeBalance();
+            if (parseInt(this.payDate.getDate()) >= 15) {
+                this.getExpenseDays();
+            }
         },
         saveInitBalanceFifteenth() {
-            localStorage.setItem('initBalanceFifteenth', this.initBalanceFifteenth);
+            const value = parseFloat(this.initBalanceFifteenth);
+            if (isNaN(value)) {
+                return;
+            }
+            this.initBalanceFifteenth = value;
+            localStorage.setItem('initBalanceFifteenth', String(value));
+            this.initializeBalance();
+            if (parseInt(this.payDate.getDate()) < 15) {
+                this.getExpenseDays();
+            }
         },
         saveInitBalance() {
             localStorage.setItem('initBalance', this.initBalance);
