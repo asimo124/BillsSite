@@ -51,6 +51,7 @@
                                 <a href="/bills/admin/weight_ratio.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Weight Ratio</a>
                                 <a href="/bills/dietlog/index.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dietary Log</a>
                                 <a href="/bills/admin/food_sensitivities.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Food Sensitivities</a>
+                                <a href="/bills/push_notifications/index.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Push Notifications</a>
                             </div>
                         </div>
                     </div>
@@ -112,6 +113,7 @@
                     <a href="/bills/admin/last_time_i.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Last Time I</a>
                     <a href="/bills/admin/pending_transactions.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Pending Transactions</a>
                     <a href="/bills/admin/debt_progress.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Debt Progress</a>
+                    <a href="/bills/push_notifications/index.php" class="text-gray-400 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-sm">Push Notifications</a>
                 </div>
             </div>
             
