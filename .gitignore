@@ -6,3 +6,5 @@ inc/config.php
 # macOS
 .DS_Store
 **/.DS_Store
+
+.env

@@ -35,7 +35,7 @@
     <a href="/bills/admin/food_sensitivities.php">Food Sensitivities</a>
     <a href="/bills/admin/disposable_income_tracker.php">Disposable Tracker</a> 
     <a href="/bills/admin/loan_countdown.php">Loan Countdown</a> 
-    <a href="/bills/admin/queue_date_job.php">Queue Date Job</a>
+    <a href="/bills/admin/google_maps_trip_duration.php">Google Maps</a>
     <a href="/bills/admin/audit_expenses_v3.php">Audit Expenses</a>
     <a href="/bills/credit_utilization/index.php?allow_blank_sort_order=0">Credit Utilization</a>
     <a href="/bills/push_notifications/index.php">Push Notifications</a>

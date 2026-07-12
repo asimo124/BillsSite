@@ -52,6 +52,7 @@
                                 <a href="/bills/dietlog/index.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dietary Log</a>
                                 <a href="/bills/admin/food_sensitivities.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Food Sensitivities</a>
                                 <a href="/bills/push_notifications/index.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Push Notifications</a>
+                                <a href="/bills/admin/google_maps_trip_duration.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Google Maps</a>
                             </div>
                         </div>
                     </div>
