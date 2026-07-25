@@ -83,6 +83,35 @@
   }
   input::placeholder{color:var(--muted);}
 
+  .field-with-clear{
+    position:relative;
+    margin-bottom:16px;
+  }
+  .field-with-clear input[type="text"]{
+    margin-bottom:0;
+    padding-right:40px;
+  }
+  .clear-btn{
+    position:absolute;
+    right:8px;
+    top:50%;
+    transform:translateY(-50%);
+    width:28px;
+    height:28px;
+    border:none;
+    border-radius:50%;
+    background:transparent;
+    color:var(--muted);
+    font-size:18px;
+    line-height:1;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+  }
+  .clear-btn:hover{color:var(--text);background:rgba(255,255,255,0.06);}
+
   /* route signature: origin dot -- dashed line -- destination dot */
   .route-sig{
     display:flex;
@@ -207,10 +236,16 @@
     </div>
 
     <label>From</label>
-    <input type="text" v-model="origin" placeholder="Starting address">
+    <div class="field-with-clear">
+      <input type="text" v-model="origin" placeholder="Starting address">
+      <button type="button" class="clear-btn" v-if="origin" @click="origin=''" aria-label="Clear origin">&times;</button>
+    </div>
 
     <label>To</label>
-    <input type="text" v-model="destination" placeholder="Destination address">
+    <div class="field-with-clear">
+      <input type="text" v-model="destination" placeholder="Destination address">
+      <button type="button" class="clear-btn" v-if="destination" @click="destination=''" aria-label="Clear destination">&times;</button>
+    </div>
 
     <div class="toggle-row">
       <button :class="{active: timeMode==='departure'}" @click="timeMode='departure'">Leave at</button>
@@ -246,8 +281,9 @@ const API_ENDPOINT = '/api/request_google_maps_trip_duration.php';
 
 createApp({
   setup() {
-    const origin = ref('');
+    const origin = ref('33 lynn batts ln 78218');
     const destination = ref('');
+
     const timeMode = ref('departure');
 
     // default to "now" in the format datetime-local expects
