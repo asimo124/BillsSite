@@ -67,8 +67,13 @@ if (!isset($_SESSION['user'])) {
                         </select>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label" for="push_to_next_paycheck">Push to next paycheck</label>
+                    <div class="col-sm-8" style="padding-top: 7px;">
+                        <input type="checkbox" id="push_to_next_paycheck" v-model="push_to_next_paycheck" @change="persistLoanForm" />
+                    </div>
+                </div>
                 
-
                 <h3 class="h4" style="margin-top: 24px; padding-bottom: 8px; border-bottom: 1px solid #ddd;">Loan #1</h3>
                 <div class="form-group">
                     <label class="col-sm-4 control-label" for="loan1_name">Name</label>
@@ -464,6 +469,7 @@ function defaultLoanFormState() {
         disposable_per_paycheck15: null,
         already_spent_on_first_paycheck: null,
         starting_month: '',
+        push_to_next_paycheck: false,
         loan1_name: '',
         loan1_remaining_balance: null,
         loan1_adjust_disposable_per_paycheck1: null,
@@ -741,6 +747,7 @@ createApp({
                 disposable_per_paycheck15: this.disposable_per_paycheck15,
                 already_spent_on_first_paycheck: this.already_spent_on_first_paycheck,
                 starting_month: this.starting_month,
+                push_to_next_paycheck: this.push_to_next_paycheck,
                 loan1_name: this.loan1_name,
                 loan1_remaining_balance: this.loan1_remaining_balance,
                 loan1_adjust_disposable_per_paycheck1: this.loan1_adjust_disposable_per_paycheck1,
@@ -867,6 +874,8 @@ createApp({
                             }
                         } else if (typeof defaults[key] === 'string') {
                             this[key] = v == null ? '' : String(v);
+                        } else if (typeof defaults[key] === 'boolean') {
+                            this[key] = !!v;
                         } else {
                             this[key] = v;
                         }
@@ -1023,7 +1032,11 @@ createApp({
             const filterMinMs = Math.max(planStart.getTime(), todayStart.getTime());
 
             const allPc = listPaycheckDatesFromPlanStart(this.starting_month, 3200);
-            const pcDates = allPc.filter((dt) => startOfLocalDay(dt).getTime() >= filterMinMs);
+            let pcDates = allPc.filter((dt) => startOfLocalDay(dt).getTime() >= filterMinMs);
+            if (this.push_to_next_paycheck && pcDates.length > 0) {
+                // Skip the next upcoming paycheck: 1st → 15th, or 15th → 1st of next month.
+                pcDates = pcDates.slice(1);
+            }
             if (pcDates.length === 0) {
                 this.countdownValidationError =
                     'No paycheck dates on or after today for the selected starting month.';
