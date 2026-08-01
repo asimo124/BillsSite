@@ -59,6 +59,12 @@ if (!isset($_SESSION['user'])) {
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-4 control-label" for="already_spent_on_second_paycheck">Already spent on 2nd paycheck</label>
+                    <div class="col-sm-8">
+                        <input type="number" id="already_spent_on_second_paycheck" v-model.number="already_spent_on_second_paycheck" class="form-control" step="0.01" min="0" @blur="persistLoanForm" />
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-4 control-label" for="starting_month">Starting month</label>
                     <div class="col-sm-8">
                         <select id="starting_month" v-model="starting_month" class="form-control" @blur="persistLoanForm" @change="persistLoanForm">
@@ -468,6 +474,7 @@ function defaultLoanFormState() {
         disposable_per_paycheck1: null,
         disposable_per_paycheck15: null,
         already_spent_on_first_paycheck: null,
+        already_spent_on_second_paycheck: null,
         starting_month: '',
         push_to_next_paycheck: false,
         loan1_name: '',
@@ -746,6 +753,7 @@ createApp({
                 disposable_per_paycheck1: this.disposable_per_paycheck1,
                 disposable_per_paycheck15: this.disposable_per_paycheck15,
                 already_spent_on_first_paycheck: this.already_spent_on_first_paycheck,
+                already_spent_on_second_paycheck: this.already_spent_on_second_paycheck,
                 starting_month: this.starting_month,
                 push_to_next_paycheck: this.push_to_next_paycheck,
                 loan1_name: this.loan1_name,
@@ -836,6 +844,7 @@ createApp({
                     'disposable_per_paycheck1',
                     'disposable_per_paycheck15',
                     'already_spent_on_first_paycheck',
+                    'already_spent_on_second_paycheck',
                     'loan1_remaining_balance',
                     'loan2_remaining_balance',
                     'loan3_remaining_balance',
@@ -1087,6 +1096,11 @@ createApp({
                     const alreadySpent = Number(this.already_spent_on_first_paycheck);
                     if (Number.isFinite(alreadySpent) && alreadySpent > 0) {
                         pool = roundMoney(Math.max(0, pool - alreadySpent));
+                    }
+                } else if (pi === 1) {
+                    const alreadySpent2 = Number(this.already_spent_on_second_paycheck);
+                    if (Number.isFinite(alreadySpent2) && alreadySpent2 > 0) {
+                        pool = roundMoney(Math.max(0, pool - alreadySpent2));
                     }
                 }
                 const dateLabel = formatPaycheckDateLabel(pcDate);
