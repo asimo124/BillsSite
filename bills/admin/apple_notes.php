@@ -127,6 +127,14 @@ if (!isset($_SESSION['user'])) {
         >
             {{ deleting ? 'Deleting...' : 'Delete Selected (' + selectedIds.length + ')' }}
         </button>
+        <form action="proc_export_apple_notes.php" method="POST" class="inline" target="_blank">
+            <button
+                type="submit"
+                class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            >
+                Export to CSV
+            </button>
+        </form>
         <div class="ml-auto flex items-center gap-2">
             <label class="text-sm text-gray-700">Per page</label>
             <select
