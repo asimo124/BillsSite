@@ -80,7 +80,14 @@ if (!isset($_SESSION['user'])) {
                     </div>
                 </div>
                 
-                <h3 class="h4" style="margin-top: 24px; padding-bottom: 8px; border-bottom: 1px solid #ddd;">Loan #1</h3>
+                <div style="margin-top: 24px; padding-bottom: 8px; border-bottom: 1px solid #ddd; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;">
+                    <h3 class="h4" style="margin: 0;">Loan #1</h3>
+                    <div>
+                        <button type="button" class="btn btn-default btn-sm" style="margin-right: 6px;" @click="unshiftLoan" title="Insert a blank loan at #1 and push the others down">Insert New First Loan</button>
+                        <button type="button" class="btn btn-default btn-sm" :disabled="!canShiftLoan" @click="shiftLoan" title="Remove loan #1 and move the others up">Remove First Loan</button>
+                    </div>
+                </div>
+                <div v-if="loanArrayError" class="alert alert-warning" role="alert" style="margin-top: 12px;">{{ loanArrayError }}</div>
                 <div class="form-group">
                     <label class="col-sm-4 control-label" for="loan1_name">Name</label>
                     <div class="col-sm-8">
@@ -303,6 +310,7 @@ if (!isset($_SESSION['user'])) {
                         </tr>
                     </tbody>
                 </table>
+                <pre v-if="fifteenthRunningTotalsText(loan1Schedule)" style="margin-top: 8px;">{{ fifteenthRunningTotalsText(loan1Schedule) }}</pre>
                 <p v-if="loan1PayoffLeftover !== null" class="lead" style="margin-top: 12px;">
                     Money left over from paying {{ loan1_name }}: <strong>${{ formatMoney(loan1PayoffLeftover) }}</strong>
                 </p>
@@ -347,6 +355,7 @@ if (!isset($_SESSION['user'])) {
                         </tr>
                     </tbody>
                 </table>
+                <pre v-if="fifteenthRunningTotalsText(loan2Schedule)" style="margin-top: 8px;">{{ fifteenthRunningTotalsText(loan2Schedule) }}</pre>
                 <p v-if="loan2PayoffLeftover !== null" class="lead" style="margin-top: 12px;">
                     Money left over from paying {{ (loan2_name && loan2_name.trim()) ? loan2_name : 'Loan #2' }}: <strong>${{ formatMoney(loan2PayoffLeftover) }}</strong>
                 </p>
@@ -388,6 +397,7 @@ if (!isset($_SESSION['user'])) {
                         </tr>
                     </tbody>
                 </table>
+                <pre v-if="fifteenthRunningTotalsText(loan3Schedule)" style="margin-top: 8px;">{{ fifteenthRunningTotalsText(loan3Schedule) }}</pre>
                 <p v-if="loan3PayoffLeftover !== null" class="lead" style="margin-top: 12px;">
                     Money left over from paying {{ (loan3_name && loan3_name.trim()) ? loan3_name : 'Loan #3' }}: <strong>${{ formatMoney(loan3PayoffLeftover) }}</strong>
                 </p>
@@ -423,6 +433,7 @@ if (!isset($_SESSION['user'])) {
                         </tr>
                     </tbody>
                 </table>
+                <pre v-if="fifteenthRunningTotalsText(loan4Schedule)" style="margin-top: 8px;">{{ fifteenthRunningTotalsText(loan4Schedule) }}</pre>
                 <p v-if="loan4PayoffLeftover !== null" class="lead" style="margin-top: 12px;">
                     Money left over from paying {{ (loan4_name && loan4_name.trim()) ? loan4_name : 'Loan #4' }}: <strong>${{ formatMoney(loan4PayoffLeftover) }}</strong>
                 </p>
@@ -452,6 +463,7 @@ if (!isset($_SESSION['user'])) {
                         </tr>
                     </tbody>
                 </table>
+                <pre v-if="fifteenthRunningTotalsText(loan5Schedule)" style="margin-top: 8px;">{{ fifteenthRunningTotalsText(loan5Schedule) }}</pre>
                 <p v-if="loan5PayoffLeftover !== null" class="lead" style="margin-top: 12px;">
                     Money left over from paying {{ (loan5_name && loan5_name.trim()) ? loan5_name : 'Loan #5' }}: <strong>${{ formatMoney(loan5PayoffLeftover) }}</strong>
                 </p>
@@ -468,46 +480,63 @@ if (!isset($_SESSION['user'])) {
 const { createApp } = Vue;
 
 const LOAN_COUNTDOWN_STORAGE_KEY = 'loanCountdownForm';
+const LOAN_SLOT_COUNT = 5;
+const LOAN_SLOT_FIELDS = [
+    'name',
+    'remaining_balance',
+    'adjust_disposable_per_paycheck1',
+    'adjust_disposable_per_paycheck15',
+    'min_to_principal',
+    'day_of_month',
+];
+
+function emptyLoanSlot() {
+    return {
+        name: '',
+        remaining_balance: null,
+        adjust_disposable_per_paycheck1: null,
+        adjust_disposable_per_paycheck15: null,
+        min_to_principal: null,
+        day_of_month: null,
+    };
+}
 
 function defaultLoanFormState() {
-    return {
+    const state = {
         disposable_per_paycheck1: null,
         disposable_per_paycheck15: null,
         already_spent_on_first_paycheck: null,
         already_spent_on_second_paycheck: null,
         starting_month: '',
         push_to_next_paycheck: false,
-        loan1_name: '',
-        loan1_remaining_balance: null,
-        loan1_adjust_disposable_per_paycheck1: null,
-        loan1_adjust_disposable_per_paycheck15: null,
-        loan1_min_to_principal: null,
-        loan1_day_of_month: null,
-        loan2_name: '',
-        loan2_remaining_balance: null,
-        loan2_adjust_disposable_per_paycheck1: null,
-        loan2_adjust_disposable_per_paycheck15: null,
-        loan2_min_to_principal: null,
-        loan2_day_of_month: null,
-        loan3_name: '',
-        loan3_remaining_balance: null,
-        loan3_adjust_disposable_per_paycheck1: null,
-        loan3_adjust_disposable_per_paycheck15: null,
-        loan3_min_to_principal: null,
-        loan3_day_of_month: null,
-        loan4_name: '',
-        loan4_remaining_balance: null,
-        loan4_adjust_disposable_per_paycheck1: null,
-        loan4_adjust_disposable_per_paycheck15: null,
-        loan4_min_to_principal: null,
-        loan4_day_of_month: null,
-        loan5_name: '',
-        loan5_remaining_balance: null,
-        loan5_adjust_disposable_per_paycheck1: null,
-        loan5_adjust_disposable_per_paycheck15: null,
-        loan5_min_to_principal: null,
-        loan5_day_of_month: null,
     };
+    for (let n = 1; n <= LOAN_SLOT_COUNT; n++) {
+        const slot = emptyLoanSlot();
+        LOAN_SLOT_FIELDS.forEach((field) => {
+            state[`loan${n}_${field}`] = slot[field];
+        });
+    }
+    return state;
+}
+
+function loanSlotHasData(slot) {
+    if (!slot) {
+        return false;
+    }
+    if (slot.name != null && String(slot.name).trim() !== '') {
+        return true;
+    }
+    const numberFields = [
+        'remaining_balance',
+        'adjust_disposable_per_paycheck1',
+        'adjust_disposable_per_paycheck15',
+        'min_to_principal',
+        'day_of_month',
+    ];
+    return numberFields.some((field) => {
+        const v = slot[field];
+        return v !== null && v !== undefined && v !== '';
+    });
 }
 
 /**
@@ -679,9 +708,18 @@ createApp({
             loan4BalanceAfterLoan3Spill: null,
             loan5PayoffLeftover: null,
             loan5BalanceAfterLoan4Spill: null,
+            loanArrayError: '',
         };
     },
     computed: {
+        canShiftLoan() {
+            for (let n = 1; n <= LOAN_SLOT_COUNT; n++) {
+                if (loanSlotHasData(this.getLoanSlot(n))) {
+                    return true;
+                }
+            }
+            return false;
+        },
         startingMonthOptions() {
             const out = [];
             const d = new Date();
@@ -748,7 +786,62 @@ createApp({
         this.calculateLoanCountdown();
     },
     methods: {
+        getLoanSlot(n) {
+            const slot = emptyLoanSlot();
+            LOAN_SLOT_FIELDS.forEach((field) => {
+                slot[field] = this[`loan${n}_${field}`];
+            });
+            return slot;
+        },
+        setLoanSlot(n, slot) {
+            const src = slot || emptyLoanSlot();
+            LOAN_SLOT_FIELDS.forEach((field) => {
+                this[`loan${n}_${field}`] = Object.prototype.hasOwnProperty.call(src, field)
+                    ? src[field]
+                    : emptyLoanSlot()[field];
+            });
+        },
+        getLoanSlots() {
+            const slots = [];
+            for (let n = 1; n <= LOAN_SLOT_COUNT; n++) {
+                slots.push(this.getLoanSlot(n));
+            }
+            return slots;
+        },
+        setLoanSlots(slots) {
+            for (let n = 1; n <= LOAN_SLOT_COUNT; n++) {
+                this.setLoanSlot(n, slots[n - 1] || emptyLoanSlot());
+            }
+        },
+        unshiftLoan() {
+            this.loanArrayError = '';
+            const slots = this.getLoanSlots();
+            if (loanSlotHasData(slots[LOAN_SLOT_COUNT - 1])) {
+                this.loanArrayError =
+                    'Cannot unshift: all 5 loan slots are in use. Clear Loan #5 first (there is no Loan #6).';
+                return;
+            }
+            slots.pop();
+            slots.unshift(emptyLoanSlot());
+            this.setLoanSlots(slots);
+            this.persistLoanForm();
+            this.calculateLoanCountdown();
+        },
+        shiftLoan() {
+            this.loanArrayError = '';
+            const slots = this.getLoanSlots();
+            if (!slots.some(loanSlotHasData)) {
+                this.loanArrayError = 'Nothing to shift: all loan slots are already empty.';
+                return;
+            }
+            slots.shift();
+            slots.push(emptyLoanSlot());
+            this.setLoanSlots(slots);
+            this.persistLoanForm();
+            this.calculateLoanCountdown();
+        },
         persistLoanForm() {
+            this.loanArrayError = '';
             const payload = {
                 disposable_per_paycheck1: this.disposable_per_paycheck1,
                 disposable_per_paycheck15: this.disposable_per_paycheck15,
@@ -756,37 +849,13 @@ createApp({
                 already_spent_on_second_paycheck: this.already_spent_on_second_paycheck,
                 starting_month: this.starting_month,
                 push_to_next_paycheck: this.push_to_next_paycheck,
-                loan1_name: this.loan1_name,
-                loan1_remaining_balance: this.loan1_remaining_balance,
-                loan1_adjust_disposable_per_paycheck1: this.loan1_adjust_disposable_per_paycheck1,
-                loan1_adjust_disposable_per_paycheck15: this.loan1_adjust_disposable_per_paycheck15,
-                loan1_min_to_principal: this.loan1_min_to_principal,
-                loan1_day_of_month: this.loan1_day_of_month,
-                loan2_name: this.loan2_name,
-                loan2_remaining_balance: this.loan2_remaining_balance,
-                loan2_adjust_disposable_per_paycheck1: this.loan2_adjust_disposable_per_paycheck1,
-                loan2_adjust_disposable_per_paycheck15: this.loan2_adjust_disposable_per_paycheck15,
-                loan2_min_to_principal: this.loan2_min_to_principal,
-                loan2_day_of_month: this.loan2_day_of_month,
-                loan3_name: this.loan3_name,
-                loan3_remaining_balance: this.loan3_remaining_balance,
-                loan3_adjust_disposable_per_paycheck1: this.loan3_adjust_disposable_per_paycheck1,
-                loan3_adjust_disposable_per_paycheck15: this.loan3_adjust_disposable_per_paycheck15,
-                loan3_min_to_principal: this.loan3_min_to_principal,
-                loan3_day_of_month: this.loan3_day_of_month,
-                loan4_name: this.loan4_name,
-                loan4_remaining_balance: this.loan4_remaining_balance,
-                loan4_adjust_disposable_per_paycheck1: this.loan4_adjust_disposable_per_paycheck1,
-                loan4_adjust_disposable_per_paycheck15: this.loan4_adjust_disposable_per_paycheck15,
-                loan4_min_to_principal: this.loan4_min_to_principal,
-                loan4_day_of_month: this.loan4_day_of_month,
-                loan5_name: this.loan5_name,
-                loan5_remaining_balance: this.loan5_remaining_balance,
-                loan5_adjust_disposable_per_paycheck1: this.loan5_adjust_disposable_per_paycheck1,
-                loan5_adjust_disposable_per_paycheck15: this.loan5_adjust_disposable_per_paycheck15,
-                loan5_min_to_principal: this.loan5_min_to_principal,
-                loan5_day_of_month: this.loan5_day_of_month,
             };
+            this.getLoanSlots().forEach((slot, i) => {
+                const n = i + 1;
+                LOAN_SLOT_FIELDS.forEach((field) => {
+                    payload[`loan${n}_${field}`] = slot[field];
+                });
+            });
             try {
                 localStorage.setItem(LOAN_COUNTDOWN_STORAGE_KEY, JSON.stringify(payload));
             } catch (e) {
@@ -919,6 +988,7 @@ createApp({
             this.loan4BalanceAfterLoan3Spill = null;
             this.loan5PayoffLeftover = null;
             this.loan5BalanceAfterLoan4Spill = null;
+            this.loanArrayError = '';
         },
         formatMoney(value) {
             const n = Number(value);
@@ -926,6 +996,20 @@ createApp({
                 return '0.00';
             }
             return n.toFixed(2);
+        },
+        fifteenthRunningTotalsText(schedule) {
+            if (!Array.isArray(schedule) || !schedule.length) {
+                return '';
+            }
+            return schedule
+                .filter((row) => Number(row.day) === 15)
+                .map((row) => {
+                    const n = Number(row.runningTotal);
+                    const amount = Number.isFinite(n) ? String(Math.round(n)) : '0';
+                    const datePrefix = row.dateShort || 'Day 15';
+                    return `${datePrefix} - ${amount}`;
+                })
+                .join('\n');
         },
         // async addDeterminedDisposable() {
         //     try {
@@ -1104,12 +1188,16 @@ createApp({
                     }
                 }
                 const dateLabel = formatPaycheckDateLabel(pcDate);
+                const day = pcDate.getDate();
+                const dateShort = pcDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
                 if (activeN === 1) {
                     const applied1 = appliedPrincipalThisPaycheck(bals[0], pool, this.loan1_min_to_principal);
                     bals[0] = roundMoney(bals[0] - applied1);
                     this.loan1Schedule.push({
                         dateLabel,
+                        day,
+                        dateShort,
                         disposableApplied: applied1,
                         runningTotal: bals[0],
                     });
@@ -1129,6 +1217,8 @@ createApp({
                     bals[1] = roundMoney(bals[1] - applied2);
                     this.loan2Schedule.push({
                         dateLabel,
+                        day,
+                        dateShort,
                         disposableApplied: applied2,
                         runningTotal: bals[1],
                     });
@@ -1148,6 +1238,8 @@ createApp({
                     bals[2] = roundMoney(bals[2] - applied3);
                     this.loan3Schedule.push({
                         dateLabel,
+                        day,
+                        dateShort,
                         disposableApplied: applied3,
                         runningTotal: bals[2],
                     });
@@ -1167,6 +1259,8 @@ createApp({
                     bals[3] = roundMoney(bals[3] - applied4);
                     this.loan4Schedule.push({
                         dateLabel,
+                        day,
+                        dateShort,
                         disposableApplied: applied4,
                         runningTotal: bals[3],
                     });
@@ -1186,6 +1280,8 @@ createApp({
                     bals[4] = roundMoney(bals[4] - applied5);
                     this.loan5Schedule.push({
                         dateLabel,
+                        day,
+                        dateShort,
                         disposableApplied: applied5,
                         runningTotal: bals[4],
                     });

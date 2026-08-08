@@ -2,23 +2,47 @@
 include "../inc/includes.php";
 //ini_set("display_errors", 1);
 
-$keyword = isset($_REQUEST['keyword']) ? trim($_REQUEST['keyword']) : '';
+$keywordTitle = isset($_REQUEST['keyword_title']) ? trim($_REQUEST['keyword_title']) : '';
+$keywordBody = isset($_REQUEST['keyword_body']) ? trim($_REQUEST['keyword_body']) : '';
 $startDate = isset($_REQUEST['start_date']) ? trim($_REQUEST['start_date']) : '';
 $endDate = isset($_REQUEST['end_date']) ? trim($_REQUEST['end_date']) : '';
 $page = isset($_REQUEST['page']) ? max(1, intval($_REQUEST['page'])) : 1;
 $perPage = isset($_REQUEST['per_page']) ? intval($_REQUEST['per_page']) : 20;
+$sortBy = isset($_REQUEST['sort_by']) ? trim($_REQUEST['sort_by']) : 'modification_date';
+$sortDir = isset($_REQUEST['sort_dir']) ? strtoupper(trim($_REQUEST['sort_dir'])) : 'DESC';
 
 if (!in_array($perPage, [20, 50, 100], true)) {
     $perPage = 20;
 }
 
+$allowedSortBy = [
+    'modification_date' => 'modification_date',
+    'creation_date' => 'creation_date',
+    'name' => 'name',
+    'folder' => 'folder'
+];
+
+if (!isset($allowedSortBy[$sortBy])) {
+    $sortBy = 'modification_date';
+} else {
+    $sortBy = $allowedSortBy[$sortBy];
+}
+
+if ($sortDir !== 'ASC' && $sortDir !== 'DESC') {
+    $sortDir = 'DESC';
+}
+
 $sqlWhere = " AND (to_delete IS NULL OR to_delete = 0) ";
 $params = [];
 
-if ($keyword !== '') {
-    $sqlWhere .= " AND (name LIKE :keyword_name OR body LIKE :keyword_body) ";
-    $params['keyword_name'] = '%' . $keyword . '%';
-    $params['keyword_body'] = '%' . $keyword . '%';
+if ($keywordTitle !== '') {
+    $sqlWhere .= " AND name LIKE :keyword_title ";
+    $params['keyword_title'] = '%' . $keywordTitle . '%';
+}
+
+if ($keywordBody !== '') {
+    $sqlWhere .= " AND body LIKE :keyword_body ";
+    $params['keyword_body'] = '%' . $keywordBody . '%';
 }
 
 if ($startDate !== '') {
@@ -55,7 +79,7 @@ $sql = "SELECT id, id_str, name, folder, account, creation_date, modification_da
         FROM apple_notes
         WHERE 1
         $sqlWhere
-        ORDER BY modification_date DESC, id DESC
+        ORDER BY $sortBy $sortDir, id DESC
         LIMIT $perPage OFFSET $offset";
 
 $results = getQuery($sql, $params);

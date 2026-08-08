@@ -75,16 +75,44 @@ if (!isset($_SESSION['user'])) {
 
     <h2 class="text-2xl font-bold mb-4">Notes</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-        <div class="md:col-span-2">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Keyword</label>
-            <input
-                type="text"
-                v-model="filters.keyword"
-                @keyup.enter="applyFilters"
-                placeholder="Search title or body..."
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            />
+    <div class="grid grid-cols-1 md:grid-cols-6 gap-4 mb-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Title keyword</label>
+            <div class="relative">
+                <input
+                    type="text"
+                    v-model="filters.keyword_title"
+                    @keyup.enter="applyFilters"
+                    placeholder="Search title..."
+                    class="w-full px-3 py-2 pr-9 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                />
+                <button
+                    v-if="filters.keyword_title"
+                    type="button"
+                    @click="clearKeyword('keyword_title')"
+                    class="absolute inset-y-0 right-0 px-3 text-gray-400 hover:text-gray-700"
+                    aria-label="Clear title keyword"
+                >&times;</button>
+            </div>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Body keyword</label>
+            <div class="relative">
+                <input
+                    type="text"
+                    v-model="filters.keyword_body"
+                    @keyup.enter="applyFilters"
+                    placeholder="Search body..."
+                    class="w-full px-3 py-2 pr-9 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                />
+                <button
+                    v-if="filters.keyword_body"
+                    type="button"
+                    @click="clearKeyword('keyword_body')"
+                    class="absolute inset-y-0 right-0 px-3 text-gray-400 hover:text-gray-700"
+                    aria-label="Clear body keyword"
+                >&times;</button>
+            </div>
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Mod start</label>
@@ -101,6 +129,30 @@ if (!isset($_SESSION['user'])) {
                 v-model="filters.end_date"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Sort by</label>
+            <select
+                v-model="filters.sort_by"
+                @change="applyFilters"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            >
+                <option value="modification_date">Modification date</option>
+                <option value="creation_date">Creation date</option>
+                <option value="name">Title</option>
+                <option value="folder">Folder</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Sort direction</label>
+            <select
+                v-model="filters.sort_dir"
+                @change="applyFilters"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            >
+                <option value="DESC">DESC</option>
+                <option value="ASC">ASC</option>
+            </select>
         </div>
     </div>
 
@@ -210,7 +262,7 @@ if (!isset($_SESSION['user'])) {
             Showing {{ notes.length ? ((page - 1) * perPage) + 1 : 0 }}–{{ Math.min(page * perPage, total) }}
             of {{ total }}
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-1">
             <button
                 type="button"
                 @click="goToPage(page - 1)"
@@ -219,7 +271,20 @@ if (!isset($_SESSION['user'])) {
             >
                 Previous
             </button>
-            <span class="text-sm text-gray-700">Page {{ page }} of {{ totalPages }}</span>
+            <template v-for="(item, idx) in pageNumbers" :key="'p-' + idx">
+                <span v-if="item === '...'" class="px-2 text-gray-500">…</span>
+                <button
+                    v-else
+                    type="button"
+                    @click="goToPage(item)"
+                    :disabled="loading"
+                    :class="item === page
+                        ? 'px-3 py-2 border border-blue-500 bg-blue-500 text-white rounded'
+                        : 'px-3 py-2 border border-gray-300 rounded hover:bg-gray-100'"
+                >
+                    {{ item }}
+                </button>
+            </template>
             <button
                 type="button"
                 @click="goToPage(page + 1)"
@@ -248,17 +313,58 @@ if (!isset($_SESSION['user'])) {
     }
 
     const { createApp } = Vue;
+    const FILTER_STORAGE_KEY = 'apple_notes_filters';
+
+    function getDefaultFilters() {
+        return {
+            keyword_title: '',
+            keyword_body: '',
+            start_date: '',
+            end_date: '',
+            sort_by: 'modification_date',
+            sort_dir: 'DESC'
+        };
+    }
+
+    function loadStoredFilters() {
+        try {
+            const raw = localStorage.getItem(FILTER_STORAGE_KEY);
+            if (!raw) {
+                return null;
+            }
+            const parsed = JSON.parse(raw);
+            if (!parsed || typeof parsed !== 'object') {
+                return null;
+            }
+            return parsed;
+        } catch (e) {
+            return null;
+        }
+    }
 
     const app = createApp({
             data() {
+                const stored = loadStoredFilters();
+                const defaults = getDefaultFilters();
                 return {
                     notes: [],
                     selectedIds: [],
                     expandedIds: [],
                     filters: {
-                        keyword: '',
-                        start_date: '',
-                        end_date: ''
+                        keyword_title: stored && typeof stored.keyword_title === 'string'
+                            ? stored.keyword_title
+                            : (stored && typeof stored.keyword === 'string' ? stored.keyword : defaults.keyword_title),
+                        keyword_body: stored && typeof stored.keyword_body === 'string'
+                            ? stored.keyword_body
+                            : defaults.keyword_body,
+                        start_date: stored && typeof stored.start_date === 'string' ? stored.start_date : defaults.start_date,
+                        end_date: stored && typeof stored.end_date === 'string' ? stored.end_date : defaults.end_date,
+                        sort_by: stored && ['modification_date', 'creation_date', 'name', 'folder'].includes(stored.sort_by)
+                            ? stored.sort_by
+                            : defaults.sort_by,
+                        sort_dir: stored && (stored.sort_dir === 'ASC' || stored.sort_dir === 'DESC')
+                            ? stored.sort_dir
+                            : defaults.sort_dir
                     },
                     page: 1,
                     perPage: 20,
@@ -276,22 +382,63 @@ if (!isset($_SESSION['user'])) {
                 },
                 someSelected() {
                     return this.selectedIds.length > 0 && !this.allSelected;
+                },
+                pageNumbers() {
+                    const total = this.totalPages;
+                    const current = this.page;
+                    if (total <= 1) {
+                        return [1];
+                    }
+                    if (total <= 9) {
+                        return Array.from({ length: total }, (_, i) => i + 1);
+                    }
+
+                    const pages = new Set([1, total, current, current - 1, current + 1, current - 2, current + 2]);
+                    const sorted = [...pages].filter(p => p >= 1 && p <= total).sort((a, b) => a - b);
+                    const result = [];
+                    for (let i = 0; i < sorted.length; i++) {
+                        if (i > 0 && sorted[i] - sorted[i - 1] > 1) {
+                            result.push('...');
+                        }
+                        result.push(sorted[i]);
+                    }
+                    return result;
+                }
+            },
+            watch: {
+                filters: {
+                    deep: true,
+                    handler(value) {
+                        this.persistFilters(value);
+                    }
                 }
             },
             mounted() {
                 this.loadNotes();
             },
             methods: {
+                persistFilters(filters) {
+                    try {
+                        localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify(filters || this.filters));
+                    } catch (e) {
+                        // ignore quota / private mode errors
+                    }
+                },
                 async loadNotes() {
                     this.loading = true;
                     this.error = '';
                     try {
                         const params = new URLSearchParams({
                             page: String(this.page),
-                            per_page: String(this.perPage)
+                            per_page: String(this.perPage),
+                            sort_by: this.filters.sort_by,
+                            sort_dir: this.filters.sort_dir
                         });
-                        if (this.filters.keyword) {
-                            params.set('keyword', this.filters.keyword);
+                        if (this.filters.keyword_title) {
+                            params.set('keyword_title', this.filters.keyword_title);
+                        }
+                        if (this.filters.keyword_body) {
+                            params.set('keyword_body', this.filters.keyword_body);
                         }
                         if (this.filters.start_date) {
                             params.set('start_date', this.filters.start_date);
@@ -329,14 +476,21 @@ if (!isset($_SESSION['user'])) {
                 applyFilters() {
                     this.page = 1;
                     this.message = '';
+                    this.persistFilters();
                     this.loadNotes();
                 },
+                clearKeyword(field) {
+                    if (field !== 'keyword_title' && field !== 'keyword_body') {
+                        return;
+                    }
+                    this.filters[field] = '';
+                    this.applyFilters();
+                },
                 clearFilters() {
-                    this.filters.keyword = '';
-                    this.filters.start_date = '';
-                    this.filters.end_date = '';
+                    this.filters = getDefaultFilters();
                     this.page = 1;
                     this.message = '';
+                    this.persistFilters();
                     this.loadNotes();
                 },
                 changePerPage() {
@@ -368,7 +522,11 @@ if (!isset($_SESSION['user'])) {
                     if (!value) {
                         return '—';
                     }
-                    return String(value).replace('T', ' ').substring(0, 16);
+                    const match = String(value).match(/^(\d{4})-(\d{2})-(\d{2})/);
+                    if (!match) {
+                        return String(value);
+                    }
+                    return match[2] + '/' + match[3] + '/' + match[1];
                 },
                 async deleteSelected() {
                     if (this.selectedIds.length === 0) {
