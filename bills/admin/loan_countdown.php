@@ -119,6 +119,12 @@ if (!isset($_SESSION['user'])) {
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-4 control-label" for="loan1_minimum_payment_percent">Minimum Payment Percent</label>
+                    <div class="col-sm-8">
+                        <input type="number" id="loan1_minimum_payment_percent" v-model.number="loan1_minimum_payment_percent" class="form-control" step="any" min="0" @blur="persistLoanForm" />
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-4 control-label" for="loan1_day_of_month">Day of month</label>
                     <div class="col-sm-8">
                         <input type="number" id="loan1_day_of_month" v-model.number="loan1_day_of_month" class="form-control" step="1" min="1" max="31" @blur="persistLoanForm" />
@@ -154,6 +160,12 @@ if (!isset($_SESSION['user'])) {
                     <label class="col-sm-4 control-label" for="loan2_min_to_principal">Min to principal</label>
                     <div class="col-sm-8">
                         <input type="number" id="loan2_min_to_principal" v-model.number="loan2_min_to_principal" class="form-control" step="0.01" min="0" @blur="persistLoanForm" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label" for="loan2_minimum_payment_percent">Minimum Payment Percent</label>
+                    <div class="col-sm-8">
+                        <input type="number" id="loan2_minimum_payment_percent" v-model.number="loan2_minimum_payment_percent" class="form-control" step="any" min="0" @blur="persistLoanForm" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -195,6 +207,12 @@ if (!isset($_SESSION['user'])) {
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-4 control-label" for="loan3_minimum_payment_percent">Minimum Payment Percent</label>
+                    <div class="col-sm-8">
+                        <input type="number" id="loan3_minimum_payment_percent" v-model.number="loan3_minimum_payment_percent" class="form-control" step="any" min="0" @blur="persistLoanForm" />
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-4 control-label" for="loan3_day_of_month">Day of month</label>
                     <div class="col-sm-8">
                         <input type="number" id="loan3_day_of_month" v-model.number="loan3_day_of_month" class="form-control" step="1" min="1" max="31" @blur="persistLoanForm" />
@@ -233,6 +251,12 @@ if (!isset($_SESSION['user'])) {
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-4 control-label" for="loan4_minimum_payment_percent">Minimum Payment Percent</label>
+                    <div class="col-sm-8">
+                        <input type="number" id="loan4_minimum_payment_percent" v-model.number="loan4_minimum_payment_percent" class="form-control" step="any" min="0" @blur="persistLoanForm" />
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-4 control-label" for="loan4_day_of_month">Day of month</label>
                     <div class="col-sm-8">
                         <input type="number" id="loan4_day_of_month" v-model.number="loan4_day_of_month" class="form-control" step="1" min="1" max="31" @blur="persistLoanForm" />
@@ -268,6 +292,12 @@ if (!isset($_SESSION['user'])) {
                     <label class="col-sm-4 control-label" for="loan5_min_to_principal">Min to principal</label>
                     <div class="col-sm-8">
                         <input type="number" id="loan5_min_to_principal" v-model.number="loan5_min_to_principal" class="form-control" step="0.01" min="0" @blur="persistLoanForm" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label" for="loan5_minimum_payment_percent">Minimum Payment Percent</label>
+                    <div class="col-sm-8">
+                        <input type="number" id="loan5_minimum_payment_percent" v-model.number="loan5_minimum_payment_percent" class="form-control" step="any" min="0" @blur="persistLoanForm" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -310,7 +340,7 @@ if (!isset($_SESSION['user'])) {
                         </tr>
                     </tbody>
                 </table>
-                <pre v-if="fifteenthRunningTotalsText(loan1Schedule)" style="margin-top: 8px;">{{ fifteenthRunningTotalsText(loan1Schedule) }}</pre>
+                <pre v-if="fifteenthRunningTotalsText(loan1Schedule, loan1_minimum_payment_percent)" style="margin-top: 8px;">{{ fifteenthRunningTotalsText(loan1Schedule, loan1_minimum_payment_percent) }}</pre>
                 <p v-if="loan1PayoffLeftover !== null" class="lead" style="margin-top: 12px;">
                     Money left over from paying {{ loan1_name }}: <strong>${{ formatMoney(loan1PayoffLeftover) }}</strong>
                 </p>
@@ -355,7 +385,7 @@ if (!isset($_SESSION['user'])) {
                         </tr>
                     </tbody>
                 </table>
-                <pre v-if="fifteenthRunningTotalsText(loan2Schedule)" style="margin-top: 8px;">{{ fifteenthRunningTotalsText(loan2Schedule) }}</pre>
+                <pre v-if="fifteenthRunningTotalsText(loan2Schedule, loan2_minimum_payment_percent)" style="margin-top: 8px;">{{ fifteenthRunningTotalsText(loan2Schedule, loan2_minimum_payment_percent) }}</pre>
                 <p v-if="loan2PayoffLeftover !== null" class="lead" style="margin-top: 12px;">
                     Money left over from paying {{ (loan2_name && loan2_name.trim()) ? loan2_name : 'Loan #2' }}: <strong>${{ formatMoney(loan2PayoffLeftover) }}</strong>
                 </p>
@@ -397,7 +427,7 @@ if (!isset($_SESSION['user'])) {
                         </tr>
                     </tbody>
                 </table>
-                <pre v-if="fifteenthRunningTotalsText(loan3Schedule)" style="margin-top: 8px;">{{ fifteenthRunningTotalsText(loan3Schedule) }}</pre>
+                <pre v-if="fifteenthRunningTotalsText(loan3Schedule, loan3_minimum_payment_percent)" style="margin-top: 8px;">{{ fifteenthRunningTotalsText(loan3Schedule, loan3_minimum_payment_percent) }}</pre>
                 <p v-if="loan3PayoffLeftover !== null" class="lead" style="margin-top: 12px;">
                     Money left over from paying {{ (loan3_name && loan3_name.trim()) ? loan3_name : 'Loan #3' }}: <strong>${{ formatMoney(loan3PayoffLeftover) }}</strong>
                 </p>
@@ -433,7 +463,7 @@ if (!isset($_SESSION['user'])) {
                         </tr>
                     </tbody>
                 </table>
-                <pre v-if="fifteenthRunningTotalsText(loan4Schedule)" style="margin-top: 8px;">{{ fifteenthRunningTotalsText(loan4Schedule) }}</pre>
+                <pre v-if="fifteenthRunningTotalsText(loan4Schedule, loan4_minimum_payment_percent)" style="margin-top: 8px;">{{ fifteenthRunningTotalsText(loan4Schedule, loan4_minimum_payment_percent) }}</pre>
                 <p v-if="loan4PayoffLeftover !== null" class="lead" style="margin-top: 12px;">
                     Money left over from paying {{ (loan4_name && loan4_name.trim()) ? loan4_name : 'Loan #4' }}: <strong>${{ formatMoney(loan4PayoffLeftover) }}</strong>
                 </p>
@@ -463,7 +493,7 @@ if (!isset($_SESSION['user'])) {
                         </tr>
                     </tbody>
                 </table>
-                <pre v-if="fifteenthRunningTotalsText(loan5Schedule)" style="margin-top: 8px;">{{ fifteenthRunningTotalsText(loan5Schedule) }}</pre>
+                <pre v-if="fifteenthRunningTotalsText(loan5Schedule, loan5_minimum_payment_percent)" style="margin-top: 8px;">{{ fifteenthRunningTotalsText(loan5Schedule, loan5_minimum_payment_percent) }}</pre>
                 <p v-if="loan5PayoffLeftover !== null" class="lead" style="margin-top: 12px;">
                     Money left over from paying {{ (loan5_name && loan5_name.trim()) ? loan5_name : 'Loan #5' }}: <strong>${{ formatMoney(loan5PayoffLeftover) }}</strong>
                 </p>
@@ -487,6 +517,7 @@ const LOAN_SLOT_FIELDS = [
     'adjust_disposable_per_paycheck1',
     'adjust_disposable_per_paycheck15',
     'min_to_principal',
+    'minimum_payment_percent',
     'day_of_month',
 ];
 
@@ -497,6 +528,7 @@ function emptyLoanSlot() {
         adjust_disposable_per_paycheck1: null,
         adjust_disposable_per_paycheck15: null,
         min_to_principal: null,
+        minimum_payment_percent: null,
         day_of_month: null,
     };
 }
@@ -531,6 +563,7 @@ function loanSlotHasData(slot) {
         'adjust_disposable_per_paycheck1',
         'adjust_disposable_per_paycheck15',
         'min_to_principal',
+        'minimum_payment_percent',
         'day_of_month',
     ];
     return numberFields.some((field) => {
@@ -934,6 +967,11 @@ createApp({
                     'loan3_min_to_principal',
                     'loan4_min_to_principal',
                     'loan5_min_to_principal',
+                    'loan1_minimum_payment_percent',
+                    'loan2_minimum_payment_percent',
+                    'loan3_minimum_payment_percent',
+                    'loan4_minimum_payment_percent',
+                    'loan5_minimum_payment_percent',
                     'loan1_day_of_month',
                     'loan2_day_of_month',
                     'loan3_day_of_month',
@@ -997,17 +1035,35 @@ createApp({
             }
             return n.toFixed(2);
         },
-        fifteenthRunningTotalsText(schedule) {
+        fifteenthRunningTotalsText(schedule, minimumPaymentPercent) {
             if (!Array.isArray(schedule) || !schedule.length) {
                 return '';
             }
-            return schedule
+            const pct = Number(minimumPaymentPercent);
+            const showMinPmt = Number.isFinite(pct) && pct > 0;
+            const rows = schedule
                 .filter((row) => Number(row.day) === 15)
                 .map((row) => {
                     const n = Number(row.runningTotal);
                     const amount = Number.isFinite(n) ? String(Math.round(n)) : '0';
                     const datePrefix = row.dateShort || 'Day 15';
-                    return `${datePrefix} - ${amount}`;
+                    const bal = Number.isFinite(n) ? n : 0;
+                    const minPmt = showMinPmt ? String(Math.round(bal * (pct / 100))) : '';
+                    return { datePrefix, amount, minPmt };
+                });
+            if (!rows.length) {
+                return '';
+            }
+            const dateWidth = Math.max(...rows.map((r) => r.datePrefix.length));
+            const amountWidth = Math.max(...rows.map((r) => r.amount.length));
+            const padEnd = (s, width) => s + ' '.repeat(Math.max(0, width - s.length));
+            return rows
+                .map((r) => {
+                    let line = `${padEnd(r.datePrefix, dateWidth)} | ${padEnd(r.amount, amountWidth)}`;
+                    if (showMinPmt) {
+                        line += ` | Min Pmt: ${r.minPmt}`;
+                    }
+                    return line;
                 })
                 .join('\n');
         },

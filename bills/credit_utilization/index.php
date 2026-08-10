@@ -52,6 +52,11 @@ $totalCreditLimit = 0;
 foreach ($loans as $index => $loan) {
     $totalDebtOwed += floatval($loan['debt_owed']);
     $totalCreditLimit += floatval($loan['credit_limit']);
+    if ($loan['credit_limit'] > 0) {
+        $loans[$index]['credit_utilization'] = round(($loan['debt_owed'] / $loan['credit_limit']), 4) * 100;
+    } else {
+        $loans[$index]['credit_utilization'] = 0;
+    }
     
     $adjustDisposableAmountAccum += floatval($loan['adjust_disposable_amount']);
     $loans[$index]['min_payment_accum'] = $minPaymentAccum;
@@ -241,6 +246,7 @@ $creditUtilization = number_format($creditUtilization, 2);
                     <th>Loan/Card</th>
                     <th>Debt Owed</th>
                     <th>Credit Limit</th>
+                    <th>Credit Utilization</th>
                     <th>Min Payment</th>
                     <th>Adjust Disposable Amount</th>
                     <th>Disposable</th>
@@ -254,6 +260,7 @@ $creditUtilization = number_format($creditUtilization, 2);
                         <td><?php echo htmlspecialchars($loan['title']); ?></td>
                         <td><?php echo '$' . number_format($loan['debt_owed'], 2); ?></td>
                         <td><?php echo '$' . number_format($loan['credit_limit'], 2); ?></td>
+                        <td><?php echo number_format($loan['credit_utilization'], 2) . '%'; ?></td>
                         <td><?php echo '$' . number_format($loan['min_payment_accum'], 2); ?></td>
                         <td><?php echo '$' . number_format($loan['adjust_disposable_amount_accum'], 2); ?></td>
                         <td><?php echo '$' . number_format($loan['min_payment_adjust_disposable'], 2); ?></td>
