@@ -20,6 +20,61 @@ if (!isset($_SESSION['user'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/nav.css" />
     <link rel="stylesheet" href="/css/bills_admin.css" />
+    <style>
+        .deduction-section {
+            margin-bottom: 8px;
+        }
+        .deduction-section .deduction-row {
+            margin-bottom: 8px;
+        }
+        .deduction-section .monthly-summary {
+            margin-top: 4px;
+            margin-bottom: 8px;
+        }
+        .deduction-section .monthly-summary .summary-label {
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 2px;
+        }
+        .deduction-section .monthly-summary .summary-value {
+            font-size: 16px;
+            font-weight: 600;
+            word-break: break-word;
+        }
+        .avg-item-holder .avg-inputs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: flex-start;
+        }
+        .avg-item-holder .avg-inputs > div {
+            flex: 1 1 calc(50% - 3px);
+            min-width: 70px;
+            max-width: 125px;
+        }
+        .avg-item-holder .avg-inputs .form-control {
+            width: 100%;
+        }
+        .avg-item-holder .avg-caption {
+            font-size: 10px;
+            color: #777;
+            display: block;
+            margin-top: 2px;
+        }
+        @media (max-width: 480px) {
+            .avg-item-holder .avg-inputs > div {
+                flex: 1 1 calc(50% - 3px);
+                max-width: none;
+            }
+            .deduction-section .monthly-summary {
+                text-align: left;
+            }
+            .date-nav-row .form-control {
+                width: 40% !important;
+                max-width: 90px;
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="container" id="app">
@@ -55,7 +110,7 @@ if (!isset($_SESSION['user'])) {
         </div>
     </div>
 
-    <div class="row">
+    <div class="row date-nav-row">
         <div class="col-xs-12 col-md-8 col-md-offset-2">
             <div class="row">
                 <div class="col-xs-5" style="text-align: right;">
@@ -73,6 +128,38 @@ if (!isset($_SESSION['user'])) {
     </div>
     <div style="clear: both; height: 16px"></div>
 
+    <div class="row deduction-section">
+        <div class="col-xs-12">
+            <div class="row deduction-row">
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" v-model="deductLabel1" placeholder="Label 1" @blur="saveDeductLabel1" />
+                </div>
+                <div class="col-xs-6">
+                    <input type="number" class="form-control" v-model="deductValue1" placeholder="0" @blur="saveDeductValue1" />
+                </div>
+            </div>
+            <div class="row deduction-row">
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" v-model="deductLabel2" placeholder="Label 2" @blur="saveDeductLabel2" />
+                </div>
+                <div class="col-xs-6">
+                    <input type="number" class="form-control" v-model="deductValue2" placeholder="0" @blur="saveDeductValue2" />
+                </div>
+            </div>
+            <div class="row monthly-summary">
+                <div class="col-xs-6">
+                    <div class="summary-label">Monthly Disposable</div>
+                    <div class="summary-value">{{ monthlyDisposableDisplay }}</div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="summary-label">After {{ deductLabel1 }} + {{ deductLabel2 }}</div>
+                    <div class="summary-value">{{ monthlyDisposableAfterDisplay }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="clear: both; height: 8px"></div>
+
     <div class="row">
         <div class="col-xs-12">
             <input id="determinedDisposable" style="width: 75px; display: inline-block;" type="number" class="form-control" placeholder="Determined Disposable" v-model="determinedDisposable" />&nbsp;
@@ -86,9 +173,9 @@ if (!isset($_SESSION['user'])) {
             <input type="number" class="form-control" placeholder="Extra Sum" style="width: 100%" v-model="extraSum" @change="calcFinalSums" />
         </div>
         <div class="col-xs-6">
-            <input type="checkbox" v-model="testMode" /> Test Mode
+            <input type="checkbox" v-model="testMode" @change="saveTestMode" /> Test Mode
             &nbsp; <input type="number" v-model="disposablePerDay" style="width: 50px;" @blur="updateDisposablePerDay" /> Disposable
-            &nbsp; <input type="checkbox" v-model="remove15Days" /> 15 Days
+            &nbsp; <input type="checkbox" v-model="remove15Days" @change="saveRemove15Days" /> 15 Days
         </div>
     </div>
 
@@ -119,10 +206,20 @@ if (!isset($_SESSION['user'])) {
         <div class="col-xs-6 averages_content">
             <h5>Sums</h5>
             <div v-for="(avg, index) in averages" :key="index" class="avg-item-holder">
-                <input type="number" 
-                    :value="avg" 
-                    :style="{ width: '125px', visibility: avg ? 'visible' : 'hidden' }" 
-                    class="form-control" readonly />
+                <div class="avg-inputs" :style="{ visibility: avg ? 'visible' : 'hidden' }">
+                    <div>
+                        <input type="number" 
+                            :value="avg" 
+                            class="form-control" readonly />
+                        <!-- <span class="avg-caption">paycheck</span> -->
+                    </div>
+                    <div>
+                        <input type="number" 
+                            :value="avg ? monthlyFromAvg(avg) : ''" 
+                            class="form-control" readonly />
+                        <!-- <span class="avg-caption">monthly</span> -->
+                    </div>
+                </div>
                 <div style="clear: both; height: 8px;"></div>
             </div>
         </div>
@@ -180,6 +277,40 @@ createApp({
             sumSpa: 0,
             averages: [],
             showDisposableUpdated: false,
+            deductLabel1: 'Test1',
+            deductValue1: 0,
+            deductLabel2: 'Test2',
+            deductValue2: 0,
+        }
+    },
+    computed: {
+        latestPaycheckAvg() {
+            for (let i = this.averages.length - 1; i >= 0; i--) {
+                if (this.averages[i] != null && this.averages[i] !== '') {
+                    return parseFloat(this.averages[i]);
+                }
+            }
+            return null;
+        },
+        monthlyDisposable() {
+            if (this.latestPaycheckAvg == null || isNaN(this.latestPaycheckAvg)) {
+                return null;
+            }
+            return Math.round((this.latestPaycheckAvg * 2) * 100) / 100;
+        },
+        monthlyDisposableAfter() {
+            if (this.monthlyDisposable == null) {
+                return null;
+            }
+            const v1 = parseFloat(this.deductValue1) || 0;
+            const v2 = parseFloat(this.deductValue2) || 0;
+            return Math.round((this.monthlyDisposable - v1 - v2) * 100) / 100;
+        },
+        monthlyDisposableDisplay() {
+            return this.monthlyDisposable == null ? '—' : this.monthlyDisposable;
+        },
+        monthlyDisposableAfterDisplay() {
+            return this.monthlyDisposableAfter == null ? '—' : this.monthlyDisposableAfter;
         }
     },
     mounted() {
@@ -192,6 +323,32 @@ createApp({
             this.initBalanceFifteenth = parseFloat(savedFifteenth);
         }
 
+        const savedDeductLabel1 = localStorage.getItem('deductLabel1');
+        if (savedDeductLabel1 !== null) {
+            this.deductLabel1 = savedDeductLabel1;
+        }
+        const savedDeductLabel2 = localStorage.getItem('deductLabel2');
+        if (savedDeductLabel2 !== null) {
+            this.deductLabel2 = savedDeductLabel2;
+        }
+        const savedDeductValue1 = localStorage.getItem('deductValue1');
+        if (savedDeductValue1 !== null && savedDeductValue1 !== '') {
+            this.deductValue1 = parseFloat(savedDeductValue1) || 0;
+        }
+        const savedDeductValue2 = localStorage.getItem('deductValue2');
+        if (savedDeductValue2 !== null && savedDeductValue2 !== '') {
+            this.deductValue2 = parseFloat(savedDeductValue2) || 0;
+        }
+
+        const savedTestMode = localStorage.getItem('testMode');
+        if (savedTestMode !== null) {
+            this.testMode = savedTestMode === '1' || savedTestMode === 'true';
+        }
+        const savedRemove15Days = localStorage.getItem('remove15Days');
+        if (savedRemove15Days !== null) {
+            this.remove15Days = savedRemove15Days === '1' || savedRemove15Days === 'true';
+        }
+
         this.initializeBalance();
 
         if (localStorage.getItem('disposable_per_day')) {
@@ -201,6 +358,28 @@ createApp({
         this.loadPage('');
     },
     methods: {
+        saveTestMode() {
+            localStorage.setItem('testMode', this.testMode ? '1' : '0');
+        },
+        saveRemove15Days() {
+            localStorage.setItem('remove15Days', this.remove15Days ? '1' : '0');
+        },
+        saveDeductLabel1() {
+            localStorage.setItem('deductLabel1', this.deductLabel1 == null ? '' : String(this.deductLabel1));
+        },
+        saveDeductLabel2() {
+            localStorage.setItem('deductLabel2', this.deductLabel2 == null ? '' : String(this.deductLabel2));
+        },
+        saveDeductValue1() {
+            const value = parseFloat(this.deductValue1);
+            this.deductValue1 = isNaN(value) ? 0 : value;
+            localStorage.setItem('deductValue1', String(this.deductValue1));
+        },
+        saveDeductValue2() {
+            const value = parseFloat(this.deductValue2);
+            this.deductValue2 = isNaN(value) ? 0 : value;
+            localStorage.setItem('deductValue2', String(this.deductValue2));
+        },
         loadPage(action) {
             this.nextDate = 0;
             this.prevDate = 0;
@@ -335,6 +514,13 @@ createApp({
             this.sumSpa = spaTotal;
             
             this.calcAverages();
+        },
+        monthlyFromAvg(avg) {
+            const value = parseFloat(avg);
+            if (isNaN(value)) {
+                return '';
+            }
+            return Math.round((value * 2) * 100) / 100;
         },
         calcAverages() {
             this.averages = [];
