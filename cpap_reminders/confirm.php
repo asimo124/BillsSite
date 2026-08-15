@@ -65,7 +65,7 @@ try {
 }
 
 // Fetch the task
-$stmt = $db->prepare('SELECT id, task_name FROM cpap_reminders WHERE id = ?');
+$stmt = $db->prepare('SELECT id, task_name FROM push_notification WHERE id = ?');
 $stmt->execute([$task_id]);
 $task = $stmt->fetch();
 
@@ -80,7 +80,7 @@ try {
     $db->beginTransaction();
 
     $stmt = $db->prepare(
-        'INSERT IGNORE INTO cpap_confirmations (task_id, confirmed_date) VALUES (?, ?)'
+        'INSERT IGNORE INTO push_notification_confirmation (task_id, confirmed_date) VALUES (?, ?)'
     );
     $stmt->execute([$task_id, $date]);
     $inserted = $stmt->rowCount();
@@ -88,7 +88,7 @@ try {
     if ($inserted > 0) {
         // Also update last_confirmed on the task row so Python knows the schedule
         $stmt2 = $db->prepare(
-            'UPDATE cpap_reminders SET last_confirmed = ? WHERE id = ?'
+            'UPDATE push_notification SET last_confirmed = ? WHERE id = ?'
         );
         $stmt2->execute([$date, $task_id]);
     } else {

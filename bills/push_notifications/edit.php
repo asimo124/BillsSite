@@ -8,8 +8,9 @@ if (!isset($_SESSION['user'])) {
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
-$sql = "SELECT * FROM cpap_reminders WHERE id = :id";
+$sql = "SELECT * FROM push_notification WHERE id = :id";
 $reminder = getQuerySingle($sql, [':id' => $id]);
+$schedules = getQuery("SELECT * FROM push_notification_schedule ORDER BY title ASC");
 
 if (!$reminder) {
     header("Location: index.php?Message=" . urlencode("Reminder not found.") . "&error=1");
@@ -56,6 +57,19 @@ if (!empty($reminder['created_at'])) {
                 <label class="col-md-4 control-label" for="task_description">Task Description</label>
                 <div class="col-md-4">
                     <textarea id="task_description" name="task_description" rows="4" placeholder="Task Description" class="form-control input-md"><?php echo htmlspecialchars($reminder['task_description']); ?></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="schedule_id">Schedule</label>
+                <div class="col-md-4">
+                    <select id="schedule_id" name="schedule_id" class="form-control input-md">
+                        <option value="">— None —</option>
+                        <?php foreach ($schedules as $schedule) : ?>
+                            <option value="<?php echo $schedule['id']; ?>" <?php echo ((int)$reminder['schedule_id'] === (int)$schedule['id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($schedule['title']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
             </div>
             <div class="form-group">

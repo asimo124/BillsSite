@@ -7,6 +7,7 @@ if (!isset($_SESSION['user'])) {
 }
 
 $defaultCreatedAt = date('Y-m-d\TH:i');
+$schedules = getQuery("SELECT * FROM push_notification_schedule ORDER BY title ASC");
 ?>
 <!DOCTYPE html>
 <html>
@@ -44,6 +45,17 @@ $defaultCreatedAt = date('Y-m-d\TH:i');
                 <label class="col-md-4 control-label" for="task_description">Task Description</label>
                 <div class="col-md-4">
                     <textarea id="task_description" name="task_description" rows="4" placeholder="Task Description" class="form-control input-md"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="schedule_id">Schedule</label>
+                <div class="col-md-4">
+                    <select id="schedule_id" name="schedule_id" class="form-control input-md">
+                        <option value="">— None —</option>
+                        <?php foreach ($schedules as $schedule) : ?>
+                            <option value="<?php echo $schedule['id']; ?>"><?php echo htmlspecialchars($schedule['title']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
             </div>
             <div class="form-group">

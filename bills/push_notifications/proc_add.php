@@ -24,8 +24,10 @@ function parseCreatedAt($value) {
 $task_name = isset($_REQUEST['task_name']) ? trim($_REQUEST['task_name']) : "";
 $task_description = isset($_REQUEST['task_description']) ? trim($_REQUEST['task_description']) : "";
 $frequency_days = isset($_REQUEST['frequency_days']) ? intval($_REQUEST['frequency_days']) : 0;
+$schedule_id = isset($_REQUEST['schedule_id']) ? intval($_REQUEST['schedule_id']) : 0;
 $last_confirmed = isset($_REQUEST['last_confirmed']) ? trim($_REQUEST['last_confirmed']) : "";
 $created_at_raw = isset($_REQUEST['created_at']) ? trim($_REQUEST['created_at']) : "";
+$schedule_id_value = ($schedule_id > 0) ? $schedule_id : null;
 
 if ($task_name === "" || $frequency_days <= 0) {
     header("Location: add.php?Message=" . urlencode("You did not fill in all the required fields.") . "&error=1");
@@ -37,7 +39,7 @@ if (strlen($task_name) > 120) {
     exit;
 }
 
-$sql = "SELECT id FROM cpap_reminders WHERE task_name = :task_name";
+$sql = "SELECT id FROM push_notification WHERE task_name = :task_name";
 $existing = getQuerySingle($sql, [':task_name' => $task_name]);
 if ($existing) {
     header("Location: add.php?Message=" . urlencode("A reminder with that task name already exists.") . "&error=1");
@@ -53,23 +55,25 @@ if ($created_at === false) {
 $last_confirmed_value = ($last_confirmed !== "") ? $last_confirmed : null;
 
 if ($created_at === null) {
-    $sql = "INSERT INTO cpap_reminders (task_name, task_description, frequency_days, last_confirmed)
-            VALUES (:task_name, :task_description, :frequency_days, :last_confirmed)";
-    execQuery($sql, [
-        ':task_name' => $task_name,
-        ':task_description' => $task_description !== '' ? $task_description : null,
-        ':frequency_days' => $frequency_days,
-        ':last_confirmed' => $last_confirmed_value
-    ]);
-} else {
-    $sql = "INSERT INTO cpap_reminders (task_name, task_description, frequency_days, last_confirmed, created_at)
-            VALUES (:task_name, :task_description, :frequency_days, :last_confirmed, :created_at)";
+    $sql = "INSERT INTO push_notification (task_name, task_description, frequency_days, last_confirmed, schedule_id)
+            VALUES (:task_name, :task_description, :frequency_days, :last_confirmed, :schedule_id)";
     execQuery($sql, [
         ':task_name' => $task_name,
         ':task_description' => $task_description !== '' ? $task_description : null,
         ':frequency_days' => $frequency_days,
         ':last_confirmed' => $last_confirmed_value,
-        ':created_at' => $created_at
+        ':schedule_id' => $schedule_id_value
+    ]);
+} else {
+    $sql = "INSERT INTO push_notification (task_name, task_description, frequency_days, last_confirmed, created_at, schedule_id)
+            VALUES (:task_name, :task_description, :frequency_days, :last_confirmed, :created_at, :schedule_id)";
+    execQuery($sql, [
+        ':task_name' => $task_name,
+        ':task_description' => $task_description !== '' ? $task_description : null,
+        ':frequency_days' => $frequency_days,
+        ':last_confirmed' => $last_confirmed_value,
+        ':created_at' => $created_at,
+        ':schedule_id' => $schedule_id_value
     ]);
 }
 

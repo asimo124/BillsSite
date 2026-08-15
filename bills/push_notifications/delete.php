@@ -8,7 +8,7 @@ if (!isset($_SESSION['user'])) {
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
-$sql = "DELETE FROM cpap_reminders WHERE id = :id";
+$sql = "DELETE FROM push_notification WHERE id = :id";
 execQuery($sql, [
     "id" => $id
 ]);
