@@ -6,6 +6,7 @@ $keywordTitle = isset($_REQUEST['keyword_title']) ? trim($_REQUEST['keyword_titl
 $keywordBody = isset($_REQUEST['keyword_body']) ? trim($_REQUEST['keyword_body']) : '';
 $startDate = isset($_REQUEST['start_date']) ? trim($_REQUEST['start_date']) : '';
 $endDate = isset($_REQUEST['end_date']) ? trim($_REQUEST['end_date']) : '';
+$deletedOnly = isset($_REQUEST['deleted']) && ($_REQUEST['deleted'] === '1' || $_REQUEST['deleted'] === 'true');
 $page = isset($_REQUEST['page']) ? max(1, intval($_REQUEST['page'])) : 1;
 $perPage = isset($_REQUEST['per_page']) ? intval($_REQUEST['per_page']) : 20;
 $sortBy = isset($_REQUEST['sort_by']) ? trim($_REQUEST['sort_by']) : 'modification_date';
@@ -32,7 +33,11 @@ if ($sortDir !== 'ASC' && $sortDir !== 'DESC') {
     $sortDir = 'DESC';
 }
 
-$sqlWhere = " AND (to_delete IS NULL OR to_delete = 0) ";
+// Unchecked (default): do not filter out to_delete = 1 (show all notes)
+// Checked (deleted=1): only notes with to_delete = 0 / NULL
+$sqlWhere = $deletedOnly
+    ? " AND (to_delete IS NULL OR to_delete = 0) "
+    : "";
 $params = [];
 
 if ($keywordTitle !== '') {

@@ -38,10 +38,14 @@ if (!isset($_SESSION['user'])) {
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .note-body-full {
-            max-width: 520px;
+        .note-modal-body {
             white-space: pre-wrap;
             word-break: break-word;
+            overflow-wrap: anywhere;
+            margin: 0;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -187,6 +191,15 @@ if (!isset($_SESSION['user'])) {
                 Export to CSV
             </button>
         </form>
+        <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer select-none">
+            <input
+                type="checkbox"
+                v-model="filters.deleted"
+                @change="applyFilters"
+                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            Not Deleted
+        </label>
         <div class="ml-auto flex items-center gap-2">
             <label class="text-sm text-gray-700">Per page</label>
             <select
@@ -240,21 +253,45 @@ if (!isset($_SESSION['user'])) {
                     <td class="px-3 py-3 align-top text-gray-600 whitespace-nowrap">{{ formatDate(note.modification_date) }}</td>
                     <td class="px-3 py-3 align-top text-gray-700">
                         <div
-                            :class="expandedIds.includes(note.id) ? 'note-body-full' : 'note-body-preview'"
+                            class="note-body-preview"
                             :title="note.body || ''"
                         >{{ note.body || '—' }}</div>
                         <button
-                            v-if="note.body && note.body.length > 80"
+                            v-if="note.body"
                             type="button"
                             class="mt-1 text-blue-600 hover:underline text-xs"
-                            @click="toggleExpand(note.id)"
+                            @click="openNoteModal(note)"
                         >
-                            {{ expandedIds.includes(note.id) ? 'Collapse' : 'Expand' }}
+                            View
                         </button>
                     </td>
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div
+        v-if="viewingNote"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        role="dialog"
+        aria-modal="true"
+        @click.self="closeNoteModal"
+    >
+        <div class="absolute inset-0 bg-black/50" @click="closeNoteModal"></div>
+        <div class="relative z-10 w-full max-w-3xl max-h-[85vh] flex flex-col bg-white rounded-lg shadow-xl">
+            <div class="flex items-start justify-between gap-4 px-5 py-4 border-b border-gray-200">
+                <h2 class="text-xl font-bold text-gray-900 pr-4">{{ viewingNote.name || '(Untitled)' }}</h2>
+                <button
+                    type="button"
+                    class="shrink-0 text-gray-400 hover:text-gray-700 text-2xl leading-none"
+                    aria-label="Close"
+                    @click="closeNoteModal"
+                >&times;</button>
+            </div>
+            <div class="px-5 py-4 overflow-y-auto">
+                <pre class="note-modal-body text-gray-800">{{ viewingNote.body || '' }}</pre>
+            </div>
+        </div>
     </div>
 
     <div class="flex flex-wrap items-center justify-between gap-3 mt-4 mb-10">
@@ -322,7 +359,8 @@ if (!isset($_SESSION['user'])) {
             start_date: '',
             end_date: '',
             sort_by: 'modification_date',
-            sort_dir: 'DESC'
+            sort_dir: 'DESC',
+            deleted: false
         };
     }
 
@@ -349,7 +387,7 @@ if (!isset($_SESSION['user'])) {
                 return {
                     notes: [],
                     selectedIds: [],
-                    expandedIds: [],
+                    viewingNote: null,
                     filters: {
                         keyword_title: stored && typeof stored.keyword_title === 'string'
                             ? stored.keyword_title
@@ -364,7 +402,10 @@ if (!isset($_SESSION['user'])) {
                             : defaults.sort_by,
                         sort_dir: stored && (stored.sort_dir === 'ASC' || stored.sort_dir === 'DESC')
                             ? stored.sort_dir
-                            : defaults.sort_dir
+                            : defaults.sort_dir,
+                        deleted: stored && typeof stored.deleted === 'boolean'
+                            ? stored.deleted
+                            : defaults.deleted
                     },
                     page: 1,
                     perPage: 20,
@@ -446,6 +487,9 @@ if (!isset($_SESSION['user'])) {
                         if (this.filters.end_date) {
                             params.set('end_date', this.filters.end_date);
                         }
+                        if (this.filters.deleted) {
+                            params.set('deleted', '1');
+                        }
 
                         const response = await axios.get('/api/loadAppleNotes.php?' + params.toString());
                         if (response.data && response.data.error) {
@@ -465,7 +509,7 @@ if (!isset($_SESSION['user'])) {
                         this.perPage = response.data.per_page || this.perPage;
                         this.totalPages = response.data.total_pages || 1;
                         this.selectedIds = [];
-                        this.expandedIds = [];
+                        this.viewingNote = null;
                     } catch (error) {
                         this.error = 'Failed to load notes.';
                         console.error(error);
@@ -511,12 +555,11 @@ if (!isset($_SESSION['user'])) {
                         this.selectedIds = [];
                     }
                 },
-                toggleExpand(id) {
-                    if (this.expandedIds.includes(id)) {
-                        this.expandedIds = this.expandedIds.filter(x => x !== id);
-                    } else {
-                        this.expandedIds.push(id);
-                    }
+                openNoteModal(note) {
+                    this.viewingNote = note;
+                },
+                closeNoteModal() {
+                    this.viewingNote = null;
                 },
                 formatDate(value) {
                     if (!value) {
