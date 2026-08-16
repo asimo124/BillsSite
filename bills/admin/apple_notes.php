@@ -120,19 +120,37 @@ if (!isset($_SESSION['user'])) {
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Mod start</label>
-            <input
-                type="date"
-                v-model="filters.start_date"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            />
+            <div class="relative">
+                <input
+                    type="date"
+                    v-model="filters.start_date"
+                    class="w-full px-3 py-2 pr-9 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                />
+                <button
+                    v-if="filters.start_date"
+                    type="button"
+                    @click="clearDate('start_date')"
+                    class="absolute inset-y-0 right-0 px-3 text-gray-400 hover:text-gray-700"
+                    aria-label="Clear start date"
+                >&times;</button>
+            </div>
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Mod end</label>
-            <input
-                type="date"
-                v-model="filters.end_date"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            />
+            <div class="relative">
+                <input
+                    type="date"
+                    v-model="filters.end_date"
+                    class="w-full px-3 py-2 pr-9 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                />
+                <button
+                    v-if="filters.end_date"
+                    type="button"
+                    @click="clearDate('end_date')"
+                    class="absolute inset-y-0 right-0 px-3 text-gray-400 hover:text-gray-700"
+                    aria-label="Clear end date"
+                >&times;</button>
+            </div>
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Sort by</label>
@@ -281,12 +299,19 @@ if (!isset($_SESSION['user'])) {
         <div class="relative z-10 w-full max-w-3xl max-h-[85vh] flex flex-col bg-white rounded-lg shadow-xl">
             <div class="flex items-start justify-between gap-4 px-5 py-4 border-b border-gray-200">
                 <h2 class="text-xl font-bold text-gray-900 pr-4">{{ viewingNote.name || '(Untitled)' }}</h2>
-                <button
-                    type="button"
-                    class="shrink-0 text-gray-400 hover:text-gray-700 text-2xl leading-none"
-                    aria-label="Close"
-                    @click="closeNoteModal"
-                >&times;</button>
+                <div class="flex items-center gap-2 shrink-0">
+                    <button
+                        type="button"
+                        class="px-3 py-1.5 text-sm font-medium text-white bg-blue-500 hover:bg-blue-700 rounded"
+                        @click="copyNoteBody"
+                    >{{ copyStatus || 'Copy' }}</button>
+                    <button
+                        type="button"
+                        class="text-gray-400 hover:text-gray-700 text-2xl leading-none"
+                        aria-label="Close"
+                        @click="closeNoteModal"
+                    >&times;</button>
+                </div>
             </div>
             <div class="px-5 py-4 overflow-y-auto">
                 <pre class="note-modal-body text-gray-800">{{ viewingNote.body || '' }}</pre>
@@ -388,6 +413,7 @@ if (!isset($_SESSION['user'])) {
                     notes: [],
                     selectedIds: [],
                     viewingNote: null,
+                    copyStatus: '',
                     filters: {
                         keyword_title: stored && typeof stored.keyword_title === 'string'
                             ? stored.keyword_title
@@ -530,6 +556,13 @@ if (!isset($_SESSION['user'])) {
                     this.filters[field] = '';
                     this.applyFilters();
                 },
+                clearDate(field) {
+                    if (field !== 'start_date' && field !== 'end_date') {
+                        return;
+                    }
+                    this.filters[field] = '';
+                    this.applyFilters();
+                },
                 clearFilters() {
                     this.filters = getDefaultFilters();
                     this.page = 1;
@@ -557,9 +590,42 @@ if (!isset($_SESSION['user'])) {
                 },
                 openNoteModal(note) {
                     this.viewingNote = note;
+                    this.copyStatus = '';
                 },
                 closeNoteModal() {
                     this.viewingNote = null;
+                    this.copyStatus = '';
+                },
+                async copyNoteBody() {
+                    const text = this.viewingNote && this.viewingNote.body
+                        ? String(this.viewingNote.body)
+                        : '';
+                    try {
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            await navigator.clipboard.writeText(text);
+                        } else {
+                            const textarea = document.createElement('textarea');
+                            textarea.value = text;
+                            textarea.setAttribute('readonly', '');
+                            textarea.style.position = 'fixed';
+                            textarea.style.left = '-9999px';
+                            document.body.appendChild(textarea);
+                            textarea.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(textarea);
+                        }
+                        this.copyStatus = 'Copied';
+                        clearTimeout(this._copyStatusTimer);
+                        this._copyStatusTimer = setTimeout(() => {
+                            this.copyStatus = '';
+                        }, 1500);
+                    } catch (e) {
+                        this.copyStatus = 'Failed';
+                        clearTimeout(this._copyStatusTimer);
+                        this._copyStatusTimer = setTimeout(() => {
+                            this.copyStatus = '';
+                        }, 1500);
+                    }
                 },
                 formatDate(value) {
                     if (!value) {
