@@ -314,7 +314,7 @@ if (!isset($_SESSION['user'])) {
                 </div>
             </div>
             <div class="px-5 py-4 overflow-y-auto">
-                <pre class="note-modal-body text-gray-800">{{ viewingNote.body || '' }}</pre>
+                <pre class="note-modal-body text-gray-800">{{ normalizeNoteBody(viewingNote.body) }}</pre>
             </div>
         </div>
     </div>
@@ -596,10 +596,34 @@ if (!isset($_SESSION['user'])) {
                     this.viewingNote = null;
                     this.copyStatus = '';
                 },
+                normalizeNoteBody(text) {
+                    if (!text) {
+                        return '';
+                    }
+                    let normalized = String(text)
+                        .replace(/\r\n/g, '\n')
+                        .replace(/\r/g, '\n')
+                        .replace(/\t/g, '\n');
+
+                    // Apple Notes export often stores line breaks as 2+ spaces.
+                    normalized = normalized.replace(/  +/g, '\n');
+
+                    // Some exports collapse line breaks to a single space before labeled lines
+                    // (e.g. "2022-07-24 Weight:" or "lbs. Body Fat %:").
+                    normalized = normalized.replace(/(?<=\d)\s+(?=[A-Z][a-zA-Z %]*:)/g, '\n');
+                    normalized = normalized.replace(/(?<=[.!?])\s+(?=[A-Z][a-zA-Z %]*:)/g, '\n');
+
+                    normalized = normalized.replace(/\n{3,}/g, '\n\n').trim();
+                    const lines = normalized.split('\n');
+                    if (lines.length <= 1) {
+                        return normalized;
+                    }
+                    return lines[0] + '\n\n' + lines.slice(1).map(line => '- ' + line).join('\n');
+                },
                 async copyNoteBody() {
-                    const text = this.viewingNote && this.viewingNote.body
-                        ? String(this.viewingNote.body)
-                        : '';
+                    const text = this.normalizeNoteBody(
+                        this.viewingNote && this.viewingNote.body ? this.viewingNote.body : ''
+                    );
                     try {
                         if (navigator.clipboard && navigator.clipboard.writeText) {
                             await navigator.clipboard.writeText(text);
