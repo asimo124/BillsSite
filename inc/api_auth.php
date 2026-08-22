@@ -74,8 +74,6 @@ function api_get_bearer_token() {
  * @return array user row
  */
 function require_api_auth() {
-    global $db_conn;
-
     $token = api_get_bearer_token();
     if ($token === '') {
         api_json_response(array('message' => 'Unauthorized'), 401);
@@ -105,6 +103,30 @@ function require_api_auth() {
 
     $GLOBALS['api_user'] = $user;
     return $user;
+}
+
+/** Accept Bearer token or legacy PHP session (for existing admin pages). */
+function require_api_auth_or_session() {
+    if (isset($_SESSION['user']['user_id'])) {
+        $userId = intval($_SESSION['user']['user_id']);
+        $rows = getQuery(
+            "SELECT id, username, fname, lname, email FROM hth_users WHERE id = :id LIMIT 1",
+            array('id' => $userId)
+        );
+        if ($rows && count($rows) > 0) {
+            $row = $rows[0];
+            $user = array(
+                'id' => intval($row['id']),
+                'username' => $row['username'],
+                'fname' => $row['fname'],
+                'lname' => $row['lname'],
+                'email' => $row['email'],
+            );
+            $GLOBALS['api_user'] = $user;
+            return $user;
+        }
+    }
+    return require_api_auth();
 }
 
 function api_read_json_body() {

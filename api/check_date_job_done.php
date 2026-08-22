@@ -1,26 +1,20 @@
 <?php
-$changeTestMode            = isset($_REQUEST['test_mode']) ? intval($_REQUEST['test_mode']) : 0;
+$changeTestMode = isset($_REQUEST['test_mode']) ? intval($_REQUEST['test_mode']) : 0;
 include "../inc/Bills.php";
 include "../inc/includes.php";
-ini_set("display_errors", 1);
+include "../inc/api_auth.php";
 
-if (!isset($_SESSION['user'])) {
-    echo "Not logged in\n";
-    exit;
-}
+api_handle_preflight();
+require_api_auth_or_session();
 
 $sql = "SELECT * FROM date_job WHERE `status` IN ('pending', 'running') ORDER BY created_at DESC LIMIT 1";
-$runningJob = getQuery($sql, []);
+$runningJob = getQuery($sql, array());
 if ($runningJob) {
-    header("Content-type: text/json");
-    echo json_encode([
+    api_json_response(array(
         "return_status" => "running"
-    ]);
-    die();
+    ));
 }
 
-header("Content-type: text/json");
-echo json_encode([
+api_json_response(array(
     "return_status" => "done"
-]);
-die();
+));
