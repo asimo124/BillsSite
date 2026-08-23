@@ -361,7 +361,8 @@ class BillDateHelper {
 
             $billsDescArr = [];
 
-            foreach ($MyBills[$timestamp] as $getBill) {
+            // Days with no bills leave $MyBills[$timestamp] unset; PHP 8+ warns on foreach(null)
+            foreach (($MyBills[$timestamp] ?? []) as $getBill) {
 
                 $hasBills = true;
                 $billsDescArr[] = [

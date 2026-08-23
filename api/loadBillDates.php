@@ -75,7 +75,7 @@ while ($timestamp <= strtotime($end_date)) {
 	$bills_desc = "";
 	$hasBills = false;
 
-	foreach ($MyBills[$timestamp] as $getBill) {
+	foreach (($MyBills[$timestamp] ?? []) as $getBill) {
 
 		$hasBills = true;
 

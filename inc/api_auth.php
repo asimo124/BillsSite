@@ -11,7 +11,11 @@ function api_allowed_origins() {
         'http://localhost:4173',
         'http://127.0.0.1:4173',
         'https://mybudget.hawleywebdesign.com',
-        // Add production MyBudget origin(s) here when deployed
+        // Angular Bills SPA (budget2) calls budget.hawleywebdesign.com APIs
+        'https://budget2.hawleywebdesign.com',
+        'http://budget2.hawleywebdesign.com',
+        'https://budget.hawleywebdesign.com',
+        'http://budget.hawleywebdesign.com',
     );
 }
 
