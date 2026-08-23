@@ -9,19 +9,11 @@
  *   3. Put GOOGLE_MAPS_API_KEY=... in the project-root .env file.
  */
 
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *'); // tighten this to your own domain in production
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    exit(0);
-}
+include "../inc/api_auth.php";
+api_handle_preflight();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Use POST']);
-    exit;
+    api_json_response(array('error' => 'Use POST'), 405);
 }
 
 $envFile = dirname(__DIR__) . '/.env';
@@ -46,9 +38,7 @@ if (is_readable($envFile)) {
 
 $apiKey = getenv('GOOGLE_MAPS_API_KEY') ?: '';
 if ($apiKey === '') {
-    http_response_code(500);
-    echo json_encode(['error' => 'GOOGLE_MAPS_API_KEY is not configured']);
-    exit;
+    api_json_response(array('error' => 'GOOGLE_MAPS_API_KEY is not configured'), 500);
 }
 
 $input = json_decode(file_get_contents('php://input'), true);
@@ -59,9 +49,7 @@ $timeMode = $input['timeMode'] ?? 'departure'; // 'departure' or 'arrival'
 $timestamp = $input['timestamp'] ?? null; // ISO 8601 string, e.g. "2026-07-14T08:30:00-07:00"
 
 if ($origin === '' || $destination === '' || !$timestamp) {
-    http_response_code(400);
-    echo json_encode(['error' => 'origin, destination, and timestamp are required']);
-    exit;
+    api_json_response(array('error' => 'origin, destination, and timestamp are required'), 400);
 }
 
 // Routes API computeRoutes endpoint
@@ -121,40 +109,29 @@ if ($curlError) {
 // Each is billed as a separate Routes API request under the Pro SKU.
 $optimistic = computeRoute($url, $apiKey, $origin, $destination, $timeMode, $timestamp, 'OPTIMISTIC');
 if ($optimistic['error']) {
-    http_response_code(502);
-    echo json_encode(['error' => 'Upstream request failed', 'detail' => $optimistic['detail']]);
-    exit;
+    api_json_response(array('error' => 'Upstream request failed', 'detail' => $optimistic['detail']), 502);
 }
 if ($optimistic['httpCode'] !== 200) {
-    http_response_code($optimistic['httpCode']);
-    echo json_encode($optimistic['data']);
-    exit;
+    api_json_response($optimistic['data'], $optimistic['httpCode']);
 }
 
 $pessimistic = computeRoute($url, $apiKey, $origin, $destination, $timeMode, $timestamp, 'PESSIMISTIC');
 if ($pessimistic['error']) {
-    http_response_code(502);
-    echo json_encode(['error' => 'Upstream request failed', 'detail' => $pessimistic['detail']]);
-    exit;
+    api_json_response(array('error' => 'Upstream request failed', 'detail' => $pessimistic['detail']), 502);
 }
 if ($pessimistic['httpCode'] !== 200) {
-    http_response_code($pessimistic['httpCode']);
-    echo json_encode($pessimistic['data']);
-    exit;
+    api_json_response($pessimistic['data'], $pessimistic['httpCode']);
 }
 
 $minRoute = $optimistic['data']['routes'][0] ?? null;
 $maxRoute = $pessimistic['data']['routes'][0] ?? null;
 
 if (!$minRoute || !$maxRoute) {
-    http_response_code(404);
-    echo json_encode(['error' => 'No route found between those addresses.']);
-    exit;
+    api_json_response(array('error' => 'No route found between those addresses.'), 404);
 }
 
-http_response_code(200);
-echo json_encode([
+api_json_response(array(
     'distanceMeters' => $minRoute['distanceMeters'] ?? $maxRoute['distanceMeters'] ?? 0,
-    'minDuration' => $minRoute['duration'] ?? null,   // best case (OPTIMISTIC)
-    'maxDuration' => $maxRoute['duration'] ?? null,   // worst case (PESSIMISTIC)
-]);
+    'minDuration' => $minRoute['duration'] ?? null,
+    'maxDuration' => $maxRoute['duration'] ?? null,
+));

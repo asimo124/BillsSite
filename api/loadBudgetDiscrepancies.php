@@ -1,6 +1,9 @@
 <?php
 $changeTestMode            = isset($_REQUEST['test_mode']) ? intval($_REQUEST['test_mode']) : 0;
 include "../inc/includes.php";
+include "../inc/api_auth.php";
+api_handle_preflight();
+
 include "../inc/Bills.php";
 include "../inc/IpPayPeriod.php";
 include "../inc/IpPayPeriodItem.php";
