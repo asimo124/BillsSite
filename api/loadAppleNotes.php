@@ -1,27 +1,32 @@
 <?php
 include "../inc/includes.php";
-//ini_set("display_errors", 1);
+include "../inc/api_auth.php";
 
-$keywordTitle = isset($_REQUEST['keyword_title']) ? trim($_REQUEST['keyword_title']) : '';
-$keywordBody = isset($_REQUEST['keyword_body']) ? trim($_REQUEST['keyword_body']) : '';
-$startDate = isset($_REQUEST['start_date']) ? trim($_REQUEST['start_date']) : '';
-$endDate = isset($_REQUEST['end_date']) ? trim($_REQUEST['end_date']) : '';
-$deletedOnly = isset($_REQUEST['deleted']) && ($_REQUEST['deleted'] === '1' || $_REQUEST['deleted'] === 'true');
-$page = isset($_REQUEST['page']) ? max(1, intval($_REQUEST['page'])) : 1;
-$perPage = isset($_REQUEST['per_page']) ? intval($_REQUEST['per_page']) : 20;
-$sortBy = isset($_REQUEST['sort_by']) ? trim($_REQUEST['sort_by']) : 'modification_date';
-$sortDir = isset($_REQUEST['sort_dir']) ? strtoupper(trim($_REQUEST['sort_dir'])) : 'DESC';
+api_handle_preflight();
+require_api_auth_or_session();
 
-if (!in_array($perPage, [20, 50, 100], true)) {
+$paramsIn = array_merge($_REQUEST, api_read_json_body());
+
+$keywordTitle = isset($paramsIn['keyword_title']) ? trim($paramsIn['keyword_title']) : '';
+$keywordBody = isset($paramsIn['keyword_body']) ? trim($paramsIn['keyword_body']) : '';
+$startDate = isset($paramsIn['start_date']) ? trim($paramsIn['start_date']) : '';
+$endDate = isset($paramsIn['end_date']) ? trim($paramsIn['end_date']) : '';
+$deletedOnly = isset($paramsIn['deleted']) && ($paramsIn['deleted'] === '1' || $paramsIn['deleted'] === 1 || $paramsIn['deleted'] === true || $paramsIn['deleted'] === 'true');
+$page = isset($paramsIn['page']) ? max(1, intval($paramsIn['page'])) : 1;
+$perPage = isset($paramsIn['per_page']) ? intval($paramsIn['per_page']) : 20;
+$sortBy = isset($paramsIn['sort_by']) ? trim($paramsIn['sort_by']) : 'modification_date';
+$sortDir = isset($paramsIn['sort_dir']) ? strtoupper(trim($paramsIn['sort_dir'])) : 'DESC';
+
+if (!in_array($perPage, array(20, 50, 100), true)) {
     $perPage = 20;
 }
 
-$allowedSortBy = [
+$allowedSortBy = array(
     'modification_date' => 'modification_date',
     'creation_date' => 'creation_date',
     'name' => 'name',
-    'folder' => 'folder'
-];
+    'folder' => 'folder',
+);
 
 if (!isset($allowedSortBy[$sortBy])) {
     $sortBy = 'modification_date';
@@ -33,12 +38,12 @@ if ($sortDir !== 'ASC' && $sortDir !== 'DESC') {
     $sortDir = 'DESC';
 }
 
-// Unchecked (default): do not filter out to_delete = 1 (show all notes)
-// Checked (deleted=1): only notes with to_delete = 0 / NULL
+// Unchecked (default): show all notes
+// Checked (deleted=1): only notes with to_delete = 0 / NULL ("Not Deleted")
 $sqlWhere = $deletedOnly
     ? " AND (to_delete IS NULL OR to_delete = 0) "
     : "";
-$params = [];
+$params = array();
 
 if ($keywordTitle !== '') {
     $sqlWhere .= " AND name LIKE :keyword_title ";
@@ -61,12 +66,7 @@ if ($endDate !== '') {
 }
 
 if ($startDate !== '' && $endDate !== '' && strtotime($startDate) > strtotime($endDate)) {
-    header("Content-type: application/json");
-    header('Access-Control-Allow-Origin: *');
-    echo json_encode([
-        'error' => 'start_date must be before end_date'
-    ], JSON_PRETTY_PRINT);
-    die();
+    api_json_response(array('error' => 'start_date must be before end_date'), 400);
 }
 
 $countSql = "SELECT COUNT(*) AS total FROM apple_notes WHERE 1 $sqlWhere";
@@ -88,14 +88,19 @@ $sql = "SELECT id, id_str, name, folder, account, creation_date, modification_da
         LIMIT $perPage OFFSET $offset";
 
 $results = getQuery($sql, $params);
+if (!$results) {
+    $results = array();
+}
 
-header("Content-type: application/json");
-header('Access-Control-Allow-Origin: *');
-echo json_encode([
+foreach ($results as $i => $row) {
+    $results[$i]['id'] = intval($row['id']);
+    $results[$i]['to_delete'] = isset($row['to_delete']) ? intval($row['to_delete']) : 0;
+}
+
+api_json_response(array(
     'items' => $results,
     'total' => $total,
     'page' => $page,
     'per_page' => $perPage,
-    'total_pages' => $totalPages
-], JSON_PRETTY_PRINT);
-die();
+    'total_pages' => $totalPages,
+));

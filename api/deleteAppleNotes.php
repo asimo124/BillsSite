@@ -1,14 +1,18 @@
 <?php
 include "../inc/includes.php";
-//ini_set("display_errors", 1);
+include "../inc/api_auth.php";
 
-$ids = [];
+api_handle_preflight();
+require_api_auth_or_session();
 
-if (isset($_REQUEST['ids'])) {
-    if (is_array($_REQUEST['ids'])) {
-        $ids = $_REQUEST['ids'];
+$paramsIn = array_merge($_REQUEST, api_read_json_body());
+$ids = array();
+
+if (isset($paramsIn['ids'])) {
+    if (is_array($paramsIn['ids'])) {
+        $ids = $paramsIn['ids'];
     } else {
-        $raw = trim($_REQUEST['ids']);
+        $raw = trim((string) $paramsIn['ids']);
         if ($raw !== '') {
             $decoded = json_decode($raw, true);
             if (is_array($decoded)) {
@@ -25,23 +29,19 @@ $ids = array_values(array_unique(array_filter(array_map('intval', $ids), functio
 })));
 
 if (count($ids) === 0) {
-    header("Content-type: application/json");
-    header('Access-Control-Allow-Origin: *');
-    echo json_encode([
+    api_json_response(array(
         'success' => false,
-        'error' => 'No valid ids provided'
-    ], JSON_PRETTY_PRINT);
-    die();
+        'error' => 'No valid ids provided',
+        'message' => 'No valid ids provided',
+    ), 400);
 }
 
 $placeholders = implode(',', array_fill(0, count($ids), '?'));
 $sql = "UPDATE apple_notes SET to_delete = 1 WHERE id IN ($placeholders)";
-$result = execQuery($sql, $ids);
+execQuery($sql, $ids);
 
-header("Content-type: application/json");
-header('Access-Control-Allow-Origin: *');
-echo json_encode([
+api_json_response(array(
     'success' => true,
-    'deleted_count' => count($ids)
-], JSON_PRETTY_PRINT);
-die();
+    'deleted_count' => count($ids),
+    'message' => 'Marked ' . count($ids) . ' note(s) for deletion.',
+));
