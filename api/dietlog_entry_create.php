@@ -5,10 +5,11 @@ include __DIR__ . "/dietlog_inc.php";
 
 dietlog_require_user();
 
-$food_id = isset($_REQUEST['food_id']) ? intval($_REQUEST['food_id']) : 0;
-$amount = isset($_REQUEST['amount']) ? floatval($_REQUEST['amount']) : 0.0;
-$date_consumed = isset($_REQUEST['date_consumed']) ? trim($_REQUEST['date_consumed']) : '';
-$meal_of_day_id = isset($_REQUEST['meal_of_day_id']) ? intval($_REQUEST['meal_of_day_id']) : 0;
+$req = dietlog_request();
+$food_id = isset($req['food_id']) ? intval($req['food_id']) : 0;
+$amount = isset($req['amount']) ? floatval($req['amount']) : 0.0;
+$date_consumed = isset($req['date_consumed']) ? trim($req['date_consumed']) : '';
+$meal_of_day_id = isset($req['meal_of_day_id']) ? intval($req['meal_of_day_id']) : 0;
 
 if ($food_id <= 0 || $meal_of_day_id <= 0 || $date_consumed === '') {
     dietlog_json_exit([

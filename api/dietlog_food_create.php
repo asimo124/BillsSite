@@ -5,15 +5,16 @@ include __DIR__ . "/dietlog_inc.php";
 
 dietlog_require_user();
 
-$title = isset($_REQUEST['title']) ? trim($_REQUEST['title']) : '';
-$macro_type_id = isset($_REQUEST['macro_type_id']) ? intval($_REQUEST['macro_type_id']) : 0;
-$type_id = isset($_REQUEST['type_id']) ? intval($_REQUEST['type_id']) : 0;
-$has_fiber = isset($_REQUEST['has_fiber']) ? intval($_REQUEST['has_fiber']) : 0;
-$percent_fiber = isset($_REQUEST['percent_fiber']) ? floatval($_REQUEST['percent_fiber']) : 0.0;
-$percent_soluble_fiber = isset($_REQUEST['percent_soluble_fiber']) ? floatval($_REQUEST['percent_soluble_fiber']) : 0.0;
-$is_cruciferous = isset($_REQUEST['is_cruciferous']) ? intval($_REQUEST['is_cruciferous']) : 0;
-$unit_of_measure_id = isset($_REQUEST['unit_of_measure_id']) ? intval($_REQUEST['unit_of_measure_id']) : 0;
-$default_amount = isset($_REQUEST['default_amount']) ? floatval($_REQUEST['default_amount']) : 0.0;
+$req = dietlog_request();
+$title = isset($req['title']) ? trim($req['title']) : '';
+$macro_type_id = isset($req['macro_type_id']) ? intval($req['macro_type_id']) : 0;
+$type_id = isset($req['type_id']) ? intval($req['type_id']) : 0;
+$has_fiber = isset($req['has_fiber']) ? intval($req['has_fiber']) : 0;
+$percent_fiber = isset($req['percent_fiber']) ? floatval($req['percent_fiber']) : 0.0;
+$percent_soluble_fiber = isset($req['percent_soluble_fiber']) ? floatval($req['percent_soluble_fiber']) : 0.0;
+$is_cruciferous = isset($req['is_cruciferous']) ? intval($req['is_cruciferous']) : 0;
+$unit_of_measure_id = isset($req['unit_of_measure_id']) ? intval($req['unit_of_measure_id']) : 0;
+$default_amount = isset($req['default_amount']) ? floatval($req['default_amount']) : 0.0;
 
 if ($title === '' || $macro_type_id <= 0 || $unit_of_measure_id <= 0) {
     dietlog_json_exit([

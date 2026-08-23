@@ -5,7 +5,8 @@ include __DIR__ . "/dietlog_inc.php";
 
 dietlog_require_user();
 
-$food_id = isset($_REQUEST['food_id']) ? intval($_REQUEST['food_id']) : 0;
+$req = dietlog_request();
+$food_id = isset($req['food_id']) ? intval($req['food_id']) : 0;
 
 if ($food_id <= 0) {
     dietlog_json_exit([

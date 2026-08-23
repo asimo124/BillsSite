@@ -3,8 +3,14 @@
  * Shared helpers for dietlog_*.php API endpoints.
  */
 
+if (!function_exists('api_handle_preflight')) {
+    include_once __DIR__ . '/../inc/api_auth.php';
+}
+api_handle_preflight();
+
 function dietlog_json_exit($data, $httpCode = 200)
 {
+    api_send_cors_headers();
     http_response_code($httpCode);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($data, JSON_UNESCAPED_UNICODE);
@@ -13,9 +19,17 @@ function dietlog_json_exit($data, $httpCode = 200)
 
 function dietlog_require_user()
 {
-    if (!isset($_SESSION['user'])) {
-        dietlog_json_exit(['success' => false, 'error' => 'Unauthorized'], 401);
+    require_api_auth_or_session();
+}
+
+/** Merge legacy form fields with JSON body (MyBudget SPA sends JSON). */
+function dietlog_request()
+{
+    static $merged = null;
+    if ($merged === null) {
+        $merged = array_merge($_REQUEST, api_read_json_body());
     }
+    return $merged;
 }
 
 function dietlog_sql_foods()
