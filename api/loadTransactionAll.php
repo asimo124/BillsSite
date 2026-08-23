@@ -2,6 +2,9 @@
 $changeTestMode            = isset($_REQUEST['test_mode']) ? intval($_REQUEST['test_mode']) : 0;
 
 include "../inc/includes.php";
+include "../inc/api_auth.php";
+api_handle_preflight();
+
 //ini_set("display_errors", 1);
 
 $categoryName = isset($_REQUEST['category_name']) ? trim($_REQUEST['category_name']) : '';
