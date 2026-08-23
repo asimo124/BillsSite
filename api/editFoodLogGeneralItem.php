@@ -1,58 +1,44 @@
 <?php
-$changeTestMode            = isset($_REQUEST['test_mode']) ? intval($_REQUEST['test_mode']) : 0;
-
 include "../inc/includes.php";
-//ini_set("display_errors", 1);
+include "../inc/api_auth.php";
 
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
-$title = isset($_REQUEST['title']) ? trim($_REQUEST['title']) : '';
+api_handle_preflight();
+require_api_auth_or_session();
 
-if (!$id) {
-    header("HTTP/1.1 400 Bad Request");
-    echo "id is required";
-    die();
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    api_json_response(array('message' => 'Method not allowed'), 405);
 }
 
-if (!$title) {
-    header("HTTP/1.1 400 Bad Request");
-    echo "title is required";
-    die();
+$params = array_merge($_REQUEST, api_read_json_body());
+
+$id = isset($params['id']) ? intval($params['id']) : 0;
+$title = isset($params['title']) ? trim($params['title']) : '';
+
+if ($id <= 0) {
+    api_json_response(array('message' => 'id is required'), 400);
+}
+if ($title === '') {
+    api_json_response(array('message' => 'title is required'), 400);
 }
 
-$title2 = str_replace("'", "''", $title);
-
-$sql = "SELECT id 
-        FROM fs_food_general 
-        WHERE title = '" . $title2 . "'
-        AND id <> " . intval($id) . "
-        ";
-
-$result = getQuerySingle($sql);
-
-if ($result) {
-    header("HTTP/1.1 400 Bad Request");
-    echo "A food general item with that title already exists";
-    die();
+$existing = getQuerySingle(
+    "SELECT id FROM fs_food_general WHERE title = :title AND id <> :id LIMIT 1",
+    array('title' => $title, 'id' => $id)
+);
+if ($existing) {
+    api_json_response(array('message' => 'A food general item with that title already exists'), 400);
 }
 
-$sql = "UPDATE fs_food_general 
-        SET title = '" . $title2 . "'
-        WHERE id = " . intval($id) . "
-        ";
+execQuery(
+    "UPDATE fs_food_general SET title = :title WHERE id = :id",
+    array('title' => $title, 'id' => $id)
+);
 
-execQuery($sql);
+$item = getQuerySingle(
+    "SELECT * FROM fs_food_general WHERE id = :id LIMIT 1",
+    array('id' => $id)
+);
 
-$foodId = $db_conn->lastInsertId();
-
-$sql = "SELECT * FROM fs_food_general WHERE id = " . intval($id) . " LIMIT 1";
-
-$item = getQuerySingle($sql);
-
-header("Content-type: application/json");
-header('Access-Control-Allow-Origin: *');
-echo json_encode([
-    'item' => $item
-], JSON_PRETTY_PRINT);
-die();
-
-?>
+api_json_response(array(
+    'item' => $item,
+));

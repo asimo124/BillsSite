@@ -1,26 +1,26 @@
 <?php
-$changeTestMode            = isset($_REQUEST['test_mode']) ? intval($_REQUEST['test_mode']) : 0;
-
 include "../inc/includes.php";
-//ini_set("display_errors", 1);
+include "../inc/api_auth.php";
 
-$food_id = isset($_REQUEST['food_id']) ? intval($_REQUEST['food_id']) : 0;
+api_handle_preflight();
+require_api_auth_or_session();
 
-if (!$food_id) {
-    header("HTTP/1.1 400 Bad Request");
-    echo "food_id is required";
-    die();
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    api_json_response(array('message' => 'Method not allowed'), 405);
 }
 
-$sql = "DELETE FROM fs_food_general WHERE id = " . intval($food_id);
+$params = array_merge($_REQUEST, api_read_json_body());
+$food_id = isset($params['food_id']) ? intval($params['food_id']) : 0;
 
-execQuery($sql);
+if ($food_id <= 0) {
+    api_json_response(array('message' => 'food_id is required'), 400);
+}
 
-header("Content-type: application/json");
-header('Access-Control-Allow-Origin: *');
-echo json_encode([
-    'success' => true
-], JSON_PRETTY_PRINT);
-die();
+execQuery(
+    "DELETE FROM fs_food_general WHERE id = :id",
+    array('id' => $food_id)
+);
 
-?>
+api_json_response(array(
+    'success' => true,
+));

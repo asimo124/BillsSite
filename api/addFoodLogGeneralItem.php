@@ -1,51 +1,42 @@
 <?php
-$changeTestMode            = isset($_REQUEST['test_mode']) ? intval($_REQUEST['test_mode']) : 0;
-
 include "../inc/includes.php";
-//ini_set("display_errors", 1);
+include "../inc/api_auth.php";
 
-$title = isset($_REQUEST['title']) ? trim($_REQUEST['title']) : '';
+api_handle_preflight();
+require_api_auth_or_session();
 
-if (!$title) {
-    header("HTTP/1.1 400 Bad Request");
-    echo "title is required";
-    die();
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    api_json_response(array('message' => 'Method not allowed'), 405);
 }
 
-$title2 = str_replace("'", "''", $title);
+$params = array_merge($_REQUEST, api_read_json_body());
+$title = isset($params['title']) ? trim($params['title']) : '';
 
-$sql = "SELECT id 
-        FROM fs_food_general 
-        WHERE title = '" . $title2 . "'
-        ";
-
-$result = getQuerySingle($sql);
-
-if ($result) {
-    header("HTTP/1.1 400 Bad Request");
-    echo "A food general item with that title already exists";
-    die();
+if ($title === '') {
+    api_json_response(array('message' => 'title is required'), 400);
 }
 
-$sql = "INSERT INTO fs_food_general 
-        (title) 
-        VALUES 
-        ('" . $title2 . "')
-        ";
+$existing = getQuerySingle(
+    "SELECT id FROM fs_food_general WHERE title = :title LIMIT 1",
+    array('title' => $title)
+);
+if ($existing) {
+    api_json_response(array('message' => 'A food general item with that title already exists'), 400);
+}
 
-execQuery($sql);
+execQuery(
+    "INSERT INTO fs_food_general (title) VALUES (:title)",
+    array('title' => $title)
+);
 
-$foodId = $db_conn->lastInsertId();
+global $db_conn;
+$newId = intval($db_conn->lastInsertId());
 
-$sql = "SELECT * FROM fs_food_general WHERE id = " . intval($foodId) . " LIMIT 1";
+$item = getQuerySingle(
+    "SELECT * FROM fs_food_general WHERE id = :id LIMIT 1",
+    array('id' => $newId)
+);
 
-$item = getQuerySingle($sql);
-
-header("Content-type: application/json");
-header('Access-Control-Allow-Origin: *');
-echo json_encode([
-    'item' => $item
-], JSON_PRETTY_PRINT);
-die();
-
-?>
+api_json_response(array(
+    'item' => $item,
+));

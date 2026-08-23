@@ -1,52 +1,65 @@
 <?php
-$changeTestMode            = isset($_REQUEST['test_mode']) ? intval($_REQUEST['test_mode']) : 0;
-
 include "../inc/includes.php";
-//ini_set("display_errors", 1);
+include "../inc/api_auth.php";
 
-$title = isset($_REQUEST['title']) ? trim($_REQUEST['title']) : '';
-$sortBy1 = isset($_REQUEST['sort_by1']) ? trim($_REQUEST['sort_by1']) : 'percentage_towards_inflammation';
-$sortDir1 = isset($_REQUEST['sort_dir1']) ? trim($_REQUEST['sort_dir1']) : 'DESC';
+api_handle_preflight();
+require_api_auth_or_session();
 
-if ($sortDir1 != 'ASC' && $sortDir1 != 'DESC') {
+$params = array_merge($_REQUEST, api_read_json_body());
+
+$title = isset($params['title']) ? trim($params['title']) : '';
+$sortBy1 = isset($params['sort_by1']) ? trim($params['sort_by1']) : 'percentage_towards_inflammation';
+$sortDir1 = isset($params['sort_dir1']) ? trim($params['sort_dir1']) : 'DESC';
+$sortBy2 = isset($params['sort_by2']) ? trim($params['sort_by2']) : '';
+$sortDir2 = isset($params['sort_dir2']) ? trim($params['sort_dir2']) : 'ASC';
+
+if ($sortDir1 !== 'ASC' && $sortDir1 !== 'DESC') {
     $sortDir1 = 'ASC';
 }
-
-$sortBy2 = isset($_REQUEST['sort_by2']) ? trim($_REQUEST['sort_by2']) : '';
-$sortDir2 = isset($_REQUEST['sort_dir2']) ? trim($_REQUEST['sort_dir2']) : 'ASC';
-
-if ($sortDir2 != 'ASC' && $sortDir2 != 'DESC') {
+if ($sortDir2 !== 'ASC' && $sortDir2 !== 'DESC') {
     $sortDir2 = 'ASC';
 }
 
-$whereSql = "";
-if ($title) {
-    $title2 = str_replace("'", "''", $title);
-    $whereSql .= " AND title LIKE '%" . $title2 . "%' ";
+$allowedSort = array(
+    'percentage_towards_inflammation' => 'percentage_towards_inflammation',
+    'title' => 'title',
+    'is_inflammation' => 'is_inflammation',
+);
+if (!isset($allowedSort[$sortBy1])) {
+    $sortBy1 = 'percentage_towards_inflammation';
+}
+if ($sortBy2 !== '' && !isset($allowedSort[$sortBy2])) {
+    $sortBy2 = '';
 }
 
-$orderBySql = "";
-if ($sortBy1) {
-    $orderBySql .= " ORDER BY $sortBy1 $sortDir1 ";
-    if ($sortBy2) {
-        $orderBySql .= ", $sortBy2 $sortDir2 ";
-    }
+$whereSql = '';
+$queryParams = array();
+if ($title !== '') {
+    $whereSql .= ' AND title LIKE :title ';
+    $queryParams['title'] = '%' . $title . '%';
 }
 
-$sql = "SELECT * 
-        FROM fs_food 
-        WHERE 1 
-        $whereSql 
-        $orderBySql
-        ";
+$orderBySql = ' ORDER BY ' . $allowedSort[$sortBy1] . ' ' . $sortDir1;
+if ($sortBy2 !== '') {
+    $orderBySql .= ', ' . $allowedSort[$sortBy2] . ' ' . $sortDir2;
+}
 
-$results = getQuery($sql);
+$sql = "SELECT *
+        FROM fs_food
+        WHERE 1
+        $whereSql
+        $orderBySql";
 
-header("Content-type: application/json");
-header('Access-Control-Allow-Origin: *');
-echo json_encode([
-    'items' => $results
-], JSON_PRETTY_PRINT);
-die();
+$results = getQuery($sql, $queryParams);
+if (!$results) {
+    $results = array();
+}
 
-?>
+foreach ($results as $i => $row) {
+    $results[$i]['id'] = intval($row['id']);
+    $results[$i]['is_inflammation'] = intval($row['is_inflammation']);
+}
+
+api_json_response(array(
+    'items' => $results,
+));

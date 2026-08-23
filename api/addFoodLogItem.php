@@ -1,51 +1,55 @@
 <?php
-$changeTestMode            = isset($_REQUEST['test_mode']) ? intval($_REQUEST['test_mode']) : 0;
-
 include "../inc/includes.php";
-//ini_set("display_errors", 1);
+include "../inc/api_auth.php";
 
-$food_id = isset($_REQUEST['food_id']) ? intval($_REQUEST['food_id']) : 0;
-$food_general_id = isset($_REQUEST['food_general_id']) ? intval($_REQUEST['food_general_id']) : 0;
-$consumed_date = isset($_REQUEST['consumed_date']) ? trim($_REQUEST['consumed_date']) : date("m/d/Y");
+api_handle_preflight();
+require_api_auth_or_session();
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    api_json_response(array('message' => 'Method not allowed'), 405);
+}
+
+$params = array_merge($_REQUEST, api_read_json_body());
+
+$food_id = isset($params['food_id']) ? intval($params['food_id']) : 0;
+$food_general_id = isset($params['food_general_id']) ? intval($params['food_general_id']) : 0;
+$consumed_date = isset($params['consumed_date']) ? trim($params['consumed_date']) : date('m/d/Y');
 
 if ($food_id === 0 && $food_general_id === 0) {
-    header("HTTP/1.1 400 Bad Request");
-    echo "food_id or food_general_id is required";
-    die();
+    api_json_response(array('message' => 'food_id or food_general_id is required'), 400);
 }
 
-$consumed_date2 = date("Y-m-d", strtotime($consumed_date));
+$timestamp = strtotime($consumed_date);
+if ($timestamp === false) {
+    api_json_response(array('message' => 'Invalid consumed_date'), 400);
+}
+$consumed_date2 = date('Y-m-d', $timestamp);
 
-$refTable = "";
-$refTableId = 0;
-if ($food_id) {
+if ($food_id > 0) {
+    $refTable = 'fs_food';
     $refTableId = $food_id;
-    $refTable = "fs_food";
 } else {
+    $refTable = 'fs_food_general';
     $refTableId = $food_general_id;
-    $refTable = "fs_food_general";
 }
 
+execQuery(
+    "INSERT INTO fs_food_history (ref_table, ref_table_id, consumed_date) VALUES (:ref_table, :ref_table_id, :consumed_date)",
+    array(
+        'ref_table' => $refTable,
+        'ref_table_id' => $refTableId,
+        'consumed_date' => $consumed_date2,
+    )
+);
 
-$sql = "INSERT INTO fs_food_history 
-        (ref_table, ref_table_id, consumed_date) 
-        VALUES 
-        ('" . $refTable . "', " . intval($refTableId) . ", '" . $consumed_date2 . "')
-        ";  
+global $db_conn;
+$newId = intval($db_conn->lastInsertId());
 
-execQuery($sql);
+$item = getQuerySingle(
+    "SELECT * FROM fs_food_history WHERE id = :id LIMIT 1",
+    array('id' => $newId)
+);
 
-$foodId = $db_conn->lastInsertId();
-
-$sql = "SELECT * FROM fs_food_history WHERE id = " . intval($foodId) . " LIMIT 1";
-
-$item = getQuery($sql);
-
-header("Content-type: application/json");
-header('Access-Control-Allow-Origin: *');
-echo json_encode([
-    'item' => $item
-], JSON_PRETTY_PRINT);
-die();
-
-?>
+api_json_response(array(
+    'item' => $item,
+));
