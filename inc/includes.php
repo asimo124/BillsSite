@@ -48,12 +48,15 @@ include "UploadValidator.php";
 include "QueryUtils.php";
 include "SortOrderHelper.php";
 
-$testMode = isset($_SESSION['testMode']) ? $_SESSION['testMode'] : 0;
+$testMode = 0;
 if (isset($changeTestMode)) {
-	$testMode = $changeTestMode;
-}
-
-if ($test_mode) {
+	$testMode = intval($changeTestMode) ? 1 : 0;
+} elseif (isset($_REQUEST['test_mode'])) {
+	// MyBudget SPA + APIs pass ?test_mode=1 to use MYSQL_DATABASE3
+	$testMode = intval($_REQUEST['test_mode']) ? 1 : 0;
+} elseif (isset($_SESSION['testMode'])) {
+	$testMode = intval($_SESSION['testMode']) ? 1 : 0;
+} elseif (isset($test_mode) && $test_mode) {
 	$testMode = 1;
 }
 
