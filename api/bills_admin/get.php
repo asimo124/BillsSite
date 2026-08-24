@@ -1,9 +1,11 @@
 <?php
 include "../../inc/includes.php";
 include "../../inc/api_auth.php";
+include "../../inc/app_settings.php";
 
 api_handle_preflight();
 require_api_auth_or_session();
+apply_app_test_mode_db();
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 if ($id <= 0) {

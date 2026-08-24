@@ -73,12 +73,30 @@ function api_get_bearer_token() {
     return '';
 }
 
+function api_read_json_body() {
+    $raw = file_get_contents('php://input');
+    if (!$raw) {
+        return array();
+    }
+    $data = json_decode($raw, true);
+    return is_array($data) ? $data : array();
+}
+
+/** Auth + settings always use live DB (asimo124_bills), never the test DB. */
+function api_use_live_db() {
+    global $db_conn, $db_conn1;
+    if (isset($db_conn1)) {
+        $db_conn = $db_conn1;
+    }
+}
+
 /**
  * Validate Bearer token against hth_user_sessions.
  * Sets $GLOBALS['api_user'] on success.
  * @return array user row
  */
 function require_api_auth() {
+    api_use_live_db();
     $token = api_get_bearer_token();
     if ($token === '') {
         api_json_response(array('message' => 'Unauthorized'), 401);
@@ -112,6 +130,7 @@ function require_api_auth() {
 
 /** Accept Bearer token or legacy PHP session (for existing admin pages). */
 function require_api_auth_or_session() {
+    api_use_live_db();
     if (isset($_SESSION['user']['user_id'])) {
         $userId = intval($_SESSION['user']['user_id']);
         $rows = getQuery(
@@ -132,13 +151,4 @@ function require_api_auth_or_session() {
         }
     }
     return require_api_auth();
-}
-
-function api_read_json_body() {
-    $raw = file_get_contents('php://input');
-    if (!$raw) {
-        return array();
-    }
-    $data = json_decode($raw, true);
-    return is_array($data) ? $data : array();
 }

@@ -3,6 +3,7 @@ include "../../inc/includes.php";
 include "../../inc/api_auth.php";
 
 api_handle_preflight();
+api_use_live_db();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     api_json_response(array('message' => 'Method not allowed'), 405);

@@ -49,15 +49,15 @@ include "QueryUtils.php";
 include "SortOrderHelper.php";
 
 $testMode = 0;
+// Only switch default $db_conn when the script sets $changeTestMode before include
+// (e.g. loadBillDates2.php). Do NOT read $_REQUEST['test_mode'] here — that broke
+// MyBudget auth when the SPA leaked test_mode onto login/me requests.
 if (isset($changeTestMode)) {
 	$testMode = intval($changeTestMode) ? 1 : 0;
-} elseif (isset($_REQUEST['test_mode'])) {
-	// MyBudget SPA + APIs pass ?test_mode=1 to use MYSQL_DATABASE3
-	$testMode = intval($_REQUEST['test_mode']) ? 1 : 0;
-} elseif (isset($_SESSION['testMode'])) {
-	$testMode = intval($_SESSION['testMode']) ? 1 : 0;
 } elseif (isset($test_mode) && $test_mode) {
 	$testMode = 1;
+} elseif (isset($_SESSION['testMode'])) {
+	$testMode = intval($_SESSION['testMode']) ? 1 : 0;
 }
 
 $mysqlDatabase = $testMode == 1 ? MYSQL_DATABASE3 : MYSQL_DATABASE;
