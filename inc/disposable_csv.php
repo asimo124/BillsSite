@@ -36,7 +36,9 @@ function disposable_save_uploaded_csv($uploadedFile) {
 
     $destinationPath = $destinationDir . '/disposable_income_tracker_main.csv';
     if (!move_uploaded_file($uploadedFile['tmp_name'], $destinationPath)) {
-        return array('ok' => false, 'message' => 'Failed to save uploaded file.');
+        if (!copy($uploadedFile['tmp_name'], $destinationPath)) {
+            return array('ok' => false, 'message' => 'Failed to save uploaded file.');
+        }
     }
 
     return array('ok' => true, 'path' => $destinationPath);

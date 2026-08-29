@@ -69,6 +69,7 @@ class Bills {
 		
 		$query = "
 		SELECT 
+		bd.vnd_id,
 		bd.bill_id,
 		vnd_bill_desc,
 		vnd_amount,
