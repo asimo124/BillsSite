@@ -61,12 +61,7 @@ execQuery($sql, array(
     'can_be_multiplied_by' => $can_be_multiplied_by,
 ));
 
-$id = intval($db_conn->lastInsertId());
-
-execQuery3("UPDATE vnd_bills SET end_date = null WHERE end_date = '0000-00-00'");
-execQuery("UPDATE vnd_bills SET end_date = null WHERE end_date = '0000-00-00'");
-execQuery3("UPDATE vnd_bills SET start_date = null WHERE start_date = '0000-00-00'");
-execQuery("UPDATE vnd_bills SET start_date = null WHERE start_date = '0000-00-00'");
+$id = intval($GLOBALS['db_conn']->lastInsertId());
 
 api_json_response(array(
     'message' => 'Bill has been created.',

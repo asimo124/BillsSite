@@ -1,7 +1,9 @@
 <?php
-ini_set('session.gc_maxlifetime', 31536000);
-ini_set('session.cookie_lifetime', 31536000);
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+	ini_set('session.gc_maxlifetime', 31536000);
+	ini_set('session.cookie_lifetime', 31536000);
+	session_start();
+}
 date_default_timezone_set("America/Chicago");
 
 function preformat2($str) {
@@ -63,8 +65,9 @@ if (isset($changeTestMode)) {
 $mysqlDatabase = $testMode == 1 ? MYSQL_DATABASE3 : MYSQL_DATABASE;
 
 try {
-	$db_conn = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.$mysqlDatabase, MYSQL_USERNAME, MYSQL_PASSWORD);
+	$db_conn = new PDO('mysql:host='.MYSQL_SERVER.';port='.MYSQL_PORT.';dbname='.$mysqlDatabase, MYSQL_USERNAME, MYSQL_PASSWORD);
 	$db_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$GLOBALS['db_conn'] = $db_conn;
 } catch(PDOException $e) {
 	echo 'ERROR: ' . $e->getMessage() . "<br />";
 	echo 'Could not establish database connection';
@@ -72,8 +75,9 @@ try {
 }
 
 try {
-	$db_conn2 = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.MYSQL_DATABASE2, MYSQL_USERNAME, MYSQL_PASSWORD);
+	$db_conn2 = new PDO('mysql:host='.MYSQL_SERVER.';port='.MYSQL_PORT.';dbname='.MYSQL_DATABASE2, MYSQL_USERNAME, MYSQL_PASSWORD);
 	$db_conn2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$GLOBALS['db_conn2'] = $db_conn2;
 } catch(PDOException $e) {
 	echo 'ERROR: ' . $e->getMessage() . "<br />";
 	echo 'Could not establish database connection';
@@ -81,8 +85,9 @@ try {
 }
 
 try {
-	$db_conn1 = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.MYSQL_DATABASE, MYSQL_USERNAME, MYSQL_PASSWORD);
+	$db_conn1 = new PDO('mysql:host='.MYSQL_SERVER.';port='.MYSQL_PORT.';dbname='.MYSQL_DATABASE, MYSQL_USERNAME, MYSQL_PASSWORD);
 	$db_conn1->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$GLOBALS['db_conn1'] = $db_conn1;
 } catch(PDOException $e) {
 	echo 'ERROR: ' . $e->getMessage() . "<br />";
 	echo 'Could not establish database connection';
@@ -90,8 +95,9 @@ try {
 }
 
 try {
-	$db_conn3 = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.MYSQL_DATABASE3, MYSQL_USERNAME, MYSQL_PASSWORD);
+	$db_conn3 = new PDO('mysql:host='.MYSQL_SERVER.';port='.MYSQL_PORT.';dbname='.MYSQL_DATABASE3, MYSQL_USERNAME, MYSQL_PASSWORD);
 	$db_conn3->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$GLOBALS['db_conn3'] = $db_conn3;
 } catch(PDOException $e) {
 	echo 'ERROR: ' . $e->getMessage() . "<br />";
 	echo 'Could not establish database connection';
@@ -99,8 +105,9 @@ try {
 }
 
 try {
-	$db_conn4 = new PDO('mysql:host='.MYSQL_SERVER.';dbname='.MYSQL_DATABASE4, MYSQL_USERNAME, MYSQL_PASSWORD);
+	$db_conn4 = new PDO('mysql:host='.MYSQL_SERVER.';port='.MYSQL_PORT.';dbname='.MYSQL_DATABASE4, MYSQL_USERNAME, MYSQL_PASSWORD);
 	$db_conn4->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$GLOBALS['db_conn4'] = $db_conn4;
 } catch(PDOException $e) {
 	echo 'ERROR: ' . $e->getMessage() . "<br />";
 	echo 'Could not establish database connection';

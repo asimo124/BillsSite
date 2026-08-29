@@ -5,18 +5,31 @@
  */
 
 function api_allowed_origins() {
-    return array(
+    $origins = array(
         'http://localhost:5173',
         'http://127.0.0.1:5173',
         'http://localhost:4173',
         'http://127.0.0.1:4173',
         'https://mybudget.hawleywebdesign.com',
+        'https://mybudgetlp.hawleywebdesign.com',
         // Angular Bills SPA (budget2) calls budget.hawleywebdesign.com APIs
         'https://budget2.hawleywebdesign.com',
         'http://budget2.hawleywebdesign.com',
         'https://budget.hawleywebdesign.com',
         'http://budget.hawleywebdesign.com',
     );
+
+    $extra = getenv('BILLS_CORS_ORIGINS');
+    if ($extra) {
+        foreach (explode(',', $extra) as $origin) {
+            $origin = trim($origin);
+            if ($origin !== '') {
+                $origins[] = $origin;
+            }
+        }
+    }
+
+    return array_values(array_unique($origins));
 }
 
 function api_send_cors_headers() {
@@ -37,6 +50,9 @@ function api_send_cors_headers() {
 }
 
 function api_handle_preflight() {
+    if (defined('BILLS_LEGACY_CAPTURE')) {
+        return;
+    }
     api_send_cors_headers();
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
         http_response_code(204);
@@ -45,6 +61,9 @@ function api_handle_preflight() {
 }
 
 function api_json_response($data, $status = 200) {
+    if (defined('BILLS_LEGACY_CAPTURE')) {
+        throw new \App\Exceptions\BillsLegacyResponse($data, $status);
+    }
     api_send_cors_headers();
     http_response_code($status);
     header('Content-Type: application/json');
@@ -74,6 +93,12 @@ function api_get_bearer_token() {
 }
 
 function api_read_json_body() {
+    if (defined('BILLS_LEGACY_CAPTURE') && isset($GLOBALS['bills_legacy_json_body'])) {
+        return is_array($GLOBALS['bills_legacy_json_body'])
+            ? $GLOBALS['bills_legacy_json_body']
+            : array();
+    }
+
     $raw = file_get_contents('php://input');
     if (!$raw) {
         return array();
@@ -85,8 +110,12 @@ function api_read_json_body() {
 /** Auth + settings always use live DB (asimo124_bills), never the test DB. */
 function api_use_live_db() {
     global $db_conn, $db_conn1;
-    if (isset($db_conn1)) {
+    if (isset($GLOBALS['db_conn1'])) {
+        $db_conn = $GLOBALS['db_conn1'];
+        $GLOBALS['db_conn'] = $db_conn;
+    } elseif (isset($db_conn1)) {
         $db_conn = $db_conn1;
+        $GLOBALS['db_conn'] = $db_conn;
     }
 }
 
@@ -96,6 +125,11 @@ function api_use_live_db() {
  * @return array user row
  */
 function require_api_auth() {
+    // Laravel Sanctum already authenticated the request; reuse that user.
+    if (defined('BILLS_LEGACY_CAPTURE') && !empty($GLOBALS['api_user'])) {
+        return $GLOBALS['api_user'];
+    }
+
     api_use_live_db();
     $token = api_get_bearer_token();
     if ($token === '') {
@@ -130,6 +164,11 @@ function require_api_auth() {
 
 /** Accept Bearer token or legacy PHP session (for existing admin pages). */
 function require_api_auth_or_session() {
+    // Laravel Sanctum already authenticated the request; reuse that user.
+    if (defined('BILLS_LEGACY_CAPTURE') && !empty($GLOBALS['api_user'])) {
+        return $GLOBALS['api_user'];
+    }
+
     api_use_live_db();
     if (isset($_SESSION['user']['user_id'])) {
         $userId = intval($_SESSION['user']['user_id']);

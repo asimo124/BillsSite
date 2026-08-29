@@ -60,8 +60,9 @@ function app_test_mode_enabled() {
 function apply_app_test_mode_db() {
     global $db_conn, $db_conn1, $db_conn3;
     if (app_test_mode_enabled()) {
-        $db_conn = $db_conn3;
+        $db_conn = isset($GLOBALS['db_conn3']) ? $GLOBALS['db_conn3'] : $db_conn3;
     } else {
-        $db_conn = $db_conn1;
+        $db_conn = isset($GLOBALS['db_conn1']) ? $GLOBALS['db_conn1'] : $db_conn1;
     }
+    $GLOBALS['db_conn'] = $db_conn;
 }

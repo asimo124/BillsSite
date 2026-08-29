@@ -75,11 +75,6 @@ execQuery($sql, array(
     'id' => $id,
 ));
 
-execQuery3("UPDATE vnd_bills SET end_date = null WHERE end_date = '0000-00-00'");
-execQuery("UPDATE vnd_bills SET end_date = null WHERE end_date = '0000-00-00'");
-execQuery3("UPDATE vnd_bills SET start_date = null WHERE start_date = '0000-00-00'");
-execQuery("UPDATE vnd_bills SET start_date = null WHERE start_date = '0000-00-00'");
-
 api_json_response(array(
     'message' => 'Bill has been updated.',
     'id' => $id,
