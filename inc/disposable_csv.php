@@ -28,8 +28,17 @@ function disposable_validate_uploaded_csv($uploadedFile) {
     return array('ok' => true);
 }
 
+function disposable_data_dir() {
+    $configured = getenv('DISPOSABLE_INCOME_TRACKER_DATA_DIR');
+    if ($configured !== false && $configured !== '') {
+        return rtrim($configured, '/');
+    }
+
+    return dirname(__FILE__) . '/../data/disposable_income_tracker';
+}
+
 function disposable_save_uploaded_csv($uploadedFile) {
-    $destinationDir = dirname(__FILE__) . '/../data/disposable_income_tracker';
+    $destinationDir = disposable_data_dir();
     if (!is_dir($destinationDir)) {
         mkdir($destinationDir, 0755, true);
     }
