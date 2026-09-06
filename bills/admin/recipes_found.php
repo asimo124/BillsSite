@@ -11,20 +11,20 @@ if (!isset($_SESSION['user'])) {
 
 $sql = "SELECT r.id as recipe_id, r.title as recipe_name 
         , p.title as protein_type
-        , GROUP_CONCAT(i.title SEPARATOR '~') as ingredient
+        , r.used_recently as used_recently
+        , string_agg(i.title, '~' ORDER BY i.id) as ingredient
         , rs.title as recipe_style
         FROM ri_recipe r 
         INNER JOIN ri_protein p 
             ON r.protein_id = p.id 
         INNER JOIN ri_recipe_ingredient ri 
-            oN r.id = ri.recipe_id 
+            ON r.id = ri.recipe_id 
         INNER JOIN ri_ingredient i 
             ON ri.ingredient_id = i.id 
         INNER JOIN ri_recipe_style rs 
             ON r.recipe_style_id = rs.id
-        GROUP BY r.id 
-        ORDER BY CONCAT(r.title, '-', r.id) ASC 
-        , i.id ";
+        GROUP BY r.id, r.title, p.title, r.used_recently, rs.title
+        ORDER BY r.used_recently DESC, r.title ASC";
 
 $results = getQuery4($sql);
 
@@ -46,7 +46,9 @@ foreach ($results as $index => $getResult) {
     <link rel="stylesheet" href="/css/nav.css" />
     <link rel="stylesheet" href="/css/bills_admin.css" />
     <style>
-        
+        .used-recently {
+            background-color: #fef3c7;
+        }
     </style>
 </head>
 <body>
@@ -70,7 +72,7 @@ foreach ($results as $index => $getResult) {
                 <th>Recipe Style</th>
             </tr>
             <?php foreach ($results as $result): ?>
-                <tr>
+                <tr <?php if ($result['used_recently'] == 1) { echo 'class="used-recently"'; } ?>>
                     <td><?php echo $result['recipe_name']; ?></td>
                     <td><?php echo $result['protein_type']; ?></td>
                     <td>

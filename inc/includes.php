@@ -105,7 +105,7 @@ try {
 }
 
 try {
-	$db_conn4 = new PDO('mysql:host='.MYSQL_SERVER.';port='.MYSQL_PORT.';dbname='.MYSQL_DATABASE4, MYSQL_USERNAME, MYSQL_PASSWORD);
+	$db_conn4 = new PDO('pgsql:host='.MYSQL_SERVER.';port='.MYSQL_PORT4.';dbname='.MYSQL_DATABASE4, MYSQL_USERNAME4, MYSQL_PASSWORD4);
 	$db_conn4->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$GLOBALS['db_conn4'] = $db_conn4;
 } catch(PDOException $e) {
