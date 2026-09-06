@@ -10,6 +10,7 @@ if (!isset($_SESSION['user'])) {
 //*/
 
 $sql = "SELECT r.id as recipe_id, r.title as recipe_name 
+        , r.recipe_link as recipe_link
         , p.title as protein_type
         , r.used_recently as used_recently
         , string_agg(i.title, '~' ORDER BY i.id) as ingredient
@@ -73,7 +74,7 @@ foreach ($results as $index => $getResult) {
             </tr>
             <?php foreach ($results as $result): ?>
                 <tr <?php if ($result['used_recently'] == 1) { echo 'class="used-recently"'; } ?>>
-                    <td><?php echo $result['recipe_name']; ?></td>
+                    <td><?php echo $result['recipe_name']; ?> <a href="<?php echo $result['recipe_link']; ?>" target="_blank"><i class="fa fa-external-link"></i></a></td>
                     <td><?php echo $result['protein_type']; ?></td>
                     <td>
                         <ul>
