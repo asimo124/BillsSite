@@ -226,3 +226,36 @@ function dietlog_resolve_meal_id_for_slot(array $meals, $slot)
     }
     return null;
 }
+
+function dietlog_current_meal_of_day_id()
+{
+    $meals = getQuery("SELECT * FROM dl_meal_of_day ORDER BY id ASC");
+    $slot = dietlog_chicago_meal_slot();
+    $id = dietlog_resolve_meal_id_for_slot($meals, $slot);
+    if ($id === null && count($meals) > 0) {
+        $id = (int) $meals[0]['id'];
+    }
+    return $id ? (int) $id : 1;
+}
+
+function dietlog_add_food_with_default($food_id)
+{
+    $food_id = intval($food_id);
+    $food = getQuerySingle(
+        "SELECT id, title, default_amount FROM dl_food WHERE id = :id",
+        array(':id' => $food_id)
+    );
+    if (!$food) {
+        dietlog_json_exit(array('success' => false, 'error' => 'Food not found.'), 404);
+    }
+
+    $sql = "INSERT INTO dl_food_log (food_id, amount, date_consumed, meal_of_day_id)
+            VALUES (:food_id, :amount, NOW(), :meal_of_day_id)";
+    execQuery($sql, array(
+        ':food_id' => $food_id,
+        ':amount' => floatval($food['default_amount']),
+        ':meal_of_day_id' => dietlog_current_meal_of_day_id(),
+    ));
+
+    return $food;
+}
