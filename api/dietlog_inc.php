@@ -238,7 +238,7 @@ function dietlog_current_meal_of_day_id()
     return $id ? (int) $id : 1;
 }
 
-function dietlog_add_food_with_default($food_id)
+function dietlog_add_food_with_default($food_id, $amount = null)
 {
     $food_id = intval($food_id);
     $food = getQuerySingle(
@@ -249,11 +249,13 @@ function dietlog_add_food_with_default($food_id)
         dietlog_json_exit(array('success' => false, 'error' => 'Food not found.'), 404);
     }
 
+    $insertAmount = $amount !== null ? floatval($amount) : floatval($food['default_amount']);
+
     $sql = "INSERT INTO dl_food_log (food_id, amount, date_consumed, meal_of_day_id)
             VALUES (:food_id, :amount, NOW(), :meal_of_day_id)";
     execQuery($sql, array(
         ':food_id' => $food_id,
-        ':amount' => floatval($food['default_amount']),
+        ':amount' => $insertAmount,
         ':meal_of_day_id' => dietlog_current_meal_of_day_id(),
     ));
 
