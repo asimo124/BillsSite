@@ -1,6 +1,7 @@
 <?php
 include "../inc/includes.php";
 include "../inc/api_auth.php";
+include "../inc/apple_notes.php";
 
 api_handle_preflight();
 require_api_auth_or_session();
@@ -38,21 +39,21 @@ if ($sortDir !== 'ASC' && $sortDir !== 'DESC') {
     $sortDir = 'DESC';
 }
 
-// Unchecked (default): show all notes
-// Checked (deleted=1): only notes with to_delete = 0 / NULL ("Not Deleted")
 $sqlWhere = $deletedOnly
     ? " AND (to_delete IS NULL OR to_delete = 0) "
     : "";
 $params = array();
 
-if ($keywordTitle !== '') {
-    $sqlWhere .= " AND name LIKE :keyword_title ";
-    $params['keyword_title'] = '%' . $keywordTitle . '%';
+$titleTsQuery = apple_notes_tsquery($keywordTitle);
+if ($titleTsQuery !== '') {
+    $sqlWhere .= " AND to_tsvector('english', coalesce(name, '')) @@ to_tsquery('english', :keyword_title) ";
+    $params['keyword_title'] = $titleTsQuery;
 }
 
-if ($keywordBody !== '') {
-    $sqlWhere .= " AND body LIKE :keyword_body ";
-    $params['keyword_body'] = '%' . $keywordBody . '%';
+$bodyTsQuery = apple_notes_tsquery($keywordBody);
+if ($bodyTsQuery !== '') {
+    $sqlWhere .= " AND to_tsvector('english', coalesce(body, '')) @@ to_tsquery('english', :keyword_body) ";
+    $params['keyword_body'] = $bodyTsQuery;
 }
 
 if ($startDate !== '') {
@@ -69,8 +70,8 @@ if ($startDate !== '' && $endDate !== '' && strtotime($startDate) > strtotime($e
     api_json_response(array('error' => 'start_date must be before end_date'), 400);
 }
 
-$countSql = "SELECT COUNT(*) AS total FROM apple_notes WHERE 1 $sqlWhere";
-$countRow = getQuerySingle($countSql, $params);
+$countSql = "SELECT COUNT(*) AS total FROM apple_notes WHERE TRUE $sqlWhere";
+$countRow = getQuerySingle4($countSql, $params);
 $total = isset($countRow['total']) ? intval($countRow['total']) : 0;
 $totalPages = $total > 0 ? (int) ceil($total / $perPage) : 1;
 
@@ -82,12 +83,12 @@ $offset = ($page - 1) * $perPage;
 
 $sql = "SELECT id, id_str, name, folder, account, creation_date, modification_date, body, to_delete
         FROM apple_notes
-        WHERE 1
+        WHERE TRUE
         $sqlWhere
         ORDER BY $sortBy $sortDir, id DESC
         LIMIT $perPage OFFSET $offset";
 
-$results = getQuery($sql, $params);
+$results = getQuery4($sql, $params);
 if (!$results) {
     $results = array();
 }

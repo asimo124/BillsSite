@@ -38,7 +38,7 @@ if (count($ids) === 0) {
 
 $placeholders = implode(',', array_fill(0, count($ids), '?'));
 $sql = "UPDATE apple_notes SET to_delete = 1 WHERE id IN ($placeholders)";
-execQuery($sql, $ids);
+execQuery4($sql, $ids);
 
 api_json_response(array(
     'success' => true,

@@ -4,7 +4,7 @@ include "../../inc/api_auth.php";
 include "../../inc/apple_notes.php";
 
 api_handle_preflight();
-require_api_auth_or_session();
+require_apple_notes_import_token();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     api_json_response(array('message' => 'Method not allowed'), 405);

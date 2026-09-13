@@ -14,7 +14,7 @@ $sql = "SELECT id_str, name, folder, account, creation_date, modification_date, 
         WHERE to_delete = 1
         ORDER BY modification_date DESC, id DESC";
 
-$results = getQuery($sql);
+$results = getQuery4($sql);
 if (!$results) {
     $results = array();
 }

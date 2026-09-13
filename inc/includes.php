@@ -105,7 +105,12 @@ try {
 }
 
 try {
-	$db_conn4 = new PDO('pgsql:host='.MYSQL_SERVER.';port='.MYSQL_PORT4.';dbname='.MYSQL_DATABASE4, MYSQL_USERNAME4, MYSQL_PASSWORD4);
+	$pgsqlHost = defined('MYSQL_SERVER4') ? MYSQL_SERVER4 : MYSQL_SERVER;
+	$pgsqlPort = defined('MYSQL_PORT4') ? MYSQL_PORT4 : '5432';
+	$pgsqlDatabase = defined('MYSQL_DATABASE4') ? MYSQL_DATABASE4 : 'recipes';
+	$pgsqlUsername = defined('MYSQL_USERNAME4') ? MYSQL_USERNAME4 : MYSQL_USERNAME;
+	$pgsqlPassword = defined('MYSQL_PASSWORD4') ? MYSQL_PASSWORD4 : MYSQL_PASSWORD;
+	$db_conn4 = new PDO('pgsql:host='.$pgsqlHost.';port='.$pgsqlPort.';dbname='.$pgsqlDatabase, $pgsqlUsername, $pgsqlPassword);
 	$db_conn4->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$GLOBALS['db_conn4'] = $db_conn4;
 } catch(PDOException $e) {
@@ -205,6 +210,14 @@ function getQuery4($sql, $data=array()) {
 	$stmt = $db_conn4->prepare($sql);
 	$stmt->execute($data);
 	return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getQuerySingle4($sql, $data=array()) {
+	global $db_conn4;
+
+	$stmt = $db_conn4->prepare($sql);
+	$stmt->execute($data);
+	return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 function curlExec($requestMethod, $url, $data = [])
