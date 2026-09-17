@@ -18,6 +18,26 @@ $increaseCreditLimitBy = isset($params['increase_credit_limit_by'])
     ? floatval($params['increase_credit_limit_by'])
     : 0;
 
+// How much debt is expected to be paid off before the 2nd contract ends.
+// 0 means no payoff projection.
+$paidByCutoff = isset($params['paid_by_cutoff']) ? floatval($params['paid_by_cutoff']) : 0;
+if ($paidByCutoff < 0) {
+    $paidByCutoff = 0;
+}
+
+// Loans with no milestone order get paid last.
+if (!function_exists('compare_by_milestone_order')) {
+    function compare_by_milestone_order($a, $b)
+    {
+        $aOrder = intval($a['milestone_order']) > 0 ? intval($a['milestone_order']) : 9999;
+        $bOrder = intval($b['milestone_order']) > 0 ? intval($b['milestone_order']) : 9999;
+        if ($aOrder === $bOrder) {
+            return intval($a['id']) - intval($b['id']);
+        }
+        return $aOrder - $bOrder;
+    }
+}
+
 $allowedSort = array(
     'sort_order' => 'sort_order',
     'debt_owed' => 'debt_owed',
@@ -39,10 +59,48 @@ if (!$loans) {
 
 $defaultdisposable = 3000 + (400 * 2) - (180 * 2);
 
+// A paid off card keeps its credit limit, so utilization is always measured
+// against every card's limit — even the ones the cutoff hides below.
+$totalCreditLimit = 0;
+foreach ($loans as $loan) {
+    $totalCreditLimit += floatval($loan['credit_limit']);
+}
+
+$paidOffByCutoff = array();
+if ($paidByCutoff > 0) {
+    $payoffOrder = $loans;
+    usort($payoffOrder, 'compare_by_milestone_order');
+
+    $cutoffBudget = $paidByCutoff;
+    $debtLeftAfterCutoff = array();
+    foreach ($payoffOrder as $loan) {
+        $debtOwed = max(floatval($loan['debt_owed']), 0);
+        $applied = min($cutoffBudget, $debtOwed);
+        $cutoffBudget -= $applied;
+        $debtLeft = round($debtOwed - $applied, 2);
+        $debtLeftAfterCutoff[intval($loan['id'])] = $debtLeft;
+        // Cards already sitting at $0 are hidden too, but the cutoff did not pay them.
+        if ($debtLeft <= 0 && $applied > 0) {
+            $paidOffByCutoff[] = $loan['title'];
+        }
+    }
+
+    $loansLeft = array();
+    foreach ($loans as $loan) {
+        $debtLeft = $debtLeftAfterCutoff[intval($loan['id'])];
+        if ($debtLeft <= 0) {
+            continue;
+        }
+        $loan['debt_owed'] = $debtLeft;
+        $loansLeft[] = $loan;
+    }
+    $loans = array_values($loansLeft);
+}
+
 $minPaymentAccum = 0;
 $adjustDisposableAmountAccum = 0;
 $totalDebtOwed = 0;
-$totalCreditLimit = 0;
+$totalMinPayment = 0;
 
 foreach ($loans as $index => $loan) {
     $debtOwed = floatval($loan['debt_owed']);
@@ -51,7 +109,7 @@ foreach ($loans as $index => $loan) {
     $adjustDisposable = floatval($loan['adjust_disposable_amount']);
 
     $totalDebtOwed += $debtOwed;
-    $totalCreditLimit += $creditLimit;
+    $totalMinPayment += $minPayment;
 
     if ($creditLimit > 0) {
         $loans[$index]['credit_utilization'] = round(($debtOwed / $creditLimit), 4) * 100;
@@ -103,19 +161,20 @@ foreach ($chartHeaders as $header) {
     $chartValues[] = round(($header * $totalCreditLimitWithIncrease), 4);
 }
 
-$sql = "SELECT * FROM cu_loan WHERE 1 AND milestone_order > 0 ORDER BY milestone_order ASC";
-$loansByMilestone = getQuery($sql);
-if (!$loansByMilestone) {
-    $loansByMilestone = array();
+// Built from the loans above so the milestone chart reflects the cutoff.
+$loansByMilestone = array();
+foreach ($loans as $loan) {
+    if (intval($loan['milestone_order']) > 0 && floatval($loan['debt_owed']) > 0) {
+        $loansByMilestone[] = $loan;
+    }
 }
+usort($loansByMilestone, 'compare_by_milestone_order');
 
 $totalDebtOwedNew = $totalDebtOwed;
-$totalMinPayment = 0;
 $chartMilestoneResults = array();
 
 foreach ($loansByMilestone as $loan) {
     $debtOwed = floatval($loan['debt_owed']);
-    $totalMinPayment += floatval($loan['min_payment']);
     $totalDebtOwedNew -= $debtOwed;
 
     $creditUtilization2 = ($totalCreditLimitWithIncrease > 0)
@@ -140,6 +199,8 @@ api_json_response(array(
         'credit_utilization' => round($creditUtilization, 2),
         'total_min_payment' => round($totalMinPayment, 2),
         'increase_credit_limit_by' => $increaseCreditLimitBy,
+        'paid_by_cutoff' => $paidByCutoff,
+        'paid_off_by_cutoff' => $paidOffByCutoff,
     ),
     'chart' => array(
         'headers' => $chartHeaders,

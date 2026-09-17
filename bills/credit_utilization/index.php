@@ -35,9 +35,11 @@ $minPaymentAccum = 0;
 $adjustDisposableAmountAccum = 0;
 $totalDebtOwed = 0;
 $totalCreditLimit = 0;
+$totalMinPayment = 0;
 foreach ($loans as $index => $loan) {
     $totalDebtOwed += floatval($loan['debt_owed']);
     $totalCreditLimit += floatval($loan['credit_limit']);
+    $totalMinPayment += floatval($loan['min_payment']);
     if ($loan['credit_limit'] > 0) {
         $loans[$index]['credit_utilization'] = round(($loan['debt_owed'] / $loan['credit_limit']), 4) * 100;
     } else {
@@ -93,12 +95,12 @@ $sql = "SELECT *
         FROM cu_loan 
         WHERE 1
         AND milestone_order > 0 
+        AND debt_owed > 0
         ORDER BY milestone_order ASC";
 $loansByMilestone = getQuery($sql);
 
 
 $totalDebtOwedNew = $totalDebtOwed;
-$totalMinPayment = 0;
 
 $chartMilestoneResults = [];
 $chartMilestoneValues = [];
@@ -108,7 +110,6 @@ foreach ($loansByMilestone as $loan) {
     $title = $loan['title'];
     $debtOwed = floatval($loan['debt_owed']);
     $creditLimit = floatval($loan['credit_limit']);
-    $totalMinPayment += floatval($loan['min_payment']);
 
     $totalDebtOwedNew -= $debtOwed;
 
