@@ -57,6 +57,12 @@ $Bills = getQuery($sql);
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Original Debt Owed</label>
+                <div class="col-md-4">
+                    <input id="original_debt_owed" name="original_debt_owed" type="number" placeholder="Original Debt Owed" class="form-control input-md" value="<?php echo isset($Loan['original_debt_owed']) ? $Loan['original_debt_owed'] : ''; ?>" />
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-md-4 control-label" for="textinput">Credit Limit</label>
                 <div class="col-md-4">
                     <input id="credit_limit" name="credit_limit" type="number" placeholder="Credit Limit" class="form-control input-md" value="<?php echo $Loan['credit_limit']; ?>" />

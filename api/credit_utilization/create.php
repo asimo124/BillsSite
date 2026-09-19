@@ -13,6 +13,7 @@ $body = api_read_json_body();
 
 $title = isset($body['title']) ? trim($body['title']) : '';
 $debt_owed = isset($body['debt_owed']) ? floatval($body['debt_owed']) : 0;
+$original_debt_owed = isset($body['original_debt_owed']) ? floatval($body['original_debt_owed']) : 0;
 $credit_limit = isset($body['credit_limit']) ? floatval($body['credit_limit']) : 0;
 $min_payment = isset($body['min_payment']) ? floatval($body['min_payment']) : 0;
 $amount_to_principal = isset($body['amount_to_principal']) ? floatval($body['amount_to_principal']) : 0;
@@ -29,13 +30,14 @@ if ($title === '' || ($debt_owed <= 0 && $credit_limit <= 0)) {
 }
 
 $sql = "INSERT INTO cu_loan
-        (title, debt_owed, credit_limit, sort_order, milestone_order, min_payment, amount_to_principal)
+        (title, debt_owed, original_debt_owed, credit_limit, sort_order, milestone_order, min_payment, amount_to_principal)
         VALUES
-        (:title, :debt_owed, :credit_limit, :sort_order, :milestone_order, :min_payment, :amount_to_principal)";
+        (:title, :debt_owed, :original_debt_owed, :credit_limit, :sort_order, :milestone_order, :min_payment, :amount_to_principal)";
 
 execQuery($sql, array(
     'title' => $title,
     'debt_owed' => $debt_owed,
+    'original_debt_owed' => $original_debt_owed,
     'credit_limit' => $credit_limit,
     'sort_order' => $sort_order,
     'milestone_order' => $milestone_order,

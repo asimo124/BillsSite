@@ -120,6 +120,7 @@ foreach ($loans as $index => $loan) {
     $adjustDisposableAmountAccum += $adjustDisposable;
     $loans[$index]['id'] = intval($loan['id']);
     $loans[$index]['debt_owed'] = $debtOwed;
+    $loans[$index]['original_debt_owed'] = floatval($loan['original_debt_owed'] ?? 0);
     $loans[$index]['credit_limit'] = $creditLimit;
     $loans[$index]['min_payment'] = $minPayment;
     $loans[$index]['amount_to_principal'] = floatval($loan['amount_to_principal']);

@@ -18,6 +18,7 @@ if (!$loan) {
 
 $loan['id'] = intval($loan['id']);
 $loan['debt_owed'] = floatval($loan['debt_owed']);
+$loan['original_debt_owed'] = floatval($loan['original_debt_owed'] ?? 0);
 $loan['credit_limit'] = floatval($loan['credit_limit']);
 $loan['min_payment'] = floatval($loan['min_payment']);
 $loan['amount_to_principal'] = floatval($loan['amount_to_principal']);

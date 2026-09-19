@@ -9,6 +9,7 @@ if (!isset($_SESSION['user'])) {
 
 $title = isset($_REQUEST['title']) ? trim($_REQUEST['title']) : "";
 $debt_owed = isset($_REQUEST['debt_owed']) ? floatval($_REQUEST['debt_owed']) : 0;
+$original_debt_owed = isset($_REQUEST['original_debt_owed']) ? floatval($_REQUEST['original_debt_owed']) : 0;
 $credit_limit = isset($_REQUEST['credit_limit']) ? floatval($_REQUEST['credit_limit']) : 0;
 $min_payment = isset($_REQUEST['min_payment']) ? floatval($_REQUEST['min_payment']) : 0;
 $amount_to_principal = isset($_REQUEST['amount_to_principal']) ? floatval($_REQUEST['amount_to_principal']) : 0;
@@ -42,13 +43,14 @@ if ($title == "" || ($debt_owed <= 0 && $credit_limit <= 0)) {
     exit;
 }
 
-$sql = "INSERT INTO cu_loan  ( title,  debt_owed,  credit_limit, sort_order, milestone_order, min_payment, amount_to_principal) VALUES
-        ( :title, :debt_owed, :credit_limit, :sort_order, :milestone_order, :min_payment, :amount_to_principal ) ";
+$sql = "INSERT INTO cu_loan  ( title,  debt_owed, original_debt_owed, credit_limit, sort_order, milestone_order, min_payment, amount_to_principal) VALUES
+        ( :title, :debt_owed, :original_debt_owed, :credit_limit, :sort_order, :milestone_order, :min_payment, :amount_to_principal ) ";
         
 
 execQuery($sql, [
     ':title' => $title,
     ':debt_owed' => $debt_owed,
+    ':original_debt_owed' => $original_debt_owed,
     ':credit_limit' => $credit_limit,
     ':sort_order' => $sort_order,
     ':milestone_order' => $milestone_order,
