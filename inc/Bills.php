@@ -7,6 +7,7 @@ class Bills {
 	public $sthInsertDate;
 	public $sthCheckDate;
 	public $user_id;
+	public $bill_id;
 	
 	public function __construct($numReps = 50) {
 		$this->numReps = $numReps;
@@ -124,9 +125,9 @@ class Bills {
 		
 		$queryInsertDate = "INSERT INTO vnd_bill_dates 
 		(vnd_bill_desc,  vnd_user_id,  vnd_amount,  vnd_date,  vnd_is_future,   is_heavy,  vnd_frequency,  
-		 	 vnd_frequency_type) VALUES
+		 	 vnd_frequency_type,  bill_id) VALUES
 		(:vnd_bill_desc, :vnd_user_id, :vnd_amount, :vnd_date, :vnd_is_future, :is_heavy, :vnd_frequency,
-		 	:vnd_frequency_type) ";
+		 	:vnd_frequency_type, :bill_id) ";
 		$this->sthInsertDate = $db_conn->prepare($queryInsertDate);
 		
 		$queryCheckDate = "
@@ -138,6 +139,7 @@ class Bills {
 
 		$resultset = $this->loadBillsByUserID($user_id);
 		foreach ($resultset as $getItem) {
+			$this->bill_id = $getItem['vnd_id'];
 
 			switch ($getItem['vnd_frequency']) {
 				case "Once":
@@ -293,6 +295,7 @@ class Bills {
 							$data['is_heavy'] = $is_heavy;
 							$data['vnd_frequency'] = $vnd_frequency;
 							$data['vnd_frequency_type'] = $vnd_frequency_type;
+							$data['bill_id'] = $this->bill_id;
 							$this->sthInsertDate->execute($data);
 						}
 					}
@@ -341,6 +344,7 @@ class Bills {
 					$data['is_heavy'] = $is_heavy;
 					$data['vnd_frequency'] = $vnd_frequency;
 					$data['vnd_frequency_type'] = $vnd_frequency_type;
+					$data['bill_id'] = $this->bill_id;
 					$this->sthInsertDate->execute($data);
 				}
 				$each_date = $use_date;
@@ -368,6 +372,7 @@ class Bills {
 			$data['is_heavy'] = $is_heavy;
 			$data['vnd_frequency'] = $vnd_frequency;
 			$data['vnd_frequency_type'] = $vnd_frequency_type;
+			$data['bill_id'] = $this->bill_id;
 			$this->sthInsertDate->execute($data);
 		}
 	}
@@ -410,6 +415,7 @@ class Bills {
 					$data['is_heavy'] = $is_heavy;
 					$data['vnd_frequency'] = $vnd_frequency;
 					$data['vnd_frequency_type'] = $vnd_frequency_type;
+					$data['bill_id'] = $this->bill_id;
 					$this->sthInsertDate->execute($data);
 				}
 				$each_date = $use_date;
@@ -449,6 +455,7 @@ class Bills {
 					$data['is_heavy'] = $is_heavy;
 					$data['vnd_frequency'] = $vnd_frequency;
 					$data['vnd_frequency_type'] = $vnd_frequency_type;
+					$data['bill_id'] = $this->bill_id;
 					$this->sthInsertDate->execute($data);
 				}
 				$each_date = $use_date;
