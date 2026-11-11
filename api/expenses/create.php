@@ -28,8 +28,8 @@ if ($vnd_bill === '' || $vnd_frequency_value === '') {
 }
 
 $query = "INSERT INTO vnd_bills
-( vnd_user_id,  vnd_bill,  vnd_frequency_value,  amount,  vnd_is_auto,  vnd_frequency,  vnd_frequency_type,  vnd_entrydate,  multiplier,  is_future) VALUES
-(:vnd_user_id, :vnd_bill, :vnd_frequency_value, :amount, :vnd_is_auto, :vnd_frequency, :vnd_frequency_type, :vnd_entrydate, :multiplier, :is_future)";
+( vnd_user_id,  vnd_bill,  vnd_frequency_value,  amount,  vnd_is_auto,  vnd_frequency,  vnd_frequency_type,  vnd_entrydate,  multiplier,  is_future,  watch_flag) VALUES
+(:vnd_user_id, :vnd_bill, :vnd_frequency_value, :amount, :vnd_is_auto, :vnd_frequency, :vnd_frequency_type, :vnd_entrydate, :multiplier, :is_future, :watch_flag)";
 
 $data = array(
     'vnd_user_id' => 1,
@@ -42,6 +42,7 @@ $data = array(
     'vnd_entrydate' => date('Y-m-d H:i:s'),
     'multiplier' => 1,
     'is_future' => 1,
+    'watch_flag' => 1,
 );
 
 $sth = $db_conn->prepare($query);
