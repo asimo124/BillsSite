@@ -18,7 +18,8 @@ if (count($items) === 0) {
 
 $queryUpdate = "
 UPDATE vnd_bills
-SET vnd_frequency_value = :vnd_frequency_value,
+SET vnd_bill = COALESCE(:vnd_bill, vnd_bill),
+    vnd_frequency_value = :vnd_frequency_value,
     amount = :amount,
     watch_flag = :watch_flag
 WHERE vnd_id = :vnd_id
@@ -38,7 +39,21 @@ foreach ($items as $item) {
     }
     $freq_val = strip_tags($freq_val);
 
+    // Optional rename: only applied when a non-empty name is sent.
+    $bill_name = null;
+    if (isset($item['vnd_bill'])) {
+        $bill_name = trim($item['vnd_bill']);
+        if (!validateTags($bill_name)) {
+            api_json_response(array('message' => 'You have entered invalid content. Please re-enter'), 400);
+        }
+        $bill_name = strip_tags($bill_name);
+        if ($bill_name === '') {
+            api_json_response(array('message' => 'Description cannot be empty.'), 400);
+        }
+    }
+
     $sthUpdate->execute(array(
+        'vnd_bill' => $bill_name,
         'vnd_frequency_value' => $freq_val,
         'amount' => isset($item['amount']) ? floatval($item['amount']) : 0,
         'watch_flag' => !empty($item['watch_flag']) ? 1 : 0,
