@@ -16,11 +16,29 @@ $id = isset($body['id']) ? intval($body['id']) : 0;
 $flag = isset($body['flag']) ? $body['flag'] : '';
 $action = isset($body['action']) ? $body['action'] : '';
 
-if ($id <= 0 || !in_array($flag, array('heavy', 'watch'), true) || !in_array($action, array('mark', 'unmark'), true)) {
+if ($id <= 0 || !in_array($flag, array('heavy', 'watch', 'watched'), true) || !in_array($action, array('mark', 'unmark'), true)) {
     api_json_response(array('message' => 'Invalid request'), 400);
 }
 
 $value = ($action === 'mark') ? 1 : 0;
+
+if ($flag === 'watched') {
+    // "Watched" sets both watch_flag and is_heavy together.
+    $sql = "UPDATE vnd_bills SET watch_flag = :value, is_heavy = :value2 WHERE vnd_id = :id";
+    execQuery($sql, array(
+        'value' => $value,
+        'value2' => $value,
+        'id' => $id,
+    ));
+    api_json_response(array(
+        'message' => 'Bill has been updated.',
+        'id' => $id,
+        'flag' => $flag,
+        'action' => $action,
+        'value' => $value,
+    ));
+}
+
 $column = ($flag === 'heavy') ? 'is_heavy' : 'watch_flag';
 
 $sql = "UPDATE vnd_bills SET {$column} = :value WHERE vnd_id = :id";
