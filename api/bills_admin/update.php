@@ -46,6 +46,15 @@ if ($vnd_bill === '' || $amount <= 0) {
     api_json_response(array('message' => 'You did not fill in all the required fields.'), 400);
 }
 
+if ($vnd_frequency === 'Every 1 Week') {
+    // Weekly bills are due on a weekday, stored PHP date('w') style: 0 = Sunday ... 6 = Saturday.
+    $vnd_frequency_type = 'Day of Week';
+    if (!preg_match('/^[0-6]$/', $vnd_frequency_value)) {
+        api_json_response(array('message' => 'Choose the day of the week this bill is due (0 = Sunday ... 6 = Saturday).'), 400);
+    }
+    $vnd_frequency_value_original = null;
+}
+
 $sql = "UPDATE vnd_bills
         SET vnd_bill = :vnd_bill,
             amount = :amount,
