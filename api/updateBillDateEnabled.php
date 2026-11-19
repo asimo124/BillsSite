@@ -15,6 +15,10 @@ $title = isset($_REQUEST['title']) ? trim($_REQUEST['title']) : "";
 $bill_id = isset($_REQUEST['bill_id']) ? intval($_REQUEST['bill_id']) : 0;
 $paycheck_date = isset($_REQUEST['paycheck_date']) ? trim($_REQUEST['paycheck_date']) : "";
 
+$title = str_replace("'", "''", $title);
+$paycheck_date = str_replace("'", "''", $paycheck_date);
+$date = str_replace("'", "''", $date);
+
 $isEnabled    = isset($_REQUEST['is_enabled']) ? intval($_REQUEST['is_enabled']) : 0;
 
 if (!$date || !$title) {
